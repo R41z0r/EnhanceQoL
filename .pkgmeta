@@ -1,4 +1,4 @@
-package-as: Raizor2
+package-as: Raizor
 
 externals:
   Raizor/libs/LibDBIcon-1.0:
@@ -15,5 +15,5 @@ ignore:
   - .vscode
 
 move-folders:
-  Raizor2/Raizor: Raizor
-  Raizor2/RaizorDrinkMakro: RaizorDrinkMacro
+  Raizor/Raizor: Raizor
+  Raizor/RaizorDrinkMakro: RaizorDrinkMacro
