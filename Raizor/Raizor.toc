@@ -5,7 +5,8 @@
 ## IconTexture: Interface\AddOns\Raizor\Icons\Icon.tga
 ## Notes: Little Tweaks for Raizor
 ## SavedVariables: RaizorDB
-## X-Wago-ID: j6jzRx6R
+## X-Wago-ID: aN0Ykv6j
+## X-Curse-Project-ID: 1076354
 ## Retail: true
 ## X-Compatible-With: retail
 
