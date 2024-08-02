@@ -1,0 +1,12 @@
+## Interface: 110000, 110002
+## Title: Raizor
+## Author: R41Z0R
+## Version: 11.0.0-01
+## IconTexture: Interface\AddOns\Raizor\Icons\Icon.tga
+## Notes: Little Tweaks for Raizor
+## SavedVariables: RaizorDB
+## X-Wago-ID: E6gLRRK1
+
+libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+main.lua

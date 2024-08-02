@@ -1,0 +1,8 @@
+## Interface: 110000, 110002
+## Title: RaizorDrinkMacro
+## Notes: DrinkMacro - Automatically picks the best drink in your bags and set a macro with that
+## Dependencies: Raizor
+## IconTexture: Interface\AddOns\Raizor\Icons\Icon.tga
+
+Drinks.lua
+main.lua
