@@ -1,41 +1,40 @@
-name: Release
+name: CI
 
 on:
   push:
+    branches:
+      - main
     tags:
-      - 'v*'
+      - "*"
+      - "!**-alpha**"
+      - "!**-beta**"
 
 jobs:
-  create_github_release:
-    name: Create a release object in Github
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: Roang-zero1/github-create-release-action@v2.3.0
-        with:
-          version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+.*$
-          prerelease_regex:  ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+-beta.*$
-          update_existing: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  packager_release:
-    needs:
-      - create_github_release
-    name: Package and Upload
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Bigwigs packager
-        uses: BigWigsMods/packager@master
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Hack around https://github.com/actions/checkout/issues/290
+        run: |
+          git fetch --tags --force
+
+      - name: Install and run Luacheck
+        uses: nebularg/actions-luacheck@v1
+        with:
+          args: "--no-color -q"
+          annotate: warning
+
+      - name: Generate Changelog
+        run: ./generate_changelog.sh
+
+      - name: Create Package
+        uses: BigWigsMods/packager@v2
         env:
-        #   WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
+          #   WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
           CF_API_KEY: ${{ secrets.CURSE_API_TOKEN }}
-      - name: Get name of zip file
-        id: get_zip
-        run: echo "artifact=$(ls .release/*.zip)" >> $GITHUB_ENV
-      - name: Upload artifact to github
-        uses: fnkr/github-action-ghr@v1
-        env:
-          GHR_PATH: ${{ env.artifact }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

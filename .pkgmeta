@@ -13,6 +13,9 @@ enable-nolib-creation: no
 ignore:
   - scripts
   - .vscode
+  - generate_changelog.sh
+  - README.md
+  - CONTRIBUTING.md
 
 move-folders:
   Raizor/Raizor: Raizor
