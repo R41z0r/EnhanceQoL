@@ -17,6 +17,10 @@ ignore:
   - README.md
   - CONTRIBUTING.md
 
+manual-changelog:
+  filename: CHANGELOG.md
+  markup-type: markdown
+
 move-folders:
   Raizor/Raizor: Raizor
   Raizor/RaizorDrinkMacro: RaizorDrinkMacro
