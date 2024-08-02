@@ -47,6 +47,8 @@ globals = {
 	"LFGListSearchPanel_SignUp",
 	"LFGListSearchPanel_SelectResult",
 	"LFGListSearchPanelUtil_CanSelectResult",
+	"LFGListApplicationDialog",
+	"StaticPopupSpecial_Show",
 	"Minimap",
 	"GetMinimapShape",
 	"foundItem",
