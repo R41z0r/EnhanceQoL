@@ -3,6 +3,23 @@ package-as: Raizor
 move-folders:
   RaizorDrinkMacro: RaizorDrinkMacro
 
+ignore:
+  - .git/
+  - .github/
+  - .vscode/
+  - docs/
+  - tests/
+  - "*.md"
+  - "*.bak"
+  - "*.txt"
+  - "*.DS_Store"
+  - ".pkgmeta"
+
 embedded-libraries:
   - LibDataBroker-1.1
   - LibDBIcon-1.0
+  
+enable-nolib-creation: yes
+
+game-versions:
+  - retail
