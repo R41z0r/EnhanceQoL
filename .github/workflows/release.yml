@@ -35,7 +35,7 @@ jobs:
         id: get_zip
         run: echo "artifact=$(ls .release/*.zip)" >> $GITHUB_ENV
       - name: Upload artifact to github
-        uses: actions/upload-artifact@v2
-        with:
-          name: RaizorAddon
-          path: ${{ env.artifact }}
+        uses: fnkr/github-action-ghr@v1
+        env:
+          GHR_PATH: ${{ env.artifact }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
