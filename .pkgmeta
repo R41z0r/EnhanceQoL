@@ -1,4 +1,4 @@
-package-as: Raizor
+package-as: RaizorAddon
 
 externals:
   Raizor/libs/LibDBIcon-1.0:
