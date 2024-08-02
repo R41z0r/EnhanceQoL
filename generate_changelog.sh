@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 version=$( git describe --tags --always )
 tag=$( git describe --tags --always --abbrev=0 )
 
