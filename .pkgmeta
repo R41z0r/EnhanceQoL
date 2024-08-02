@@ -7,7 +7,7 @@ externals:
   Raizor/libs/LibDataBroker-1.1: 
     url: https://github.com/tekkub/libdatabroker-1-1
     tag: latest
-  
+
 enable-nolib-creation: no
 
 ignore:
@@ -15,5 +15,5 @@ ignore:
   - .vscode
 
 move-folders:
-  Raizor/Raizor: Raizor
-  Raizor/RaizorDrinkMakro: RaizorDrinkMacro
+  Raizor: Raizor
+  RaizorDrinkMacro: RaizorDrinkMacro
