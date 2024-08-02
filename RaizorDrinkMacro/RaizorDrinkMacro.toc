@@ -6,7 +6,7 @@
 ## Dependencies: Raizor
 ## IconTexture: Interface\AddOns\Raizor\Icons\Icon.tga
 ## Retail: true
-
+## X-Compatible-With: retail
 
 Drinks.lua
 main.lua
