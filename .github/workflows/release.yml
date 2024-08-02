@@ -40,4 +40,4 @@ jobs:
       - name: Package and release
         uses: BigWigsMods/packager@v2
         with:
-          args: -a E6gLRRK1
+          args: -g retail -a E6gLRRK1
