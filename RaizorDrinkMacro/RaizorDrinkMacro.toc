@@ -9,4 +9,4 @@
 ## X-Compatible-With: retail
 
 Drinks.lua
-main.lua
+RaizorDrinkMacro.lua
