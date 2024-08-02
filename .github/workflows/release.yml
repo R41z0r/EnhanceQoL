@@ -26,13 +26,13 @@ jobs:
       - uses: actions/checkout@v2
 #      - name: verify required files recursively
 #        run: scripts/verify-dependencies.sh ClassicLootManager.toc
-      - name: Bigwigs packager
-        uses: BigWigsMods/packager@master
-        env:
-          WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
-          # GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: "-o -u -m .pkgmeta -S"
+      # - name: Bigwigs packager
+      #   uses: BigWigsMods/packager@master
+      #   env:
+      #     WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
+      #     # GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     args: "-o -u -m .pkgmeta -S"
       - name: Get name of zip file
         run: echo "artifact=`readlink -f .release/*.zip`" >> $GITHUB_ENV
       - name: Upload artifact to github

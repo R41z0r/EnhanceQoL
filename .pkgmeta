@@ -1,14 +1,19 @@
-package-as: Raizor
+package-as: Raizor2
+
+externals:
+  Raizor2/libs/LibDBIcon-1.0:
+    url: https://repos.wowace.com/wow/libdbicon-1-0/trunk
+    tag: latest
+  Raizor2/Libs/LibDataBroker-1.1: 
+    url: https://github.com/tekkub/libdatabroker-1-1
+    tag: latest
+  
+enable-nolib-creation: no
+
+ignore:
+  - scripts
+  - .vscode
 
 move-folders:
-  Raizor/Raizor: Raizor
-  Raizor/RaizorDrinkMakro: RaizorDrinkMacro
-
-embedded-libraries:
-  - LibDataBroker-1.1
-  - LibDBIcon-1.0
-  
-enable-nolib-creation: yes
-
-game-versions:
-  - retail
+  Raizor2/Raizor: Raizor
+  Raizor2/RaizorDrinkMakro: RaizorDrinkMacro
