@@ -1,7 +1,7 @@
 ## Interface: 110000, 110002
 ## Title: RaizorDrinkMacro
 ## Author: R41Z0R
-## Version: 1.0.0
+## Version: @project-version@
 ## Notes: DrinkMacro - Automatically picks the best drink in your bags and set a macro with that
 ## Dependencies: Raizor
 ## IconTexture: Interface\AddOns\Raizor\Icons\Icon.tga
