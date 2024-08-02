@@ -1,4 +1,8 @@
 package-as: Raizor
+
+move-folders:
+  RaizorDrinkMacro: RaizorDrinkMacro
+
 embedded-libraries:
   - LibDataBroker-1.1
   - LibDBIcon-1.0
