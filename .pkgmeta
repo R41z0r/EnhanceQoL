@@ -4,20 +4,6 @@ move-folders:
   Raizor/Raizor: Raizor
   Raizor/RaizorDrinkMakro: RaizorDrinkMacro
 
-ignore:
-  - .git/
-  - .github/
-  - .vscode/
-  - docs/
-  - tests/
-  - "*.md"
-  - "*.bak"
-  - "*.txt"
-  - "*.DS_Store"
-  - ".pkgmeta"
-  - CHANGELOG.md
-  - LICENCE
-
 embedded-libraries:
   - LibDataBroker-1.1
   - LibDBIcon-1.0
