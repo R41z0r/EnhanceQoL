@@ -1,0 +1,4 @@
+package-as: Raizor
+embedded-libraries:
+  - LibDataBroker-1.1
+  - LibDBIcon-1.0
