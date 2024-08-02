@@ -1,10 +1,10 @@
 package-as: Raizor2
 
 externals:
-  Raizor2/libs/LibDBIcon-1.0:
+  Raizor/libs/LibDBIcon-1.0:
     url: https://repos.wowace.com/wow/libdbicon-1-0/trunk
     tag: latest
-  Raizor2/Libs/LibDataBroker-1.1: 
+  Raizor/libs/LibDataBroker-1.1: 
     url: https://github.com/tekkub/libdatabroker-1-1
     tag: latest
   
