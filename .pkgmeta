@@ -1,6 +1,7 @@
 package-as: Raizor
 
 move-folders:
+  Raizor/Raizor: Raizor
   Raizor/RaizorDrinkMakro: RaizorDrinkMacro
 
 ignore:
