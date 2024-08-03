@@ -43,7 +43,7 @@ local function addDrinks()
     EditMacro(drinkMacroName, drinkMacroName, nil, buildMacroString(foundItem))
 end
 
-function addon.updateAvailableDrinks(ignoreCombat)
+function addon.functions.updateAvailableDrinks(ignoreCombat)
     if (UnitAffectingCombat("Player") and ignoreCombat == false) or unitHasMana() == false then --on Combat do nothing, when no manaclass do nothing
         return
     end
@@ -70,4 +70,4 @@ cbPreferMage:SetChecked(addon.db["preferMageFood"])
 local _, _, _, _, headerY2 = cbPreferMage:GetPoint()
 addon.functions.createSlider("minManaFoodValue",addon.frame, L["Minimum mana restore for food"], 15, (headerY2 - cbPreferMage:GetHeight() - 20), initialValue)
 
-addon.updateAllowedDrinks()
+addon.functions.updateAllowedDrinks()

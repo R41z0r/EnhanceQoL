@@ -3,7 +3,7 @@
 ## Notes: A simple addon to show item info
 ## Author: R41Z0R
 ## Version: @project-version@
-## Dependencies: Raizor
+## Dependencies: RaizorDrinkMacro
 ## IconTexture: Interface\AddOns\Raizor\Icons\Icon.tga
 
 RaizorQuery.lua

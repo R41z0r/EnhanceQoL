@@ -99,11 +99,11 @@ function loadMain()
         for key, value in pairs(addon.saveVariables) do
             RaizorDB[key] = value
         end
-
-        if type(addon.updateAvailableDrinks) == "function" then
+        
+        if type(addon.functions.updateAvailableDrinks) == "function" then
             --Update allowed drinks because of changed mana value
-            addon.updateAllowedDrinks()
-            addon.updateAvailableDrinks()
+            addon.functions.updateAllowedDrinks()
+            addon.functions.updateAvailableDrinks()
         end
 
         self:GetParent():Hide()
@@ -211,18 +211,18 @@ local function eventHandler(self, event, arg1)
         end
         loadMain()
         RAIZ.PersistSignUpNote()
-    elseif type(addon.updateAvailableDrinks) == "function" then
+    elseif type(addon.functions.updateAvailableDrinks) == "function" then
         -- functions for DrinkMacro
         if event == "BAG_UPDATE_DELAYED" then
-            addon.updateAvailableDrinks(false)
+            addon.functions.updateAvailableDrinks(false)
         elseif event == "PLAYER_LOGIN" or event == "PLAYER_REGEN_ENABLED" then
             --on login always load the macro
             --on PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
-            addon.updateAvailableDrinks(true)
+            addon.functions.updateAvailableDrinks(true)
         elseif event == "PLAYER_LEVEL_UP" then
             --on level up, reload the complete list of allowed drinks
-            addon.updateAllowedDrinks()
-            addon.updateAvailableDrinks(true)
+            addon.functions.updateAllowedDrinks()
+            addon.functions.updateAvailableDrinks(true)
         end
     end
 end

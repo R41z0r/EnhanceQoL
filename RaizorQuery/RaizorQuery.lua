@@ -1,3 +1,12 @@
+local parentAddonName = "Raizor"
+local addonName, addon = ...
+
+if _G[parentAddonName] then
+    addon = _G[parentAddonName]
+else
+    error(parentAddonName .. " is not loaded")
+end
+
 local frame = CreateFrame("Frame", "RaizorQueryFrame", UIParent, "BasicFrameTemplateWithInset")
 local reSearchList = {}
 local resultsAHSearch = {}
@@ -135,6 +144,7 @@ local function onAddonLoaded(event, addonName)
 end
 
 local function onItemPush(...)
+    if nil == ... then return end;
     local itemLink = GetContainerItemLink(...)
     if itemLink then
         handleItemLink(itemLink)
@@ -166,6 +176,9 @@ end
 local function onEvent(self, event, ...)
     if event == "ADDON_LOADED" then
         onAddonLoaded(event, ...)
+        for _, drink in ipairs(addon.Drinks.drinkList) do
+            addedItems["" .. drink.id] = true
+        end
     elseif event == "ITEM_PUSH" then
         onItemPush(...)
     elseif event == "GET_ITEM_INFO_RECEIVED" then
