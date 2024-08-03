@@ -42,6 +42,7 @@ globals = {
 	"header",
 	"RaizorDB",
 	"cbPreferMage",
+	"cbBuffFood",
 	"headerY",
 	"headerY2",
 	"result",

@@ -253,7 +253,6 @@ function addon.functions.updateAllowedDrinks()
 
         if (drink.requiredLevel >= 0 and drink.requiredLevel <= playerLevel) and (drink.mana >= minManaValue) then
             if drink.isBuffFood and nil ~= addon.db["ignoreBuffFood"] and addon.db["ignoreBuffFood"] == true then 
-                print("Ignore bufffood", drink.key)
                 --do nothing because there is not "continue"
             else
                 if drink.isMageFood and nil ~= addon.db["preferMageFood"] and addon.db["preferMageFood"] == true then
