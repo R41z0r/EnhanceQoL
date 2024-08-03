@@ -10,6 +10,11 @@
 ## Retail: true
 ## X-Compatible-With: retail
 
+Init.lua
+locales.xml
+
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+Bindings\Slider.xml
+General\functions.lua
 Raizor.lua

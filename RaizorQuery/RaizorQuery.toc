@@ -1,0 +1,10 @@
+## Interface: 11000
+## Title: Raizor Query
+## Notes: A simple addon to show item info
+## Author: R41Z0R
+## Version: @project-version@
+## Dependencies: Raizor
+## IconTexture: Interface\AddOns\Raizor\Icons\Icon.tga
+
+RaizorQuery.lua
+RaizorQuery.xml

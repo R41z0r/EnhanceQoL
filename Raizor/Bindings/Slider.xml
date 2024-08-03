@@ -1,0 +1,19 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+    <Frame name="RaizorSliderFrameTemplate" virtual="true">
+        <Size>
+            <AbsDimension x="300" y="200"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>
+                self:SetMovable(true);
+                self:EnableMouse(true);
+                self:RegisterForDrag("LeftButton");
+                self:SetScript("OnDragStart", self.StartMoving);
+                self:SetScript("OnDragStop", self.StopMovingOrSizing);
+            </OnLoad>
+        </Scripts>
+    </Frame>
+</Ui>

@@ -1,6 +1,5 @@
 local addonName, addon = ...
-_G[addonName] = addon
-
+local L = addon.L
 -- Bibliotheken laden
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LibStub("LibDBIcon-1.0")
@@ -77,37 +76,36 @@ function loadMain()
     frame.title = frame:CreateFontString(nil, "OVERLAY")
     frame.title:SetFontObject("GameFontHighlight")
     frame.title:SetPoint("CENTER", frame.TitleBg, "CENTER", 0, 0)
-    frame.title:SetText("Raizor Checkboxes")
+    frame.title:SetText(addonName)
 
-    -- Checkboxen erstellen
-    local function createCheckbox(name, parent, label, x, y)
-        local checkbox = CreateFrame("CheckButton", name, parent, "ChatConfigCheckButtonTemplate")
-        checkbox:SetPoint("TOPLEFT", x, y)
-        getglobal(checkbox:GetName() .. 'Text'):SetText(label)
-        return checkbox
-    end
 
     -- Schleife zur Erzeugung der Checkboxen
-    local checkboxes = {}
-    local checkbox = createCheckbox("skipSignUpDialog", frame, "Quick signup", 10, -30)
+    addon.frame = frame
+    addon.checkboxes = {}
+    addon.db = RaizorDB
+    local checkbox = addon.functions.createCheckbox("skipSignUpDialog", frame, L["Quick signup"], 10, (-30*#addon.checkboxes-30))
     checkbox:SetChecked(RaizorDB["skipSignUpDialog"])
-    -- checkbox:SetScript("OnClick", function(self)
-    --     RaizorDB.skipSignUpDialog = self:GetChecked()
-    -- end)
-    table.insert(checkboxes, checkbox)
 
-    local checkbox2 = createCheckbox("persistSignUpNote", frame, "Persist LFG signup note", 10, -60)
+    local checkbox2 = addon.functions.createCheckbox("persistSignUpNote", frame, L["Persist LFG signup note"], 10, (-30*#addon.checkboxes-30))
     checkbox2:SetChecked(RaizorDB["persistSignUpNote"])
-    -- checkbox2:SetScript("OnClick", function(self)
-    --     RaizorDB.persistSignUpNote = self:GetChecked()
-    -- end)
-    table.insert(checkboxes, checkbox2)
 
     -- Funktion zum Abrufen der Checkbox-Werte
     local function getCheckboxValues(self)
-        for i, checkbox in ipairs(checkboxes) do
+        local oldKey = {}
+        for i, checkbox in ipairs(addon.checkboxes) do
             RaizorDB[checkbox:GetName()] = checkbox:GetChecked()
         end
+
+        for key, value in pairs(addon.saveVariables) do
+            RaizorDB[key] = value
+        end
+
+        if type(addon.updateAvailableDrinks) == "function" then
+            --Update allowed drinks because of changed mana value
+            addon.updateAllowedDrinks()
+            addon.updateAvailableDrinks()
+        end
+
         self:GetParent():Hide()
     end
 

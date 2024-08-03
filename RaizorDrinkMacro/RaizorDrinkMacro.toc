@@ -8,5 +8,8 @@
 ## Retail: true
 ## X-Compatible-With: retail
 
+Init.lua
+locales.xml
+
 Drinks.lua
 RaizorDrinkMacro.lua
