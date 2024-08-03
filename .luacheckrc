@@ -43,6 +43,7 @@ globals = {
 	"RaizorDB",
 	"cbPreferMage",
 	"headerY",
+	"headerY2",
 	"result",
 	"browseResults",
 	"C_AuctionHouse",

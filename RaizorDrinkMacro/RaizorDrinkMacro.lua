@@ -67,7 +67,7 @@ end
 cbPreferMage = addon.functions.createCheckbox("preferMageFood", addon.frame, L["Prefer mage food"], 10, (headerY - header:GetHeight() - 10))
 cbPreferMage:SetChecked(addon.db["preferMageFood"])
 
-local _, _, _, _, headerY = cbPreferMage:GetPoint()
-addon.functions.createSlider("minManaFoodValue",addon.frame, L["Minimum mana restore for food"], 15, (headerY - cbPreferMage:GetHeight() - 20), initialValue)
+local _, _, _, _, headerY2 = cbPreferMage:GetPoint()
+addon.functions.createSlider("minManaFoodValue",addon.frame, L["Minimum mana restore for food"], 15, (headerY2 - cbPreferMage:GetHeight() - 20), initialValue)
 
 addon.updateAllowedDrinks()
