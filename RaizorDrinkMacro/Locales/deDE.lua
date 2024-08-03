@@ -12,3 +12,4 @@ local L = addon.LDrinkMacro
 
 L["Prefer mage food"] = "Magier-Essen bevorzugen"
 L["Minimum mana restore for food"] = "Mindest Manawiederherstellung des Essens"
+L["Ignore bufffood"] = "Ignore Essen mit \"Gesättigt\" Effekt"

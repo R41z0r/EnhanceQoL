@@ -11,6 +11,8 @@ local frame = CreateFrame("Frame", "RaizorQueryFrame", UIParent, "BasicFrameTemp
 local reSearchList = {}
 local resultsAHSearch = {}
 
+local executeSearch = false
+
 frame:SetSize(400, 300)
 frame:SetPoint("CENTER")
 frame:SetMovable(true)
@@ -77,6 +79,24 @@ local function extractManaFromTooltip(itemLink)
     return mana
 end
 
+local function extractWellFedFromTooltip(itemLink)
+    local tooltip = CreateFrame("GameTooltip", "RaizorQueryTooltip", UIParent, "GameTooltipTemplate")
+    tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    tooltip:SetHyperlink(itemLink)
+    local buffFood = "false"
+
+    for i = 1, tooltip:NumLines() do
+        local text = _G["RaizorQueryTooltipTextLeft" .. i]:GetText()
+        if text and text:match("well fed") then
+            buffFood = "true"
+            break
+        end
+    end
+
+    tooltip:Hide()
+    return buffFood
+end
+
 local function updateItemInfo(itemLink)
     if not itemLink then
         return
@@ -84,21 +104,33 @@ local function updateItemInfo(itemLink)
     local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = GetItemInfo(itemLink)
     local mana = extractManaFromTooltip(itemLink)
     if name and type and subType and minLevel and mana > 0 then
+        local buffFood = extractWellFedFromTooltip(itemLink)
         local formattedKey = name:gsub("%s+", "")
-        return string.format("{ key = \"%s\", id = %d, desc = \"%s\", requiredLevel = %d, mana = %d }\n", formattedKey,
-            itemLink:match("item:(%d+)"), name, minLevel, mana)
+        return string.format("{ key = \"%s\", id = %d, desc = \"%s\", requiredLevel = %d, mana = %d, isBuffFood = " ..
+                                 buffFood .. " }", formattedKey, itemLink:match("item:(%d+)"), name, minLevel, mana)
     end
     return nil
 end
+
+local loadedResults = {}
 
 frame.editEditBox:SetScript("OnTextChanged", function(self)
     local itemLinks = {strsplit(" ", self:GetText())}
     local results = {}
 
     for _, itemLink in ipairs(itemLinks) do
-        local result = updateItemInfo(itemLink)
-        if result then
-            table.insert(results, result)
+        local itemID = itemLink:match("item:(%d+)")
+        if nil ~= itemID then
+            local result = nil
+            if nil == loadedResults[itemID] then
+                result = updateItemInfo(itemLink)
+                loadedResults[itemID] = result
+            else
+                result = loadedResults[itemID]
+            end
+            if result then
+                table.insert(results, result)
+            end
         end
     end
 
@@ -108,11 +140,16 @@ end)
 local function addToSearchResult(itemID)
     local name, link, quality, level, minLevel, type, subType = GetItemInfo(itemID)
     local mana = extractManaFromTooltip(link)
-    if name and type and subType and minLevel and mana > 0 then
-        local formattedKey = name:gsub("%s+", "")
-        result = string.format("{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d }",
-            formattedKey, itemID, minLevel, mana)
-        table.insert(resultsAHSearch, result)
+    if name and type and subType and minLevel and mana > 0 and type == Enum.ItemClass.Consumable and subType ==
+        Enum.ItemConsumableSubclass.Fooddrink then
+        if not addedItems["" .. itemID] then
+            local buffFood = extractWellFedFromTooltip(link)
+            local formattedKey = name:gsub("%s+", "")
+            result = string.format(
+                "{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " .. buffFood .. " }",
+                formattedKey, itemID, minLevel, mana)
+            table.insert(resultsAHSearch, result)
+        end
     end
     frame.outputEditBox:SetText(table.concat(resultsAHSearch, ",\n        "))
 end
@@ -144,7 +181,9 @@ local function onAddonLoaded(event, addonName)
 end
 
 local function onItemPush(...)
-    if nil == ... then return end;
+    if nil == ... then
+        return
+    end
     local itemLink = GetContainerItemLink(...)
     if itemLink then
         handleItemLink(itemLink)
@@ -152,15 +191,17 @@ local function onItemPush(...)
 end
 
 local function onAuctionHouseEvent(self, event, ...)
-    if event == "AUCTION_HOUSE_BROWSE_RESULTS_UPDATED" then
-        browseResults = C_AuctionHouse.GetBrowseResults()
-        print(#browseResults)
-        for i = 1, #browseResults do
-            _, link = GetItemInfo(browseResults[i].itemKey.itemID)
-            if nil == link then
-                reSearchList[browseResults[i].itemKey.itemID] = true
-            else
-                addToSearchResult(browseResults[i].itemKey.itemID)
+    if executeSearch then
+        if event == "AUCTION_HOUSE_BROWSE_RESULTS_UPDATED" then
+            browseResults = C_AuctionHouse.GetBrowseResults()
+            print(#browseResults)
+            for i = 1, #browseResults do
+                _, link = GetItemInfo(browseResults[i].itemKey.itemID)
+                if nil == link then
+                    reSearchList[browseResults[i].itemKey.itemID] = true
+                else
+                    addToSearchResult(browseResults[i].itemKey.itemID)
+                end
             end
         end
     end
@@ -223,6 +264,7 @@ scanButton:SetPoint("BOTTOM", frame, "BOTTOM", 0, 40)
 scanButton:SetSize(100, 25)
 scanButton:SetText("Scan AH")
 scanButton:SetScript("OnClick", function()
+    executeSearch = true
     if AuctionHouseFrame and AuctionHouseFrame:IsShown() then
         -- Search for consumables in the Food & Drink category
         local query = {
@@ -230,7 +272,7 @@ scanButton:SetScript("OnClick", function()
             sorts = { -- {sortOrder = Enum.AuctionHouseSortOrder.Price, reverseSort = false},
             {
                 sortOrder = Enum.AuctionHouseSortOrder.Name,
-                reverseSort = false
+                reverseSort = true
             }},
             filters = {Enum.AuctionHouseFilter.Potions},
             itemClassFilters = {{

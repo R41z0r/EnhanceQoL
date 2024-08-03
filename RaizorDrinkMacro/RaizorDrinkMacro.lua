@@ -63,11 +63,19 @@ end
 if nil == addon.db["preferMageFood"] then
     addon.db["preferMageFood"] = true
 end
+if nil == addon.db["ignoreBuffFood"] then
+    addon.db["ignoreBuffFood"] = true
+end
 
 cbPreferMage = addon.functions.createCheckbox("preferMageFood", addon.frame, L["Prefer mage food"], 10, (headerY - header:GetHeight() - 10))
 cbPreferMage:SetChecked(addon.db["preferMageFood"])
 
-local _, _, _, _, headerY2 = cbPreferMage:GetPoint()
-addon.functions.createSlider("minManaFoodValue",addon.frame, L["Minimum mana restore for food"], 15, (headerY2 - cbPreferMage:GetHeight() - 20), initialValue)
+_, _, _, _, headerY = cbPreferMage:GetPoint()
+
+cbBuffFood = addon.functions.createCheckbox("ignoreBuffFood", addon.frame, L["Ignore bufffood"], 10, (headerY - cbPreferMage:GetHeight()))
+cbBuffFood:SetChecked(addon.db["ignoreBuffFood"])
+
+_, _, _, _, headerY = cbBuffFood:GetPoint()
+addon.functions.createSlider("minManaFoodValue",addon.frame, L["Minimum mana restore for food"], 15, (headerY - cbBuffFood:GetHeight() - 20), initialValue)
 
 addon.functions.updateAllowedDrinks()

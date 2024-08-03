@@ -99,7 +99,7 @@ function loadMain()
         for key, value in pairs(addon.saveVariables) do
             RaizorDB[key] = value
         end
-        
+
         if type(addon.functions.updateAvailableDrinks) == "function" then
             --Update allowed drinks because of changed mana value
             addon.functions.updateAllowedDrinks()
