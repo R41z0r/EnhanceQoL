@@ -47,7 +47,7 @@ function addon.updateAllowedDrinks()
 
     addon.Drinks.drinkList = {
         --Dragonflight
-        { key = "ConjuredManaBun", id = 113509, requiredLevel = 40, mana = mana, isMageFood = true }, 
+        { key = "ConjuredManaBun", id = 113509, requiredLevel = 40, mana = mana, isMageFood = true },
         { key = "GorlocFinSoup", id = 197847, requiredLevel = 70, mana = 240000 },
 
         --Raizor Query
@@ -221,9 +221,9 @@ function addon.updateAllowedDrinks()
     for _, drink in ipairs(addon.Drinks.drinkList) do
         if (drink.requiredLevel >= 0 and drink.requiredLevel <= playerLevel) and (drink.mana >= minManaValue) then
             if drink.isMageFood and nil ~= addon.db["preferMageFood"] and addon.db["preferMageFood"] == true then
-                table.insert(addon.Drinks.filteredDrinks, 1, newItem(drink.id, drink.desc)) 
+                table.insert(addon.Drinks.filteredDrinks, 1, newItem(drink.id, drink.desc))
             else
-                table.insert(addon.Drinks.filteredDrinks, newItem(drink.id, drink.desc)) 
+                table.insert(addon.Drinks.filteredDrinks, newItem(drink.id, drink.desc))
             end
         end
     end
