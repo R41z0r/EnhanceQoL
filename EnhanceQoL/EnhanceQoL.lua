@@ -215,9 +215,12 @@ local function eventHandler(self, event, arg1)
         -- functions for DrinkMacro
         if event == "BAG_UPDATE_DELAYED" then
             addon.functions.updateAvailableDrinks(false)
-        elseif event == "PLAYER_LOGIN" or event == "PLAYER_REGEN_ENABLED" then
+        elseif event == "PLAYER_LOGIN" then
             --on login always load the macro
-            --on PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
+            addon.functions.updateAllowedDrinks()
+            addon.functions.updateAvailableDrinks(true)
+        elseif event == "PLAYER_REGEN_ENABLED" then
+            --PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
             addon.functions.updateAvailableDrinks(true)
         elseif event == "PLAYER_LEVEL_UP" then
             --on level up, reload the complete list of allowed drinks

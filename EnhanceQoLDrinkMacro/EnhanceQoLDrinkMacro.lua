@@ -3,7 +3,6 @@ local addonName, addon = ...
 local drinkMacroName = "EnhanceQoLDrinkMacro"
 
 if _G[parentAddonName] then
-    print("Parent", _G[parentAddonName])
     addon = _G[parentAddonName]
 else
     error(parentAddonName .. " is not loaded")
