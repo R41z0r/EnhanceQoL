@@ -1,10 +1,10 @@
 ## Interface: 110000, 110002
-## Title: RaizorDrinkMacro
+## Title: Enhance QoL DrinkMacro
 ## Author: R41Z0R
 ## Version: @project-version@
 ## Notes: DrinkMacro - Automatically picks the best drink in your bags and set a macro with that
-## Dependencies: Raizor
-## IconTexture: Interface\AddOns\Raizor\Icons\Icon.tga
+## Dependencies: EnhanceQoL
+## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail
 
@@ -12,4 +12,4 @@ Init.lua
 locales.xml
 
 Drinks.lua
-RaizorDrinkMacro.lua
+EnhanceQoLDrinkMacro.lua

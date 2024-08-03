@@ -37,10 +37,10 @@ globals = {
 	"OmniCC",
 	"ElvUI",
 
-	-- Raizor
+	-- EnhanceQoL
 	"addon",
 	"header",
-	"RaizorDB",
+	"EnhanceQoLDB",
 	"cbPreferMage",
 	"cbBuffFood",
 	"headerY",

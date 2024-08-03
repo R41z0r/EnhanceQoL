@@ -6,8 +6,8 @@ local LDBIcon = LibStub("LibDBIcon-1.0")
 
 local LFGListFrame = _G.LFGListFrame
 
-local RAIZ = select(2, ...)
-RAIZ.C = {}
+local EQOL = select(2, ...)
+EQOL.C = {}
 
 hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
     local panel = LFGListFrame.SearchPanel
@@ -20,7 +20,7 @@ hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
 end)
 
 LFGListApplicationDialog:HookScript("OnShow", function(self)
-    if not RaizorDB.skipSignUpDialog then
+    if not EnhanceQoLDB.skipSignUpDialog then
         return
     end
 
@@ -42,8 +42,8 @@ local patchedFunc = function(self, resultID)
     StaticPopupSpecial_Show(self);
 end
 
-function RAIZ.PersistSignUpNote()
-    if RaizorDB.persistSignUpNote then
+function EQOL.PersistSignUpNote()
+    if EnhanceQoLDB.persistSignUpNote then
         -- overwrite function with patched func missing the call to ClearApplicationTextFields
         LFGListApplicationDialog_Show = patchedFunc
         didApplyPatch = true
@@ -66,9 +66,9 @@ function loadMain()
         self:StopMovingOrSizing()
         -- Position speichern
         local point, _, _, xOfs, yOfs = self:GetPoint()
-        RaizorDB.point = point
-        RaizorDB.x = xOfs
-        RaizorDB.y = yOfs
+        EnhanceQoLDB.point = point
+        EnhanceQoLDB.x = xOfs
+        EnhanceQoLDB.y = yOfs
     end)
     frame:Hide() -- Das Frame wird initial versteckt
 
@@ -82,22 +82,22 @@ function loadMain()
     -- Schleife zur Erzeugung der Checkboxen
     addon.frame = frame
     addon.checkboxes = {}
-    addon.db = RaizorDB
+    addon.db = EnhanceQoLDB
     local checkbox = addon.functions.createCheckbox("skipSignUpDialog", frame, L["Quick signup"], 10, (-30*#addon.checkboxes-30))
-    checkbox:SetChecked(RaizorDB["skipSignUpDialog"])
+    checkbox:SetChecked(EnhanceQoLDB["skipSignUpDialog"])
 
     local checkbox2 = addon.functions.createCheckbox("persistSignUpNote", frame, L["Persist LFG signup note"], 10, (-30*#addon.checkboxes-30))
-    checkbox2:SetChecked(RaizorDB["persistSignUpNote"])
+    checkbox2:SetChecked(EnhanceQoLDB["persistSignUpNote"])
 
     -- Funktion zum Abrufen der Checkbox-Werte
     local function getCheckboxValues(self)
         local oldKey = {}
         for i, checkbox in ipairs(addon.checkboxes) do
-            RaizorDB[checkbox:GetName()] = checkbox:GetChecked()
+            EnhanceQoLDB[checkbox:GetName()] = checkbox:GetChecked()
         end
 
         for key, value in pairs(addon.saveVariables) do
-            RaizorDB[key] = value
+            EnhanceQoLDB[key] = value
         end
 
         if type(addon.functions.updateAvailableDrinks) == "function" then
@@ -119,17 +119,17 @@ function loadMain()
     button:SetScript("OnClick", getCheckboxValues)
 
     -- Slash-Command hinzufügen
-    SLASH_RAIZOR1 = "/raizor"
-    SLASH_RAIZOR2 = "/raizor resetframe"
-    SlashCmdList["RAIZOR"] = function(msg)
+    SLASH_ENHANCEQOL1 = "/eqol"
+    SLASH_ENHANCEQOL2 = "/eqol resetframe"
+    SlashCmdList["ENHANCEQOL"] = function(msg)
         if msg == "resetframe" then
             -- Frame zurücksetzen
             frame:ClearAllPoints()
             frame:SetPoint("CENTER", UIParent, "CENTER")
-            RaizorDB.point = "CENTER"
-            RaizorDB.x = 0
-            RaizorDB.y = 0
-            print("Raizor frame has been reset to the center.")
+            EnhanceQoLDB.point = "CENTER"
+            EnhanceQoLDB.x = 0
+            EnhanceQoLDB.y = 0
+            print(addonName .. " frame has been reset to the center.")
         else
             if frame:IsShown() then
                 frame:Hide()
@@ -140,9 +140,9 @@ function loadMain()
     end
 
     -- Datenobjekt für den Minimap-Button
-    local RaizorLDB = LDB:NewDataObject("Raizor", {
+    local EnhanceQoLLDB = LDB:NewDataObject("EnhanceQoL", {
         type = "launcher",
-        text = "Raizor",
+        text = addonName,
         icon = "Interface\\AddOns\\" .. addonName .. "\\Icons\\Icon.tga", -- Hier kannst du dein eigenes Icon verwenden
         OnClick = function(_, msg)
             if msg == "LeftButton" then
@@ -154,17 +154,17 @@ function loadMain()
             end
         end,
         OnTooltipShow = function(tt)
-            tt:AddLine("Raizor")
+            tt:AddLine(addonName)
             tt:AddLine("Left-Click to open the addon")
         end
     })
 
     -- Einstellungen für den Minimap-Button
-    LDBIcon:Register("Raizor", RaizorLDB, RaizorDB)
+    LDBIcon:Register(addonName, EnhanceQoLLDB, EnhanceQoLDB)
 
     -- Frame für die Optionen
-    local configFrame = CreateFrame("Frame", "RaizorConfigFrame", InterfaceOptionsFramePanelContainer)
-    configFrame.name = "Raizor"
+    local configFrame = CreateFrame("Frame", addonName .. "ConfigFrame", InterfaceOptionsFramePanelContainer)
+    configFrame.name = addonName
 
     -- Button für die Optionen
     local configButton = CreateFrame("Button", nil, configFrame, "UIPanelButtonTemplate")
@@ -187,9 +187,9 @@ function loadMain()
 
     -- Frame-Position wiederherstellen
     local function RestorePosition()
-        if RaizorDB.point and RaizorDB.x and RaizorDB.y then
+        if EnhanceQoLDB.point and EnhanceQoLDB.x and EnhanceQoLDB.y then
             frame:ClearAllPoints()
-            frame:SetPoint(RaizorDB.point, UIParent, RaizorDB.point, RaizorDB.x, RaizorDB.y)
+            frame:SetPoint(EnhanceQoLDB.point, UIParent, EnhanceQoLDB.point, EnhanceQoLDB.x, EnhanceQoLDB.y)
         end
     end
 
@@ -204,13 +204,13 @@ local frameLoad = CreateFrame("Frame")
 
 -- Funktion zum Umgang mit Events
 local function eventHandler(self, event, arg1)
-    if event == "ADDON_LOADED" and arg1 == "Raizor" then
+    if event == "ADDON_LOADED" and arg1 == addonName then
         -- Dein Code zur Initialisierung der Datenbank
-        if not RaizorDB then
-            RaizorDB = {}
+        if not EnhanceQoLDB then
+            EnhanceQoLDB = {}
         end
         loadMain()
-        RAIZ.PersistSignUpNote()
+        EQOL.PersistSignUpNote()
     elseif type(addon.functions.updateAvailableDrinks) == "function" then
         -- functions for DrinkMacro
         if event == "BAG_UPDATE_DELAYED" then

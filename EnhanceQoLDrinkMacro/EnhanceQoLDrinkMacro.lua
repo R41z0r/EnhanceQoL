@@ -1,8 +1,9 @@
-local parentAddonName = "Raizor"
+local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
-local drinkMacroName = "RaizorDrinkMacro"
+local drinkMacroName = "EnhanceQoLDrinkMacro"
 
 if _G[parentAddonName] then
+    print("Parent", _G[parentAddonName])
     addon = _G[parentAddonName]
 else
     error(parentAddonName .. " is not loaded")
@@ -44,16 +45,13 @@ local function addDrinks()
 end
 
 function addon.functions.updateAvailableDrinks(ignoreCombat)
-    if (UnitAffectingCombat("Player") and ignoreCombat == false) or unitHasMana() == false then --on Combat do nothing, when no manaclass do nothing
+    if (UnitAffectingCombat("Player") and ignoreCombat == false) or unitHasMana() == false then -- on Combat do nothing, when no manaclass do nothing
         return
     end
     createMacroIfMissing()
     addDrinks()
 end
 
---Extend the option menu
-header = addon.functions.createHeader(addon.frame, addonName, 0,(-30*#addon.checkboxes-50))
-local _, _, _, _, headerY = header:GetPoint()
 local initialValue = 50
 if addon.db["minManaFoodValue"] then
     initialValue = addon.db["minManaFoodValue"]
@@ -67,15 +65,22 @@ if nil == addon.db["ignoreBuffFood"] then
     addon.db["ignoreBuffFood"] = true
 end
 
-cbPreferMage = addon.functions.createCheckbox("preferMageFood", addon.frame, L["Prefer mage food"], 10, (headerY - header:GetHeight() - 10))
+-- Extend the option menu
+header = addon.functions.createHeader(addon.frame, addonName, 0, (-30 * #addon.checkboxes - 50))
+local _, _, _, _, headerY = header:GetPoint()
+
+cbPreferMage = addon.functions.createCheckbox("preferMageFood", addon.frame, L["Prefer mage food"], 10,
+    (headerY - header:GetHeight() - 10))
 cbPreferMage:SetChecked(addon.db["preferMageFood"])
 
 _, _, _, _, headerY = cbPreferMage:GetPoint()
 
-cbBuffFood = addon.functions.createCheckbox("ignoreBuffFood", addon.frame, L["Ignore bufffood"], 10, (headerY - cbPreferMage:GetHeight()))
+cbBuffFood = addon.functions.createCheckbox("ignoreBuffFood", addon.frame, L["Ignore bufffood"], 10,
+    (headerY - cbPreferMage:GetHeight()))
 cbBuffFood:SetChecked(addon.db["ignoreBuffFood"])
 
 _, _, _, _, headerY = cbBuffFood:GetPoint()
-addon.functions.createSlider("minManaFoodValue",addon.frame, L["Minimum mana restore for food"], 15, (headerY - cbBuffFood:GetHeight() - 20), initialValue)
+addon.functions.createSlider("minManaFoodValue", addon.frame, L["Minimum mana restore for food"], 15,
+    (headerY - cbBuffFood:GetHeight() - 20), initialValue)
 
 addon.functions.updateAllowedDrinks()

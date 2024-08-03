@@ -1,0 +1,10 @@
+## Interface: 11000
+## Title: Enhance QoL Query
+## Notes: A simple addon to show item info
+## Author: R41Z0R
+## Version: @project-version@
+## Dependencies: EnhanceQoLDrinkMacro
+## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+
+EnhanceQoLQuery.lua
+EnhanceQoLQuery.xml

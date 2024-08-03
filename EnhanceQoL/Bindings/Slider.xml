@@ -1,5 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-    <Frame name="RaizorSliderFrameTemplate" virtual="true">
+    <Frame name="EnhanceQoLSliderFrameTemplate" virtual="true">
         <Size>
             <AbsDimension x="300" y="200"/>
         </Size>

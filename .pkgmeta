@@ -1,10 +1,10 @@
-package-as: Raizor
+package-as: EnhanceQoL
 
 externals:
-  Raizor/libs/LibDBIcon-1.0:
+  EnhanceQoL/libs/LibDBIcon-1.0:
     url: https://repos.wowace.com/wow/libdbicon-1-0/trunk
     tag: latest
-  Raizor/libs/LibDataBroker-1.1: 
+  EnhanceQoL/libs/LibDataBroker-1.1: 
     url: https://github.com/tekkub/libdatabroker-1-1
     tag: latest
 
@@ -22,5 +22,5 @@ manual-changelog:
   markup-type: markdown
 
 move-folders:
-  Raizor/Raizor: Raizor
-  Raizor/RaizorDrinkMacro: RaizorDrinkMacro
+  EnhanceQoL/EnhanceQoL: EnhanceQoL
+  EnhanceQoL/EnhanceQoLDrinkMacro: EnhanceQoLDrinkMacro

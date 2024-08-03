@@ -1,4 +1,4 @@
-local parentAddonName = "Raizor"
+local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 
 if _G[parentAddonName] then
@@ -7,7 +7,7 @@ else
     error(parentAddonName .. " is not loaded")
 end
 
-local frame = CreateFrame("Frame", "RaizorQueryFrame", UIParent, "BasicFrameTemplateWithInset")
+local frame = CreateFrame("Frame", "EnhanceQoLQueryFrame", UIParent, "BasicFrameTemplateWithInset")
 local reSearchList = {}
 local resultsAHSearch = {}
 
@@ -25,7 +25,7 @@ frame:Hide() -- Initially hide the frame
 frame.title = frame:CreateFontString(nil, "OVERLAY")
 frame.title:SetFontObject("GameFontHighlight")
 frame.title:SetPoint("LEFT", frame.TitleBg, "LEFT", 5, 0)
-frame.title:SetText("Raizor Query")
+frame.title:SetText(addonName)
 
 frame.editBox = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
 frame.editBox:SetSize(360, 40)
@@ -58,13 +58,13 @@ end)
 local addedItems = {}
 
 local function extractManaFromTooltip(itemLink)
-    local tooltip = CreateFrame("GameTooltip", "RaizorQueryTooltip", UIParent, "GameTooltipTemplate")
+    local tooltip = CreateFrame("GameTooltip", "EnhanceQoLQueryTooltip", UIParent, "GameTooltipTemplate")
     tooltip:SetOwner(UIParent, "ANCHOR_NONE")
     tooltip:SetHyperlink(itemLink)
     local mana = 0
 
     for i = 1, tooltip:NumLines() do
-        local text = _G["RaizorQueryTooltipTextLeft" .. i]:GetText()
+        local text = _G["EnhanceQoLQueryTooltipTextLeft" .. i]:GetText()
         if text and text:find("mana") then
             local manaValue = text:match("(%d[%d,%.]*) mana")
             if manaValue then
@@ -80,13 +80,13 @@ local function extractManaFromTooltip(itemLink)
 end
 
 local function extractWellFedFromTooltip(itemLink)
-    local tooltip = CreateFrame("GameTooltip", "RaizorQueryTooltip", UIParent, "GameTooltipTemplate")
+    local tooltip = CreateFrame("GameTooltip", "EnhanceQoLQueryTooltip", UIParent, "GameTooltipTemplate")
     tooltip:SetOwner(UIParent, "ANCHOR_NONE")
     tooltip:SetHyperlink(itemLink)
     local buffFood = "false"
 
     for i = 1, tooltip:NumLines() do
-        local text = _G["RaizorQueryTooltipTextLeft" .. i]:GetText()
+        local text = _G["EnhanceQoLQueryTooltipTextLeft" .. i]:GetText()
         if text and text:match("well fed") then
             buffFood = "true"
             break
@@ -172,9 +172,9 @@ local function handleItemLink(text)
 end
 
 local function onAddonLoaded(event, addonName)
-    if addonName == "RaizorQuery" then
-        SLASH_RAIZORQUERY1 = "/rq"
-        SlashCmdList["RAIZORQUERY"] = function(msg)
+    if addonName == "EnhanceQoLQuery" then
+        SLASH_EnhanceQoLQUERY1 = "/rq"
+        SlashCmdList["EnhanceQoLQUERY"] = function(msg)
             frame:Show()
         end
     end

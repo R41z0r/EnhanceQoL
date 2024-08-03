@@ -1,4 +1,4 @@
-local parentAddonName = "Raizor"
+local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 
 if _G[parentAddonName] then
@@ -15,7 +15,7 @@ addon.Drinks.drinkList = {
     { key = "Herb-InfusedStuffing", id = 116408, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true }, --Restores 100% mana und health
     { key = "GorlocFinSoup", id = 197847, requiredLevel = 70, mana = 240000 },
 
-    --Raizor Query
+    --EnhanceQoL Query
     { key = "AzureLeywine", id = 194684, requiredLevel = 65, mana = 375000, isBuffFood = false },
     { key = "BeetleJuice", id = 205794, requiredLevel = 65, mana = 375000, isBuffFood = false },
     { key = "DeepFriedSeraphTenders", id = 182737, requiredLevel = 55, mana = 120000, isBuffFood = false },

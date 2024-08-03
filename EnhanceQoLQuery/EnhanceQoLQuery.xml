@@ -2,7 +2,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
 
-    <Frame name="RaizorQueryFrame" hidden="true">
+    <Frame name="EnhanceQoLQueryFrame" hidden="true">
         <Scripts>
             <OnLoad>
                 self:RegisterForDrag("LeftButton")

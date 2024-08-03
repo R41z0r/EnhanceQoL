@@ -11,7 +11,7 @@ function addon.functions.createCheckbox(name, parent, label, x, y)
 end
 
 function addon.functions.createSlider(id, parent, label, x, y, initial)
-    local slider = CreateFrame("Slider", "RaizorSlider", parent, "OptionsSliderTemplate")
+    local slider = CreateFrame("Slider", "EnhanceQoLSlider", parent, "OptionsSliderTemplate")
     slider:SetOrientation('HORIZONTAL')
     slider:SetSize(200, 20)
     slider:SetMinMaxValues(0, 100)
