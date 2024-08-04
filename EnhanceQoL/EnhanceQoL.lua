@@ -110,7 +110,7 @@ function loadMain()
         local oldKey = {}
         for i, checkbox in ipairs(addon.checkboxes) do
             EnhanceQoLDB[checkbox:GetName()] = checkbox:GetChecked()
-            if(checkbox:GetName() == "hideMinimapButton") then 
+            if(checkbox:GetName() == "hideMinimapButton") then
                 addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
             end
         end
@@ -268,7 +268,7 @@ local function eventHandler(self, event, arg1)
         if not EnhanceQoLDB then
             EnhanceQoLDB = {}
         end
-        
+
         loadMain()
         EQOL.PersistSignUpNote()
     elseif type(addon.functions.updateAvailableDrinks) == "function" then
