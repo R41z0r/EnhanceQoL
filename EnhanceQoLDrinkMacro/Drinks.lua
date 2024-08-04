@@ -7,10 +7,18 @@ else
     error(parentAddonName .. " is not loaded")
 end
 
-
 addon.Drinks.drinkList = {
     --Special Food
     { key = "ConjuredManaBun", id = 113509, requiredLevel = 40, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaFritter", id = 80618, requiredLevel = 35, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaPudding", id = 80610, requiredLevel = 35, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaCake", id = 65499, requiredLevel = 32, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaStrudel", id = 43523, requiredLevel = 30, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaPie", id = 43518, requiredLevel = 28, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaLollipop", id = 65517, requiredLevel = 26, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaCupcake", id = 65516, requiredLevel = 23, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaBrownie", id = 65515, requiredLevel = 19, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
+    { key = "ConjuredManaCookie", id = 65500, requiredLevel = 14, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
     { key = "GourmetPumpkinPie", id = 116409, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true }, --Restores 100% mana und health
     { key = "Herb-InfusedStuffing", id = 116408, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true }, --Restores 100% mana und health
     { key = "Sugar-CrustedFishFeast", id = 126936, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true }, --Restores 100% mana und health

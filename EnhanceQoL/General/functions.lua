@@ -96,9 +96,11 @@ function addon.functions.createDropdown(id, frame, items, width, text, x, y, ini
     -- Initialisiere das Dropdown-Menü
     UIDropDownMenu_SetWidth(dropdown, 180)
     UIDropDownMenu_SetText(dropdown, addon.L["Select an option"])
-
+    dropdown:SetFrameStrata("DIALOG")
+    
     -- Funktion zum Erstellen der Menüeinträge
     local function OnClick(self)
+        print("Yo geht")
         UIDropDownMenu_SetSelectedID(dropdown, self:GetID())
         addon.saveVariables[id] = self.value
     end

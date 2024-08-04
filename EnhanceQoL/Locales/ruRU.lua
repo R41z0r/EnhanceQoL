@@ -1,0 +1,14 @@
+if (GAME_LOCALE or GetLocale()) ~= "ruRU" then
+    return
+  end
+
+local addonName, addon = ...
+
+local L = addon.L
+
+L["Quick signup"] = "Быстрая запись"
+L["Persist LFG signup note"] = "Сохранять заметку LFG"
+L["Select an option"] = "Выберите вариант"
+L["Save"] = "Сохранить"
+L["Hide Minimap Button"] = "Скрыть кнопку мини-карты"
+L["Left-Click to show options"] = "Щелкните левой кнопкой для показа опций"
