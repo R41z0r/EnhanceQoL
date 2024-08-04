@@ -86,6 +86,7 @@ function loadMain()
     frame.title:SetFontObject("GameFontHighlight")
     frame.title:SetPoint("CENTER", frame.TitleBg, "CENTER", 0, 0)
     frame.title:SetText(addonName)
+    frame:SetFrameStrata("TOOLTIP")
 
     -- Schleife zur Erzeugung der Checkboxen
     addon.frame = frame
