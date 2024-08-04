@@ -102,11 +102,17 @@ function loadMain()
     local checkbox2 = addon.functions.createCheckbox("persistSignUpNote", fTab, L["Persist LFG signup note"], 10,
         (addon.functions.getHeightOffset(checkbox)))
 
+    local checkbox3 = addon.functions.createCheckbox("hideMinimapButton", fTab, L["Hide Minimap Button"], 10,
+        (addon.functions.getHeightOffset(checkbox2)))
+
     -- Funktion zum Abrufen der Checkbox-Werte
     local function getCheckboxValues(self)
         local oldKey = {}
         for i, checkbox in ipairs(addon.checkboxes) do
             EnhanceQoLDB[checkbox:GetName()] = checkbox:GetChecked()
+            if(checkbox:GetName() == "hideMinimapButton") then 
+                addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
+            end
         end
 
         for key, value in pairs(addon.saveVariables) do
@@ -158,6 +164,7 @@ function loadMain()
         text = addonName,
         icon = "Interface\\AddOns\\" .. addonName .. "\\Icons\\Icon.tga", -- Hier kannst du dein eigenes Icon verwenden
         OnClick = function(_, msg)
+
             if msg == "LeftButton" then
                 if frame:IsShown() then
                     frame:Hide()
@@ -168,12 +175,51 @@ function loadMain()
         end,
         OnTooltipShow = function(tt)
             tt:AddLine(addonName)
-            tt:AddLine("Left-Click to open the addon")
+            tt:AddLine(L["Left-Click to show options"])
         end
     })
-
-    -- Einstellungen für den Minimap-Button
+    -- Toggle Minimap Button based on settings
     LDBIcon:Register(addonName, EnhanceQoLLDB, EnhanceQoLDB)
+
+    --Register to addon compartment
+    AddonCompartmentFrame:RegisterAddon({
+        text = "Enhance QoL",
+        icon = "Interface\\AddOns\\EnhanceQoL\\Icons\\Icon.tga",
+        notCheckable = true,
+        func = function(button, menuInputData, menu)
+            if frame:IsShown() then
+                frame:Hide()
+            else
+                frame:Show()
+            end
+        end,
+        funcOnEnter = function(button)
+            MenuUtil.ShowTooltip(button, function(tooltip)
+                tooltip:SetText(L["Left-Click to show options"])
+            end)
+        end,
+        funcOnLeave = function(button)
+            MenuUtil.HideTooltip(button)
+        end,
+    })
+
+    if nil == addon.db["hideMinimapButton"] then
+        addon.db["hideMinimapButton"] = false
+    end
+
+    function addon.functions.toggleMinimapButton(value)
+        if value == false then
+            LDBIcon:Show(addonName)
+        else
+            LDBIcon:Hide(addonName)
+        end
+    end
+
+    local eventFrame = CreateFrame("Frame")
+    eventFrame:SetScript("OnUpdate", function(self)
+        addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
+        self:SetScript("OnUpdate", nil)
+    end)
 
     -- Frame für die Optionen
     local configFrame = CreateFrame("Frame", addonName .. "ConfigFrame", InterfaceOptionsFramePanelContainer)
@@ -222,6 +268,7 @@ local function eventHandler(self, event, arg1)
         if not EnhanceQoLDB then
             EnhanceQoLDB = {}
         end
+        
         loadMain()
         EQOL.PersistSignUpNote()
     elseif type(addon.functions.updateAvailableDrinks) == "function" then
