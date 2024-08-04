@@ -1,5 +1,5 @@
 if (GAME_LOCALE or GetLocale()) ~= "deDE" then
-    -- return
+    return
 end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -11,8 +11,8 @@ end
 local L = addon.LMythicPlus
 
 L["Automatically insert keystone"] = "Schlüsselstein automatisch einsetzen"
-L["Mythic Plus"] = "Mythisch Plus"
-L[addonName] = "Mythisch Plus"
+L["Mythic Plus"] = "Mythisch+"
+L[addonName] = "Mythisch+"
 L["Close all bags on keystone insert"] = "Schließe alle Taschen,\nwenn der Schlüsselstein eingesetzt wird"
 L["ReadyCheck"] = "Ready Check"
 L["ReadyCheckWaiting"] = "Prüfe Bereitschaft..."
@@ -24,3 +24,9 @@ L["sliderShortTime"] = "Pull Timer rechtsklick"
 L["sliderLongTime"] = "Pull Timer"
 L["Stating"] = "Starten..."
 L["autoKeyStart"] = "Starte den Schlüsselstein automatisch nach\nAblauf des Pull Timers"
+
+L["None"] = "Kein Pull Timer"
+L["Blizzard Pull Timer"] = "Blizzard Pull Timer"
+L["DBM / BigWigs Pull Timer"] = "DBM / BigWigs Pull Timer"
+L["Both"] = "Blizzard und DBM / BigWigs"
+L["Pull Timer Type"] = "Pull Timer Typ"

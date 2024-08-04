@@ -56,7 +56,7 @@ end
 function loadMain()
     -- Erstelle das Hauptframe
     local frame = CreateFrame("Frame", "MyAddonFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(300, 400)
+    frame:SetSize(300, 500)
     frame:SetPoint("CENTER", UIParent, "CENTER")
     frame:SetMovable(true)
     frame:EnableMouse(true)

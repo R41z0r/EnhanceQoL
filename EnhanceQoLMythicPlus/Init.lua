@@ -27,6 +27,11 @@ end
 if nil == addon.db["pullTimerLongTime"] then
     addon.db["pullTimerLongTime"] = 10
 end
+if nil == addon.db["PullTimerType"] or addon.db["PullTimerType"] == 0 then
+    addon.db["PullTimerType"] = 4
+end
+
+print("Type:", addon.db["PullTimerType"])
 
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus

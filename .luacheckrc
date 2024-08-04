@@ -36,6 +36,9 @@ globals = {
 	"LibStub",
 	"OmniCC",
 	"ElvUI",
+	"PanelTemplates_SetTab",
+	"PanelTemplates_SetNumTabs",
+	"ChallengesKeystoneFrame",
 
 	-- EnhanceQoL
 	"addon",
@@ -66,6 +69,12 @@ globals = {
 	"Minimap",
 	"GetMinimapShape",
 	"foundItem",
+	"C_MythicPlus",
+	"NUM_TOTAL_EQUIPPED_BAG_SLOTS",
+	"C_PartyInfo",
+	"C_ChatInfo",
+	"instanceId",
+
 
 	-- Third Party Addons/Libs
 	"APIDocumentation",

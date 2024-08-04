@@ -80,5 +80,44 @@ end
 
 function addon.functions.getHeightOffset(element)
     local _, _, _, _, headerY = element:GetPoint()
-    return headerY - element:GetHeight() 
+    return headerY - element:GetHeight()
+end
+
+function addon.functions.createDropdown(id, frame, items, width, text, x, y, initial)
+    -- Erstelle ein Label
+    local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    label:SetPoint("TOPLEFT", frame, "TOPLEFT", x, y)
+    label:SetText(text)
+
+    -- Erstelle ein Dropdown-Menü
+    local dropdown = CreateFrame("Frame", "MyDropdown", frame, "UIDropDownMenuTemplate")
+    dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -16, -10) -- Position relativ zum Label
+
+    -- Initialisiere das Dropdown-Menü
+    UIDropDownMenu_SetWidth(dropdown, 180)
+    UIDropDownMenu_SetText(dropdown, addon.L["Select an option"])
+
+    -- Funktion zum Erstellen der Menüeinträge
+    local function OnClick(self)
+        UIDropDownMenu_SetSelectedID(dropdown, self:GetID())
+        addon.saveVariables[id] = self.value
+    end
+
+    local function Initialize(self, level)
+        local info = UIDropDownMenu_CreateInfo()
+        for i = 1, #items do
+            info.text = items[i].text
+            info.value = items[i].value
+            info.func = OnClick
+            info.arg1 = items[i].value
+            info.checked = nil
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end
+
+    UIDropDownMenu_SetSelectedID(dropdown, initial)
+    UIDropDownMenu_SetText(dropdown, items[initial].text)
+    -- Initialisiere das Dropdown-Menü
+    UIDropDownMenu_Initialize(dropdown, Initialize)
+    return label
 end
