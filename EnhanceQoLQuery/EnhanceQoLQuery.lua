@@ -106,8 +106,8 @@ local function updateItemInfo(itemLink)
     if name and type and subType and minLevel and mana > 0 then
         local buffFood = extractWellFedFromTooltip(itemLink)
         local formattedKey = name:gsub("%s+", "")
-        return string.format("{ key = \"%s\", id = %d, desc = \"%s\", requiredLevel = %d, mana = %d, isBuffFood = " ..
-                                 buffFood .. " }", formattedKey, itemLink:match("item:(%d+)"), name, minLevel, mana)
+        return string.format("{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " ..
+                                 buffFood .. " }", formattedKey, itemLink:match("item:(%d+)"), minLevel, mana)
     end
     return nil
 end
@@ -180,11 +180,14 @@ local function onAddonLoaded(event, addonName)
     end
 end
 
-local function onItemPush(...)
-    if nil == ... then
+local function onItemPush(bag, slot)
+    if nil == bag or nil == slot then
         return
     end
-    local itemLink = GetContainerItemLink(...)
+    if bag < 0 or bag > 5 or slot < 1 or slot > C_Container.GetContainerNumSlots(bag) then
+        return
+    end
+    local itemLink = GetContainerItemLink(bag, slot)
     if itemLink then
         handleItemLink(itemLink)
     end
