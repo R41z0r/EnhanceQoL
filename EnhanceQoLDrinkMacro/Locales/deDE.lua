@@ -2,6 +2,7 @@ if (GAME_LOCALE or GetLocale()) ~= "deDE" then
     return
 end
 
+local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
     addon = _G[parentAddonName]

@@ -93,18 +93,13 @@ function loadMain()
     addon.db = EnhanceQoLDB
 
     local fTab = addon.functions.createTabFrame("General")
-    header = addon.functions.createHeader(fTab, "General", 0, -10)
-    local _, _, _, _, headerY = header:GetPoint()
+    local header = addon.functions.createHeader(fTab, "General", 0, -10)
 
     local checkbox = addon.functions.createCheckbox("skipSignUpDialog", fTab, L["Quick signup"], 10,
-        (headerY - header:GetHeight() - 10))
-    checkbox:SetChecked(EnhanceQoLDB["skipSignUpDialog"])
-
-    _, _, _, _, headerY = checkbox:GetPoint()
+        (addon.functions.getHeightOffset(header) - 10))
 
     local checkbox2 = addon.functions.createCheckbox("persistSignUpNote", fTab, L["Persist LFG signup note"], 10,
-        (headerY - checkbox:GetHeight()))
-    checkbox2:SetChecked(EnhanceQoLDB["persistSignUpNote"])
+        (addon.functions.getHeightOffset(checkbox)))
 
     -- Funktion zum Abrufen der Checkbox-Werte
     local function getCheckboxValues(self)
