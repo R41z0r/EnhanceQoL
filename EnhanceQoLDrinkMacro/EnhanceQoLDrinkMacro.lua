@@ -76,6 +76,6 @@ local cbBuffFood = addon.functions.createCheckbox("ignoreBuffFood", frame, L["Ig
     (addon.functions.getHeightOffset(cbPreferMage)))
 
 addon.functions.createSlider("minManaFoodValue", frame, L["Minimum mana restore for food"], 15,
-    (addon.functions.getHeightOffset(cbBuffFood) - 20), initialValue, 0, 100, "%")
+    (addon.functions.getHeightOffset(cbBuffFood) - 25), initialValue, 0, 100, "%")
 
 addon.functions.updateAllowedDrinks()
