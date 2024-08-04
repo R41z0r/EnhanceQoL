@@ -71,22 +71,39 @@ function loadMain()
         EnhanceQoLDB.y = yOfs
     end)
     frame:Hide() -- Das Frame wird initial versteckt
+    frame.tabs = {}
 
+    function frame:ShowTab(id)
+        for _, tabContent in pairs(self.tabs) do
+            tabContent:Hide()
+        end
+        if self.tabs[id] then
+            self.tabs[id]:Show()
+        end
+    end
     -- Titel des Frames
     frame.title = frame:CreateFontString(nil, "OVERLAY")
     frame.title:SetFontObject("GameFontHighlight")
     frame.title:SetPoint("CENTER", frame.TitleBg, "CENTER", 0, 0)
     frame.title:SetText(addonName)
 
-
     -- Schleife zur Erzeugung der Checkboxen
     addon.frame = frame
     addon.checkboxes = {}
     addon.db = EnhanceQoLDB
-    local checkbox = addon.functions.createCheckbox("skipSignUpDialog", frame, L["Quick signup"], 10, (-30*#addon.checkboxes-30))
+
+    local fTab = addon.functions.createTabFrame("General")
+    header = addon.functions.createHeader(fTab, "General", 0, -10)
+    local _, _, _, _, headerY = header:GetPoint()
+
+    local checkbox = addon.functions.createCheckbox("skipSignUpDialog", fTab, L["Quick signup"], 10,
+        (headerY - header:GetHeight() - 10))
     checkbox:SetChecked(EnhanceQoLDB["skipSignUpDialog"])
 
-    local checkbox2 = addon.functions.createCheckbox("persistSignUpNote", frame, L["Persist LFG signup note"], 10, (-30*#addon.checkboxes-30))
+    _, _, _, _, headerY = checkbox:GetPoint()
+
+    local checkbox2 = addon.functions.createCheckbox("persistSignUpNote", fTab, L["Persist LFG signup note"], 10,
+        (headerY - checkbox:GetHeight()))
     checkbox2:SetChecked(EnhanceQoLDB["persistSignUpNote"])
 
     -- Funktion zum Abrufen der Checkbox-Werte
@@ -101,7 +118,7 @@ function loadMain()
         end
 
         if type(addon.functions.updateAvailableDrinks) == "function" then
-            --Update allowed drinks because of changed mana value
+            -- Update allowed drinks because of changed mana value
             addon.functions.updateAllowedDrinks()
             addon.functions.updateAvailableDrinks()
         end
@@ -216,14 +233,14 @@ local function eventHandler(self, event, arg1)
         if event == "BAG_UPDATE_DELAYED" then
             addon.functions.updateAvailableDrinks(false)
         elseif event == "PLAYER_LOGIN" then
-            --on login always load the macro
+            -- on login always load the macro
             addon.functions.updateAllowedDrinks()
             addon.functions.updateAvailableDrinks(true)
         elseif event == "PLAYER_REGEN_ENABLED" then
-            --PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
+            -- PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
             addon.functions.updateAvailableDrinks(true)
         elseif event == "PLAYER_LEVEL_UP" then
-            --on level up, reload the complete list of allowed drinks
+            -- on level up, reload the complete list of allowed drinks
             addon.functions.updateAllowedDrinks()
             addon.functions.updateAvailableDrinks(true)
         end

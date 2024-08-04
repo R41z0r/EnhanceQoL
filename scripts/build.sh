@@ -8,6 +8,7 @@ WOW_ADDON_DIR="/Applications/World of Warcraft/_retail_/Interface/AddOns"
 EnhanceQoL_ADDON_DIR="$WOW_ADDON_DIR/EnhanceQoL"
 EnhanceQoL_DRINK_MACRO_DIR="$WOW_ADDON_DIR/EnhanceQoLDrinkMacro"
 EnhanceQoL_QUERY_DIR="$WOW_ADDON_DIR/EnhanceQoLQuery"
+EnhanceQoL_MYTHIC_PLUS_QUERY_DIR="$WOW_ADDON_DIR/EnhanceQoLMythicPlus"
 
 VERSION=$(git describe --tags --always)
 
@@ -15,11 +16,13 @@ VERSION=$(git describe --tags --always)
 rm -rf "$EnhanceQoL_ADDON_DIR"
 rm -rf "$EnhanceQoL_DRINK_MACRO_DIR"
 rm -rf "$EnhanceQoL_QUERY_DIR"
+rm -rf "$EnhanceQoL_MYTHIC_PLUS_QUERY_DIR"
 
 # Erstelle die Addon-Verzeichnisse neu
 mkdir -p "$EnhanceQoL_ADDON_DIR"
 mkdir -p "$EnhanceQoL_DRINK_MACRO_DIR"
 mkdir -p "$EnhanceQoL_QUERY_DIR"
+mkdir -p "$EnhanceQoL_MYTHIC_PLUS_QUERY_DIR"
 
 echo "$ROOT_DIR"
 
@@ -27,10 +30,12 @@ echo "$ROOT_DIR"
 cp -r "$ROOT_DIR/EnhanceQoL/"* "$EnhanceQoL_ADDON_DIR/"
 cp -r "$ROOT_DIR/EnhanceQoLDrinkMacro/"* "$EnhanceQoL_DRINK_MACRO_DIR/"
 cp -r "$ROOT_DIR/EnhanceQoLQuery/"* "$EnhanceQoL_QUERY_DIR/"
+cp -r "$ROOT_DIR/EnhanceQoLMythicPlus/"* "$EnhanceQoL_MYTHIC_PLUS_QUERY_DIR/"
 
 # Version in den .toc-Dateien ersetzen
 sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_ADDON_DIR/EnhanceQoL.toc"
 sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_DRINK_MACRO_DIR/EnhanceQoLDrinkMacro.toc"
 sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_QUERY_DIR/EnhanceQoLQuery.toc"
+sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_MYTHIC_PLUS_QUERY_DIR/EnhanceQoLMythicPlus.toc"
 
 echo "Addons wurden nach $WOW_ADDON_DIR kopiert."

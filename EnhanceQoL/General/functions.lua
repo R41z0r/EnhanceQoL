@@ -44,3 +44,36 @@ function addon.functions.createHeader(parent, label, x, y)
     header:SetText(label)
     return header
 end
+
+function addon.functions.createTabButton(parent, id, text)
+    local tab = CreateFrame("Button", nil, parent,
+        C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate")
+    tab:SetID(id)
+    tab:SetText(text)
+    tab:SetScript("OnClick", function(self)
+        PanelTemplates_SetTab(parent, self:GetID())
+        parent:ShowTab(self:GetID())
+    end)
+    return tab
+end
+
+function addon.functions.createTabFrame(text)
+    addon.variables.numOfTabs = addon.variables.numOfTabs + 1
+    local tab1 = addon.functions.createTabButton(addon.frame, addon.variables.numOfTabs, text)
+    tab1:SetPoint("TOPLEFT", addon.frame, "BOTTOMLEFT", 5, 7)
+
+    PanelTemplates_SetNumTabs(addon.frame, addon.variables.numOfTabs)
+    PanelTemplates_SetTab(addon.frame, 1)
+
+    addon.frame.tabs[addon.variables.numOfTabs] = CreateFrame("Frame", nil, addon.frame, "InsetFrameTemplate")
+    addon.frame.tabs[addon.variables.numOfTabs]:SetSize((addon.frame:GetWidth() - 8), (addon.frame:GetHeight() - 20))
+    addon.frame.tabs[addon.variables.numOfTabs]:SetPoint("TOPLEFT", 3, -20)
+
+    if addon.variables.numOfTabs == 1 then
+        addon.frame.tabs[addon.variables.numOfTabs]:Show()
+    else
+        addon.frame.tabs[addon.variables.numOfTabs]:Hide()
+    end
+    return addon.frame.tabs[addon.variables.numOfTabs]
+end
+
