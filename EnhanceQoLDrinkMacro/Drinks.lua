@@ -16,8 +16,6 @@ addon.Drinks.drinkList = {
     { key = "Sugar-CrustedFishFeast", id = 126936, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true }, --Restores 100% mana und health
     { key = "Twice-BakedSweetPotato", id = 116406, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true }, --Restores 100% mana und health
     { key = "LemonHerbFilet", id = 126934, requiredLevel = 1, mana = UnitPowerMax("player", 0) , isBuffFood = true },
-    
-    
     { key = "GorlocFinSoup", id = 197847, requiredLevel = 70, mana = 240000 },
     { key = "StrongSniffin'SoupforNiffen", id = 204790, requiredLevel = 65, mana = 240000, isBuffFood = false },
     { key = "RefreshingSpringWater", id = 159, requiredLevel = 1, mana = 135, isBuffFood = false },
