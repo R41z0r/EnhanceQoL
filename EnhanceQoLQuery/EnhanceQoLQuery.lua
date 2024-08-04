@@ -66,10 +66,15 @@ local function extractManaFromTooltip(itemLink)
     for i = 1, tooltip:NumLines() do
         local text = _G["EnhanceQoLQueryTooltipTextLeft" .. i]:GetText()
         if text and text:find("mana") then
-            local manaValue = text:match("(%d[%d,%.]*) mana")
+            local manaValue = text:match("([%d,%.]+)%s*million%s*mana") or text:match("([%d,%.]+)%s*mana")
             if manaValue then
-                manaValue = manaValue:gsub(",", "") -- Remove thousands separator
-                mana = tonumber(manaValue)
+                if text:find("million") then
+                    manaValue = manaValue:gsub(",", "") -- Remove thousands separator
+                    mana = tonumber(manaValue) * 1000000 -- Convert to numeric value for millions
+                else
+                    manaValue = manaValue:gsub("[,%.]", "") -- Remove commas and periods
+                    mana = tonumber(manaValue)
+                end
                 break
             end
         end
@@ -101,7 +106,7 @@ local function updateItemInfo(itemLink)
     if not itemLink then
         return
     end
-    local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = GetItemInfo(itemLink)
+    local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = C_Item.GetItemInfo(itemLink)
     local mana = extractManaFromTooltip(itemLink)
     if name and type and subType and minLevel and mana > 0 then
         local buffFood = extractWellFedFromTooltip(itemLink)
@@ -138,7 +143,7 @@ frame.editEditBox:SetScript("OnTextChanged", function(self)
 end)
 
 local function addToSearchResult(itemID)
-    local name, link, quality, level, minLevel, type, subType = GetItemInfo(itemID)
+    local name, link, quality, level, minLevel, type, subType = C_Item.GetItemInfo(itemID)
     local mana = extractManaFromTooltip(link)
     if name and type and subType and minLevel and mana > 0 and type == Enum.ItemClass.Consumable and subType ==
         Enum.ItemConsumableSubclass.Fooddrink then
@@ -155,7 +160,7 @@ local function addToSearchResult(itemID)
 end
 
 local function handleItemLink(text)
-    local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = GetItemInfo(text)
+    local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = C_Item.GetItemInfo(text)
     if type == "Consumable" and subType == "Food & Drink" then
         local itemId = text:match("item:(%d+)")
         if not addedItems[itemId] then
@@ -199,7 +204,7 @@ local function onAuctionHouseEvent(self, event, ...)
             browseResults = C_AuctionHouse.GetBrowseResults()
             print(#browseResults)
             for i = 1, #browseResults do
-                _, link = GetItemInfo(browseResults[i].itemKey.itemID)
+                _, link = C_Item.GetItemInfo(browseResults[i].itemKey.itemID)
                 if nil == link then
                     reSearchList[browseResults[i].itemKey.itemID] = true
                 else

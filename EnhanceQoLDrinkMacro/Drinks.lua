@@ -422,6 +422,30 @@ addon.Drinks.drinkList = {
     { key = "TimelessTea", id = 104348, requiredLevel = 32, mana = 5500, isBuffFood = false },
     { key = "WildfowlGinsengSoup", id = 86070, requiredLevel = 33, mana = 20000, isBuffFood = true },
     { key = "ZestyWater", id = 197770, requiredLevel = 60, mana = 540000, isBuffFood = false },
+
+    --TWW
+    { key = "MeatandPotatoes", id = 222710, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "RibStickers", id = 222711, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "SweetandSourMeatballs", id = 222712, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "TenderTwilightJerky", id = 222713, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "ChippyTea", id = 222736, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "DeepfinPatty", id = 222718, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "FieryFishSticks", id = 222715, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "FishandChips", id = 222721, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "GingerGlazedFillet", id = 222716, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "MarinatedTenderloins", id = 222723, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "SaltBakedSeafood", id = 222722, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "SaltyDog", id = 222717, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "SweetandSpicySoup", id = 222719, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "ZestyNibblers", id = 222714, requiredLevel = 1, mana = 2900000, isBuffFood = true },
+    { key = "MycobloomRisotto", id = 222725, requiredLevel = 1, mana = 3700000, isBuffFood = true },
+    { key = "EverythingStew", id = 222735, requiredLevel = 1, mana = 3700000, isBuffFood = true },
+    { key = "FeastoftheDivineDay", id = 222732, requiredLevel = 1, mana = 3700000, isBuffFood = true },
+    { key = "FeastoftheMidnightMasquerade", id = 222733, requiredLevel = 1, mana = 3700000, isBuffFood = true },
+    { key = "TheSushiSpecial", id = 222720, requiredLevel = 1, mana = 3700000, isBuffFood = true },
+    { key = "CinderNectar", id = 222744, requiredLevel = 1, mana = 3700000, isBuffFood = false },
+    { key = "Pep-In-Your-Step", id = 222745, requiredLevel = 1, mana = 3700000, isBuffFood = true },
+    { key = "ProteinSlurp", id = 223967, requiredLevel = 1, mana = 1100000, isBuffFood = true }
 }
 
 table.sort(addon.Drinks.drinkList, function(a, b)
