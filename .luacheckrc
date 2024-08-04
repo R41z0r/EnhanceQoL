@@ -74,6 +74,7 @@ globals = {
 	"C_PartyInfo",
 	"C_ChatInfo",
 	"instanceId",
+	"UIDropDownMenu_SetSelectedID",
 
 
 	-- Third Party Addons/Libs
