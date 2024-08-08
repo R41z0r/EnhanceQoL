@@ -56,7 +56,7 @@ end
 function loadMain()
     -- Erstelle das Hauptframe
     local frame = CreateFrame("Frame", "MyAddonFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(300, 500)
+    frame:SetSize(300, 550)
     frame:SetPoint("CENTER", UIParent, "CENTER")
     frame:SetMovable(true)
     frame:EnableMouse(true)
@@ -122,7 +122,7 @@ function loadMain()
         if type(addon.functions.updateAvailableDrinks) == "function" then
             -- Update allowed drinks because of changed mana value
             addon.functions.updateAllowedDrinks()
-            addon.functions.updateAvailableDrinks()
+            addon.functions.updateAvailableDrinks(false)
         end
 
         self:GetParent():Hide()
@@ -278,7 +278,7 @@ local function eventHandler(self, event, arg1)
         elseif event == "PLAYER_LOGIN" then
             -- on login always load the macro
             addon.functions.updateAllowedDrinks()
-            addon.functions.updateAvailableDrinks(true)
+            addon.functions.updateAvailableDrinks(false)
         elseif event == "PLAYER_REGEN_ENABLED" then
             -- PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
             addon.functions.updateAvailableDrinks(true)

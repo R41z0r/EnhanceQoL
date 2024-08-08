@@ -100,7 +100,6 @@ function addon.functions.createDropdown(id, frame, items, width, text, x, y, ini
 
     -- Funktion zum Erstellen der Menüeinträge
     local function OnClick(self)
-        print("Yo geht")
         UIDropDownMenu_SetSelectedID(dropdown, self:GetID())
         addon.saveVariables[id] = self.value
     end

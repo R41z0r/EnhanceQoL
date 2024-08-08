@@ -1,0 +1,14 @@
+## Interface: 110000, 110002
+## Title: Enhance QoL Mythic Plus
+## Author: R41Z0R
+## Version: @project-version@
+## Notes: Mythic Plus extends your Game in Dungeons
+## Dependencies: EnhanceQoL
+## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## Retail: true
+## X-Compatible-With: retail
+
+Init.lua
+locales.xml
+
+EnhanceQoLTooltip.lua
