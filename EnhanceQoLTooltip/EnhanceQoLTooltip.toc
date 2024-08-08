@@ -1,8 +1,8 @@
 ## Interface: 110000, 110002
-## Title: Enhance QoL Mythic Plus
+## Title: Enhance QoL Tooltip
 ## Author: R41Z0R
 ## Version: @project-version@
-## Notes: Mythic Plus extends your Game in Dungeons
+## Notes: Tooltip modifies the visibility in different situations
 ## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
 ## Retail: true
