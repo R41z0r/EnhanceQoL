@@ -12,7 +12,6 @@ local L = addon.LTooltip
 
 L["Tooltip"] = "Tooltip"
 L[addonName] = "Tooltip"
-L["TooltipUnitHideType"] = "Ocultar en Unidad"
 L["None"] = "Ninguno"
 L["Enemies"] = "Enemigos"
 L["Friendly"] = "Amistoso"
@@ -20,17 +19,36 @@ L["Both"] = "Ambos"
 L["TooltipOFF"] = "APAGADO"
 L["TooltipON"] = "ENCENDIDO"
 
-L["TooltipUnitHideInCombat"] = "Ocultar unidad solo en combate"
-L["TooltipUnitHideInDungeon"] = "Ocultar unidad solo en mazmorras"
+-- Tabs
+L["Unit"] = "Unidad"
+L["Spell"] = "Hechizo"
+L["Item"] = "Objeto"
+L["Buff"] = "Beneficio"
+L["Debuff"] = "Perjuicio"
 
---Spell
-L["TooltipSpellHideType"] = "Ocultar en Hechizos"
+-- Buff
+L["TooltipBuffHideType"] = "Ocultar tooltip en beneficios"
+L["TooltipBuffHideInCombat"] = "Ocultar solo en combate"
+L["TooltipBuffHideInDungeon"] = "Ocultar solo en mazmorras"
 
-L["TooltipSpellHideInCombat"] = "Ocultar hechizos solo en combate"
-L["TooltipSpellHideInDungeon"] = "Ocultar hechizos solo en mazmorras"
+-- Debuff
+L["TooltipDebuffHideType"] = "Ocultar tooltip en perjuicios"
+L["TooltipDebuffHideInCombat"] = "Ocultar solo en combate"
+L["TooltipDebuffHideInDungeon"] = "Ocultar solo en mazmorras"
 
---Item
-L["TooltipItemHideType"] = "Ocultar en Objetos"
+-- Unit
+L["TooltipUnitHideType"] = "Ocultar tooltip en unidades"
+L["TooltipUnitHideInCombat"] = "Ocultar solo en combate"
+L["TooltipUnitHideInDungeon"] = "Ocultar solo en mazmorras"
 
-L["TooltipItemHideInCombat"] = "Ocultar objetos solo en combate"
-L["TooltipItemHideInDungeon"] = "Ocultar objetos solo en mazmorras"
+-- Spell
+L["TooltipSpellHideType"] = "Ocultar tooltip en hechizos"
+
+L["TooltipSpellHideInCombat"] = "Ocultar solo en combate"
+L["TooltipSpellHideInDungeon"] = "Ocultar solo en mazmorras"
+
+-- Item
+L["TooltipItemHideType"] = "Ocultar tooltip en objetos"
+
+L["TooltipItemHideInCombat"] = "Ocultar solo en combate"
+L["TooltipItemHideInDungeon"] = "Ocultar solo en mazmorras"

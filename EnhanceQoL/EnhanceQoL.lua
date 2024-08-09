@@ -73,6 +73,12 @@ function loadMain()
     frame:Hide() -- Das Frame wird initial versteckt
     frame.tabs = {}
 
+    frame:SetScript("OnSizeChanged", function(self, width, height)
+        for i, tab in ipairs(frame.tabs) do
+            tab:SetSize(width - 8, height - 20)
+        end
+    end)
+
     function frame:ShowTab(id)
         for _, tabContent in pairs(self.tabs) do
             tabContent:Hide()

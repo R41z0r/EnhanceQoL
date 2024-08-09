@@ -13,7 +13,6 @@ local L = addon.LTooltip
 
 L["Tooltip"] = "Descrizione comandi"
 L[addonName] = "Descrizione comandi"
-L["TooltipUnitHideType"] = "Nascondi su Unità"
 L["None"] = "Nessuno"
 L["Enemies"] = "Nemici"
 L["Friendly"] = "Amichevole"
@@ -21,17 +20,36 @@ L["Both"] = "Entrambi"
 L["TooltipOFF"] = "SPENTO"
 L["TooltipON"] = "ACCESO"
 
-L["TooltipUnitHideInCombat"] = "Nascondi unità solo in combattimento"
-L["TooltipUnitHideInDungeon"] = "Nascondi unità solo in spedizioni"
+-- Tabs
+L["Unit"] = "Unità"
+L["Spell"] = "Incantesimo"
+L["Item"] = "Oggetto"
+L["Buff"] = "Buff"
+L["Debuff"] = "Debuff"
 
---Spell
-L["TooltipSpellHideType"] = "Nascondi su Incantesimi"
+-- Buff
+L["TooltipBuffHideType"] = "Nascondi tooltip su buff"
+L["TooltipBuffHideInCombat"] = "Nascondi solo in combattimento"
+L["TooltipBuffHideInDungeon"] = "Nascondi solo nei dungeon"
 
-L["TooltipSpellHideInCombat"] = "Nascondi incantesimi solo in combattimento"
-L["TooltipSpellHideInDungeon"] = "Nascondi incantesimi solo in spedizioni"
+-- Debuff
+L["TooltipDebuffHideType"] = "Nascondi tooltip su debuff"
+L["TooltipDebuffHideInCombat"] = "Nascondi solo in combattimento"
+L["TooltipDebuffHideInDungeon"] = "Nascondi solo nei dungeon"
 
---Item
-L["TooltipItemHideType"] = "Nascondi su Oggetti"
+-- Unit
+L["TooltipUnitHideType"] = "Nascondi tooltip su unità"
+L["TooltipUnitHideInCombat"] = "Nascondi solo in combattimento"
+L["TooltipUnitHideInDungeon"] = "Nascondi solo nei dungeon"
 
-L["TooltipItemHideInCombat"] = "Nascondi oggetti solo in combattimento"
-L["TooltipItemHideInDungeon"] = "Nascondi oggetti solo in spedizioni"
+-- Spell
+L["TooltipSpellHideType"] = "Nascondi tooltip su incantesimi"
+
+L["TooltipSpellHideInCombat"] = "Nascondi solo in combattimento"
+L["TooltipSpellHideInDungeon"] = "Nascondi solo nei dungeon"
+
+-- Item
+L["TooltipItemHideType"] = "Nascondi tooltip su oggetti"
+
+L["TooltipItemHideInCombat"] = "Nascondi solo in combattimento"
+L["TooltipItemHideInDungeon"] = "Nascondi solo nei dungeon"

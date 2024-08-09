@@ -13,25 +13,41 @@ local L = addon.LTooltip
 
 L["Tooltip"] = "툴팁"
 L[addonName] = "툴팁"
-L["TooltipUnitHideType"] = "유닛에서 숨기기"
 L["None"] = "없음"
 L["Enemies"] = "적"
 L["Friendly"] = "우호적"
-L["Both"] = "둘 다"
-L["TooltipOFF"] = "끔"
-L["TooltipON"] = "켬"
+L["Both"] = "모두"
+L["TooltipOFF"] = "꺼짐"
+L["TooltipON"] = "켜짐"
 
-L["TooltipUnitHideInCombat"] = "전투 중 유닛만 숨기기"
-L["TooltipUnitHideInDungeon"] = "던전에서만 유닛 숨기기"
+-- Tabs
+L["Unit"] = "유닛"
+L["Spell"] = "주문"
+L["Item"] = "아이템"
+L["Buff"] = "버프"
+L["Debuff"] = "디버프"
 
---Spell
-L["TooltipSpellHideType"] = "주문에서 숨기기"
+-- Buff
+L["TooltipBuffHideType"] = "버프 툴팁 숨기기"
+L["TooltipBuffHideInCombat"] = "전투 중에만 숨기기"
+L["TooltipBuffHideInDungeon"] = "던전에서만 숨기기"
 
-L["TooltipSpellHideInCombat"] = "전투 중 주문만 숨기기"
-L["TooltipSpellHideInDungeon"] = "던전에서만 주문 숨기기"
+-- Debuff
+L["TooltipDebuffHideType"] = "디버프 툴팁 숨기기"
+L["TooltipDebuffHideInCombat"] = "전투 중에만 숨기기"
+L["TooltipDebuffHideInDungeon"] = "던전에서만 숨기기"
 
---Item
-L["TooltipItemHideType"] = "아이템에서 숨기기"
+-- Unit
+L["TooltipUnitHideType"] = "유닛 툴팁 숨기기"
+L["TooltipUnitHideInCombat"] = "전투 중에만 숨기기"
+L["TooltipUnitHideInDungeon"] = "던전에서만 숨기기"
 
-L["TooltipItemHideInCombat"] = "전투 중 아이템만 숨기기"
-L["TooltipItemHideInDungeon"] = "던전에서만 아이템 숨기기"
+-- Spell
+L["TooltipSpellHideType"] = "주문 툴팁 숨기기"
+L["TooltipSpellHideInCombat"] = "전투 중에만 숨기기"
+L["TooltipSpellHideInDungeon"] = "던전에서만 숨기기"
+
+-- Item
+L["TooltipItemHideType"] = "아이템 툴팁 숨기기"
+L["TooltipItemHideInCombat"] = "전투 중에만 숨기기"
+L["TooltipItemHideInDungeon"] = "던전에서만 숨기기"

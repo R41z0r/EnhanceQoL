@@ -13,25 +13,43 @@ local L = addon.LTooltip
 
 L["Tooltip"] = "Tooltip"
 L[addonName] = "Tooltip"
-L["TooltipUnitHideType"] = "Ocultar em Unidade"
 L["None"] = "Nenhum"
 L["Enemies"] = "Inimigos"
-L["Friendly"] = "Amigável"
+L["Friendly"] = "Amigáveis"
 L["Both"] = "Ambos"
 L["TooltipOFF"] = "DESLIGADO"
 L["TooltipON"] = "LIGADO"
 
-L["TooltipUnitHideInCombat"] = "Ocultar unidade apenas em combate"
-L["TooltipUnitHideInDungeon"] = "Ocultar unidade apenas em masmorras"
+-- Tabs
+L["Unit"] = "Unidade"
+L["Spell"] = "Feitiço"
+L["Item"] = "Item"
+L["Buff"] = "Buff"
+L["Debuff"] = "Debuff"
 
---Spell
-L["TooltipSpellHideType"] = "Ocultar em Feitiços"
+-- Buff
+L["TooltipBuffHideType"] = "Ocultar tooltip em buffs"
+L["TooltipBuffHideInCombat"] = "Ocultar apenas em combate"
+L["TooltipBuffHideInDungeon"] = "Ocultar apenas em masmorras"
 
-L["TooltipSpellHideInCombat"] = "Ocultar feitiços apenas em combate"
-L["TooltipSpellHideInDungeon"] = "Ocultar feitiços apenas em masmorras"
+-- Debuff
+L["TooltipDebuffHideType"] = "Ocultar tooltip em debuffs"
+L["TooltipDebuffHideInCombat"] = "Ocultar apenas em combate"
+L["TooltipDebuffHideInDungeon"] = "Ocultar apenas em masmorras"
 
---Item
-L["TooltipItemHideType"] = "Ocultar em Itens"
+-- Unit
+L["TooltipUnitHideType"] = "Ocultar tooltip em unidades"
+L["TooltipUnitHideInCombat"] = "Ocultar apenas em combate"
+L["TooltipUnitHideInDungeon"] = "Ocultar apenas em masmorras"
 
-L["TooltipItemHideInCombat"] = "Ocultar itens apenas em combate"
-L["TooltipItemHideInDungeon"] = "Ocultar itens apenas em masmorras"
+-- Spell
+L["TooltipSpellHideType"] = "Ocultar tooltip em feitiços"
+
+L["TooltipSpellHideInCombat"] = "Ocultar apenas em combate"
+L["TooltipSpellHideInDungeon"] = "Ocultar apenas em masmorras"
+
+-- Item
+L["TooltipItemHideType"] = "Ocultar tooltip em itens"
+
+L["TooltipItemHideInCombat"] = "Ocultar apenas em combate"
+L["TooltipItemHideInDungeon"] = "Ocultar apenas em masmorras"

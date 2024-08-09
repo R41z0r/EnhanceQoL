@@ -11,27 +11,44 @@ else
 end
 local L = addon.LTooltip
 
-L["Tooltip"] = "工具提示"
-L[addonName] = "工具提示"
-L["TooltipUnitHideType"] = "在單位上隱藏"
+L["Tooltip"] = "提示"
+L[addonName] = "提示"
 L["None"] = "無"
 L["Enemies"] = "敵人"
-L["Friendly"] = "友好"
-L["Both"] = "兩者"
+L["Friendly"] = "友方"
+L["Both"] = "雙方"
 L["TooltipOFF"] = "關閉"
 L["TooltipON"] = "開啟"
 
-L["TooltipUnitHideInCombat"] = "僅在戰鬥中隱藏單位"
-L["TooltipUnitHideInDungeon"] = "僅在地下城中隱藏單位"
+-- Tabs
+L["Unit"] = "單位"
+L["Spell"] = "法術"
+L["Item"] = "物品"
+L["Buff"] = "增益"
+L["Debuff"] = "減益"
 
---Spell
-L["TooltipSpellHideType"] = "在法術上隱藏"
+-- Buff
+L["TooltipBuffHideType"] = "隱藏增益提示"
+L["TooltipBuffHideInCombat"] = "僅在戰鬥中隱藏"
+L["TooltipBuffHideInDungeon"] = "僅在副本中隱藏"
 
-L["TooltipSpellHideInCombat"] = "僅在戰鬥中隱藏法術"
-L["TooltipSpellHideInDungeon"] = "僅在地下城中隱藏法術"
+-- Debuff
+L["TooltipDebuffHideType"] = "隱藏減益提示"
+L["TooltipDebuffHideInCombat"] = "僅在戰鬥中隱藏"
+L["TooltipDebuffHideInDungeon"] = "僅在副本中隱藏"
 
---Item
-L["TooltipItemHideType"] = "在物品上隱藏"
+-- Unit
+L["TooltipUnitHideType"] = "隱藏單位提示"
+L["TooltipUnitHideInCombat"] = "僅在戰鬥中隱藏"
+L["TooltipUnitHideInDungeon"] = "僅在副本中隱藏"
 
-L["TooltipItemHideInCombat"] = "僅在戰鬥中隱藏物品"
-L["TooltipItemHideInDungeon"] = "僅在地下城中隱藏物品"
+-- Spell
+L["TooltipSpellHideType"] = "隱藏法術提示"
+
+L["TooltipSpellHideInCombat"] = "僅在戰鬥中隱藏"
+L["TooltipSpellHideInDungeon"] = "僅在副本中隱藏"
+
+-- Item
+L["TooltipItemHideType"] = "隱藏物品提示"
+L["TooltipItemHideInCombat"] = "僅在戰鬥中隱藏"
+L["TooltipItemHideInDungeon"] = "僅在副本中隱藏"

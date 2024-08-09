@@ -12,7 +12,6 @@ local L = addon.LTooltip
 
 L["Tooltip"] = "Infobulle"
 L[addonName] = "Infobulle"
-L["TooltipUnitHideType"] = "Masquer sur Unité"
 L["None"] = "Aucun"
 L["Enemies"] = "Ennemis"
 L["Friendly"] = "Amical"
@@ -20,17 +19,36 @@ L["Both"] = "Les deux"
 L["TooltipOFF"] = "DÉSACTIVÉ"
 L["TooltipON"] = "ACTIVÉ"
 
-L["TooltipUnitHideInCombat"] = "Masquer unité seulement en combat"
-L["TooltipUnitHideInDungeon"] = "Masquer unité seulement dans les donjons"
+-- Tabs
+L["Unit"] = "Unité"
+L["Spell"] = "Sort"
+L["Item"] = "Objet"
+L["Buff"] = "Buff"
+L["Debuff"] = "Debuff"
 
---Spell
-L["TooltipSpellHideType"] = "Masquer sur Sorts"
+-- Buff
+L["TooltipBuffHideType"] = "Masquer l'infobulle sur les buffs"
+L["TooltipBuffHideInCombat"] = "Masquer uniquement en combat"
+L["TooltipBuffHideInDungeon"] = "Masquer uniquement en donjons"
 
-L["TooltipSpellHideInCombat"] = "Masquer les sorts seulement en combat"
-L["TooltipSpellHideInDungeon"] = "Masquer les sorts seulement dans les donjons"
+-- Debuff
+L["TooltipDebuffHideType"] = "Masquer l'infobulle sur les debuffs"
+L["TooltipDebuffHideInCombat"] = "Masquer uniquement en combat"
+L["TooltipDebuffHideInDungeon"] = "Masquer uniquement en donjons"
 
---Item
-L["TooltipItemHideType"] = "Masquer sur Objets"
+-- Unit
+L["TooltipUnitHideType"] = "Masquer l'infobulle sur les unités"
+L["TooltipUnitHideInCombat"] = "Masquer uniquement en combat"
+L["TooltipUnitHideInDungeon"] = "Masquer uniquement en donjons"
 
-L["TooltipItemHideInCombat"] = "Masquer les objets seulement en combat"
-L["TooltipItemHideInDungeon"] = "Masquer les objets seulement dans les donjons"
+-- Spell
+L["TooltipSpellHideType"] = "Masquer l'infobulle sur les sorts"
+
+L["TooltipSpellHideInCombat"] = "Masquer uniquement en combat"
+L["TooltipSpellHideInDungeon"] = "Masquer uniquement en donjons"
+
+-- Item
+L["TooltipItemHideType"] = "Masquer l'infobulle sur les objets"
+
+L["TooltipItemHideInCombat"] = "Masquer uniquement en combat"
+L["TooltipItemHideInDungeon"] = "Masquer uniquement en donjons"

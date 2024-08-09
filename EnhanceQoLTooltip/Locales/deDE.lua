@@ -12,25 +12,43 @@ local L = addon.LTooltip
 
 L["Tooltip"] = "Tooltip"
 L[addonName] = "Tooltip"
-L["TooltipUnitHideType"] = "Bei Einheiten ausblenden"
-L["None"] = "Keines"
+L["None"] = "Keine"
 L["Enemies"] = "Feinde"
 L["Friendly"] = "Freundlich"
-L["Both"] = "Beides"
+L["Both"] = "Beide"
 L["TooltipOFF"] = "AUS"
 L["TooltipON"] = "AN"
 
-L["TooltipUnitHideInCombat"] = "Einheit nur im Kampf ausblenden"
-L["TooltipUnitHideInDungeon"] = "Einheit nur in Dungeons ausblenden"
+-- Tabs
+L["Unit"] = "Einheit"
+L["Spell"] = "Zauber"
+L["Item"] = "Gegenstand"
+L["Buff"] = "Buff"
+L["Debuff"] = "Debuff"
 
---Spell
-L["TooltipSpellHideType"] = "Bei Zaubern ausblenden"
+-- Buff
+L["TooltipBuffHideType"] = "Tooltip bei Buffs ausblenden"
+L["TooltipBuffHideInCombat"] = "Nur im Kampf ausblenden"
+L["TooltipBuffHideInDungeon"] = "Nur in Dungeons ausblenden"
 
-L["TooltipSpellHideInCombat"] = "Zauber nur im Kampf ausblenden"
-L["TooltipSpellHideInDungeon"] = "Zauber nur in Dungeons ausblenden"
+-- Debuff
+L["TooltipDebuffHideType"] = "Tooltip bei Debuffs ausblenden"
+L["TooltipDebuffHideInCombat"] = "Nur im Kampf ausblenden"
+L["TooltipDebuffHideInDungeon"] = "Nur in Dungeons ausblenden"
 
---Item
-L["TooltipItemHideType"] = "Bei Gegenständen ausblenden"
+-- Unit
+L["TooltipUnitHideType"] = "Tooltip bei Einheiten ausblenden"
+L["TooltipUnitHideInCombat"] = "Nur im Kampf ausblenden"
+L["TooltipUnitHideInDungeon"] = "Nur in Dungeons ausblenden"
 
-L["TooltipItemHideInCombat"] = "Gegenstände nur im Kampf ausblenden"
-L["TooltipItemHideInDungeon"] = "Gegenstände nur in Dungeons ausblenden"
+-- Spell
+L["TooltipSpellHideType"] = "Tooltip bei Zaubern ausblenden"
+
+L["TooltipSpellHideInCombat"] = "Nur im Kampf ausblenden"
+L["TooltipSpellHideInDungeon"] = "Nur in Dungeons ausblenden"
+
+-- Item
+L["TooltipItemHideType"] = "Tooltip bei Gegenständen ausblenden"
+
+L["TooltipItemHideInCombat"] = "Nur im Kampf ausblenden"
+L["TooltipItemHideInDungeon"] = "Nur in Dungeons ausblenden"

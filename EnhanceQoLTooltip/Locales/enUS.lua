@@ -9,7 +9,6 @@ local L = addon.LTooltip
 
 L["Tooltip"] = "Tooltip"
 L[addonName] = "Tooltip"
-L["TooltipUnitHideType"] = "Hide on Unit"
 L["None"] = "None"
 L["Enemies"] = "Enemies"
 L["Friendly"] = "Friendly"
@@ -17,18 +16,37 @@ L["Both"] = "Both"
 L["TooltipOFF"] = "OFF"
 L["TooltipON"] = "ON"
 
-L["TooltipUnitHideInCombat"] = "Only hide Unit in combat"
-L["TooltipUnitHideInDungeon"] = "Only hide Unit in dungeons"
+--Tabs
+L["Unit"] = "Unit"
+L["Spell"] = "Spell"
+L["Item"] = "Item"
+L["Buff"] = "Buff"
+L["Debuff"] = "Debuff"
+
+-- Buff
+L["TooltipBuffHideType"] = "Hide tooltip on buffs"
+L["TooltipBuffHideInCombat"] = "Only hide it in combat"
+L["TooltipBuffHideInDungeon"] = "Only hide it in dungeons"
+
+-- Debuff
+L["TooltipDebuffHideType"] = "Hide tooltip on debuffs"
+L["TooltipDebuffHideInCombat"] = "Only hide it in combat"
+L["TooltipDebuffHideInDungeon"] = "Only hide it in dungeons"
+
+-- Unit
+L["TooltipUnitHideType"] = "Hide tooltip on Unit"
+L["TooltipUnitHideInCombat"] = "Only hide it in combat"
+L["TooltipUnitHideInDungeon"] = "Only hide it in dungeons"
 
 --Spell
-L["TooltipSpellHideType"] = "Hide on Spells"
+L["TooltipSpellHideType"] = "Hide tooltip on Spells"
 
-L["TooltipSpellHideInCombat"] = "Only hide spell in combat"
-L["TooltipSpellHideInDungeon"] = "Only hide spell in dungeon"
+L["TooltipSpellHideInCombat"] = "Only hide it in combat"
+L["TooltipSpellHideInDungeon"] = "Only hide it in dungeons"
 
 --Item
-L["TooltipItemHideType"] = "Hide on Items"
+L["TooltipItemHideType"] = "Hide tooltip on Items"
 
-L["TooltipItemHideInCombat"] = "Only hide items in combat"
-L["TooltipItemHideInDungeon"] = "Only hide items in dungeon"
+L["TooltipItemHideInCombat"] = "Only hide it in combat"
+L["TooltipItemHideInDungeon"] = "Only hide it in dungeons"
 
