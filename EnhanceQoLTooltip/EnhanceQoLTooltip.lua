@@ -191,7 +191,7 @@ local cbTooltipBuffHideDungeon = addon.functions.createCheckbox("TooltipBuffHide
 
 -- Debuffs
 
-local labelBuffHideType = addon.functions.createDropdown("TooltipDebuffHideType", tabFrameDebuff, {{
+local labelDebuffHideType = addon.functions.createDropdown("TooltipDebuffHideType", tabFrameDebuff, {{
     text = L["TooltipOFF"],
     value = 1
 }, {
@@ -200,7 +200,7 @@ local labelBuffHideType = addon.functions.createDropdown("TooltipDebuffHideType"
 }}, 150, L["TooltipDebuffHideType"], 10, -10, addon.db["TooltipDebuffHideType"])
 
 local cbTooltipDebuffHideCombat = addon.functions.createCheckbox("TooltipDebuffHideInCombat", tabFrameDebuff,
-    L["TooltipDebuffHideInCombat"], 10, (addon.functions.getHeightOffset(labelBuffHideType) - 50))
+    L["TooltipDebuffHideInCombat"], 10, (addon.functions.getHeightOffset(labelDebuffHideType) - 50))
 
 local cbTooltipDebuffHideDungeon = addon.functions.createCheckbox("TooltipDebuffHideInDungeon", tabFrameDebuff,
     L["TooltipDebuffHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipDebuffHideCombat) - 5))

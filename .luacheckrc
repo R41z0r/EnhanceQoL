@@ -75,7 +75,7 @@ globals = {
 	"C_ChatInfo",
 	"instanceId",
 	"UIDropDownMenu_SetSelectedID",
-
+	"TooltipDataProcessor",
 
 	-- Third Party Addons/Libs
 	"APIDocumentation",
