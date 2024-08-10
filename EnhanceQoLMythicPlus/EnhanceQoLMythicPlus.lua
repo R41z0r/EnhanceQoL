@@ -130,7 +130,7 @@ frameLoad:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
 frameLoad:RegisterEvent("READY_CHECK_FINISHED")
 
 -- Funktion zum Umgang mit Events
-local function eventHandler(self, event, arg1, arg2)
+local function eventHandler(self, event, arg1, arg2, arg3, arg4)
     if event == "ADDON_LOADED" and arg1 == addonName then
         -- loadMain()
     elseif event == "CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN" then
@@ -165,7 +165,7 @@ local cbAutoKeyStart = addon.functions.createCheckbox("autoKeyStart", frame, L["
 local labelPullTimerType = addon.functions.createDropdown("PullTimerType", frame, {{
     text = L["None"],
     value = 1
-},{
+}, {
     text = L["Blizzard Pull Timer"],
     value = 2
 }, {
@@ -182,3 +182,13 @@ local longSlider = addon.functions.createSlider("pullTimerLongTime", frame, L["s
 local shortSlider = addon.functions.createSlider("pullTimerShortTime", frame, L["sliderShortTime"], 15,
     (addon.functions.getHeightOffset(longSlider) - 25), addon.db["pullTimerShortTime"], 1, 60, "s")
 
+local btnToggleAnchor = addon.functions.createButton(frame, 10, addon.functions.getHeightOffset(shortSlider) - 25, 120,
+    25, "Toggle Anchor", function(self)
+        if addon.MythicPlus.anchorFrame:IsShown() then
+            addon.MythicPlus.anchorFrame:Hide()
+            self:SetText("Toggle Anchor")
+        else
+            self:SetText("Save Anchor")
+            addon.MythicPlus.anchorFrame:Show()
+        end
+    end)

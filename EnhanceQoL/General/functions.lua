@@ -122,3 +122,15 @@ function addon.functions.createDropdown(id, frame, items, width, text, x, y, ini
     UIDropDownMenu_Initialize(dropdown, Initialize)
     return label
 end
+
+function addon.functions.createButton(parent, x, y, width, height, text, script)
+    local button = CreateFrame("Button", nil, parent, "GameMenuButtonTemplate")
+    button:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)
+    button:SetSize(width, height)
+    button:SetText(text)
+    button:SetFrameStrata("DIALOG")
+    button:SetNormalFontObject("GameFontNormalLarge")
+    button:SetHighlightFontObject("GameFontHighlightLarge")
+    button:SetScript("OnClick", script)
+    return button
+end

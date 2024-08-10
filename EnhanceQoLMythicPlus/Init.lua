@@ -30,6 +30,25 @@ end
 if nil == addon.db["PullTimerType"] or addon.db["PullTimerType"] == 0 then
     addon.db["PullTimerType"] = 4
 end
+if nil == addon.db["PullTimerType"] or addon.db["PullTimerType"] == 0 then
+    addon.db["PullTimerType"] = 4
+end
+
+--Cooldown Tracker
+if nil == addon.db["CooldownTrackerPoint"] then
+    addon.db["CooldownTrackerPoint"] = "CENTER"
+end
+if nil == addon.db["CooldownTrackerX"] then
+    addon.db["CooldownTrackerX"] = 0
+end
+if nil == addon.db["CooldownTrackerY"] then
+    addon.db["CooldownTrackerY"] = 0
+end
+
+if nil == addon.db["CooldownTrackerBarHeight"] then
+    addon.db["CooldownTrackerBarHeight"] = 30
+end
+
 
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus

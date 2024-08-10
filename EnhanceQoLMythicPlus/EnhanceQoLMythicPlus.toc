@@ -11,4 +11,5 @@
 Init.lua
 locales.xml
 
+CooldownTracker.lua
 EnhanceQoLMythicPlus.lua
