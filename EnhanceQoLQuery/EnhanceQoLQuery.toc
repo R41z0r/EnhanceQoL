@@ -1,4 +1,4 @@
-## Interface: 11000, 11002
+## Interface: 110000, 110002
 ## Title: Enhance QoL Query
 ## Notes: A simple addon to show item info
 ## Author: R41Z0R

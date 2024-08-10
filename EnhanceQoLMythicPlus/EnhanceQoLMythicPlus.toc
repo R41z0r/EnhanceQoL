@@ -4,7 +4,7 @@
 ## Version: @project-version@
 ## Notes: Mythic Plus extends your Game in Dungeons
 ## Dependencies: EnhanceQoL
-## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## IconTexture: Interface\AddOns\EnhanceQoLMythicPlus\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail
 

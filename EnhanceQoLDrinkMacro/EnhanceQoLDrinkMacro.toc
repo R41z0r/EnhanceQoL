@@ -4,7 +4,7 @@
 ## Version: @project-version@
 ## Notes: DrinkMacro - Automatically picks the best drink in your bags and set a macro with that
 ## Dependencies: EnhanceQoL
-## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## IconTexture: Interface\AddOns\EnhanceQoLDrinkMacro\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail
 
