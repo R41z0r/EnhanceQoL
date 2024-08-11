@@ -395,7 +395,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
             elseif string.match(arg1, "^party") and UnitInParty(arg1) and not UnitInRaid(arg1) then
                 createBar(arg1, arg3)
                 return
-            elseif addon.db["potionTrackerDisableRaid"] == false and UnitInRaid(arg1) then
+            elseif addon.db["potionTrackerDisableRaid"] == false and string.match(arg1, "^raid") and UnitInRaid(arg1) then
                 createBar(arg1, arg3)
                 return
             end
