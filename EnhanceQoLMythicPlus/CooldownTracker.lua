@@ -246,7 +246,7 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
         frame:SetStatusBarColor(rPerc, gPerc, bPerc)
     end
     frame:SetBackdropColor(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 50% Transparenz
-    local spellName, _, spellIcon
+    local _, spellIcon
     if potInfo.isInvis then
         spellIcon = 136153 -- Invis icon
     elseif potInfo.isHealpot then
@@ -257,7 +257,7 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
             local spellInfo = C_Spell.GetSpellInfo(spellID)
             spellIcon = spellInfo.iconID
         else
-            spellName, _, spellIcon = GetSpellInfo(spellID)
+            _, _, spellIcon = GetSpellInfo(spellID)
         end
     end
     frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
