@@ -28,3 +28,21 @@ L["Blizzard Pull Timer"] = "Blizzard Pull Timer"
 L["DBM / BigWigs Pull Timer"] = "DBM / BigWigs Pull Timer"
 L["Both"] = "Blizzard and DBM / BigWigs"
 L["Pull Timer Type"] = "Pull Timer Type"
+
+-- Potion Tracker
+L["Drag me to position Cooldownbars"] = "Drag me to position Cooldownbars"
+L["Potion Tracker"] = "Potion tracker"
+L["Toggle Anchor"] = "Toggle anchor"
+L["Save Anchor"] = "Save anchor"
+L["potionTrackerHeadline"] =
+    "This enables you to track the CD of the\ncombat potions of your party members as a moveable bar"
+L["potionTracker"] = "Enable potion cooldown tracker"
+L["potionTrackerUpwardsBar"] = "Grow upwards"
+L["potionTrackerClassColor"] = "Use class colors for bars"
+L["potionTrackerDisableRaid"] = "Disable potion tracker in raid"
+
+L["Tinker"] = "Tinker"
+L["InvisPotion"] = "Invis"
+L["potionTrackerShowTooltip"] = "Show tooltip on icon"
+L["HealingPotion"] = "Heal"
+L["potionTrackerHealingPotions"] = "Track health pot CD"

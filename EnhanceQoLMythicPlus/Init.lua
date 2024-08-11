@@ -34,7 +34,7 @@ if nil == addon.db["PullTimerType"] or addon.db["PullTimerType"] == 0 then
     addon.db["PullTimerType"] = 4
 end
 
---Cooldown Tracker
+-- Cooldown Tracker
 if nil == addon.db["CooldownTrackerPoint"] then
     addon.db["CooldownTrackerPoint"] = "CENTER"
 end
@@ -49,6 +49,22 @@ if nil == addon.db["CooldownTrackerBarHeight"] then
     addon.db["CooldownTrackerBarHeight"] = 30
 end
 
+if nil == addon.db["potionTracker"] then
+    addon.db["potionTracker"] = false
+end
+
+if nil == addon.db["potionTrackerUpwardsBar"] then
+    addon.db["potionTrackerUpwardsBar"] = false
+end
+if nil == addon.db["potionTrackerDisableRaid"] then
+    addon.db["potionTrackerDisableRaid"] = true
+end
+if nil == addon.db["potionTrackerShowTooltip"] then
+    addon.db["potionTrackerShowTooltip"] = true
+end
+if nil == addon.db["potionTrackerHealingPotions"] then
+    addon.db["potionTrackerHealingPotions"] = false
+end
 
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus
@@ -57,6 +73,7 @@ addon.MythicPlus.functions = {}
 addon.MythicPlus.Buttons = {}
 addon.MythicPlus.nrOfButtons = 0
 addon.MythicPlus.variables = {}
+addon.MythicPlus.variables.numOfTabs = 0
 
 -- PullTimer
 addon.MythicPlus.variables.handled = false
@@ -99,4 +116,24 @@ function addon.MythicPlus.functions.removeExistingButton()
     end
     addon.MythicPlus.Buttons = {}
     addon.MythicPlus.nrOfButtons = 0
+end
+
+function addon.MythicPlus.functions.createTabFrame(text, frame)
+    addon.MythicPlus.variables.numOfTabs = addon.MythicPlus.variables.numOfTabs + 1
+    local tab1 = addon.functions.createTabButton(frame, addon.MythicPlus.variables.numOfTabs, text)
+    tab1:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
+
+    PanelTemplates_SetNumTabs(frame, addon.MythicPlus.variables.numOfTabs)
+    PanelTemplates_SetTab(frame, 1)
+
+    frame.tabs[addon.MythicPlus.variables.numOfTabs] = CreateFrame("Frame", nil, frame, "InsetFrameTemplate")
+    frame.tabs[addon.MythicPlus.variables.numOfTabs]:SetSize((frame:GetWidth() - 8), (frame:GetHeight() - 20))
+    frame.tabs[addon.MythicPlus.variables.numOfTabs]:SetPoint("TOPLEFT", 3, -2 - (tab1:GetHeight()))
+
+    if addon.MythicPlus.variables.numOfTabs == 1 then
+        frame.tabs[addon.MythicPlus.variables.numOfTabs]:Show()
+    else
+        frame.tabs[addon.MythicPlus.variables.numOfTabs]:Hide()
+    end
+    return frame.tabs[addon.MythicPlus.variables.numOfTabs]
 end

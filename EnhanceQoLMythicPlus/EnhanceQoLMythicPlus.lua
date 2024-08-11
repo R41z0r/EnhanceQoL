@@ -144,25 +144,42 @@ end
 frameLoad:SetScript("OnEvent", eventHandler)
 
 -- Extend the option menu
+-- Extend the option menu
 local frame = addon.functions.createTabFrame(L["Mythic Plus"])
+frame.tabs = {}
+frame:SetScript("OnSizeChanged", function(self, width, height)
+    for i, tab in ipairs(frame.tabs) do
+        tab:SetSize(width - 5, height - 35)
+    end
+end)
+function frame:ShowTab(id)
+    for _, tabContent in pairs(self.tabs) do
+        tabContent:Hide()
+    end
+    if self.tabs[id] then
+        self.tabs[id]:Show()
+    end
+end
 
-local header = addon.functions.createHeader(frame, L[addonName], 0, -10)
-local cbKeyInsert = addon.functions.createCheckbox("autoInsertKeystone", frame, L["Automatically insert keystone"], 10,
-    (addon.functions.getHeightOffset(header) - 10))
+local tabFrameKeystone = addon.MythicPlus.functions.createTabFrame("Keystone", frame)
 
-local cbCloseBags = addon.functions.createCheckbox("closeBagsOnKeyInsert", frame,
+-- local header = addon.functions.createHeader(frame, L[addonName], 0, -10)
+local cbKeyInsert = addon.functions.createCheckbox("autoInsertKeystone", tabFrameKeystone,
+    L["Automatically insert keystone"], 10, -10)
+
+local cbCloseBags = addon.functions.createCheckbox("closeBagsOnKeyInsert", tabFrameKeystone,
     L["Close all bags on keystone insert"], 10, (addon.functions.getHeightOffset(cbKeyInsert) - 10))
 
-local cbCancelOnPullTimer = addon.functions.createCheckbox("cancelPullTimerOnClick", frame,
+local cbCancelOnPullTimer = addon.functions.createCheckbox("cancelPullTimerOnClick", tabFrameKeystone,
     L["Cancel Pull Timer on click"], 10, (addon.functions.getHeightOffset(cbCloseBags) - 5))
 
-local cbNoChatOnPullTimer = addon.functions.createCheckbox("noChatOnPullTimer", frame, L["noChatOnPullTimer"], 10,
-    (addon.functions.getHeightOffset(cbCancelOnPullTimer) - 5))
+local cbNoChatOnPullTimer = addon.functions.createCheckbox("noChatOnPullTimer", tabFrameKeystone,
+    L["noChatOnPullTimer"], 10, (addon.functions.getHeightOffset(cbCancelOnPullTimer) - 5))
 
-local cbAutoKeyStart = addon.functions.createCheckbox("autoKeyStart", frame, L["autoKeyStart"], 10,
+local cbAutoKeyStart = addon.functions.createCheckbox("autoKeyStart", tabFrameKeystone, L["autoKeyStart"], 10,
     (addon.functions.getHeightOffset(cbNoChatOnPullTimer) - 5))
 
-local labelPullTimerType = addon.functions.createDropdown("PullTimerType", frame, {{
+local labelPullTimerType = addon.functions.createDropdown("PullTimerType", tabFrameKeystone, {{
     text = L["None"],
     value = 1
 }, {
@@ -176,19 +193,92 @@ local labelPullTimerType = addon.functions.createDropdown("PullTimerType", frame
     value = 4
 }}, 150, L["Pull Timer Type"], 10, addon.functions.getHeightOffset(cbAutoKeyStart) - 10, addon.db["PullTimerType"])
 
-local longSlider = addon.functions.createSlider("pullTimerLongTime", frame, L["sliderLongTime"], 15,
+local longSlider = addon.functions.createSlider("pullTimerLongTime", tabFrameKeystone, L["sliderLongTime"], 15,
     (addon.functions.getHeightOffset(labelPullTimerType) - 60), addon.db["pullTimerLongTime"], 1, 60, "s")
 
-local shortSlider = addon.functions.createSlider("pullTimerShortTime", frame, L["sliderShortTime"], 15,
+local shortSlider = addon.functions.createSlider("pullTimerShortTime", tabFrameKeystone, L["sliderShortTime"], 15,
     (addon.functions.getHeightOffset(longSlider) - 25), addon.db["pullTimerShortTime"], 1, 60, "s")
 
-local btnToggleAnchor = addon.functions.createButton(frame, 10, addon.functions.getHeightOffset(shortSlider) - 25, 120,
-    25, "Toggle Anchor", function(self)
+-- Potion Tracker
+
+local function hideElements(elements, value)
+    for _, element in pairs(elements) do
+        if value then
+            element:Show()
+        else
+            element:Hide()
+        end
+    end
+end
+
+local hideList = {}
+local tabFramePotionCooldown = addon.MythicPlus.functions.createTabFrame(L["Potion Tracker"], frame)
+
+local labelPotionTracker = addon.functions.createLabel(tabFramePotionCooldown, L["potionTrackerHeadline"], 0, -10,
+    "TOP", "TOP")
+
+local cbPotionTrackerEnabled = addon.functions.createCheckbox("potionTracker", tabFramePotionCooldown,
+    L["potionTracker"], 10, (addon.functions.getHeightOffset(labelPotionTracker) - 10))
+cbPotionTrackerEnabled:SetScript("OnClick", function(self)
+    hideElements(hideList, self:GetChecked())
+    addon.db["potionTracker"] = self:GetChecked()
+    if self:GetChecked() == false then
+        addon.MythicPlus.functions.resetCooldownBars()
+    end
+end)
+local btnToggleAnchor = addon.functions.createButton(tabFramePotionCooldown, 10,
+    (addon.functions.getHeightOffset(cbPotionTrackerEnabled) - 10), 140, 25, L["Toggle Anchor"], function(self)
         if addon.MythicPlus.anchorFrame:IsShown() then
             addon.MythicPlus.anchorFrame:Hide()
-            self:SetText("Toggle Anchor")
+            self:SetText(L["Toggle Anchor"])
         else
-            self:SetText("Save Anchor")
+            self:SetText(L["Save Anchor"])
             addon.MythicPlus.anchorFrame:Show()
         end
     end)
+table.insert(hideList, btnToggleAnchor)
+
+local cbPotionTrackerUpwards = addon.functions.createCheckbox("potionTrackerUpwardsBar", tabFramePotionCooldown,
+    L["potionTrackerUpwardsBar"], 10, (addon.functions.getHeightOffset(btnToggleAnchor) - 10))
+cbPotionTrackerUpwards:SetScript("OnClick", function(self)
+    addon.db["potionTrackerUpwardsBar"] = self:GetChecked()
+    addon.MythicPlus.functions.updateBars()
+end)
+table.insert(hideList, cbPotionTrackerUpwards)
+
+local cbPotionTrackerClassColors = addon.functions.createCheckbox("potionTrackerClassColor", tabFramePotionCooldown,
+    L["potionTrackerClassColor"], 10, (addon.functions.getHeightOffset(cbPotionTrackerUpwards) - 10))
+cbPotionTrackerClassColors:SetScript("OnClick", function(self)
+    addon.db["potionTrackerClassColor"] = self:GetChecked()
+end)
+table.insert(hideList, cbPotionTrackerClassColors)
+
+local cbPotionTrackerDisableRaid = addon.functions.createCheckbox("potionTrackerDisableRaid", tabFramePotionCooldown,
+    L["potionTrackerDisableRaid"], 10, (addon.functions.getHeightOffset(cbPotionTrackerClassColors) - 10))
+cbPotionTrackerDisableRaid:SetScript("OnClick", function(self)
+    addon.db["potionTrackerDisableRaid"] = self:GetChecked()
+end)
+cbPotionTrackerDisableRaid:SetScript("OnClick", function(self)
+    addon.db["potionTrackerDisableRaid"] = self:GetChecked()
+    if self:GetChecked() == true and UnitInRaid("player") then
+        addon.MythicPlus.functions.resetCooldownBars()
+    end
+end)
+
+table.insert(hideList, cbPotionTrackerDisableRaid)
+
+local cbPotionTrackerShowTooltip = addon.functions.createCheckbox("potionTrackerShowTooltip", tabFramePotionCooldown,
+    L["potionTrackerShowTooltip"], 10, (addon.functions.getHeightOffset(cbPotionTrackerDisableRaid) - 10))
+
+table.insert(hideList, cbPotionTrackerShowTooltip)
+
+local cbPotionTrackerShowHealpot = addon.functions.createCheckbox("potionTrackerHealingPotions", tabFramePotionCooldown,
+    L["potionTrackerHealingPotions"], 10, (addon.functions.getHeightOffset(cbPotionTrackerShowTooltip) - 10))
+
+table.insert(hideList, cbPotionTrackerShowHealpot)
+
+-- Bigger frame for all Options
+addon.frame:SetSize(500, 550)
+
+hideElements(hideList, addon.db["potionTracker"])
+

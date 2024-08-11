@@ -110,38 +110,42 @@ function loadMain()
 
     local checkbox3 = addon.functions.createCheckbox("hideMinimapButton", fTab, L["Hide Minimap Button"], 10,
         (addon.functions.getHeightOffset(checkbox2)))
+    checkbox3:SetScript("OnClick", function(self)
+        addon.db["hideMinimapButton"] = self:GetChecked()
+        addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
+    end)
 
     -- Funktion zum Abrufen der Checkbox-Werte
-    local function getCheckboxValues(self)
-        local oldKey = {}
-        for i, checkbox in ipairs(addon.checkboxes) do
-            EnhanceQoLDB[checkbox:GetName()] = checkbox:GetChecked()
-            if(checkbox:GetName() == "hideMinimapButton") then
-                addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
-            end
-        end
+    -- local function getCheckboxValues(self)
+    --     -- local oldKey = {}
+    --     -- for i, checkbox in ipairs(addon.checkboxes) do
+    --     --     EnhanceQoLDB[checkbox:GetName()] = checkbox:GetChecked()
+    --     --     if (checkbox:GetName() == "hideMinimapButton") then
+    --     --         addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
+    --     --     end
+    --     -- end
 
-        for key, value in pairs(addon.saveVariables) do
-            EnhanceQoLDB[key] = value
-        end
+    --     -- for key, value in pairs(addon.saveVariables) do
+    --     --     EnhanceQoLDB[key] = value
+    --     -- end
 
-        if type(addon.functions.updateAvailableDrinks) == "function" then
-            -- Update allowed drinks because of changed mana value
-            addon.functions.updateAllowedDrinks()
-            addon.functions.updateAvailableDrinks(false)
-        end
+    --     -- if type(addon.functions.updateAvailableDrinks) == "function" then
+    --     --     -- Update allowed drinks because of changed mana value
+    --     --     addon.functions.updateAllowedDrinks()
+    --     --     addon.functions.updateAvailableDrinks(false)
+    --     -- end
 
-        self:GetParent():Hide()
-    end
+    --     -- self:GetParent():Hide()
+    -- end
 
-    -- Button zum Abrufen der Checkbox-Werte
-    local button = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate")
-    button:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
-    button:SetSize(140, 40)
-    button:SetText(L["Save"])
-    button:SetNormalFontObject("GameFontNormalLarge")
-    button:SetHighlightFontObject("GameFontHighlightLarge")
-    button:SetScript("OnClick", getCheckboxValues)
+    -- -- Button zum Abrufen der Checkbox-Werte
+    -- local button = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate")
+    -- button:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
+    -- button:SetSize(140, 40)
+    -- button:SetText(L["Save"])
+    -- button:SetNormalFontObject("GameFontNormalLarge")
+    -- button:SetHighlightFontObject("GameFontHighlightLarge")
+    -- button:SetScript("OnClick", getCheckboxValues)
 
     -- Slash-Command hinzufügen
     SLASH_ENHANCEQOL1 = "/eqol"
@@ -187,7 +191,7 @@ function loadMain()
     -- Toggle Minimap Button based on settings
     LDBIcon:Register(addonName, EnhanceQoLLDB, EnhanceQoLDB)
 
-    --Register to addon compartment
+    -- Register to addon compartment
     AddonCompartmentFrame:RegisterAddon({
         text = "Enhance QoL",
         icon = "Interface\\AddOns\\EnhanceQoL\\Icons\\Icon.tga",
@@ -206,7 +210,7 @@ function loadMain()
         end,
         funcOnLeave = function(button)
             MenuUtil.HideTooltip(button)
-        end,
+        end
     })
 
     if nil == addon.db["hideMinimapButton"] then

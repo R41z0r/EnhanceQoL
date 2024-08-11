@@ -6,6 +6,9 @@ function addon.functions.createCheckbox(name, parent, label, x, y)
     local checkbox = CreateFrame("CheckButton", name, parent, "ChatConfigCheckButtonTemplate")
     checkbox:SetPoint("TOPLEFT", x, y)
     checkbox:SetChecked(addon.db["" .. name])
+    checkbox:SetScript("OnClick", function(self)
+        addon.db["" .. name] = self:GetChecked()
+    end)
     getglobal(checkbox:GetName() .. 'Text'):SetText(label)
     table.insert(addon.checkboxes, checkbox)
     return checkbox
@@ -33,7 +36,7 @@ function addon.functions.createSlider(id, parent, label, x, y, initial, min, max
     slider:SetScript("OnValueChanged", function(self, value)
         value = math.floor(value)
         _G[self:GetName() .. 'Text']:SetText(label .. ': ' .. value .. addText)
-        addon.saveVariables[id] = value
+        addon.db[id] = value
     end)
     return slider
 end
@@ -83,6 +86,13 @@ function addon.functions.getHeightOffset(element)
     return headerY - element:GetHeight()
 end
 
+function addon.functions.createLabel(frame, text, x, y, anchor, point)
+    local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    label:SetPoint(point, frame, anchor, x, y)
+    label:SetText(text)
+    return label
+end
+
 function addon.functions.createDropdown(id, frame, items, width, text, x, y, initial)
     -- Erstelle ein Label
     local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -101,7 +111,7 @@ function addon.functions.createDropdown(id, frame, items, width, text, x, y, ini
     -- Funktion zum Erstellen der Menüeinträge
     local function OnClick(self)
         UIDropDownMenu_SetSelectedID(dropdown, self:GetID())
-        addon.saveVariables[id] = self.value
+        addon.db[id] = self.value
     end
 
     local function Initialize(self, level)

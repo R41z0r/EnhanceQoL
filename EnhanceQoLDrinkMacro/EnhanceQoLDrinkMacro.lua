@@ -72,10 +72,28 @@ local header = addon.functions.createHeader(frame, L[addonName], 0, -10)
 local cbPreferMage = addon.functions.createCheckbox("preferMageFood", frame, L["Prefer mage food"], 10,
     (addon.functions.getHeightOffset(header) - 10))
 
+cbPreferMage:SetScript("OnClick", function(self)
+    addon.db["preferMageFood"] = self:GetChecked()
+    addon.functions.updateAllowedDrinks()
+    addon.functions.updateAvailableDrinks(false)
+end)
+
 local cbBuffFood = addon.functions.createCheckbox("ignoreBuffFood", frame, L["Ignore bufffood"], 10,
     (addon.functions.getHeightOffset(cbPreferMage)))
 
-addon.functions.createSlider("minManaFoodValue", frame, L["Minimum mana restore for food"], 15,
-    (addon.functions.getHeightOffset(cbBuffFood) - 25), initialValue, 0, 100, "%")
+cbBuffFood:SetScript("OnClick", function(self)
+    addon.db["ignoreBuffFood"] = self:GetChecked()
+    addon.functions.updateAllowedDrinks()
+    addon.functions.updateAvailableDrinks(false)
+end)
 
+local sliderDrinkValue = addon.functions.createSlider("minManaFoodValue", frame, L["Minimum mana restore for food"], 15,
+    (addon.functions.getHeightOffset(cbBuffFood) - 25), initialValue, 0, 100, "%")
+sliderDrinkValue:SetScript("OnValueChanged", function(self, value)
+    value = math.floor(value)
+    _G[self:GetName() .. 'Text']:SetText(L["Minimum mana restore for food"] .. ': ' .. value .. "%")
+    addon.db["minManaFoodValue"] = value
+    addon.functions.updateAllowedDrinks()
+    addon.functions.updateAvailableDrinks(false)
+end)
 addon.functions.updateAllowedDrinks()
