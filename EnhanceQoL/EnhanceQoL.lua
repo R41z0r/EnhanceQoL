@@ -115,38 +115,6 @@ function loadMain()
         addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
     end)
 
-    -- Funktion zum Abrufen der Checkbox-Werte
-    -- local function getCheckboxValues(self)
-    --     -- local oldKey = {}
-    --     -- for i, checkbox in ipairs(addon.checkboxes) do
-    --     --     EnhanceQoLDB[checkbox:GetName()] = checkbox:GetChecked()
-    --     --     if (checkbox:GetName() == "hideMinimapButton") then
-    --     --         addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
-    --     --     end
-    --     -- end
-
-    --     -- for key, value in pairs(addon.saveVariables) do
-    --     --     EnhanceQoLDB[key] = value
-    --     -- end
-
-    --     -- if type(addon.functions.updateAvailableDrinks) == "function" then
-    --     --     -- Update allowed drinks because of changed mana value
-    --     --     addon.functions.updateAllowedDrinks()
-    --     --     addon.functions.updateAvailableDrinks(false)
-    --     -- end
-
-    --     -- self:GetParent():Hide()
-    -- end
-
-    -- -- Button zum Abrufen der Checkbox-Werte
-    -- local button = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate")
-    -- button:SetPoint("BOTTOM", frame, "BOTTOM", 0, 10)
-    -- button:SetSize(140, 40)
-    -- button:SetText(L["Save"])
-    -- button:SetNormalFontObject("GameFontNormalLarge")
-    -- button:SetHighlightFontObject("GameFontHighlightLarge")
-    -- button:SetScript("OnClick", getCheckboxValues)
-
     -- Slash-Command hinzufügen
     SLASH_ENHANCEQOL1 = "/eqol"
     SLASH_ENHANCEQOL2 = "/eqol resetframe"

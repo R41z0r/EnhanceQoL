@@ -7,6 +7,7 @@ else
 end
 local L = addon.LMythicPlus
 
+L["Keystone"] = "Keystone"
 L["Automatically insert keystone"] = "Automatically insert keystone"
 L["Mythic Plus"] = "Mythic+"
 L[addonName] = "Mythic+"
@@ -46,3 +47,9 @@ L["InvisPotion"] = "Invis"
 L["potionTrackerShowTooltip"] = "Show tooltip on icon"
 L["HealingPotion"] = "Heal"
 L["potionTrackerHealingPotions"] = "Track health pot CD"
+
+-- LFG Tools
+
+L["DungeonBrowser"] = "Dungeonbrowser"
+L["groupfinderAppText"] = "Hide the group finder text \"Your group is currently forming\""
+L["groupfinderSkipRolecheck"] = "Skip Role Check and use current role"

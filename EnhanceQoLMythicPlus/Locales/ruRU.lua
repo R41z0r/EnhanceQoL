@@ -11,6 +11,7 @@ else
 end
 local L = addon.LMythicPlus
 
+L["Keystone"] = "Ключевой камень"
 L["Automatically insert keystone"] = "Автоматически вставлять ключ"
 L["Mythic Plus"] = "Мифик+"
 L[addonName] = "Мифик+"

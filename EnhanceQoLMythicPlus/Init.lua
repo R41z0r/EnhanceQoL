@@ -66,6 +66,14 @@ if nil == addon.db["potionTrackerHealingPotions"] then
     addon.db["potionTrackerHealingPotions"] = false
 end
 
+-- Dungeon Browser
+if nil == addon.db["groupfinderAppText"] then
+    addon.db["groupfinderAppText"] = true
+end
+if nil == addon.db["groupfinderSkipRolecheck"] then
+    addon.db["groupfinderSkipRolecheck"] = true
+end
+
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus
 addon.MythicPlus.functions = {}

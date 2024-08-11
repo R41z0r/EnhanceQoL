@@ -10,6 +10,7 @@ else
 end
 local L = addon.LMythicPlus
 
+L["Keystone"] = "Clé de voûte"
 L["Automatically insert keystone"] = "Insérer automatiquement la clé de voûte"
 L["Mythic Plus"] = "Mythique+"
 L[addonName] = "Mythique+"

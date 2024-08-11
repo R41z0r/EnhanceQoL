@@ -127,7 +127,55 @@ end
 
 -- Registriere das Event
 frameLoad:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
+frameLoad:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED")
 frameLoad:RegisterEvent("READY_CHECK_FINISHED")
+frameLoad:RegisterEvent("LFG_ROLE_CHECK_SHOW")
+
+local function skipRolecheck()
+    local tank, healer, dps = false, false, false
+    local role = UnitGroupRolesAssigned("player")
+    if role == "NONE" then
+        role = GetSpecializationRole(GetSpecialization());
+    end
+    if role == "TANK" then
+        tank = true;
+    elseif role == "DAMAGER" then
+        dps = true;
+    elseif role == "HEALER" then
+        healer = true;
+    end
+    if LFDRoleCheckPopupRoleButtonTank.checkButton:IsEnabled() then
+        LFDRoleCheckPopupRoleButtonTank.checkButton:SetChecked(tank);
+    end
+    if LFDRoleCheckPopupRoleButtonHealer.checkButton:IsEnabled() then
+        LFDRoleCheckPopupRoleButtonHealer.checkButton:SetChecked(healer);
+    end
+    if LFDRoleCheckPopupRoleButtonDPS.checkButton:IsEnabled() then
+        LFDRoleCheckPopupRoleButtonDPS.checkButton:SetChecked(dps);
+    end
+    LFDRoleCheckPopupAcceptButton:Enable();
+    LFDRoleCheckPopupAcceptButton:Click();
+end
+
+local function toggleGroupApplication(value)
+    if value then
+        -- Hide overlay and text label
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Label:Hide()
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Background:Hide()
+        -- Hide the 3 animated texture icons
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot1:Hide()
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot2:Hide()
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot3:Hide()
+    else
+        -- Hide overlay and text label
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Label:Show()
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Background:Show()
+        -- Hide the 3 animated texture icons
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot1:Show()
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot2:Show()
+        _G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot3:Show()
+    end
+end
 
 -- Funktion zum Umgang mit Events
 local function eventHandler(self, event, arg1, arg2, arg3, arg4)
@@ -137,6 +185,10 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
         checkKeyStone()
     elseif event == "READY_CHECK_FINISHED" and ChallengesKeystoneFrame and addon.MythicPlus.Buttons["ReadyCheck"] then
         addon.MythicPlus.Buttons["ReadyCheck"]:SetText(L["ReadyCheck"])
+    elseif event == "LFG_LIST_APPLICANT_LIST_UPDATED" and addon.db["groupfinderAppText"] then
+        toggleGroupApplication(true)
+    elseif event == "LFG_ROLE_CHECK_SHOW" and addon.db["groupfinderSkipRolecheck"] and UnitInParty("player") then
+        skipRolecheck()
     end
 end
 
@@ -161,7 +213,29 @@ function frame:ShowTab(id)
     end
 end
 
-local tabFrameKeystone = addon.MythicPlus.functions.createTabFrame("Keystone", frame)
+local function hideElements(elements, value)
+    for _, element in pairs(elements) do
+        if value then
+            element:Show()
+        else
+            element:Hide()
+        end
+    end
+end
+
+local tabFrameDungeonBrowser = addon.MythicPlus.functions.createTabFrame(L["DungeonBrowser"], frame)
+local cbGroupFinderAppText = addon.functions.createCheckbox("groupfinderAppText", tabFrameDungeonBrowser,
+    L["groupfinderAppText"], 10, -10)
+cbGroupFinderAppText:SetScript("OnClick", function(self)
+    addon.db["groupfinderAppText"] = self:GetChecked()
+    toggleGroupApplication(self:GetChecked())
+end)
+
+local cbGroupFinderSkipRolecheck = addon.functions.createCheckbox("groupfinderSkipRolecheck", tabFrameDungeonBrowser,
+    L["groupfinderSkipRolecheck"], 10, (addon.functions.getHeightOffset(cbGroupFinderAppText) - 10))
+
+-- Tab Keystone
+local tabFrameKeystone = addon.MythicPlus.functions.createTabFrame(L["Keystone"], frame)
 
 -- local header = addon.functions.createHeader(frame, L[addonName], 0, -10)
 local cbKeyInsert = addon.functions.createCheckbox("autoInsertKeystone", tabFrameKeystone,
@@ -200,18 +274,7 @@ local shortSlider = addon.functions.createSlider("pullTimerShortTime", tabFrameK
     (addon.functions.getHeightOffset(longSlider) - 25), addon.db["pullTimerShortTime"], 1, 60, "s")
 
 -- Potion Tracker
-
-local function hideElements(elements, value)
-    for _, element in pairs(elements) do
-        if value then
-            element:Show()
-        else
-            element:Hide()
-        end
-    end
-end
-
-local hideList = {}
+local hideListPotion = {}
 local tabFramePotionCooldown = addon.MythicPlus.functions.createTabFrame(L["Potion Tracker"], frame)
 
 local labelPotionTracker = addon.functions.createLabel(tabFramePotionCooldown, L["potionTrackerHeadline"], 0, -10,
@@ -220,7 +283,7 @@ local labelPotionTracker = addon.functions.createLabel(tabFramePotionCooldown, L
 local cbPotionTrackerEnabled = addon.functions.createCheckbox("potionTracker", tabFramePotionCooldown,
     L["potionTracker"], 10, (addon.functions.getHeightOffset(labelPotionTracker) - 10))
 cbPotionTrackerEnabled:SetScript("OnClick", function(self)
-    hideElements(hideList, self:GetChecked())
+    hideElements(hideListPotion, self:GetChecked())
     addon.db["potionTracker"] = self:GetChecked()
     if self:GetChecked() == false then
         addon.MythicPlus.functions.resetCooldownBars()
@@ -236,7 +299,7 @@ local btnToggleAnchor = addon.functions.createButton(tabFramePotionCooldown, 10,
             addon.MythicPlus.anchorFrame:Show()
         end
     end)
-table.insert(hideList, btnToggleAnchor)
+table.insert(hideListPotion, btnToggleAnchor)
 
 local cbPotionTrackerUpwards = addon.functions.createCheckbox("potionTrackerUpwardsBar", tabFramePotionCooldown,
     L["potionTrackerUpwardsBar"], 10, (addon.functions.getHeightOffset(btnToggleAnchor) - 10))
@@ -244,14 +307,14 @@ cbPotionTrackerUpwards:SetScript("OnClick", function(self)
     addon.db["potionTrackerUpwardsBar"] = self:GetChecked()
     addon.MythicPlus.functions.updateBars()
 end)
-table.insert(hideList, cbPotionTrackerUpwards)
+table.insert(hideListPotion, cbPotionTrackerUpwards)
 
 local cbPotionTrackerClassColors = addon.functions.createCheckbox("potionTrackerClassColor", tabFramePotionCooldown,
     L["potionTrackerClassColor"], 10, (addon.functions.getHeightOffset(cbPotionTrackerUpwards) - 10))
 cbPotionTrackerClassColors:SetScript("OnClick", function(self)
     addon.db["potionTrackerClassColor"] = self:GetChecked()
 end)
-table.insert(hideList, cbPotionTrackerClassColors)
+table.insert(hideListPotion, cbPotionTrackerClassColors)
 
 local cbPotionTrackerDisableRaid = addon.functions.createCheckbox("potionTrackerDisableRaid", tabFramePotionCooldown,
     L["potionTrackerDisableRaid"], 10, (addon.functions.getHeightOffset(cbPotionTrackerClassColors) - 10))
@@ -265,20 +328,20 @@ cbPotionTrackerDisableRaid:SetScript("OnClick", function(self)
     end
 end)
 
-table.insert(hideList, cbPotionTrackerDisableRaid)
+table.insert(hideListPotion, cbPotionTrackerDisableRaid)
 
 local cbPotionTrackerShowTooltip = addon.functions.createCheckbox("potionTrackerShowTooltip", tabFramePotionCooldown,
     L["potionTrackerShowTooltip"], 10, (addon.functions.getHeightOffset(cbPotionTrackerDisableRaid) - 10))
 
-table.insert(hideList, cbPotionTrackerShowTooltip)
+table.insert(hideListPotion, cbPotionTrackerShowTooltip)
 
 local cbPotionTrackerShowHealpot = addon.functions.createCheckbox("potionTrackerHealingPotions", tabFramePotionCooldown,
     L["potionTrackerHealingPotions"], 10, (addon.functions.getHeightOffset(cbPotionTrackerShowTooltip) - 10))
 
-table.insert(hideList, cbPotionTrackerShowHealpot)
+table.insert(hideListPotion, cbPotionTrackerShowHealpot)
 
 -- Bigger frame for all Options
 addon.frame:SetSize(500, 550)
 
-hideElements(hideList, addon.db["potionTracker"])
+hideElements(hideListPotion, addon.db["potionTracker"])
 
