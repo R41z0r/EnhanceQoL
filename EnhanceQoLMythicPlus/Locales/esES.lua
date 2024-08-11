@@ -33,12 +33,13 @@ L["DBM / BigWigs Pull Timer"] = "Temporizador de pull de DBM / BigWigs"
 L["Both"] = "Blizzard y DBM / BigWigs"
 L["Pull Timer Type"] = "Tipo de temporizador de pull"
 
---Potion Tracker
+-- Potion Tracker
 L["Drag me to position Cooldownbars"] = "Arrástrame"
 L["Potion Tracker"] = "Rastreador de pociones"
 L["Toggle Anchor"] = "Alternar ancla"
 L["Save Anchor"] = "Guardar ancla"
-L["potionTrackerHeadline"] = "Esto te permite rastrear el CD de las\npociones de combate de los miembros de tu grupo como una barra móvil"
+L["potionTrackerHeadline"] =
+    "Esto te permite rastrear el CD de las\npociones de combate de los miembros de tu grupo como una barra móvil"
 L["potionTracker"] = "Habilitar rastreador de enfriamiento de pociones"
 L["potionTrackerUpwardsBar"] = "Crecer hacia arriba"
 L["potionTrackerClassColor"] = "Usar colores de clase para las barras"
@@ -49,3 +50,9 @@ L["InvisPotion"] = "Invisibilidad"
 L["potionTrackerShowTooltip"] = "Mostrar información en el icono"
 L["HealingPotion"] = "Curación"
 L["potionTrackerHealingPotions"] = "Rastrear CD de poción de salud"
+
+-- Herramientas de Buscador de Mazmorras
+
+L["DungeonBrowser"] = "Explorador de mazmorras"
+L["groupfinderAppText"] = "Ocultar el texto del buscador de grupos \"Tu grupo se está formando actualmente\""
+L["groupfinderSkipRolecheck"] = "Omitir la verificación de rol\ny usar el rol actual"

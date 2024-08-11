@@ -49,3 +49,9 @@ L["InvisPotion"] = "Unsichtbarkeit"
 L["potionTrackerShowTooltip"] = "Tooltip auf dem Icon anzeigen"
 L["HealingPotion"] = "Heilung"
 L["potionTrackerHealingPotions"] = "Gesundheitstrank-CD verfolgen"
+
+-- LFG Tools
+
+L["DungeonBrowser"] = "Dungeonbrowser"
+L["groupfinderAppText"] = "Verstecke den Gruppenfinder-Text \"Deine Gruppe wird derzeit gebildet\""
+L["groupfinderSkipRolecheck"] = "Überspringe die Rollenauswahl\nund nutze die aktuelle Rolle"

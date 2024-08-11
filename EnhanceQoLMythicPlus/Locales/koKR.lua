@@ -50,3 +50,9 @@ L["InvisPotion"] = "투명 물약"
 L["potionTrackerShowTooltip"] = "아이콘에 툴팁 표시"
 L["HealingPotion"] = "치유"
 L["potionTrackerHealingPotions"] = "치유 물약 CD 추적"
+
+-- LFG 도구
+
+L["DungeonBrowser"] = "던전 브라우저"
+L["groupfinderAppText"] = "그룹 찾기 텍스트 \"당신의 그룹이 현재 형성 중입니다\" 숨기기"
+L["groupfinderSkipRolecheck"] = "역할 확인을 건너뛰고 현재 역할 사용"

@@ -50,3 +50,9 @@ L["InvisPotion"] = "Невидимость"
 L["potionTrackerShowTooltip"] = "Показать подсказку на значке"
 L["HealingPotion"] = "Лечение"
 L["potionTrackerHealingPotions"] = "Отслеживать КД зелья здоровья"
+
+-- Инструменты LFG
+
+L["DungeonBrowser"] = "Поиск подземелий"
+L["groupfinderAppText"] = "Скрыть текст поиска группы \"Ваша группа в настоящее время формируется\""
+L["groupfinderSkipRolecheck"] = "Пропустить проверку роли\nи использовать текущую роль"

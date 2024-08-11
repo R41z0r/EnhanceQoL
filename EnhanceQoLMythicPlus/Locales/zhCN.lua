@@ -50,3 +50,9 @@ L["InvisPotion"] = "隐形"
 L["potionTrackerShowTooltip"] = "在图标上显示提示"
 L["HealingPotion"] = "治疗"
 L["potionTrackerHealingPotions"] = "追踪治疗药水CD"
+
+-- LFG 工具
+
+L["DungeonBrowser"] = "地城瀏覽器"
+L["groupfinderAppText"] = "隱藏組隊搜尋器的文字 \"您的隊伍目前正在組成中\""
+L["groupfinderSkipRolecheck"] = "跳過角色檢查並使用當前角色"

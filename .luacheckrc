@@ -95,6 +95,10 @@ globals = {
 	"GAME_LOCALE",
 
 	-- FrameXML misc
+	"LFDRoleCheckPopupRoleButtonTank",
+	"LFDRoleCheckPopupRoleButtonHealer",
+	"LFDRoleCheckPopupRoleButtonDPS",
+	"LFDRoleCheckPopupAcceptButton",
 	"BackdropTemplateMixin",
 	"C_Timer",
 	"C_EditMode",
