@@ -182,7 +182,9 @@ function addon.MythicPlus.functions.updateBars()
     end)
 
     for _, bar in ipairs(activeBars) do
-        if bar:IsShown() then
+        if ((UnitInRaid(bar.unit) and UnitGUID(bar.unit) == bar.guid) or
+            (UnitInParty(bar.unit) and UnitGUID(bar.unit) == bar.guid) or (UnitGUID("player") == bar.guid)) and
+            bar:IsShown() then
             -- Neupositionierung des Balkens
             if addon.db["potionTrackerUpwardsBar"] then
                 bar:SetPoint("TOPLEFT", frameAnchor, "TOPLEFT", 0, yOffset)
@@ -283,6 +285,11 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
             GameTooltip:Hide()
         end)
     end
+
+    -- Speichere das unit, um später überprüfen zu können, ob die Einheit noch existiert
+    frame.unit = unit
+    frame.guid = UnitGUID(unit)
+
     -- Timer Update
     frame.timeElapsed = 0
     frame:SetScript("OnUpdate", function(self, elapsed)
@@ -354,6 +361,7 @@ RestorePosition()
 frameAnchor:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 frameAnchor:RegisterEvent("CHALLENGE_MODE_RESET")
 frameAnchor:RegisterEvent("ADDON_LOADED")
+frameAnchor:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 local function createBar(arg1, arg3)
 
@@ -384,7 +392,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
             elseif (arg1 == "player" and not isInRaid) then
                 createBar(arg1, arg3)
                 return
-            elseif UnitInParty(arg1) and not UnitInRaid(arg1) then
+            elseif string.match(arg1, "^party") and UnitInParty(arg1) and not UnitInRaid(arg1) then
                 createBar(arg1, arg3)
                 return
             elseif addon.db["potionTrackerDisableRaid"] == false and UnitInRaid(arg1) then
@@ -393,6 +401,8 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
             end
         elseif event == "CHALLENGE_MODE_RESET" then
             addon.MythicPlus.functions.resetCooldownBars()
+        elseif event == "GROUP_ROSTER_UPDATE" then
+            addon.MythicPlus.functions.updateBars()
         end
     end
 end
