@@ -155,11 +155,11 @@ local allowedSpells = {
         isHealpot = true
     } -- Grotesque Vial
 
-    -- [279153] = 300, -- 
-    -- [279153] = 300, -- 
-    -- [279153] = 300, -- 
+    -- [279153] = 300, --
+    -- [279153] = 300, --
+    -- [279153] = 300, --
 
-    -- [279153] = 300, -- 
+    -- [279153] = 300, --
 }
 local activeBars = {}
 local frameAnchor = CreateFrame("StatusBar", nil, UIParent)

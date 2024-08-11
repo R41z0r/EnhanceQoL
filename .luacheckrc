@@ -76,6 +76,7 @@ globals = {
 	"instanceId",
 	"UIDropDownMenu_SetSelectedID",
 	"TooltipDataProcessor",
+	"spellName",
 
 	-- Third Party Addons/Libs
 	"APIDocumentation",
