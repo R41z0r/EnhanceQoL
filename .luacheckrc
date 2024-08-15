@@ -79,6 +79,8 @@ globals = {
 	"UIDropDownMenu_SetSelectedID",
 	"TooltipDataProcessor",
 	"spellName",
+	"MerchantSellAllJunkButton",
+	"StaticPopup1",
 
 	-- Third Party Addons/Libs
 	"APIDocumentation",
