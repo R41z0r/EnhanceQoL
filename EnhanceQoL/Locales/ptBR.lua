@@ -16,3 +16,4 @@ L["Left-Click to show options"] = "Clique com o botão esquerdo para mostrar op�
 L["Hide Raid Tools"] = "Ocultar ferramentas de raid no grupo"
 L["repairCost"] = "Itens reparados por "
 L["autoRepair"] = "Reparar automaticamente todos os itens"
+L["sellAllJunk"] = "Vender automaticamente todos os itens inúteis"

@@ -105,6 +105,9 @@ function loadMain()
     if nil == addon.db["autoRepair"] then
         addon.db["autoRepair"] = false
     end
+    if nil == addon.db["sellAllJunk"] then
+        addon.db["sellAllJunk"] = false
+    end
 
     local fTab = addon.functions.createTabFrame("General")
     local header = addon.functions.createHeader(fTab, "General", 0, -10)
@@ -135,6 +138,9 @@ function loadMain()
 
     local cbAutoRepair = addon.functions.createCheckbox("autoRepair", fTab, L["autoRepair"], 10,
         (addon.functions.getHeightOffset(cbHideRaidTools)))
+
+    local cbSellAllJunk = addon.functions.createCheckbox("sellAllJunk", fTab, L["sellAllJunk"], 10,
+        (addon.functions.getHeightOffset(cbAutoRepair)))
 
     -- Slash-Command hinzufügen
     SLASH_ENHANCEQOL1 = "/eqol"
@@ -294,6 +300,13 @@ local function eventHandler(self, event, arg1)
                         PlaySound(SOUNDKIT.ITEM_REPAIR)
                         print(L["repairCost"] .. addon.functions.formatMoney(repairAllCost))
                     end
+                end
+            end
+
+            if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then
+                MerchantSellAllJunkButton:Click()
+                if StaticPopup1 and StaticPopup1:IsShown() then
+                    StaticPopup1.button1:Click()
                 end
             end
         end
