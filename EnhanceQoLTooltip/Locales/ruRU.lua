@@ -41,6 +41,9 @@ L["TooltipDebuffHideInDungeon"] = "Скрывать только в подзем
 L["TooltipUnitHideType"] = "Скрыть подсказку на единицы"
 L["TooltipUnitHideInCombat"] = "Скрывать только в бою"
 L["TooltipUnitHideInDungeon"] = "Скрывать только в подземельях"
+L["Mythic+ Score"] = "Рейтинг Мифик+"
+L["BestMythic+run"] = "Лучший забег"
+L["TooltipShowMythicScore"] = "Показывать рейтинг Мифик+ в подсказке"
 
 -- Spell
 L["TooltipSpellHideType"] = "Скрыть подсказку на заклинания"

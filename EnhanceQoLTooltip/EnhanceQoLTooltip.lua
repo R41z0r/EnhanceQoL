@@ -14,6 +14,7 @@ local frameLoad = CreateFrame("Frame")
 local function checkSpell(tooltip, id, name)
     if addon.db["TooltipShowSpellID"] then
         if id then
+            tooltip:AddLine(" ")
             tooltip:AddDoubleLine(name, id)
         end
     end
@@ -29,14 +30,63 @@ local function checkSpell(tooltip, id, name)
     tooltip:Hide()
 end
 
+local function checkMythicPlus(tooltip)
+    if addon.db["TooltipShowMythicScore"] then
+        local name, _, timeLimit
+        local rating = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("mouseover")
+        if rating then
+            local r, g, b = C_ChallengeMode.GetDungeonScoreRarityColor(rating.currentSeasonScore):GetRGB()
+            local bestDungeon
+            for _, key in pairs(rating.runs) do
+                name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(key.challengeModeID)
+                if nil == bestDungeon then
+                    bestDungeon = key
+                else
+                    if bestDungeon.mapScore < key.mapScore then
+                        bestDungeon = key
+                    end
+                end
+            end
+            tooltip:AddLine(" ")
+            tooltip:AddDoubleLine(L["Mythic+ Score"], rating.currentSeasonScore, 1, 1, 0, r, g, b)
+            if bestDungeon and bestDungeon.mapScore > 0 then
+                name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(bestDungeon.challengeModeID)
+                r, g, b = C_ChallengeMode.GetKeystoneLevelRarityColor(bestDungeon.bestRunLevel):GetRGB()
+                local stars
+                local hexColor = string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
+                if bestDungeon.finishedSuccess then
+                    local bestRunDuration = bestDungeon.bestRunDurationMS / 1000
+                    local timeForPlus3 = timeLimit * 0.6
+                    local timeForPlus2 = timeLimit * 0.8
+                    local timeForPlus1 = timeLimit
+                    if bestRunDuration <= timeForPlus3 then
+                        stars = "+++"
+                    elseif bestRunDuration <= timeForPlus2 then
+                        stars = "++"
+                    elseif bestRunDuration <= timeForPlus1 then
+                        stars = "+"
+                    end
+                    stars = stars .. bestDungeon.bestRunLevel
+                else
+                    stars = bestDungeon.bestRunLevel
+                end
+                tooltip:AddDoubleLine(L["BestMythic+run"], hexColor .. stars .. "|r " .. name, 1, 1, 0, 1, 1, 1)
+            end
+        end
+    end
+end
+
 local function checkUnit(tooltip)
-    if addon.db["TooltipUnitHideInDungeon"] == 1 and select(1, IsInInstance()) == false then
+    if addon.db["TooltipUnitHideInDungeon"] and select(1, IsInInstance()) == false then
+        checkMythicPlus(tooltip)
         return
     end -- only hide in dungeons
     if addon.db["TooltipUnitHideInCombat"] and UnitAffectingCombat("player") == false then
+        checkMythicPlus(tooltip)
         return
     end -- only hide in combat
     if addon.db["TooltipUnitHideType"] == 1 then
+        checkMythicPlus(tooltip)
         return
     end -- hide never
     if addon.db["TooltipUnitHideType"] == 4 then
@@ -48,11 +98,13 @@ local function checkUnit(tooltip)
     if addon.db["TooltipUnitHideType"] == 3 and UnitCanAttack("player", "mouseover") == false then
         tooltip:Hide()
     end
+    checkMythicPlus(tooltip)
 end
 
 local function checkItem(tooltip, id, name)
     if addon.db["TooltipShowItemID"] then
         if id then
+            tooltip:AddLine(" ")
             tooltip:AddDoubleLine(name, id)
         end
     end
@@ -143,7 +195,7 @@ if TooltipDataProcessor then
         if not data or not data.type then
             return
         end
-        local id, name
+        local id, name, _, timeLimit
         local kind = addon.Tooltip.variables.kindsByID[tonumber(data.type)]
         if kind == "spell" then
             id = data.id
@@ -156,8 +208,6 @@ if TooltipDataProcessor then
             checkSpell(tooltip, id, name)
             return
         elseif kind == "unit" then
-            id = data.id
-            name = L["UnitID"]
             checkUnit(tooltip)
             return
         elseif kind == "item" then
@@ -245,6 +295,9 @@ local cbTooltipHideCombat = addon.functions.createCheckbox("TooltipUnitHideInCom
 
 local cbTooltipHideDungeon = addon.functions.createCheckbox("TooltipUnitHideInDungeon", tabFrameUnit,
     L["TooltipUnitHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipHideCombat) - 5))
+
+local cbTooltipShowMythicScore = addon.functions.createCheckbox("TooltipShowMythicScore", tabFrameUnit,
+    L["TooltipShowMythicScore"], 10, (addon.functions.getHeightOffset(cbTooltipHideDungeon) - 5))
 
 -- Spells
 

@@ -16,6 +16,10 @@ if nil == addon.db["TooltipUnitHideInDungeon"] then
     addon.db["TooltipUnitHideInDungeon"] = false
 end
 
+if nil == addon.db["TooltipShowMythicScore"] then
+    addon.db["TooltipShowMythicScore"] = false
+end
+
 -- Spell
 if nil == addon.db["TooltipSpellHideType"] then
     addon.db["TooltipSpellHideType"] = 1

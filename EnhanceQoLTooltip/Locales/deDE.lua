@@ -40,6 +40,9 @@ L["TooltipDebuffHideInDungeon"] = "Nur in Dungeons ausblenden"
 L["TooltipUnitHideType"] = "Tooltip bei Einheiten ausblenden"
 L["TooltipUnitHideInCombat"] = "Nur im Kampf ausblenden"
 L["TooltipUnitHideInDungeon"] = "Nur in Dungeons ausblenden"
+L["Mythic+ Score"] = "Mythic+ Wertung"
+L["BestMythic+run"] = "Bester Lauf"
+L["TooltipShowMythicScore"] = "Mythic+ Wertung im Tooltip anzeigen"
 
 -- Spell
 L["TooltipSpellHideType"] = "Tooltip bei Zaubern ausblenden"

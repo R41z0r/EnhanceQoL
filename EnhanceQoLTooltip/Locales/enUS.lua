@@ -16,7 +16,7 @@ L["Both"] = "Both"
 L["TooltipOFF"] = "OFF"
 L["TooltipON"] = "ON"
 
---Tabs
+-- Tabs
 L["Unit"] = "Unit"
 L["Spell"] = "Spell"
 L["Item"] = "Item"
@@ -37,8 +37,11 @@ L["TooltipDebuffHideInDungeon"] = "Only hide it in dungeons"
 L["TooltipUnitHideType"] = "Hide tooltip on Unit"
 L["TooltipUnitHideInCombat"] = "Only hide it in combat"
 L["TooltipUnitHideInDungeon"] = "Only hide it in dungeons"
+L["Mythic+ Score"] = "Mythic+ Score"
+L["BestMythic+run"] = "Best run"
+L["TooltipShowMythicScore"] = "Show Mythic+ Score on Tooltip"
 
---Spell
+-- Spell
 L["TooltipSpellHideType"] = "Hide tooltip on Spells"
 
 L["TooltipSpellHideInCombat"] = "Only hide it in combat"
@@ -48,7 +51,7 @@ L["TooltipShowSpellID"] = "Show SpellID on Tooltip"
 L["SpellID"] = "SpellID"
 L["MacroID"] = "MacroID"
 
---Item
+-- Item
 L["TooltipItemHideType"] = "Hide tooltip on Items"
 
 L["TooltipItemHideInCombat"] = "Only hide it in combat"

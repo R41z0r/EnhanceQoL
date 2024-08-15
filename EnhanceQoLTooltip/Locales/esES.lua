@@ -40,6 +40,9 @@ L["TooltipDebuffHideInDungeon"] = "Ocultar solo en mazmorras"
 L["TooltipUnitHideType"] = "Ocultar tooltip en unidades"
 L["TooltipUnitHideInCombat"] = "Ocultar solo en combate"
 L["TooltipUnitHideInDungeon"] = "Ocultar solo en mazmorras"
+L["Mythic+ Score"] = "Puntuación Mítica+"
+L["BestMythic+run"] = "Mejor carrera"
+L["TooltipShowMythicScore"] = "Mostrar puntuación Mítica+ en el Tooltip"
 
 -- Spell
 L["TooltipSpellHideType"] = "Ocultar tooltip en hechizos"

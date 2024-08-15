@@ -9,6 +9,8 @@ end
 
 addon.Drinks.drinkList = {
     --Special Food
+    { key = "CandyBar", id = 20390, requiredLevel = 1, mana = 18000, isBuffFood = false }, -- We don't know the right amount on level 41 it's 18000
+    { key = "CandyCorn", id = 20389, requiredLevel = 1, mana = 18000, isBuffFood = false }, -- We don't know the right amount on level 41 it's 18000
     { key = "ConjuredManaBun", id = 113509, requiredLevel = 40, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
     { key = "ConjuredManaFritter", id = 80618, requiredLevel = 35, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
     { key = "ConjuredManaPudding", id = 80610, requiredLevel = 35, mana = 0, isMageFood = true }, --set mana to zero, because we update it anyway
@@ -428,6 +430,7 @@ addon.Drinks.drinkList = {
     { key = "ThunderspineTenders", id = 198441, requiredLevel = 65, mana = 240000, isBuffFood = false },
     { key = "Thuni'sPatentedDrinkingFluid", id = 139346, requiredLevel = 37, mana = 8500, isBuffFood = false },
     { key = "TimelessTea", id = 104348, requiredLevel = 32, mana = 5500, isBuffFood = false },
+    { key = "Winter Veil Cookie", id = 21254, requiredLevel = 1, mana = 3984, isBuffFood = true },
     { key = "WildfowlGinsengSoup", id = 86070, requiredLevel = 33, mana = 20000, isBuffFood = true },
     { key = "ZestyWater", id = 197770, requiredLevel = 60, mana = 540000, isBuffFood = false },
 

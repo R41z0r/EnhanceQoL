@@ -41,6 +41,9 @@ L["TooltipDebuffHideInDungeon"] = "던전에서만 숨기기"
 L["TooltipUnitHideType"] = "유닛 툴팁 숨기기"
 L["TooltipUnitHideInCombat"] = "전투 중에만 숨기기"
 L["TooltipUnitHideInDungeon"] = "던전에서만 숨기기"
+L["Mythic+ Score"] = "쐐기돌 점수"
+L["BestMythic+run"] = "최고 기록"
+L["TooltipShowMythicScore"] = "툴팁에 쐐기돌 점수 표시"
 
 -- Spell
 L["TooltipSpellHideType"] = "주문 툴팁 숨기기"

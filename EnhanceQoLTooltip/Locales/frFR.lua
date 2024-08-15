@@ -40,6 +40,9 @@ L["TooltipDebuffHideInDungeon"] = "Masquer uniquement en donjons"
 L["TooltipUnitHideType"] = "Masquer l'infobulle sur les unités"
 L["TooltipUnitHideInCombat"] = "Masquer uniquement en combat"
 L["TooltipUnitHideInDungeon"] = "Masquer uniquement en donjons"
+L["Mythic+ Score"] = "Score Mythique+"
+L["BestMythic+run"] = "Meilleure course"
+L["TooltipShowMythicScore"] = "Afficher le score Mythique+ dans l'infobulle"
 
 -- Spell
 L["TooltipSpellHideType"] = "Masquer l'infobulle sur les sorts"
