@@ -48,8 +48,15 @@ L["TooltipSpellHideType"] = "Nascondi tooltip su incantesimi"
 L["TooltipSpellHideInCombat"] = "Nascondi solo in combattimento"
 L["TooltipSpellHideInDungeon"] = "Nascondi solo nei dungeon"
 
+L["TooltipShowSpellID"] = "Mostra l'ID dell'incantesimo nel tooltip"
+L["SpellID"] = "ID Incantesimo"
+L["MacroID"] = "ID Macro"
+
 -- Item
 L["TooltipItemHideType"] = "Nascondi tooltip su oggetti"
 
 L["TooltipItemHideInCombat"] = "Nascondi solo in combattimento"
 L["TooltipItemHideInDungeon"] = "Nascondi solo nei dungeon"
+
+L["ItemID"] = "ID Oggetto"
+L["TooltipShowItemID"] = "Mostra l'ID dell'oggetto nel tooltip"

@@ -47,8 +47,15 @@ L["TooltipSpellHideType"] = "Tooltip bei Zaubern ausblenden"
 L["TooltipSpellHideInCombat"] = "Nur im Kampf ausblenden"
 L["TooltipSpellHideInDungeon"] = "Nur in Dungeons ausblenden"
 
+L["TooltipShowSpellID"] = "Zauber-ID im Tooltip anzeigen"
+L["SpellID"] = "Zauber-ID"
+L["MacroID"] = "Makro-ID"
+
 -- Item
 L["TooltipItemHideType"] = "Tooltip bei Gegenständen ausblenden"
 
 L["TooltipItemHideInCombat"] = "Nur im Kampf ausblenden"
 L["TooltipItemHideInDungeon"] = "Nur in Dungeons ausblenden"
+
+L["ItemID"] = "Item-ID"
+L["TooltipShowItemID"] = "Item-ID im Tooltip anzeigen"

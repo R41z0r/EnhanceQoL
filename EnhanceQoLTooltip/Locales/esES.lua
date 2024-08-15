@@ -47,8 +47,15 @@ L["TooltipSpellHideType"] = "Ocultar tooltip en hechizos"
 L["TooltipSpellHideInCombat"] = "Ocultar solo en combate"
 L["TooltipSpellHideInDungeon"] = "Ocultar solo en mazmorras"
 
+L["TooltipShowSpellID"] = "Mostrar ID de hechizo en el tooltip"
+L["SpellID"] = "ID de hechizo"
+L["MacroID"] = "ID de macro"
+
 -- Item
 L["TooltipItemHideType"] = "Ocultar tooltip en objetos"
 
 L["TooltipItemHideInCombat"] = "Ocultar solo en combate"
 L["TooltipItemHideInDungeon"] = "Ocultar solo en mazmorras"
+
+L["ItemID"] = "ID de objeto"
+L["TooltipShowItemID"] = "Mostrar ID de objeto en el tooltip"

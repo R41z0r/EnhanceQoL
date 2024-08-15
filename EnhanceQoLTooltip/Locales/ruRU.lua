@@ -48,8 +48,15 @@ L["TooltipSpellHideType"] = "Скрыть подсказку на заклина
 L["TooltipSpellHideInCombat"] = "Скрывать только в бою"
 L["TooltipSpellHideInDungeon"] = "Скрывать только в подземельях"
 
+L["TooltipShowSpellID"] = "Показать ID заклинания в подсказке"
+L["SpellID"] = "ID заклинания"
+L["MacroID"] = "ID макроса"
+
 -- Item
 L["TooltipItemHideType"] = "Скрыть подсказку на предметы"
 
 L["TooltipItemHideInCombat"] = "Скрывать только в бою"
 L["TooltipItemHideInDungeon"] = "Скрывать только в подземельях"
+
+L["ItemID"] = "ID предмета"
+L["TooltipShowItemID"] = "Показать ID предмета в подсказке"

@@ -47,7 +47,14 @@ L["TooltipSpellHideType"] = "주문 툴팁 숨기기"
 L["TooltipSpellHideInCombat"] = "전투 중에만 숨기기"
 L["TooltipSpellHideInDungeon"] = "던전에서만 숨기기"
 
+L["TooltipShowSpellID"] = "툴팁에 주문 ID 표시"
+L["SpellID"] = "주문 ID"
+L["MacroID"] = "매크로 ID"
+
 -- Item
 L["TooltipItemHideType"] = "아이템 툴팁 숨기기"
 L["TooltipItemHideInCombat"] = "전투 중에만 숨기기"
 L["TooltipItemHideInDungeon"] = "던전에서만 숨기기"
+
+L["ItemID"] = "아이템 ID"
+L["TooltipShowItemID"] = "툴팁에 아이템 ID 표시"

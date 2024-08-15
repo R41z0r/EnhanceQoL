@@ -47,8 +47,15 @@ L["TooltipSpellHideType"] = "Masquer l'infobulle sur les sorts"
 L["TooltipSpellHideInCombat"] = "Masquer uniquement en combat"
 L["TooltipSpellHideInDungeon"] = "Masquer uniquement en donjons"
 
+L["TooltipShowSpellID"] = "Afficher l'ID du sort dans l'infobulle"
+L["SpellID"] = "ID du sort"
+L["MacroID"] = "ID du macro"
+
 -- Item
 L["TooltipItemHideType"] = "Masquer l'infobulle sur les objets"
 
 L["TooltipItemHideInCombat"] = "Masquer uniquement en combat"
 L["TooltipItemHideInDungeon"] = "Masquer uniquement en donjons"
+
+L["ItemID"] = "ID de l'objet"
+L["TooltipShowItemID"] = "Afficher l'ID de l'objet dans l'infobulle"

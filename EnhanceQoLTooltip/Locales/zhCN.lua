@@ -48,8 +48,15 @@ L["TooltipSpellHideType"] = "隐藏法术提示"
 L["TooltipSpellHideInCombat"] = "仅在战斗中隐藏"
 L["TooltipSpellHideInDungeon"] = "仅在副本中隐藏"
 
+L["TooltipShowSpellID"] = "在工具提示中显示法术ID"
+L["SpellID"] = "法术ID"
+L["MacroID"] = "宏ID"
+
 -- Item
 L["TooltipItemHideType"] = "隐藏物品提示"
 
 L["TooltipItemHideInCombat"] = "仅在战斗中隐藏"
 L["TooltipItemHideInDungeon"] = "仅在副本中隐藏"
+
+L["ItemID"] = "物品ID"
+L["TooltipShowItemID"] = "在工具提示中显示物品ID"
