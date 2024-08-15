@@ -1,6 +1,6 @@
 if (GAME_LOCALE or GetLocale()) ~= "itIT" then
     return
-  end
+end
 
 local addonName, addon = ...
 
@@ -12,3 +12,7 @@ L["Select an option"] = "Seleziona un'opzione"
 L["Save"] = "Salva"
 L["Hide Minimap Button"] = "Nascondi pulsante della minimappa"
 L["Left-Click to show options"] = "Clicca con il tasto sinistro per mostrare le opzioni"
+
+L["Hide Raid Tools"] = "Nascondi strumenti da raid nel gruppo"
+L["repairCost"] = "Oggetti riparati per "
+L["autoRepair"] = "Ripara automaticamente tutti gli oggetti"

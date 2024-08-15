@@ -99,6 +99,13 @@ function loadMain()
     addon.checkboxes = {}
     addon.db = EnhanceQoLDB
 
+    if nil == addon.db["hideRaidTools"] then
+        addon.db["hideRaidTools"] = false
+    end
+    if nil == addon.db["autoRepair"] then
+        addon.db["autoRepair"] = false
+    end
+
     local fTab = addon.functions.createTabFrame("General")
     local header = addon.functions.createHeader(fTab, "General", 0, -10)
 
@@ -114,6 +121,20 @@ function loadMain()
         addon.db["hideMinimapButton"] = self:GetChecked()
         addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
     end)
+
+    local cbHideRaidTools = addon.functions.createCheckbox("hideRaidTools", fTab, L["Hide Raid Tools"], 10,
+        (addon.functions.getHeightOffset(checkbox3)))
+    cbHideRaidTools:SetScript("OnClick", function(self)
+        addon.db["hideRaidTools"] = self:GetChecked()
+        addon.functions.toggleRaidTools(addon.db["hideRaidTools"], _G.CompactRaidFrameManager)
+    end)
+
+    _G.CompactRaidFrameManager:SetScript("OnShow", function(self)
+        addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self)
+    end)
+
+    local cbAutoRepair = addon.functions.createCheckbox("autoRepair", fTab, L["autoRepair"], 10,
+        (addon.functions.getHeightOffset(cbHideRaidTools)))
 
     -- Slash-Command hinzufügen
     SLASH_ENHANCEQOL1 = "/eqol"
@@ -264,6 +285,17 @@ local function eventHandler(self, event, arg1)
             -- on level up, reload the complete list of allowed drinks
             addon.functions.updateAllowedDrinks()
             addon.functions.updateAvailableDrinks(true)
+        elseif event == "MERCHANT_SHOW" then
+            if addon.db["autoRepair"] then
+                if CanMerchantRepair() then
+                    local repairAllCost = GetRepairAllCost()
+                    if repairAllCost and repairAllCost > 0 then
+                        RepairAllItems()
+                        PlaySound(SOUNDKIT.ITEM_REPAIR)
+                        print(L["repairCost"] .. addon.functions.formatMoney(repairAllCost))
+                    end
+                end
+            end
         end
     end
 end
@@ -274,6 +306,7 @@ frameLoad:RegisterEvent("PLAYER_LOGIN")
 frameLoad:RegisterEvent("PLAYER_REGEN_ENABLED")
 frameLoad:RegisterEvent("PLAYER_LEVEL_UP")
 frameLoad:RegisterEvent("BAG_UPDATE_DELAYED")
+frameLoad:RegisterEvent("MERCHANT_SHOW")
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)

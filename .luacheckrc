@@ -39,7 +39,8 @@ globals = {
 	"PanelTemplates_SetTab",
 	"PanelTemplates_SetNumTabs",
 	"ChallengesKeystoneFrame",
-
+	"_G.CompactRaidFrameManager",
+	
 	-- EnhanceQoL
 	"addon",
 	"header",

@@ -12,3 +12,7 @@ L["Select an option"] = "選擇一個選項"
 L["Save"] = "保存"
 L["Hide Minimap Button"] = "隱藏小地圖按鈕"
 L["Left-Click to show options"] = "左鍵點擊顯示選項"
+
+L["Hide Raid Tools"] = "在小隊中隱藏團隊工具"
+L["repairCost"] = "修理物品花費 "
+L["autoRepair"] = "自動修理所有物品"

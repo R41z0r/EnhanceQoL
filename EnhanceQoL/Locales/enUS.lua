@@ -8,3 +8,7 @@ L["Select an option"] = "Select an option"
 L["Save"] = "Save"
 L["Hide Minimap Button"] = "Hide Minimap Button"
 L["Left-Click to show options"] = "Left-Click to show options"
+
+L["Hide Raid Tools"] = "Hide Raid Tools in Party"
+L["repairCost"] = "Repaired items for "
+L["autoRepair"] = "Automatically repair all items"

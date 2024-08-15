@@ -12,3 +12,7 @@ L["Select an option"] = "Selecione uma opção"
 L["Save"] = "Salvar"
 L["Hide Minimap Button"] = "Ocultar botão do minimapa"
 L["Left-Click to show options"] = "Clique com o botão esquerdo para mostrar opções"
+
+L["Hide Raid Tools"] = "Ocultar ferramentas de raid no grupo"
+L["repairCost"] = "Itens reparados por "
+L["autoRepair"] = "Reparar automaticamente todos os itens"

@@ -144,3 +144,31 @@ function addon.functions.createButton(parent, x, y, width, height, text, script)
     button:SetScript("OnClick", script)
     return button
 end
+
+function addon.functions.toggleRaidTools(value, self)
+    if value == false and (UnitInParty("player") or UnitInRaid("player")) then
+        self:Show()
+    elseif UnitInParty("player") then
+        self:Hide()
+    end
+end
+
+function addon.functions.formatMoney(copper)
+    local gold = math.floor(copper / 10000)
+    local silver = math.floor((copper % 10000) / 100)
+    local bronze = copper % 100
+
+    local formatted = ""
+
+    if gold > 0 then
+        formatted = string.format("%d|cffffd700g|r ", gold)
+    end
+
+    if silver > 0 or gold > 0 then
+        formatted = formatted .. string.format("%d|cffc7c7cfs|r ", silver)
+    end
+
+    formatted = formatted .. string.format("%d|cffeda55fc|r", bronze)
+
+    return formatted
+end
