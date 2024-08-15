@@ -40,6 +40,7 @@ globals = {
 	"PanelTemplates_SetNumTabs",
 	"ChallengesKeystoneFrame",
 	"_G.CompactRaidFrameManager",
+	"SOUNDKIT",
 	
 	-- EnhanceQoL
 	"addon",
