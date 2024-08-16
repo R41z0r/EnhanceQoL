@@ -30,7 +30,21 @@ local function checkSpell(tooltip, id, name)
     tooltip:Hide()
 end
 
-local function checkMythicPlus(tooltip)
+local function checkAdditionalTooltip(tooltip)
+    if addon.db["TooltipShowClassColor"] then
+        local classDisplayName, class, classID = UnitClass("mouseover")
+        if classDisplayName then
+            local r, g, b = GetClassColor(class)
+            for i = 1, tooltip:NumLines() do
+                local line = _G[tooltip:GetName() .. "TextLeft" .. i]
+                local text = line:GetText()
+                if text and text:find(classDisplayName) then
+                    line:SetTextColor(r, g, b)
+                    break
+                end
+            end
+        end
+    end
     if addon.db["TooltipShowMythicScore"] then
         local name, _, timeLimit
         local rating = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("mouseover")
@@ -78,15 +92,15 @@ end
 
 local function checkUnit(tooltip)
     if addon.db["TooltipUnitHideInDungeon"] and select(1, IsInInstance()) == false then
-        checkMythicPlus(tooltip)
+        checkAdditionalTooltip(tooltip)
         return
     end -- only hide in dungeons
     if addon.db["TooltipUnitHideInCombat"] and UnitAffectingCombat("player") == false then
-        checkMythicPlus(tooltip)
+        checkAdditionalTooltip(tooltip)
         return
     end -- only hide in combat
     if addon.db["TooltipUnitHideType"] == 1 then
-        checkMythicPlus(tooltip)
+        checkAdditionalTooltip(tooltip)
         return
     end -- hide never
     if addon.db["TooltipUnitHideType"] == 4 then
@@ -98,7 +112,7 @@ local function checkUnit(tooltip)
     if addon.db["TooltipUnitHideType"] == 3 and UnitCanAttack("player", "mouseover") == false then
         tooltip:Hide()
     end
-    checkMythicPlus(tooltip)
+    checkAdditionalTooltip(tooltip)
 end
 
 local function checkItem(tooltip, id, name)
@@ -298,6 +312,9 @@ local cbTooltipHideDungeon = addon.functions.createCheckbox("TooltipUnitHideInDu
 
 local cbTooltipShowMythicScore = addon.functions.createCheckbox("TooltipShowMythicScore", tabFrameUnit,
     L["TooltipShowMythicScore"], 10, (addon.functions.getHeightOffset(cbTooltipHideDungeon) - 5))
+
+local cbTooltipShowClassColor = addon.functions.createCheckbox("TooltipShowClassColor", tabFrameUnit,
+    L["TooltipShowClassColor"], 10, (addon.functions.getHeightOffset(cbTooltipShowMythicScore) - 5))
 
 -- Spells
 

@@ -44,6 +44,7 @@ L["TooltipUnitHideInDungeon"] = "僅在副本中隱藏"
 L["Mythic+ Score"] = "史詩鑰石分數"
 L["BestMythic+run"] = "最佳成績"
 L["TooltipShowMythicScore"] = "在提示框中顯示史詩鑰石分數"
+L["TooltipShowClassColor"] = "在提示中顯示職業顏色"
 
 -- Spell
 L["TooltipSpellHideType"] = "隱藏法術提示"

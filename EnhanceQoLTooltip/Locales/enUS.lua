@@ -40,6 +40,7 @@ L["TooltipUnitHideInDungeon"] = "Only hide it in dungeons"
 L["Mythic+ Score"] = "Mythic+ Score"
 L["BestMythic+run"] = "Best run"
 L["TooltipShowMythicScore"] = "Show Mythic+ Score on Tooltip"
+L["TooltipShowClassColor"] = "Show class color on Tooltip"
 
 -- Spell
 L["TooltipSpellHideType"] = "Hide tooltip on Spells"

@@ -44,6 +44,7 @@ L["TooltipUnitHideInDungeon"] = "Ocultar apenas em masmorras"
 L["Mythic+ Score"] = "Pontuação Mítica+"
 L["BestMythic+run"] = "Melhor corrida"
 L["TooltipShowMythicScore"] = "Mostrar Pontuação Mítica+ no Tooltip"
+L["TooltipShowClassColor"] = "Mostrar cor da classe na dica de ferramenta"
 
 -- Spell
 L["TooltipSpellHideType"] = "Ocultar tooltip em feitiços"
