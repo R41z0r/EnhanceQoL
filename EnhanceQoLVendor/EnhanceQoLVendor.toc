@@ -1,0 +1,14 @@
+## Interface: 110000, 110002
+## Title: Enhance QoL Vendor
+## Author: R41Z0R
+## Version: @project-version@
+## Notes: Automatically sells different items based on filters
+## Dependencies: EnhanceQoL
+## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## Retail: true
+## X-Compatible-With: retail
+
+Init.lua
+locales.xml
+
+EnhanceQoLVendor.lua

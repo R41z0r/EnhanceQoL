@@ -1,0 +1,29 @@
+if (GAME_LOCALE or GetLocale()) ~= "ptBR" then
+    return
+end
+
+local addonName, addon = ...
+local parentAddonName = "EnhanceQoL"
+if _G[parentAddonName] then
+    addon = _G[parentAddonName]
+else
+    error(parentAddonName .. " is not loaded")
+end
+local L = addon.LVendor
+
+L["Vendor"] = "Vendedor"
+L["MerchantWindowClosed"] = "A janela do comerciante está fechada. Interrompendo as vendas"
+
+-- Geral
+L["vendorMinIlvlDif"] = "Nível de item mínimo abaixo da\nminha média para marcar para venda automática"
+L["vendorIgnoreBoE"] = "Ignorar itens que se vinculam ao serem equipados"
+L["vendorIgnoreWarbound"] = "Ignorar itens vinculados à guerra"
+
+for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
+    local value = addon.Vendor.variables.tabNames[key]
+    L["labelItemQuality" .. value .. "line"] = "Isso permite que você venda automaticamente itens de qualidade\n" ..
+                                                   ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
+                                                   "|r com base em critérios de filtro ao visitar\num comerciante."
+    L["vendor" .. value .. "Enable"] = "Ativar a venda automática para itens de qualidade " ..
+                                           ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r"
+end

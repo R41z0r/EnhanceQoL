@@ -108,6 +108,9 @@ function loadMain()
     if nil == addon.db["sellAllJunk"] then
         addon.db["sellAllJunk"] = false
     end
+    if nil == addon.db["ignoreTalkingHead"] then
+        addon.db["ignoreTalkingHead"] = true
+    end
 
     local fTab = addon.functions.createTabFrame("General")
     local header = addon.functions.createHeader(fTab, "General", 0, -10)
@@ -132,12 +135,21 @@ function loadMain()
         addon.functions.toggleRaidTools(addon.db["hideRaidTools"], _G.CompactRaidFrameManager)
     end)
 
+    local cbIgnoreTalkingHead = addon.functions.createCheckbox("ignoreTalkingHead", fTab, L["ignoreTalkingHead"], 10,
+        (addon.functions.getHeightOffset(cbHideRaidTools)))
+
     _G.CompactRaidFrameManager:SetScript("OnShow", function(self)
         addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self)
     end)
 
+    hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
+        if addon.db["ignoreTalkingHead"] then
+            self:Hide()
+        end
+    end)
+
     local cbAutoRepair = addon.functions.createCheckbox("autoRepair", fTab, L["autoRepair"], 10,
-        (addon.functions.getHeightOffset(cbHideRaidTools)))
+        (addon.functions.getHeightOffset(cbIgnoreTalkingHead)))
 
     local cbSellAllJunk = addon.functions.createCheckbox("sellAllJunk", fTab, L["sellAllJunk"], 10,
         (addon.functions.getHeightOffset(cbAutoRepair)))
