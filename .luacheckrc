@@ -43,6 +43,11 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"containerInfo",
+	"GetDetailedItemLevelInfo",
+	"MerchantFrame",
+	"TalkingHeadFrame",
+	"ITEM_QUALITY_COLORS",
 	"addon",
 	"header",
 	"EnhanceQoLDB",
