@@ -64,8 +64,10 @@ local function setIlvlText(element, slot)
         end
     end
 
-    if addon.db["showGemsOnCharframe"] == false and addon.db["showIlvlOnCharframe"] == false then
+    if addon.db["showGemsOnCharframe"] == false and addon.db["showIlvlOnCharframe"] == false and
+        addon.db["showEnchantOnCharframe"] == false then
         element.ilvl:SetFormattedText("")
+        element.enchant:SetText("")
         element.ilvlBackground:Hide()
         return
     end
@@ -77,7 +79,6 @@ local function setIlvlText(element, slot)
             local link = eItem:GetItemLink()
             local _, itemID, enchantID = string.match(link,
                 "item:(%d+):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*)")
-            print(link, itemID, enchantID)
             if addon.db["showGemsOnCharframe"] then
                 local hasSockets = false
                 local emptySocketsCount = 0
@@ -110,15 +111,58 @@ local function setIlvlText(element, slot)
                 element.ilvl:SetTextColor(color.r, color.g, color.b, 1)
 
                 local textWidth = element.ilvl:GetStringWidth()
-                element.ilvlBackground:SetSize(textWidth + 6, element.ilvl:GetStringHeight() + 4) -- Mehr Padding für besseren Lesbarkeit
+                element.ilvlBackground:SetSize(textWidth + 6, element.ilvl:GetStringHeight() + 4) -- Mehr Padding für bessere Lesbarkeit
             else
                 element.ilvl:SetFormattedText("")
                 element.ilvlBackground:Hide()
+            end
+
+            if addon.db["showEnchantOnCharframe"] then
+                local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
+                tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+                tooltip:SetHyperlink(link)
+                local foundEnchant = false
+
+                for i = 1, tooltip:NumLines() do
+                    local line = _G["ScanTooltipTextLeft" .. i]:GetText()
+                    if line then
+                        local enchant = strmatch(line, addon.variables.enchantString)
+                        if enchant then
+                            local color1, color2 = strmatch(enchant, '(|cn.-:).-(|r)')
+                            local text = strmatch(gsub(gsub(gsub(line, '%s?|A.-|a', ''), '|cn.-:(.-)|r', '%1'),
+                                '[&+] ?', ''), addon.variables.enchantString)
+
+                            foundEnchant = true
+
+                            local enchantText = gsub(text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", ""),
+                                '(%w%w%w)%w+', '%1')
+                            -- local shortAbbrev = gsub(enchantText, '(%w%w%w)%w+', '%1')
+                            local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
+                            local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
+
+                            if color1 or color2 then
+                                element.enchant:SetFormattedText(
+                                    format('%s%s%s', color1 or '', string.utf8sub(enchantText, 1, 20), color2 or ''))
+                            else
+                                element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
+                            end
+                            break
+                        end
+                    end
+                end
+
+                if foundEnchant == false then
+                    element.enchant:SetText("")
+                end
+                tooltip:Hide()
+            else
+                element.enchant:SetText("")
             end
         end)
     else
         element.ilvl:SetFormattedText("")
         element.ilvlBackground:Hide()
+        element.enchant:SetText("")
     end
 end
 
@@ -192,6 +236,9 @@ function loadMain()
     if nil == addon.db["showGemsOnCharframe"] then
         addon.db["showGemsOnCharframe"] = false
     end
+    if nil == addon.db["showEnchantOnCharframe"] then
+        addon.db["showEnchantOnCharframe"] = false
+    end
 
     local fTab = addon.functions.createTabFrame("General")
     local header = addon.functions.createHeader(fTab, "General", 0, -10)
@@ -247,6 +294,12 @@ function loadMain()
         addon.db["showGemsOnCharframe"] = self:GetChecked()
         setCharFrame()
     end)
+    local cbShowEnchantCharframe = addon.functions.createCheckbox("showEnchantOnCharframe", fTab,
+        L["showEnchantOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowGemsCharframe)))
+    cbShowEnchantCharframe:SetScript("OnClick", function(self)
+        addon.db["showEnchantOnCharframe"] = self:GetChecked()
+        setCharFrame()
+    end)
 
     for key, value in pairs(addon.variables.itemSlots) do
         -- Hintergrund für das Item-Level
@@ -259,6 +312,16 @@ function loadMain()
         value.ilvl = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
         value.ilvl:SetPoint("TOPRIGHT", value.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
         value.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+
+        value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+        if addon.variables.itemSlotSide[key] == 0 then
+            value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, -1)
+        elseif addon.variables.itemSlotSide[key] == 1 then
+            value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, -1)
+        else
+            value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, -1)
+        end
+        value.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
 
         value.gems = {}
         for i = 1, 3 do
@@ -282,9 +345,9 @@ function loadMain()
             value.gems[i]:Hide()
         end
     end
+    setCharFrame()
 
     PaperDollFrame:HookScript("OnShow", function(self)
-        setCharFrame()
     end)
 
     -- Slash-Command hinzufügen

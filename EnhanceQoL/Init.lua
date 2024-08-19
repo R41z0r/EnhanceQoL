@@ -6,6 +6,8 @@ addon.variables = {}
 addon.variables.numOfTabs = 0
 addon.L = {} -- Language
 
+addon.variables.enchantString = ENCHANTED_TOOLTIP_LINE:gsub('%%s', '(.+)')
+
 addon.variables.itemSlots = {
     [1] = CharacterHeadSlot,
     [2] = CharacterNeckSlot,
