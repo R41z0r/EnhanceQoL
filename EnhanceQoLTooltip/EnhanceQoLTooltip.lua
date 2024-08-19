@@ -352,6 +352,3 @@ local cbTooltipItemHideDungeon = addon.functions.createCheckbox("TooltipItemHide
 
 local cbTooltipItemShowID = addon.functions.createCheckbox("TooltipShowItemID", tabFrameItem, L["TooltipShowItemID"],
     10, (addon.functions.getHeightOffset(cbTooltipItemHideDungeon) - 5))
-
--- Bigger frame for all Options
-addon.frame:SetSize(500, 550)

@@ -18,3 +18,7 @@ L["repairCost"] = "아이템 수리 비용 "
 L["autoRepair"] = "모든 아이템 자동 수리"
 L["sellAllJunk"] = "모든 잡동사니 자동 판매"
 L["ignoreTalkingHead"] = "자동으로 대화 머리 프레임 숨기기"
+
+L["showIlvlOnCharframe"] = "캐릭터 장비 창에 아이템 레벨 표시"
+L["showGemsOnCharframe"] = "캐릭터 장비 창에 보석 슬롯 표시"
+L["showEnchantOnCharframe"] = "캐릭터 장비 창에 마법 부여 표시"

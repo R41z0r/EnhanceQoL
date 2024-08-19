@@ -46,11 +46,20 @@ addon.variables.itemSlotSide = { -- 0 = left, 1 = right, 2 = bottom (Weapons)
     [17] = 2
 }
 
-addon.variables.socketTextures = {
-    ["EMPTY_SOCKET_RED"] = "Interface\\ItemSocketingFrame\\UI-EmptySocket-Red",
-    ["EMPTY_SOCKET_BLUE"] = "Interface\\ItemSocketingFrame\\UI-EmptySocket-Blue",
-    ["EMPTY_SOCKET_YELLOW"] = "Interface\\ItemSocketingFrame\\UI-EmptySocket-Yellow",
-    ["EMPTY_SOCKET_PRISMATIC"] = "Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic",
-    ["EMPTY_SOCKET_META"] = "Interface\\ItemSocketingFrame\\UI-EmptySocket-Meta",
-    ["EMPTY_SOCKET_TINKER"] = "Interface\\ItemSocketingFrame\\UI-EmptySocket-Tinker"
+addon.variables.allowedSockets = {
+    ["EMPTY_SOCKET_BLUE"] = true,
+    ["EMPTY_SOCKET_COGWHEEL"] = true,
+    ["EMPTY_SOCKET_CYPHER"] = true,
+    ["EMPTY_SOCKET_DOMINATION"] = true,
+    ["EMPTY_SOCKET_HYDRAULIC"] = true,
+    ["EMPTY_SOCKET_META"] = true,
+    ["EMPTY_SOCKET_NO_COLOR"] = true,
+    ["EMPTY_SOCKET_PRIMORDIAL"] = true,
+    ["EMPTY_SOCKET_PRISMATIC"] = true,
+    ["EMPTY_SOCKET_PUNCHCARDBLUE"] = true,
+    ["EMPTY_SOCKET_PUNCHCARDRED"] = true,
+    ["EMPTY_SOCKET_PUNCHCARDYELLOW"] = true,
+    ["EMPTY_SOCKET_RED"] = true,
+    ["EMPTY_SOCKET_TINKER"] = true,
+    ["EMPTY_SOCKET_YELLOW"] = true
 }

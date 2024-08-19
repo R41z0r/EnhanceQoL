@@ -18,3 +18,7 @@ L["repairCost"] = "Objets réparés pour "
 L["autoRepair"] = "Réparer automatiquement tous les objets"
 L["sellAllJunk"] = "Vendre automatiquement tous les objets inutiles"
 L["ignoreTalkingHead"] = "Masquer automatiquement le cadre Talking Head"
+
+L["showIlvlOnCharframe"] = "Afficher le niveau d'objet sur l'équipement du personnage"
+L["showGemsOnCharframe"] = "Afficher les emplacements de gemmes sur l'équipement du personnage"
+L["showEnchantOnCharframe"] = "Afficher les enchantements sur l'équipement du personnage"

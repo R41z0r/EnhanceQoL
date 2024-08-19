@@ -150,7 +150,3 @@ end
 frameLoad:RegisterEvent("MERCHANT_SHOW")
 
 frameLoad:SetScript("OnEvent", eventHandler)
-
--- hideElements(hideListUncommon, addon.db["vendorUncommonEnable"])
--- Bigger frame for all Options
-addon.frame:SetSize(500, 550)

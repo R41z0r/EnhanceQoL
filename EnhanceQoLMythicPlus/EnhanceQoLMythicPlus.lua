@@ -340,8 +340,5 @@ local cbPotionTrackerShowHealpot = addon.functions.createCheckbox("potionTracker
 
 table.insert(hideListPotion, cbPotionTrackerShowHealpot)
 
--- Bigger frame for all Options
-addon.frame:SetSize(500, 550)
-
 hideElements(hideListPotion, addon.db["potionTracker"])
 

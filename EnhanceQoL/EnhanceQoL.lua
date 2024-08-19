@@ -84,7 +84,8 @@ local function setIlvlText(element, slot)
                 local emptySocketsCount = 0
                 local itemStats = C_Item.GetItemStats(link)
                 for statName, statValue in pairs(itemStats) do
-                    if statName:find("EMPTY_SOCKET") or statName:find("empty_socket") then
+                    if (statName:find("EMPTY_SOCKET") or statName:find("empty_socket")) and
+                        addon.variables.allowedSockets[statName] then
                         hasSockets = true
                         emptySocketsCount = emptySocketsCount + statValue
                     end
@@ -122,7 +123,6 @@ local function setIlvlText(element, slot)
                 tooltip:SetOwner(UIParent, "ANCHOR_NONE")
                 tooltip:SetHyperlink(link)
                 local foundEnchant = false
-
                 for i = 1, tooltip:NumLines() do
                     local line = _G["ScanTooltipTextLeft" .. i]:GetText()
                     if line then
@@ -140,6 +140,8 @@ local function setIlvlText(element, slot)
                             local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
                             local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 
+                            enchantText = enchantText:gsub("%%", "%%%%")
+                            
                             if color1 or color2 then
                                 element.enchant:SetFormattedText(
                                     format('%s%s%s', color1 or '', string.utf8sub(enchantText, 1, 20), color2 or ''))
@@ -175,7 +177,8 @@ end
 function loadMain()
     -- Erstelle das Hauptframe
     local frame = CreateFrame("Frame", "MyAddonFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(300, 550)
+    frame:SetSize(500, 550)
+
     frame:SetPoint("CENTER", UIParent, "CENTER")
     frame:SetMovable(true)
     frame:EnableMouse(true)
@@ -283,19 +286,19 @@ function loadMain()
         (addon.functions.getHeightOffset(cbAutoRepair)))
 
     local cbShowIlvlCharframe = addon.functions.createCheckbox("showIlvlOnCharframe", fTab, L["showIlvlOnCharframe"],
-        10, (addon.functions.getHeightOffset(cbSellAllJunk)))
+        10, (addon.functions.getHeightOffset(cbSellAllJunk)) -10)
     cbShowIlvlCharframe:SetScript("OnClick", function(self)
         addon.db["showIlvlOnCharframe"] = self:GetChecked()
         setCharFrame()
     end)
     local cbShowGemsCharframe = addon.functions.createCheckbox("showGemsOnCharframe", fTab, L["showGemsOnCharframe"],
-        10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)))
+        10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)) -10)
     cbShowGemsCharframe:SetScript("OnClick", function(self)
         addon.db["showGemsOnCharframe"] = self:GetChecked()
         setCharFrame()
     end)
     local cbShowEnchantCharframe = addon.functions.createCheckbox("showEnchantOnCharframe", fTab,
-        L["showEnchantOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowGemsCharframe)))
+        L["showEnchantOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowGemsCharframe)) -10)
     cbShowEnchantCharframe:SetScript("OnClick", function(self)
         addon.db["showEnchantOnCharframe"] = self:GetChecked()
         setCharFrame()
@@ -315,11 +318,11 @@ function loadMain()
 
         value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
         if addon.variables.itemSlotSide[key] == 0 then
-            value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, -1)
+            value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, 1)
         elseif addon.variables.itemSlotSide[key] == 1 then
-            value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, -1)
+            value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
         else
-            value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, -1)
+            value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
         end
         value.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
 
@@ -345,9 +348,9 @@ function loadMain()
             value.gems[i]:Hide()
         end
     end
-    setCharFrame()
 
     PaperDollFrame:HookScript("OnShow", function(self)
+        setCharFrame()
     end)
 
     -- Slash-Command hinzufügen
@@ -475,7 +478,7 @@ end
 local frameLoad = CreateFrame("Frame")
 
 -- Funktion zum Umgang mit Events
-local function eventHandler(self, event, arg1)
+local function eventHandler(self, event, arg1, arg2)
     if event == "ADDON_LOADED" and arg1 == addonName then
         -- Dein Code zur Initialisierung der Datenbank
         if not EnhanceQoLDB then
@@ -519,6 +522,16 @@ local function eventHandler(self, event, arg1)
             end
         elseif event == "PLAYER_EQUIPMENT_CHANGED" and PaperDollFrame:IsShown() then
             setIlvlText(addon.variables.itemSlots[arg1], arg1)
+        elseif event == "SOCKET_INFO_ACCEPT" and PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then
+            C_Timer.After(0.5, function()
+                setCharFrame()
+            end)
+        elseif event == "ENCHANT_SPELL_COMPLETED" and PaperDollFrame:IsShown() and addon.db["showEnchantOnCharframe"] then
+            if arg1 == true and arg2 and arg2.equipmentSlotIndex then
+                C_Timer.After(1, function()
+                    setIlvlText(addon.variables.itemSlots[arg2.equipmentSlotIndex], arg2.equipmentSlotIndex)
+                end)
+            end
         end
     end
 end
@@ -531,6 +544,8 @@ frameLoad:RegisterEvent("PLAYER_LEVEL_UP")
 frameLoad:RegisterEvent("BAG_UPDATE_DELAYED")
 frameLoad:RegisterEvent("MERCHANT_SHOW")
 frameLoad:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
+frameLoad:RegisterEvent("SOCKET_INFO_ACCEPT")
+frameLoad:RegisterEvent("ENCHANT_SPELL_COMPLETED")
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)
