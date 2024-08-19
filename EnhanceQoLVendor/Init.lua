@@ -14,6 +14,8 @@ addon.Vendor.Buttons = {}
 addon.Vendor.nrOfButtons = 0
 addon.Vendor.variables = {}
 addon.Vendor.variables.numOfTabs = 0
+local _, avgItemLevelEquipped = GetAverageItemLevel()
+addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
 
 function addon.Vendor.functions.createTabFrame(text, frame)
     addon.Vendor.variables.numOfTabs = addon.Vendor.variables.numOfTabs + 1

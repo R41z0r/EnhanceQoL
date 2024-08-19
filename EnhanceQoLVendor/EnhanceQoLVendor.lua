@@ -11,6 +11,23 @@ local L = addon.LVendor
 
 local frameLoad = CreateFrame("Frame")
 
+local function updateLegend(value, value2)
+    if not addon.frame:IsShown() then
+        return
+    end
+    local text = {}
+    if addon.db["vendor" .. value .. "IgnoreWarbound"] then
+        table.insert(text, L["vendorIgnoreWarbound"])
+    end
+    if addon.db["vendor" .. value .. "IgnoreBoE"] then
+        table.insert(text, L["vendorIgnoreBoE"])
+    end
+
+    addon.Vendor.variables["labelExplained" .. value .. "line"]:SetText(string.format(
+        L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - value2),
+        table.concat(text, ' and ')))
+end
+
 -- Extend the option menu
 local frame = addon.functions.createTabFrame(L["Vendor"])
 frame.tabs = {}
@@ -20,6 +37,12 @@ frame:SetScript("OnSizeChanged", function(self, width, height)
     end
 end)
 function frame:ShowTab(id)
+    local _, avgItemLevelEquipped = GetAverageItemLevel()
+    addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
+    for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
+        local value = addon.Vendor.variables.tabNames[key]
+        updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
+    end
     for _, tabContent in pairs(self.tabs) do
         tabContent:Hide()
     end
@@ -112,12 +135,19 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local vendorIlvl = addon.functions.createSlider("vendor" .. value .. "MinIlvlDif", tabFrame, L["vendorMinIlvlDif"],
         15, (addon.functions.getHeightOffset(vendorEnable) - 30), addon.db["vendor" .. value .. "MinIlvlDif"], 1, 600,
         "")
+    vendorIlvl:SetScript("OnValueChanged", function(self, value2)
+        value2 = math.floor(value2)
+        _G[self:GetName() .. 'Text']:SetText(L["vendorMinIlvlDif"] .. ': ' .. value2)
+        addon.db["vendor" .. value .. "MinIlvlDif"] = value2
+        updateLegend(value, value2)
+    end)
 
     local vendorIgnoreBoE = addon.functions.createCheckbox("vendor" .. value .. "IgnoreBoE", tabFrame,
         L["vendorIgnoreBoE"], 10, (addon.functions.getHeightOffset(vendorIlvl) - 25))
     vendorIgnoreBoE:SetScript("OnClick", function(self)
         addon.db["vendor" .. value .. "IgnoreBoE"] = self:GetChecked()
         addon.Vendor.variables.itemBindTypeQualityFilter[key][2] = not self:GetChecked()
+        updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
     end)
 
     local vendorIgnoreWarbound = addon.functions.createCheckbox("vendor" .. value .. "IgnoreWarbound", tabFrame,
@@ -126,11 +156,27 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
         addon.db["vendor" .. value .. "IgnoreWarbound"] = self:GetChecked()
         addon.Vendor.variables.itemBindTypeQualityFilter[key][8] = not self:GetChecked()
         addon.Vendor.variables.itemBindTypeQualityFilter[key][9] = not self:GetChecked()
+        updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
     end)
+
+    local text = {}
+    if addon.db["vendor" .. value .. "IgnoreWarbound"] then
+        table.insert(text, L["vendorIgnoreWarbound"])
+    end
+    if addon.db["vendor" .. value .. "IgnoreBoE"] then
+        table.insert(text, L["vendorIgnoreBoE"])
+    end
+
+    local labelExplanation = addon.functions.createLabel(tabFrame,
+        string.format(L["labelExplained" .. value .. "line"],
+            (addon.Vendor.variables.avgItemLevelEquipped - addon.db["vendor" .. value .. "MinIlvlDif"]),
+            table.concat(text, ' and ')), 0, 20, "BOTTOM", "BOTTOM")
+    addon.Vendor.variables["labelExplained" .. value .. "line"] = labelExplanation
 
     table.insert(hideList[value], vendorIlvl)
     table.insert(hideList[value], vendorIgnoreBoE)
     table.insert(hideList[value], vendorIgnoreWarbound)
+    table.insert(hideList[value], labelExplanation)
 
     hideElements(hideList[value], addon.db["vendor" .. value .. "Enable"])
 end
@@ -142,11 +188,18 @@ local function eventHandler(self, event, arg1)
         if IsShiftKeyDown() then
             return
         end
-
         checkItem()
+    elseif event == "PLAYER_AVG_ITEM_LEVEL_UPDATE" then
+        local _, avgItemLevelEquipped = GetAverageItemLevel()
+        addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
+        for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
+            local value = addon.Vendor.variables.tabNames[key]
+            updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
+        end
     end
 end
 
 frameLoad:RegisterEvent("MERCHANT_SHOW")
+frameLoad:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE")
 
 frameLoad:SetScript("OnEvent", eventHandler)
