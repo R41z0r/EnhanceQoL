@@ -81,6 +81,9 @@ local function checkItem()
                 local itemName, itemLink, _, itemLevel, _, _, _, _, _, _, sellPrice, classID, subclassID, bindType,
                     expansionID = C_Item.GetItemInfo(containerInfo.itemID)
                 if sellPrice > 0 and addon.Vendor.variables.itemTypeFilter[classID] and
+                    (not addon.Vendor.variables.itemSubTypeFilter[classID] or
+                        (addon.Vendor.variables.itemSubTypeFilter[classID] and
+                            addon.Vendor.variables.itemSubTypeFilter[classID][subclassID])) and
                     addon.Vendor.variables.itemBindTypeQualityFilter[containerInfo.quality][bindType] then -- Check if classID is allowed for AutoSell
                     if effectiveILvl <=
                         (avgItemLevelEquipped -

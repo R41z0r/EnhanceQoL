@@ -84,5 +84,13 @@ end
 
 addon.Vendor.variables.itemTypeFilter = {
     [2] = true, -- Weapon
+    [3] = true, -- Gems
     [4] = true -- Armor
+}
+
+-- List to filter specific gems only
+addon.Vendor.variables.itemSubTypeFilter = {
+    [3] = {
+        [11] = true -- Artifact Relic
+    }
 }
