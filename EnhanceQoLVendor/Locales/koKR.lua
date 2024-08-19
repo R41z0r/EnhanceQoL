@@ -23,9 +23,13 @@ L["vendorIgnoreWarbound"] = "전쟁에 귀속된 아이템 무시"
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]
     L["labelItemQuality" .. value .. "line"] =
-        "이 옵션을 사용하면 상인에게 있는 동안 필터 기준에 따라\n" .. ITEM_QUALITY_COLORS[key].hex ..
-            _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 품질의 아이템을 자동으로 판매할 수 있습니다."
+        "이 옵션을 사용하면 상인에게 있는 동안 필터 기준에 따라\n" ..
+            ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
+            "|r 품질의 아이템을 자동으로 판매할 수 있습니다."
     L["vendor" .. value .. "Enable"] =
         "품질 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
             "|r 아이템 자동 판매 활성화"
+    L["labelExplained" .. value .. "line"] = "이것은 자동으로 " .. ITEM_QUALITY_COLORS[key].hex ..
+                                                 _G["ITEM_QUALITY" .. key .. "_DESC"] ..
+                                                 "|r\n아이템 레벨이 %s 이하인 아이템을 판매합니다\n%s"
 end

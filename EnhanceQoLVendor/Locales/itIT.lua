@@ -25,4 +25,7 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
             _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r in base ai criteri\ndi filtro quando sei da un mercante."
     L["vendor" .. value .. "Enable"] = "Abilita la vendita automatica per oggetti di qualità " ..
                                            ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r"
+    L["labelExplained" .. value .. "line"] =
+        "Ciò significa che vende automaticamente " .. ITEM_QUALITY_COLORS[key].hex ..
+            _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r\ngli oggetti con un livello di oggetto di %s e inferiore\n%s"
 end

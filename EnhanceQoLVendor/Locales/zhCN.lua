@@ -27,4 +27,7 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
                                                    "|r 的物品。"
     L["vendor" .. value .. "Enable"] = "启用自动销售 " .. ITEM_QUALITY_COLORS[key].hex ..
                                            _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 物品"
+    L["labelExplained" .. value .. "line"] = "这意味着它会自动出售 " .. ITEM_QUALITY_COLORS[key].hex ..
+                                                 _G["ITEM_QUALITY" .. key .. "_DESC"] ..
+                                                 "|r\n物品等级为 %s 及以下的物品\n%s"
 end

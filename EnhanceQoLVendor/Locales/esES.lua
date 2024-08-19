@@ -21,9 +21,12 @@ L["vendorIgnoreWarbound"] = "Ignorar objetos vinculados por guerra"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]
-    L["labelItemQuality" .. value .. "line"] =
-        "Esto te permite vender automáticamente\nlos objetos de calidad " .. ITEM_QUALITY_COLORS[key].hex ..
-            _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r\nen función de criterios de filtro cuando estás en un comerciante."
-    L["vendor" .. value .. "Enable"] = "Activar la venta automática para\nobjetos de calidad " .. ITEM_QUALITY_COLORS[key].hex ..
-                                           _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r"
+    L["labelItemQuality" .. value .. "line"] = "Esto te permite vender automáticamente\nlos objetos de calidad " ..
+                                                   ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
+                                                   "|r\nen función de criterios de filtro cuando estás en un comerciante."
+    L["vendor" .. value .. "Enable"] = "Activar la venta automática para\nobjetos de calidad " ..
+                                           ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r"
+    L["labelExplained" .. value .. "line"] = "Esto significa que automáticamente vende " ..
+                                                 ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
+                                                 "|r\nobjetos con un nivel de objeto de %s o inferior\n%s"
 end

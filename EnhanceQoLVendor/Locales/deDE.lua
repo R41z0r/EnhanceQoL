@@ -14,15 +14,19 @@ L["Vendor"] = "Verkäufer"
 L["MerchantWindowClosed"] = "Händlerfenster ist geschlossen. Verkauf wird gestoppt"
 
 -- Allgemein
-L["vendorMinIlvlDif"] = "Mindestgegenstandsstufe unter meinem Durchschnitt,\num zum automatischen Verkauf markiert zu werden"
+L["vendorMinIlvlDif"] =
+    "Mindestgegenstandsstufe unter meinem Durchschnitt,\num zum automatischen Verkauf markiert zu werden"
 L["vendorIgnoreBoE"] = "Beim Anlegen gebundene Gegenstände ignorieren"
 L["vendorIgnoreWarbound"] = "Kriegsgebundene Gegenstände ignorieren"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]
-    L["labelItemQuality" .. value .. "line"] =
-        "Dies ermöglicht es Ihnen, " .. ITEM_QUALITY_COLORS[key].hex ..
-            _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r Gegenstände\nbasierend auf Filterkriterien beim Händler automatisch zu verkaufen."
+    L["labelItemQuality" .. value .. "line"] = "Dies ermöglicht es Ihnen, " .. ITEM_QUALITY_COLORS[key].hex ..
+                                                   _G["ITEM_QUALITY" .. key .. "_DESC"] ..
+                                                   "|r Gegenstände\nbasierend auf Filterkriterien beim Händler automatisch zu verkaufen."
     L["vendor" .. value .. "Enable"] = "Automatisches Verkaufen für " .. ITEM_QUALITY_COLORS[key].hex ..
                                            _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r\nGegenstände aktivieren"
+    L["labelExplained" .. value .. "line"] = "Das bedeutet, dass automatisch " .. ITEM_QUALITY_COLORS[key].hex ..
+                                                 _G["ITEM_QUALITY" .. key .. "_DESC"] ..
+                                                 "|r\nGegenstände mit einem Gegenstandsstufe von %s und niedriger verkauft werden\n%s"
 end
