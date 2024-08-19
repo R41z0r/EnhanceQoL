@@ -14,3 +14,6 @@ L["repairCost"] = "Repaired items for "
 L["autoRepair"] = "Automatically repair all items"
 L["sellAllJunk"] = "Automatically sell all junk items"
 L["ignoreTalkingHead"] = "Automatically hide Talking Head Frame"
+
+L["showIlvlOnCharframe"] = "Display item level on Character Equipment Frame"
+L["showGemsOnCharframe"] = "Display gem slots on Character Equipment Frame"

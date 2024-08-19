@@ -53,6 +53,81 @@ function EQOL.PersistSignUpNote()
     end
 end
 
+local function setIlvlText(element, slot)
+    -- Hide all gemslots
+    if element.gems then
+        for i = 1, 3 do
+            if element.gems[i] then
+                element.gems[i]:Hide()
+                element.gems[i].icon:SetTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic")
+            end
+        end
+    end
+
+    if addon.db["showGemsOnCharframe"] == false and addon.db["showIlvlOnCharframe"] == false then
+        element.ilvl:SetFormattedText("")
+        element.ilvlBackground:Hide()
+        return
+    end
+
+    local eItem = Item:CreateFromEquipmentSlot(slot)
+    if eItem and not eItem:IsItemEmpty() then
+        eItem:ContinueOnItemLoad(function()
+
+            local link = eItem:GetItemLink()
+            local _, itemID, enchantID = string.match(link,
+                "item:(%d+):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*)")
+            print(link, itemID, enchantID)
+            if addon.db["showGemsOnCharframe"] then
+                local hasSockets = false
+                local emptySocketsCount = 0
+                local itemStats = C_Item.GetItemStats(link)
+                for statName, statValue in pairs(itemStats) do
+                    if statName:find("EMPTY_SOCKET") or statName:find("empty_socket") then
+                        hasSockets = true
+                        emptySocketsCount = emptySocketsCount + statValue
+                    end
+                end
+
+                if hasSockets then
+                    for i = 1, emptySocketsCount do
+                        element.gems[i]:Show()
+                        local gemName, gemLink = C_Item.GetItemGem(link, i)
+                        if gemName then
+                            local icon = GetItemIcon(gemLink)
+                            element.gems[i].icon:SetTexture(icon)
+                            emptySocketsCount = emptySocketsCount - 1
+                        end
+                    end
+                end
+            end
+
+            if addon.db["showIlvlOnCharframe"] then
+                local color = eItem:GetItemQualityColor()
+                local itemLevelText = eItem:GetCurrentItemLevel()
+
+                element.ilvl:SetFormattedText(itemLevelText)
+                element.ilvl:SetTextColor(color.r, color.g, color.b, 1)
+
+                local textWidth = element.ilvl:GetStringWidth()
+                element.ilvlBackground:SetSize(textWidth + 6, element.ilvl:GetStringHeight() + 4) -- Mehr Padding für besseren Lesbarkeit
+            else
+                element.ilvl:SetFormattedText("")
+                element.ilvlBackground:Hide()
+            end
+        end)
+    else
+        element.ilvl:SetFormattedText("")
+        element.ilvlBackground:Hide()
+    end
+end
+
+local function setCharFrame()
+    for key, value in pairs(addon.variables.itemSlots) do
+        setIlvlText(value, key)
+    end
+end
+
 function loadMain()
     -- Erstelle das Hauptframe
     local frame = CreateFrame("Frame", "MyAddonFrame", UIParent, "BasicFrameTemplateWithInset")
@@ -111,6 +186,12 @@ function loadMain()
     if nil == addon.db["ignoreTalkingHead"] then
         addon.db["ignoreTalkingHead"] = true
     end
+    if nil == addon.db["showIlvlOnCharframe"] then
+        addon.db["showIlvlOnCharframe"] = false
+    end
+    if nil == addon.db["showGemsOnCharframe"] then
+        addon.db["showGemsOnCharframe"] = false
+    end
 
     local fTab = addon.functions.createTabFrame("General")
     local header = addon.functions.createHeader(fTab, "General", 0, -10)
@@ -153,6 +234,58 @@ function loadMain()
 
     local cbSellAllJunk = addon.functions.createCheckbox("sellAllJunk", fTab, L["sellAllJunk"], 10,
         (addon.functions.getHeightOffset(cbAutoRepair)))
+
+    local cbShowIlvlCharframe = addon.functions.createCheckbox("showIlvlOnCharframe", fTab, L["showIlvlOnCharframe"],
+        10, (addon.functions.getHeightOffset(cbSellAllJunk)))
+    cbShowIlvlCharframe:SetScript("OnClick", function(self)
+        addon.db["showIlvlOnCharframe"] = self:GetChecked()
+        setCharFrame()
+    end)
+    local cbShowGemsCharframe = addon.functions.createCheckbox("showGemsOnCharframe", fTab, L["showGemsOnCharframe"],
+        10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)))
+    cbShowGemsCharframe:SetScript("OnClick", function(self)
+        addon.db["showGemsOnCharframe"] = self:GetChecked()
+        setCharFrame()
+    end)
+
+    for key, value in pairs(addon.variables.itemSlots) do
+        -- Hintergrund für das Item-Level
+        value.ilvlBackground = value:CreateTexture(nil, "BACKGROUND")
+        value.ilvlBackground:SetColorTexture(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 80% Transparenz
+        value.ilvlBackground:SetPoint("TOPRIGHT", value, "TOPRIGHT", 1, 1)
+        value.ilvlBackground:SetSize(30, 16) -- Größe des Hintergrunds (muss ggf. angepasst werden)
+
+        -- Text für das Item-Level
+        value.ilvl = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+        value.ilvl:SetPoint("TOPRIGHT", value.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
+        value.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+
+        value.gems = {}
+        for i = 1, 3 do
+            value.gems[i] = CreateFrame("Frame", nil, PaperDollFrame)
+            value.gems[i]:SetSize(16, 16) -- Setze die Größe des Icons
+
+            if addon.variables.itemSlotSide[key] == 0 then
+                value.gems[i]:SetPoint("TOPLEFT", value, "TOPRIGHT", 5 + (i - 1) * 16, -1) -- Verschiebe jedes Icon um 20px
+            elseif addon.variables.itemSlotSide[key] == 1 then
+                value.gems[i]:SetPoint("TOPRIGHT", value, "TOPLEFT", -5 - (i - 1) * 16, -1)
+            else
+                value.gems[i]:SetPoint("BOTTOM", value, "TOPLEFT", -1, 5 + (i - 1) * 16)
+            end
+
+            value.gems[i]:SetFrameStrata("DIALOG")
+
+            value.gems[i].icon = value.gems[i]:CreateTexture(nil, "OVERLAY")
+            value.gems[i].icon:SetAllPoints(value.gems[i])
+            value.gems[i].icon:SetTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic") -- Setze die erhaltene Textur
+
+            value.gems[i]:Hide()
+        end
+    end
+
+    PaperDollFrame:HookScript("OnShow", function(self)
+        setCharFrame()
+    end)
 
     -- Slash-Command hinzufügen
     SLASH_ENHANCEQOL1 = "/eqol"
@@ -321,6 +454,8 @@ local function eventHandler(self, event, arg1)
                     StaticPopup1.button1:Click()
                 end
             end
+        elseif event == "PLAYER_EQUIPMENT_CHANGED" and PaperDollFrame:IsShown() then
+            setIlvlText(addon.variables.itemSlots[arg1], arg1)
         end
     end
 end
@@ -332,6 +467,7 @@ frameLoad:RegisterEvent("PLAYER_REGEN_ENABLED")
 frameLoad:RegisterEvent("PLAYER_LEVEL_UP")
 frameLoad:RegisterEvent("BAG_UPDATE_DELAYED")
 frameLoad:RegisterEvent("MERCHANT_SHOW")
+frameLoad:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)
