@@ -45,6 +45,7 @@ globals = {
 	-- EnhanceQoL
 	"PaperDollFrame",
 	"utf8sub",
+	"string.utf8sub",
 	"CharacterHeadSlot",
 	"CharacterNeckSlot",
 	"CharacterShoulderSlot",

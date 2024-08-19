@@ -141,7 +141,7 @@ local function setIlvlText(element, slot)
                             local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 
                             enchantText = enchantText:gsub("%%", "%%%%")
-                            
+
                             if color1 or color2 then
                                 element.enchant:SetFormattedText(
                                     format('%s%s%s', color1 or '', string.utf8sub(enchantText, 1, 20), color2 or ''))
@@ -286,19 +286,19 @@ function loadMain()
         (addon.functions.getHeightOffset(cbAutoRepair)))
 
     local cbShowIlvlCharframe = addon.functions.createCheckbox("showIlvlOnCharframe", fTab, L["showIlvlOnCharframe"],
-        10, (addon.functions.getHeightOffset(cbSellAllJunk)) -10)
+        10, (addon.functions.getHeightOffset(cbSellAllJunk)) - 10)
     cbShowIlvlCharframe:SetScript("OnClick", function(self)
         addon.db["showIlvlOnCharframe"] = self:GetChecked()
         setCharFrame()
     end)
     local cbShowGemsCharframe = addon.functions.createCheckbox("showGemsOnCharframe", fTab, L["showGemsOnCharframe"],
-        10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)) -10)
+        10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)) - 10)
     cbShowGemsCharframe:SetScript("OnClick", function(self)
         addon.db["showGemsOnCharframe"] = self:GetChecked()
         setCharFrame()
     end)
     local cbShowEnchantCharframe = addon.functions.createCheckbox("showEnchantOnCharframe", fTab,
-        L["showEnchantOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowGemsCharframe)) -10)
+        L["showEnchantOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowGemsCharframe)) - 10)
     cbShowEnchantCharframe:SetScript("OnClick", function(self)
         addon.db["showEnchantOnCharframe"] = self:GetChecked()
         setCharFrame()
