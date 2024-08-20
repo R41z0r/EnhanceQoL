@@ -43,6 +43,8 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"StaticPopup1EditBox",
+	"COMMUNITIES_DELETE_CONFIRM_STRING",
 	"PaperDollFrame",
 	"utf8sub",
 	"string.utf8sub",
