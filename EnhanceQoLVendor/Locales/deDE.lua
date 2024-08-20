@@ -28,5 +28,5 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
                                            _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r\nGegenstände aktivieren"
     L["labelExplained" .. value .. "line"] = "Das bedeutet, dass automatisch " .. ITEM_QUALITY_COLORS[key].hex ..
                                                  _G["ITEM_QUALITY" .. key .. "_DESC"] ..
-                                                 "|r\nGegenstände mit einem Gegenstandsstufe von %s und niedriger verkauft werden\n%s"
+                                                 "|r\nGegenstände mit einer Gegenstandsstufe von %s\nund niedriger verkauft werden\n%s"
 end

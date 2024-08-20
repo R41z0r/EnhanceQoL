@@ -22,3 +22,6 @@ L["ignoreTalkingHead"] = "Ocultar automáticamente el marco de Talking Head"
 L["showIlvlOnCharframe"] = "Mostrar el nivel de objeto en el marco de equipo del personaje"
 L["showGemsOnCharframe"] = "Mostrar ranuras de gemas en el marco de equipo del personaje"
 L["showEnchantOnCharframe"] = "Mostrar encantamientos en el marco de equipo del personaje"
+
+L["deleteItemFillDialog"] = "Agregar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" al \"Popup de confirmación de eliminación\""
+L["autoChooseGossip"] = "Elegir automáticamente el chisme cuando solo haya una respuesta disponible"

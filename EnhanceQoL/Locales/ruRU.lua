@@ -1,6 +1,6 @@
 if (GAME_LOCALE or GetLocale()) ~= "ruRU" then
     return
-  end
+end
 
 local addonName, addon = ...
 
@@ -19,6 +19,13 @@ L["autoRepair"] = "Автоматически ремонтировать все 
 L["sellAllJunk"] = "Автоматически продавать весь мусор"
 L["ignoreTalkingHead"] = "Автоматически скрывать Talking Head Frame"
 
-L["showIlvlOnCharframe"] = "Отображать уровень предмета на экране экипировки персонажа"
-L["showGemsOnCharframe"] = "Отображать гнезда для камней на экране экипировки персонажа"
+L["showIlvlOnCharframe"] =
+    "Отображать уровень предмета на экране экипировки персонажа"
+L["showGemsOnCharframe"] =
+    "Отображать гнезда для камней на экране экипировки персонажа"
 L["showEnchantOnCharframe"] = "Отображать чары на экране экипировки персонажа"
+
+L["deleteItemFillDialog"] = "Добавить \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
+                                "\" в \"Окно подтверждения удаления\""
+L["autoChooseGossip"] =
+    "Автоматически выбирать сплетню, если доступен только один ответ"

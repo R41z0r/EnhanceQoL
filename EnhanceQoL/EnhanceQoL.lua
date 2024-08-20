@@ -242,6 +242,12 @@ function loadMain()
     if nil == addon.db["showEnchantOnCharframe"] then
         addon.db["showEnchantOnCharframe"] = false
     end
+    if nil == addon.db["deleteItemFillDialog"] then
+        addon.db["deleteItemFillDialog"] = false
+    end
+    if nil == addon.db["autoChooseGossip"] then
+        addon.db["autoChooseGossip"] = false
+    end
 
     local fTab = addon.functions.createTabFrame("General")
     local header = addon.functions.createHeader(fTab, "General", 0, -10)
@@ -269,6 +275,12 @@ function loadMain()
     local cbIgnoreTalkingHead = addon.functions.createCheckbox("ignoreTalkingHead", fTab, L["ignoreTalkingHead"], 10,
         (addon.functions.getHeightOffset(cbHideRaidTools)))
 
+    local cbDeleteItemFill = addon.functions.createCheckbox("deleteItemFillDialog", fTab, L["deleteItemFillDialog"], 10,
+        (addon.functions.getHeightOffset(cbIgnoreTalkingHead)))
+
+    local cbAutoChooseGossip = addon.functions.createCheckbox("autoChooseGossip", fTab, L["autoChooseGossip"], 10,
+        (addon.functions.getHeightOffset(cbDeleteItemFill)))
+
     _G.CompactRaidFrameManager:SetScript("OnShow", function(self)
         addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self)
     end)
@@ -280,7 +292,7 @@ function loadMain()
     end)
 
     local cbAutoRepair = addon.functions.createCheckbox("autoRepair", fTab, L["autoRepair"], 10,
-        (addon.functions.getHeightOffset(cbIgnoreTalkingHead)))
+        (addon.functions.getHeightOffset(cbAutoChooseGossip)))
 
     local cbSellAllJunk = addon.functions.createCheckbox("sellAllJunk", fTab, L["sellAllJunk"], 10,
         (addon.functions.getHeightOffset(cbAutoRepair)))
@@ -487,65 +499,59 @@ local function eventHandler(self, event, arg1, arg2)
 
         loadMain()
         EQOL.PersistSignUpNote()
-    elseif type(addon.functions.updateAvailableDrinks) == "function" then
-        -- functions for DrinkMacro
-        if event == "BAG_UPDATE_DELAYED" then
-            addon.functions.updateAvailableDrinks(false)
-        elseif event == "PLAYER_LOGIN" then
-            -- on login always load the macro
-            addon.functions.updateAllowedDrinks()
-            addon.functions.updateAvailableDrinks(false)
-        elseif event == "PLAYER_REGEN_ENABLED" then
-            -- PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
-            addon.functions.updateAvailableDrinks(true)
-        elseif event == "PLAYER_LEVEL_UP" then
-            -- on level up, reload the complete list of allowed drinks
-            addon.functions.updateAllowedDrinks()
-            addon.functions.updateAvailableDrinks(true)
-        elseif event == "MERCHANT_SHOW" then
-            if addon.db["autoRepair"] then
-                if CanMerchantRepair() then
-                    local repairAllCost = GetRepairAllCost()
-                    if repairAllCost and repairAllCost > 0 then
-                        RepairAllItems()
-                        PlaySound(SOUNDKIT.ITEM_REPAIR)
-                        print(L["repairCost"] .. addon.functions.formatMoney(repairAllCost))
-                    end
+    elseif event == "MERCHANT_SHOW" then
+        if addon.db["autoRepair"] then
+            if CanMerchantRepair() then
+                local repairAllCost = GetRepairAllCost()
+                if repairAllCost and repairAllCost > 0 then
+                    RepairAllItems()
+                    PlaySound(SOUNDKIT.ITEM_REPAIR)
+                    print(L["repairCost"] .. addon.functions.formatMoney(repairAllCost))
                 end
             end
+        end
 
-            if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then
-                MerchantSellAllJunkButton:Click()
-                if StaticPopup1 and StaticPopup1:IsShown() then
-                    StaticPopup1.button1:Click()
-                end
+        if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then
+            MerchantSellAllJunkButton:Click()
+            if StaticPopup1 and StaticPopup1:IsShown() then
+                StaticPopup1.button1:Click()
             end
-        elseif event == "PLAYER_EQUIPMENT_CHANGED" and PaperDollFrame:IsShown() then
-            setIlvlText(addon.variables.itemSlots[arg1], arg1)
-        elseif event == "SOCKET_INFO_ACCEPT" and PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then
-            C_Timer.After(0.5, function()
-                setCharFrame()
+        end
+    elseif event == "PLAYER_EQUIPMENT_CHANGED" and PaperDollFrame:IsShown() then
+        setIlvlText(addon.variables.itemSlots[arg1], arg1)
+    elseif event == "SOCKET_INFO_ACCEPT" and PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then
+        C_Timer.After(0.5, function()
+            setCharFrame()
+        end)
+    elseif event == "ENCHANT_SPELL_COMPLETED" and PaperDollFrame:IsShown() and addon.db["showEnchantOnCharframe"] then
+        if arg1 == true and arg2 and arg2.equipmentSlotIndex then
+            C_Timer.After(1, function()
+                setIlvlText(addon.variables.itemSlots[arg2.equipmentSlotIndex], arg2.equipmentSlotIndex)
             end)
-        elseif event == "ENCHANT_SPELL_COMPLETED" and PaperDollFrame:IsShown() and addon.db["showEnchantOnCharframe"] then
-            if arg1 == true and arg2 and arg2.equipmentSlotIndex then
-                C_Timer.After(1, function()
-                    setIlvlText(addon.variables.itemSlots[arg2.equipmentSlotIndex], arg2.equipmentSlotIndex)
-                end)
+        end
+    elseif event == "GOSSIP_SHOW" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
+        local options = C_GossipInfo.GetOptions()
+
+        if #options == 1 then
+            if options and options[1] then
+                C_GossipInfo.SelectOption(options[1].gossipOptionID)
             end
+        end
+    elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
+        if StaticPopup1:IsShown() then
+            StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING)
         end
     end
 end
 
 -- Registriere das Event
 frameLoad:RegisterEvent("ADDON_LOADED")
-frameLoad:RegisterEvent("PLAYER_LOGIN")
-frameLoad:RegisterEvent("PLAYER_REGEN_ENABLED")
-frameLoad:RegisterEvent("PLAYER_LEVEL_UP")
-frameLoad:RegisterEvent("BAG_UPDATE_DELAYED")
 frameLoad:RegisterEvent("MERCHANT_SHOW")
 frameLoad:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
 frameLoad:RegisterEvent("SOCKET_INFO_ACCEPT")
 frameLoad:RegisterEvent("ENCHANT_SPELL_COMPLETED")
+frameLoad:RegisterEvent("DELETE_ITEM_CONFIRM")
+frameLoad:RegisterEvent("GOSSIP_SHOW")
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)

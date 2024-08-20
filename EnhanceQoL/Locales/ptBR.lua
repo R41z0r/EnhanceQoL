@@ -1,6 +1,6 @@
 if (GAME_LOCALE or GetLocale()) ~= "ptBR" then
     return
-  end
+end
 
 local addonName, addon = ...
 
@@ -20,5 +20,9 @@ L["sellAllJunk"] = "Vender automaticamente todos os itens inúteis"
 L["ignoreTalkingHead"] = "Ocultar automaticamente o quadro Talking Head"
 
 L["showIlvlOnCharframe"] = "Exibir nível do item no quadro de equipamentos do personagem"
-  L["showGemsOnCharframe"] = "Exibir slots de gemas no quadro de equipamentos do personagem"
-  L["showEnchantOnCharframe"] = "Exibir encantamentos no quadro de equipamentos do personagem"
+L["showGemsOnCharframe"] = "Exibir slots de gemas no quadro de equipamentos do personagem"
+L["showEnchantOnCharframe"] = "Exibir encantamentos no quadro de equipamentos do personagem"
+
+L["deleteItemFillDialog"] = "Adicionar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
+                                "\" ao \"Popup de confirmação de exclusão\""
+L["autoChooseGossip"] = "Escolher automaticamente o boato quando houver apenas uma resposta disponível"

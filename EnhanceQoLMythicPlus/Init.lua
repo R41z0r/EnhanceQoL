@@ -87,6 +87,22 @@ addon.MythicPlus.variables.numOfTabs = 0
 addon.MythicPlus.variables.handled = false
 addon.MythicPlus.variables.breakIt = false
 
+addon.MythicPlus.variables.resetCooldownEncounterDifficult = {
+    [3] = true,
+    [4] = true,
+    [5] = true,
+    [6] = true,
+    [7] = true,
+    [9] = true,
+    [14] = true,
+    [15] = true,
+    [16] = true,
+    [17] = true,
+    [18] = true,
+    [33] = true,
+    [151] = true
+}
+
 function addon.MythicPlus.functions.addButton(frame, name, text, call)
     local button = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate")
     button:SetPoint("TOPRIGHT", frame, "TOPLEFT", 0, (addon.MythicPlus.nrOfButtons * -40))

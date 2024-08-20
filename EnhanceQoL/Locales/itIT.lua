@@ -22,3 +22,6 @@ L["ignoreTalkingHead"] = "Nascondi automaticamente la cornice di Talking Head"
 L["showIlvlOnCharframe"] = "Mostra il livello dell'oggetto nel\npannello dell'equipaggiamento del personaggio"
 L["showGemsOnCharframe"] = "Mostra le gemme nel pannello\ndell'equipaggiamento del personaggio"
 L["showEnchantOnCharframe"] = "Mostra gli incantamenti nel\npannello dell'equipaggiamento del personaggio"
+
+L["deleteItemFillDialog"] = "Aggiungi \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" al \"Popup di conferma eliminazione\""
+L["autoChooseGossip"] = "Scegli automaticamente il pettegolezzo quando è disponibile solo una risposta"

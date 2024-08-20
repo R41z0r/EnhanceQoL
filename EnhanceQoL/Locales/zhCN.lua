@@ -1,6 +1,6 @@
 if (GAME_LOCALE or GetLocale()) ~= "zhCN" then
     return
-  end
+end
 
 local addonName, addon = ...
 
@@ -22,3 +22,6 @@ L["ignoreTalkingHead"] = "自动隐藏Talking Head框体"
 L["showIlvlOnCharframe"] = "在角色装备框架上显示物品等级"
 L["showGemsOnCharframe"] = "在角色装备框架上显示宝石插槽"
 L["showEnchantOnCharframe"] = "在角色装备框架上显示附魔"
+
+L["deleteItemFillDialog"] = "将 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 添加到“删除确认弹窗”"
+L["autoChooseGossip"] = "只有一个响应时自动选择 Gossip"

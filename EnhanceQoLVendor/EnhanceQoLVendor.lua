@@ -25,7 +25,7 @@ local function updateLegend(value, value2)
 
     addon.Vendor.variables["labelExplained" .. value .. "line"]:SetText(string.format(
         L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - value2),
-        table.concat(text, ' and ')))
+        table.concat(text, '\n')))
 end
 
 -- Extend the option menu
@@ -77,7 +77,7 @@ local function checkItem()
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
             containerInfo = C_Container.GetContainerItemInfo(bag, slot)
             if containerInfo and addon.Vendor.variables.itemQualityFilter[containerInfo.quality] then
-                local effectiveILvl = GetDetailedItemLevelInfo(containerInfo.hyperlink) -- item level of the item with all upgrades calculated
+                local effectiveILvl = C_Item.GetDetailedItemLevelInfo(containerInfo.hyperlink) -- item level of the item with all upgrades calculated
                 local itemName, itemLink, _, itemLevel, _, _, _, _, _, _, sellPrice, classID, subclassID, bindType,
                     expansionID = C_Item.GetItemInfo(containerInfo.itemID)
                 if sellPrice > 0 and addon.Vendor.variables.itemTypeFilter[classID] and

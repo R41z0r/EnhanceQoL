@@ -362,6 +362,7 @@ frameAnchor:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 frameAnchor:RegisterEvent("CHALLENGE_MODE_RESET")
 frameAnchor:RegisterEvent("ADDON_LOADED")
 frameAnchor:RegisterEvent("GROUP_ROSTER_UPDATE")
+frameAnchor:RegisterEvent("ENCOUNTER_END")
 
 local function createBar(arg1, arg3)
 
@@ -399,7 +400,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
                 createBar(arg1, arg3)
                 return
             end
-        elseif event == "CHALLENGE_MODE_RESET" then
+        elseif event == "CHALLENGE_MODE_RESET" or (event == "ENCOUNTER_END" and addon.MythicPlus.variables.resetCooldownEncounterDifficult[arg3]) then
             addon.MythicPlus.functions.resetCooldownBars()
         elseif event == "GROUP_ROSTER_UPDATE" then
             addon.MythicPlus.functions.updateBars()

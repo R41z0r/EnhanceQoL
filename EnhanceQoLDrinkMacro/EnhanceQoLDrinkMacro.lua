@@ -97,3 +97,30 @@ sliderDrinkValue:SetScript("OnValueChanged", function(self, value)
     addon.functions.updateAvailableDrinks(false)
 end)
 addon.functions.updateAllowedDrinks()
+
+local frameLoad = CreateFrame("Frame")
+-- Registriere das Event
+frameLoad:RegisterEvent("PLAYER_LOGIN")
+frameLoad:RegisterEvent("PLAYER_REGEN_ENABLED")
+frameLoad:RegisterEvent("PLAYER_LEVEL_UP")
+frameLoad:RegisterEvent("BAG_UPDATE_DELAYED")
+-- Funktion zum Umgang mit Events
+local function eventHandler(self, event, arg1, arg2, arg3, arg4)
+    if event == "BAG_UPDATE_DELAYED" then
+        addon.functions.updateAvailableDrinks(false)
+    elseif event == "PLAYER_LOGIN" then
+        -- on login always load the macro
+        addon.functions.updateAllowedDrinks()
+        addon.functions.updateAvailableDrinks(false)
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        -- PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
+        addon.functions.updateAvailableDrinks(true)
+    elseif event == "PLAYER_LEVEL_UP" then
+        -- on level up, reload the complete list of allowed drinks
+        addon.functions.updateAllowedDrinks()
+        addon.functions.updateAvailableDrinks(true)
+
+    end
+end
+-- Setze den Event-Handler
+frameLoad:SetScript("OnEvent", eventHandler)

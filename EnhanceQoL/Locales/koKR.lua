@@ -1,6 +1,6 @@
 if (GAME_LOCALE or GetLocale()) ~= "koKR" then
     return
-  end
+end
 
 local addonName, addon = ...
 
@@ -22,3 +22,6 @@ L["ignoreTalkingHead"] = "자동으로 대화 머리 프레임 숨기기"
 L["showIlvlOnCharframe"] = "캐릭터 장비 창에 아이템 레벨 표시"
 L["showGemsOnCharframe"] = "캐릭터 장비 창에 보석 슬롯 표시"
 L["showEnchantOnCharframe"] = "캐릭터 장비 창에 마법 부여 표시"
+
+L["deleteItemFillDialog"] = "\"삭제 확인 팝업\"에 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 추가"
+L["autoChooseGossip"] = "응답이 하나만 있는 경우 자동으로 Gossip 선택"

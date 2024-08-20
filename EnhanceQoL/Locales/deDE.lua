@@ -22,3 +22,6 @@ L["ignoreTalkingHead"] = "Automatisch das Talking Head Fenster ausblenden"
 L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anzeigen"
 L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"
 L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster anzeigen"
+
+L["deleteItemFillDialog"] = "Füge \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" zum \"Löschbestätigungs-Popup\" hinzu"
+L["autoChooseGossip"] = "Automatisch Gossip wählen, wenn nur eine Antwort verfügbar ist"
