@@ -81,6 +81,8 @@ addon.Tooltip.nrOfButtons = 0
 addon.Tooltip.variables = {}
 addon.Tooltip.variables.numOfTabs = 0
 
+addon.Tooltip.variables.maxLevel = GetMaxLevelForPlayerExpansion()
+
 addon.Tooltip.variables.kindsByID = {
     [0] = "item", -- Item
     [1] = "spell", -- Spell

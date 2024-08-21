@@ -106,13 +106,15 @@ local function updateItemInfo(itemLink)
     if not itemLink then
         return
     end
-    local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = C_Item.GetItemInfo(itemLink)
+    local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = C_Item.GetItemInfo(
+        itemLink)
     local mana = extractManaFromTooltip(itemLink)
     if name and type and subType and minLevel and mana > 0 then
         local buffFood = extractWellFedFromTooltip(itemLink)
         local formattedKey = name:gsub("%s+", "")
-        return string.format("{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " ..
-                                 buffFood .. " }", formattedKey, itemLink:match("item:(%d+)"), minLevel, mana)
+        return string.format(
+            "{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " .. buffFood .. " }", formattedKey,
+            itemLink:match("item:(%d+)"), minLevel, mana)
     end
     return nil
 end
@@ -228,7 +230,7 @@ local function onEvent(self, event, ...)
         for _, drink in ipairs(addon.Drinks.drinkList) do
             addedItems["" .. drink.id] = true
         end
-    elseif event == "ITEM_PUSH" then
+    elseif event == "ITEM_PUSH" and frame:IsShown() then
         onItemPush(...)
     elseif event == "GET_ITEM_INFO_RECEIVED" then
         onGetItemInfoReceived(...)

@@ -45,7 +45,8 @@ local function checkAdditionalTooltip(tooltip)
             end
         end
     end
-    if addon.db["TooltipShowMythicScore"] then
+    if addon.db["TooltipShowMythicScore"] and UnitCanAttack("player", "mouseover") == false and
+        addon.Tooltip.variables.maxLevel == UnitLevel("mouseover") then
         local name, _, timeLimit
         local rating = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("mouseover")
         if rating then
