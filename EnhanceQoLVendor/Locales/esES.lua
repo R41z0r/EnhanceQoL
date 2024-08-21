@@ -20,6 +20,15 @@ L["vendorIgnoreBoE"] = "Ignorar objetos que se ligan al equipar"
 L["vendorIgnoreWarbound"] = "Ignorar objetos vinculados por guerra"
 L["vendorIgnoreUpgradable"] = "Ignorar objetos mejorables"
 
+L["IncludeVendorList"] = "Lista de artículos"
+L["Include"] = "Incluir"
+
+L["Add"] = "Agregar"
+L["Remove"] = "Eliminar"
+L["Item id or drag item"] = "ID de artículo o arrastra el artículo"
+L["Item id does not exist"] = "La ID del artículo no existe"
+L["vendorAddItemToInclude"] = "Agregue artículos a esta lista para incluirlos en la venta.\nIMPORTANTE: Esto ignora todas las demás verificaciones para este artículo"
+
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]
     L["labelItemQuality" .. value .. "line"] = "Esto te permite vender automáticamente\nlos objetos de calidad " ..

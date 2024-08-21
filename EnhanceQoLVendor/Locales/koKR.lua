@@ -21,6 +21,15 @@ L["vendorIgnoreBoE"] = "착용 시 귀속되는 아이템 무시"
 L["vendorIgnoreWarbound"] = "전쟁에 귀속된 아이템 무시"
 L["vendorIgnoreUpgradable"] = "업그레이드 가능한 아이템 무시"
 
+L["IncludeVendorList"] = "아이템 목록"
+L["Include"] = "포함"
+
+L["Add"] = "추가"
+L["Remove"] = "제거"
+L["Item id or drag item"] = "아이템 ID 또는 아이템을 끌어다 놓으세요"
+L["Item id does not exist"] = "아이템 ID가 존재하지 않습니다"
+L["vendorAddItemToInclude"] = "판매에 포함시키기 위해 이 목록에 아이템을 추가하세요.\n중요: 이 항목에 대한 다른 모든 검사를 무시합니다"
+
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]
     L["labelItemQuality" .. value .. "line"] =

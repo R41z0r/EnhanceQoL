@@ -46,6 +46,11 @@ addon.Vendor.variables.tabNames = { -- Used to create autosell tabs
     [4] = "Epic"
 }
 
+-- Includelist
+if nil == addon.db["vendorIncludeSellList"] then
+    addon.db["vendorIncludeSellList"] = {}
+end
+
 addon.Vendor.variables.tabKeyNames = {}
 for key in pairs(addon.Vendor.variables.tabNames) do
     table.insert(addon.Vendor.variables.tabKeyNames, key)
@@ -101,3 +106,127 @@ addon.Vendor.variables.itemSubTypeFilter = {
 }
 
 addon.Vendor.variables.upgradePattern = ITEM_UPGRADE_TOOLTIP_FORMAT_STRING:gsub("%%s", "%%a+"):gsub("%%d", "%%d+")
+
+function addon.Vendor.functions.createDropdown(id, frame, items, width, text, x, y)
+
+    table.sort(items, function(a, b)
+        return a.text < b.text
+    end)
+
+    -- Erstelle ein Label
+    local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    label:SetPoint("TOPLEFT", frame, "TOPLEFT", x, y)
+    label:SetText(text)
+
+    -- Erstelle ein Dropdown-Menü
+    local dropdown = CreateFrame("Frame", "MyDropdown", frame, "UIDropDownMenuTemplate")
+    dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -16, -10) -- Position relativ zum Label
+
+    -- Initialisiere das Dropdown-Menü
+    UIDropDownMenu_SetWidth(dropdown, 180)
+    dropdown:SetFrameStrata("DIALOG")
+
+    local function Initialize(self, level)
+        local info = UIDropDownMenu_CreateInfo()
+        for i, item in ipairs(items) do
+            info.text = item.text
+            info.value = item.value
+            info.checked = nil
+            info.func = function(self)
+                UIDropDownMenu_SetSelectedID(dropdown, i)
+            end
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end
+
+    UIDropDownMenu_SetText(dropdown, "")
+    -- Initialisiere das Dropdown-Menü
+    UIDropDownMenu_Initialize(dropdown, Initialize)
+    return dropdown
+end
+
+function addon.Vendor.functions.addDropdownItem(dropdown, items, newItem)
+    -- Füge das neue Item zur Items-Tabelle hinzu
+    table.insert(items, newItem)
+
+    table.sort(items, function(a, b)
+        return a.text < b.text
+    end)
+    -- Neuinitialisiere das Dropdown-Menü
+    local function Initialize(self, level)
+        local info = UIDropDownMenu_CreateInfo()
+        for i, item in ipairs(items) do
+            info.text = item.text
+            info.value = item.value
+            info.checked = nil
+            info.func = function(self)
+                UIDropDownMenu_SetSelectedID(dropdown, i)
+            end
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end
+
+    UIDropDownMenu_Initialize(dropdown, Initialize)
+end
+
+function addon.Vendor.functions.createEditBox(parent, x, y, text)
+
+    local editBox = CreateFrame("EditBox", "EditBox", parent, "InputBoxTemplate")
+    editBox:SetSize(180, 20)
+    editBox:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)
+    editBox:SetAutoFocus(false)
+    editBox:SetMaxLetters(100)
+    editBox:SetTextInsets(10, 10, 0, 0)
+    editBox:SetText(text)
+    editBox:SetScript("OnEditFocusGained", function(self)
+        if self:GetText() == text then
+            self:SetText("")
+        end
+    end)
+    editBox:SetScript("OnEditFocusLost", function(self)
+        if self:GetText() == "" then
+            self:SetText(text)
+        end
+    end)
+    editBox:SetScript("OnReceiveDrag", function(self)
+        local infoType, itemID, itemLink = GetCursorInfo()
+        if infoType == "item" then
+            self:SetText(itemID)
+            ClearCursor()
+        end
+    end)
+
+    editBox:SetScript("OnTextChanged", function(self, userInput)
+        if userInput then
+            local text = self:GetText()
+            local filteredText = text:gsub("[^0-9]", "") -- Entfernt alle Zeichen außer Zahlen
+            if text ~= filteredText then
+                self:SetText(filteredText) -- Setzt den gefilterten Text zurück in die EditBox
+                self:SetCursorPosition(#filteredText) -- Setzt den Cursor ans Ende
+            end
+        end
+    end)
+
+    editBox:SetScript("OnMouseUp", function(self, button)
+        if button == "LeftButton" then
+            local infoType, itemID, itemLink = GetCursorInfo()
+            if infoType == "item" then
+                self:SetText(itemID)
+                ClearCursor()
+            end
+        end
+    end)
+
+    editBox:SetScript("OnMouseDown", function(self, button)
+        if button == "RightButton" then
+            self:SetText("")
+        end
+    end)
+    editBox:SetScript("OnDragStart", function(self)
+        self:SetFocus()
+    end)
+    editBox:SetScript("OnDragStop", function(self)
+        self:ClearFocus()
+    end)
+    return editBox
+end

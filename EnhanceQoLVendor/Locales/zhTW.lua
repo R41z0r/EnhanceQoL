@@ -21,6 +21,15 @@ L["vendorIgnoreBoE"] = "忽略裝備後綁定的物品"
 L["vendorIgnoreWarbound"] = "忽略戰鬥綁定的物品"
 L["vendorIgnoreUpgradable"] = "忽略可升級物品"
 
+L["IncludeVendorList"] = "物品列表"
+L["Include"] = "包含"
+
+L["Add"] = "添加"
+L["Remove"] = "移除"
+L["Item id or drag item"] = "物品ID或拖動物品"
+L["Item id does not exist"] = "物品ID不存在"
+L["vendorAddItemToInclude"] = "將物品添加到此列表中以包含在銷售中。\n重要：這將忽略該物品的所有其他檢查"
+
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]
     L["labelItemQuality" .. value .. "line"] = "這使您能夠根據商人的過濾條件，自動銷售質量為\n" ..
