@@ -19,6 +19,7 @@ L["MerchantWindowClosed"] = "商人窗口已關閉。停止銷售"
 L["vendorMinIlvlDif"] = "標記為自動銷售的最低物品等級低於我的平均值"
 L["vendorIgnoreBoE"] = "忽略裝備後綁定的物品"
 L["vendorIgnoreWarbound"] = "忽略戰鬥綁定的物品"
+L["vendorIgnoreUpgradable"] = "忽略可升級物品"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]

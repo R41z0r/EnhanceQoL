@@ -43,6 +43,7 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"ITEM_UPGRADE_TOOLTIP_FORMAT_STRING",
 	"StaticPopup1EditBox",
 	"COMMUNITIES_DELETE_CONFIRM_STRING",
 	"PaperDollFrame",

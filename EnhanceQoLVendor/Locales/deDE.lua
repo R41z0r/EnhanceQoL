@@ -18,6 +18,7 @@ L["vendorMinIlvlDif"] =
     "Mindestgegenstandsstufe unter meinem Durchschnitt,\num zum automatischen Verkauf markiert zu werden"
 L["vendorIgnoreBoE"] = "Beim Anlegen gebundene Gegenstände ignorieren"
 L["vendorIgnoreWarbound"] = "Kriegsgebundene Gegenstände ignorieren"
+L["vendorIgnoreUpgradable"] = "Ignoriere upgradebare Gegenstände"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]

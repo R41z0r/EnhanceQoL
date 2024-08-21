@@ -20,6 +20,7 @@ L["vendorMinIlvlDif"] =
     "Минимальный уровень предмета ниже моего\nсреднего, чтобы отметить его для автоматической продажи"
 L["vendorIgnoreBoE"] = "Игнорировать предметы, привязываемые при надевании"
 L["vendorIgnoreWarbound"] = "Игнорировать военные предметы"
+L["vendorIgnoreUpgradable"] = "Игнорировать улучшаемые предметы"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]

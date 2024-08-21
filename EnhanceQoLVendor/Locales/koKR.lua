@@ -19,6 +19,7 @@ L["MerchantWindowClosed"] = "상인 창이 닫혔습니다. 판매 중지"
 L["vendorMinIlvlDif"] = "내 평균보다 낮은 최소 아이템 레벨을 자동 판매 대상으로 지정"
 L["vendorIgnoreBoE"] = "착용 시 귀속되는 아이템 무시"
 L["vendorIgnoreWarbound"] = "전쟁에 귀속된 아이템 무시"
+L["vendorIgnoreUpgradable"] = "업그레이드 가능한 아이템 무시"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]

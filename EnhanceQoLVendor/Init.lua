@@ -66,6 +66,11 @@ for key, value in pairs(addon.Vendor.variables.tabNames) do
     if nil == addon.db["vendor" .. value .. "IgnoreBoE"] then
         addon.db["vendor" .. value .. "IgnoreBoE"] = true
     end
+    if key ~= 1 then
+        if nil == addon.db["vendor" .. value .. "IgnoreUpgradable"] then
+            addon.db["vendor" .. value .. "IgnoreUpgradable"] = false
+        end
+    end
 
     addon.Vendor.variables.itemQualityFilter[key] = addon.db["vendor" .. value .. "Enable"]
     addon.Vendor.variables.itemBindTypeQualityFilter[key] = {
@@ -94,3 +99,5 @@ addon.Vendor.variables.itemSubTypeFilter = {
         [11] = true -- Artifact Relic
     }
 }
+
+addon.Vendor.variables.upgradePattern = ITEM_UPGRADE_TOOLTIP_FORMAT_STRING:gsub("%%s", "%%a+"):gsub("%%d", "%%d+")

@@ -14,6 +14,7 @@ L["MerchantWindowClosed"] = "Merchant window is closed. Stopping sales"
 L["vendorMinIlvlDif"] = "Min. ilvl under my average to mark for autosell"
 L["vendorIgnoreBoE"] = "Ignore Bind on Equip items"
 L["vendorIgnoreWarbound"] = "Ignore Warbound items"
+L["vendorIgnoreUpgradable"] = "Ignore Upgradable items"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]

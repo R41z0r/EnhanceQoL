@@ -22,6 +22,9 @@ local function updateLegend(value, value2)
     if addon.db["vendor" .. value .. "IgnoreBoE"] then
         table.insert(text, L["vendorIgnoreBoE"])
     end
+    if addon.db["vendor" .. value .. "IgnoreUpgradable"] then
+        table.insert(text, L["vendorIgnoreUpgradable"])
+    end
 
     addon.Vendor.variables["labelExplained" .. value .. "line"]:SetText(string.format(
         L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - value2),
@@ -85,13 +88,39 @@ local function checkItem()
                         (addon.Vendor.variables.itemSubTypeFilter[classID] and
                             addon.Vendor.variables.itemSubTypeFilter[classID][subclassID])) and
                     addon.Vendor.variables.itemBindTypeQualityFilter[containerInfo.quality][bindType] then -- Check if classID is allowed for AutoSell
-                    if effectiveILvl <=
-                        (avgItemLevelEquipped -
-                            addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]) then
-                        table.insert(itemsToSell, {
-                            bag = bag,
-                            slot = slot
-                        })
+
+                    local canUpgrade = false
+                    if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "IgnoreUpgradable"] then
+                        local eItem = Item:CreateFromBagAndSlot(bag, slot)
+                        local link = eItem:GetItemLink()
+                        local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
+                        tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+                        tooltip:SetHyperlink(link)
+                        for i = 1, tooltip:NumLines() do
+                            local line = _G["ScanTooltipTextLeft" .. i]:GetText()
+                            if line then
+                                local upgrade = strmatch(line, addon.Vendor.variables.upgradePattern)
+                                if upgrade then
+                                    local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
+                                    if not (r > 0.5 and g > 0.5 and b > 0.5) then -- gray upgrade text = old item upgradable --> not = ignore gray
+                                        canUpgrade = true
+                                    end
+                                    break
+                                end
+                            end
+                        end
+                    end
+
+                    if not canUpgrade then
+                        if effectiveILvl <=
+                            (avgItemLevelEquipped -
+                                addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] ..
+                                    "MinIlvlDif"]) then
+                            table.insert(itemsToSell, {
+                                bag = bag,
+                                slot = slot
+                            })
+                        end
                     end
                 end
             end
@@ -162,12 +191,24 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
         updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
     end)
 
+    local vendorIgnoreUpgradable
+    if key ~= 1 then
+        vendorIgnoreUpgradable = addon.functions.createCheckbox("vendor" .. value .. "IgnoreUpgradable", tabFrame,
+            L["vendorIgnoreUpgradable"], 10, (addon.functions.getHeightOffset(vendorIgnoreWarbound) - 5))
+        vendorIgnoreUpgradable:SetScript("OnClick", function(self)
+            addon.db["vendor" .. value .. "IgnoreUpgradable"] = self:GetChecked()
+            updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
+        end)
+    end
     local text = {}
     if addon.db["vendor" .. value .. "IgnoreWarbound"] then
         table.insert(text, L["vendorIgnoreWarbound"])
     end
     if addon.db["vendor" .. value .. "IgnoreBoE"] then
         table.insert(text, L["vendorIgnoreBoE"])
+    end
+    if addon.db["vendor" .. value .. "IgnoreUpgradable"] then
+        table.insert(text, L["vendorIgnoreUpgradable"])
     end
 
     local labelExplanation = addon.functions.createLabel(tabFrame,
@@ -180,7 +221,9 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     table.insert(hideList[value], vendorIgnoreBoE)
     table.insert(hideList[value], vendorIgnoreWarbound)
     table.insert(hideList[value], labelExplanation)
-
+    if key ~= 1 then
+        table.insert(hideList[value], vendorIgnoreUpgradable)
+    end
     hideElements(hideList[value], addon.db["vendor" .. value .. "Enable"])
 end
 

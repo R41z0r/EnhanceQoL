@@ -17,6 +17,7 @@ L["MerchantWindowClosed"] = "La finestra del mercante è chiusa. Interruzione de
 L["vendorMinIlvlDif"] = "Livello oggetto minimo sotto la mia\nmedia per contrassegnarlo per la vendita automatica"
 L["vendorIgnoreBoE"] = "Ignora oggetti che si vincolano quando equipaggiati"
 L["vendorIgnoreWarbound"] = "Ignora oggetti vincolati da guerra"
+L["vendorIgnoreUpgradable"] = "Ignora gli oggetti aggiornabili"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]
