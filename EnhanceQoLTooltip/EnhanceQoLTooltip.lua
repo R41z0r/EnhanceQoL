@@ -31,7 +31,7 @@ local function checkSpell(tooltip, id, name)
 end
 
 local function checkAdditionalTooltip(tooltip)
-    if addon.db["TooltipShowClassColor"] then
+    if addon.db["TooltipShowClassColor"] and UnitPlayerControlled("mouseover") then
         local classDisplayName, class, classID = UnitClass("mouseover")
         if classDisplayName then
             local r, g, b = GetClassColor(class)
