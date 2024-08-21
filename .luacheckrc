@@ -43,6 +43,7 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"GetMaxLevelForPlayerExpansion",
 	"UIDropDownMenu_GetSelectedID",
 	"ITEM_UPGRADE_TOOLTIP_FORMAT_STRING",
 	"StaticPopup1EditBox",
