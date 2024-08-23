@@ -115,7 +115,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
     elseif event == "PLAYER_REGEN_ENABLED" then
         -- PLAYER_REGEN_ENABLED always load, because we don't know if something changed in Combat
         addon.functions.updateAvailableDrinks(true)
-    elseif event == "PLAYER_LEVEL_UP" then
+    elseif event == "PLAYER_LEVEL_UP" and UnitAffectingCombat("player") == false then
         -- on level up, reload the complete list of allowed drinks
         addon.functions.updateAllowedDrinks()
         addon.functions.updateAvailableDrinks(true)
