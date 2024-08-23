@@ -100,7 +100,8 @@ addon.MythicPlus.variables.resetCooldownEncounterDifficult = {
     [17] = true,
     [18] = true,
     [33] = true,
-    [151] = true
+    [151] = true,
+    [208] = true --delves
 }
 
 function addon.MythicPlus.functions.addButton(frame, name, text, call)
