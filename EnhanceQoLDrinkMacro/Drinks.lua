@@ -456,7 +456,14 @@ addon.Drinks.drinkList = {
     { key = "TheSushiSpecial", id = 222720, requiredLevel = 1, mana = 3700000, isBuffFood = true },
     { key = "CinderNectar", id = 222744, requiredLevel = 1, mana = 3700000, isBuffFood = false },
     { key = "Pep-In-Your-Step", id = 222745, requiredLevel = 1, mana = 3700000, isBuffFood = true },
-    { key = "ProteinSlurp", id = 223967, requiredLevel = 1, mana = 1100000, isBuffFood = true }
+    { key = "ProteinSlurp", id = 223967, requiredLevel = 1, mana = 1100000, isBuffFood = true },
+    { key = "Magmalaid", id = 227310, requiredLevel = 70, mana = 1100000, isBuffFood = false },
+    { key = "Titanshake", id = 227309, requiredLevel = 70, mana = 1100000, isBuffFood = false },
+    { key = "QuicksilverSipper", id = 227318, requiredLevel = 75, mana = 1400000, isBuffFood = false },
+    { key = "LavaCola", id = 227317, requiredLevel = 75, mana = 1400000, isBuffFood = false },
+    { key = "ChalcociteLavaCake", id = 227326, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+    { key = "StoneSoup", id = 227325, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+    { key = "RockyRoad", id = 227327, requiredLevel = 75, mana = 3700000, isBuffFood = false }
 }
 
 table.sort(addon.Drinks.drinkList, function(a, b)
