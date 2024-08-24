@@ -22,13 +22,16 @@ L["vendorIgnoreWarbound"] = "忽略战斗绑定的物品"
 L["vendorIgnoreUpgradable"] = "忽略可升级物品"
 
 L["IncludeVendorList"] = "物品列表"
+L["ExcludeVendorList"] = "物品列表"
 L["Include"] = "包括"
+L["Exclude"] = "排除"
 
 L["Add"] = "添加"
 L["Remove"] = "移除"
 L["Item id or drag item"] = "物品ID或拖动物品"
 L["Item id does not exist"] = "物品ID不存在"
 L["vendorAddItemToInclude"] = "将物品添加到此列表中以包含在出售中。\n重要：这将忽略该物品的所有其他检查"
+L["vendorAddItemToExclude"] = "将物品添加到此列表中以排除出售。\n重要：排除总是优先，除非它是垃圾"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]

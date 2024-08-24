@@ -21,13 +21,16 @@ L["vendorIgnoreWarbound"] = "Kriegsgebundene Gegenstände ignorieren"
 L["vendorIgnoreUpgradable"] = "Ignoriere upgradebare Gegenstände"
 
 L["IncludeVendorList"] = "Artikelliste"
+L["ExcludeVendorList"] = "Artikelliste"
 L["Include"] = "Hinzufügen"
+L["Exclude"] = "Ausschließen"
 
 L["Add"] = "Hinzufügen"
 L["Remove"] = "Entfernen"
 L["Item id or drag item"] = "Artikel-ID oder Artikel ziehen"
 L["Item id does not exist"] = "Artikel-ID existiert nicht"
 L["vendorAddItemToInclude"] = "Fügen Sie Artikel zu dieser Liste hinzu, um sie zum Verkauf einzuschließen.\nWICHTIG: Dies ignoriert alle anderen Prüfungen für diesen Artikel"
+L["vendorAddItemToExclude"] = "Füge Gegenstände zu dieser Liste hinzu, um sie vom Verkauf auszuschließen.\nWICHTIG: Ausschlüsse haben immer Vorrang, es sei denn, es handelt sich um Müll"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]

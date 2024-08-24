@@ -51,6 +51,12 @@ if nil == addon.db["vendorIncludeSellList"] then
     addon.db["vendorIncludeSellList"] = {}
 end
 
+-- Excludelist
+
+if nil == addon.db["vendorExcludeSellList"] then
+    addon.db["vendorExcludeSellList"] = {}
+end
+
 addon.Vendor.variables.tabKeyNames = {}
 for key in pairs(addon.Vendor.variables.tabNames) do
     table.insert(addon.Vendor.variables.tabKeyNames, key)

@@ -80,7 +80,9 @@ local function checkItem()
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
             containerInfo = C_Container.GetContainerItemInfo(bag, slot)
             if containerInfo then
-                if addon.db["vendorIncludeSellList"][containerInfo.itemID] then -- ignore everything and include in sell
+                if addon.db["vendorExcludeSellList"][containerInfo.itemID] then -- ignore everything and exclude in sell
+                    -- do nothing
+                elseif addon.db["vendorIncludeSellList"][containerInfo.itemID] then -- ignore everything and include in sell
                     local itemName, itemLink, _, itemLevel, _, _, _, _, _, _, sellPrice, classID, subclassID, bindType,
                         expansionID = C_Item.GetItemInfo(containerInfo.itemID)
                     if sellPrice > 0 then
@@ -240,6 +242,7 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     hideElements(hideList[value], addon.db["vendor" .. value .. "Enable"])
 end
 
+-- Include List
 local tabFrame = addon.Vendor.functions.createTabFrame(L["Include"], frame)
 
 local labelHeadline = addon.functions.createLabel(tabFrame, L["vendorAddItemToInclude"], 0, -10, "TOP", "TOP")
@@ -306,6 +309,75 @@ btnRemoveInclude = addon.functions.createButton(tabFrame, dropIncludeList:GetWid
         end
     end)
 btnRemoveInclude:SetWidth(btnRemoveInclude:GetFontString():GetStringWidth() + 20)
+
+-- Exclude
+local tabFrameExclude = addon.Vendor.functions.createTabFrame(L["Exclude"], frame)
+
+local labelHeadlineExclude = addon.functions.createLabel(tabFrameExclude, L["vendorAddItemToExclude"], 0, -10, "TOP",
+    "TOP")
+
+local tExclude = {}
+local dropExcludeList, btnRemoveExclude
+
+for id, name in pairs(addon.db["vendorExcludeSellList"]) do
+    table.insert(tExclude, {
+        value = id,
+        text = name
+    })
+end
+
+local txtExclude = addon.Vendor.functions.createEditBox(tabFrameExclude, 20,
+    addon.functions.getHeightOffset(labelHeadlineExclude) - 10, L["Item id or drag item"])
+
+local btnAddExclude = addon.functions.createButton(tabFrameExclude, txtExclude:GetWidth() + 20,
+    addon.functions.getHeightOffset(labelHeadlineExclude) - 7, 50, 30, L["Add"], function()
+        if txtExclude:GetText() ~= "" and txtExclude:GetText() ~= L["Item id or drag item"] then
+            local eItem = Item:CreateFromItemID(tonumber(txtExclude:GetText()))
+            if eItem and not eItem:IsItemEmpty() then
+                eItem:ContinueOnItemLoad(function()
+                    if not addon.db["vendorExcludeSellList"][eItem:GetItemID()] then
+                        addon.db["vendorExcludeSellList"][eItem:GetItemID()] = eItem:GetItemName()
+                        addon.Vendor.functions.addDropdownItem(dropExcludeList, tExclude, {
+                            text = eItem:GetItemName(),
+                            value = eItem:GetItemID()
+                        })
+                    end
+                    txtExclude:SetText(L["Item id or drag item"])
+                end)
+            end
+        end
+    end)
+
+dropExcludeList = addon.Vendor.functions.createDropdown("ExcludeVendorList", tabFrameExclude, tExclude, 150,
+    L["ExcludeVendorList"], 10, addon.functions.getHeightOffset(txtExclude) - 30)
+
+btnRemoveExclude = addon.functions.createButton(tabFrameExclude, dropExcludeList:GetWidth(),
+    addon.functions.getHeightOffset(txtExclude) - 47, 50, 30, L["Remove"], function()
+        local selectedID = UIDropDownMenu_GetSelectedID(dropExcludeList)
+        if selectedID then
+            local selectedItem = tExclude[selectedID]
+            if selectedItem then
+                addon.db["vendorExcludeSellList"][selectedItem.value] = nil
+                table.remove(tExclude, selectedID)
+                local function Initialize(self, level)
+                    local info = UIDropDownMenu_CreateInfo()
+                    for i, item in ipairs(tExclude) do
+                        info.text = item.text
+                        info.value = item.value
+                        info.checked = nil
+                        info.func = function(self)
+                            UIDropDownMenu_SetSelectedID(dropExcludeList, i)
+                        end
+                        UIDropDownMenu_AddButton(info, level)
+                    end
+                end
+
+                UIDropDownMenu_Initialize(dropExcludeList, Initialize)
+                UIDropDownMenu_SetText(dropExcludeList, "")
+            end
+        end
+    end)
+btnRemoveExclude:SetWidth(btnRemoveExclude:GetFontString():GetStringWidth() + 20)
 
 ------Event Handler
 local function eventHandler(self, event, arg1, arg2)
