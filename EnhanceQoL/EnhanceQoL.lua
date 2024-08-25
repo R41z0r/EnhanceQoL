@@ -55,116 +55,118 @@ end
 
 local function setIlvlText(element, slot)
     -- Hide all gemslots
-    if element and element.gems then
-        for i = 1, 3 do
-            if element.gems[i] then
-                element.gems[i]:Hide()
-                element.gems[i].icon:SetTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic")
+    if element then
+        if element.gems then
+            for i = 1, 3 do
+                if element.gems[i] then
+                    element.gems[i]:Hide()
+                    element.gems[i].icon:SetTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic")
+                end
             end
         end
-    end
 
-    if addon.db["showGemsOnCharframe"] == false and addon.db["showIlvlOnCharframe"] == false and
-        addon.db["showEnchantOnCharframe"] == false then
-        element.ilvl:SetFormattedText("")
-        element.enchant:SetText("")
-        element.ilvlBackground:Hide()
-        return
-    end
+        if addon.db["showGemsOnCharframe"] == false and addon.db["showIlvlOnCharframe"] == false and
+            addon.db["showEnchantOnCharframe"] == false then
+            element.ilvl:SetFormattedText("")
+            element.enchant:SetText("")
+            element.ilvlBackground:Hide()
+            return
+        end
 
-    local eItem = Item:CreateFromEquipmentSlot(slot)
-    if eItem and not eItem:IsItemEmpty() then
-        eItem:ContinueOnItemLoad(function()
+        local eItem = Item:CreateFromEquipmentSlot(slot)
+        if eItem and not eItem:IsItemEmpty() then
+            eItem:ContinueOnItemLoad(function()
 
-            local link = eItem:GetItemLink()
-            local _, itemID, enchantID = string.match(link,
-                "item:(%d+):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*)")
-            if addon.db["showGemsOnCharframe"] then
-                local hasSockets = false
-                local emptySocketsCount = 0
-                local itemStats = C_Item.GetItemStats(link)
-                for statName, statValue in pairs(itemStats) do
-                    if (statName:find("EMPTY_SOCKET") or statName:find("empty_socket")) and
-                        addon.variables.allowedSockets[statName] then
-                        hasSockets = true
-                        emptySocketsCount = emptySocketsCount + statValue
-                    end
-                end
-
-                if hasSockets then
-                    for i = 1, emptySocketsCount do
-                        element.gems[i]:Show()
-                        local gemName, gemLink = C_Item.GetItemGem(link, i)
-                        if gemName then
-                            local icon = GetItemIcon(gemLink)
-                            element.gems[i].icon:SetTexture(icon)
-                            emptySocketsCount = emptySocketsCount - 1
+                local link = eItem:GetItemLink()
+                local _, itemID, enchantID = string.match(link,
+                    "item:(%d+):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*)")
+                if addon.db["showGemsOnCharframe"] then
+                    local hasSockets = false
+                    local emptySocketsCount = 0
+                    local itemStats = C_Item.GetItemStats(link)
+                    for statName, statValue in pairs(itemStats) do
+                        if (statName:find("EMPTY_SOCKET") or statName:find("empty_socket")) and
+                            addon.variables.allowedSockets[statName] then
+                            hasSockets = true
+                            emptySocketsCount = emptySocketsCount + statValue
                         end
                     end
-                end
-            end
 
-            if addon.db["showIlvlOnCharframe"] then
-                local color = eItem:GetItemQualityColor()
-                local itemLevelText = eItem:GetCurrentItemLevel()
-
-                element.ilvl:SetFormattedText(itemLevelText)
-                element.ilvl:SetTextColor(color.r, color.g, color.b, 1)
-
-                local textWidth = element.ilvl:GetStringWidth()
-                element.ilvlBackground:SetSize(textWidth + 6, element.ilvl:GetStringHeight() + 4) -- Mehr Padding für bessere Lesbarkeit
-            else
-                element.ilvl:SetFormattedText("")
-                element.ilvlBackground:Hide()
-            end
-
-            if addon.db["showEnchantOnCharframe"] then
-                local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
-                tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-                tooltip:SetHyperlink(link)
-                local foundEnchant = false
-                for i = 1, tooltip:NumLines() do
-                    local line = _G["ScanTooltipTextLeft" .. i]:GetText()
-                    if line then
-                        local enchant = strmatch(line, addon.variables.enchantString)
-                        if enchant then
-                            local color1, color2 = strmatch(enchant, '(|cn.-:).-(|r)')
-                            local text = strmatch(gsub(gsub(gsub(line, '%s?|A.-|a', ''), '|cn.-:(.-)|r', '%1'),
-                                '[&+] ?', ''), addon.variables.enchantString)
-
-                            foundEnchant = true
-
-                            local enchantText = gsub(text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", ""),
-                                '(%w%w%w)%w+', '%1')
-                            -- local shortAbbrev = gsub(enchantText, '(%w%w%w)%w+', '%1')
-                            local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
-                            local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
-
-                            enchantText = enchantText:gsub("%%", "%%%%")
-
-                            if color1 or color2 then
-                                element.enchant:SetFormattedText(
-                                    format('%s%s%s', color1 or '', string.utf8sub(enchantText, 1, 20), color2 or ''))
-                            else
-                                element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
+                    if hasSockets then
+                        for i = 1, emptySocketsCount do
+                            element.gems[i]:Show()
+                            local gemName, gemLink = C_Item.GetItemGem(link, i)
+                            if gemName then
+                                local icon = GetItemIcon(gemLink)
+                                element.gems[i].icon:SetTexture(icon)
+                                emptySocketsCount = emptySocketsCount - 1
                             end
-                            break
                         end
                     end
                 end
 
-                if foundEnchant == false then
+                if addon.db["showIlvlOnCharframe"] then
+                    local color = eItem:GetItemQualityColor()
+                    local itemLevelText = eItem:GetCurrentItemLevel()
+
+                    element.ilvl:SetFormattedText(itemLevelText)
+                    element.ilvl:SetTextColor(color.r, color.g, color.b, 1)
+
+                    local textWidth = element.ilvl:GetStringWidth()
+                    element.ilvlBackground:SetSize(textWidth + 6, element.ilvl:GetStringHeight() + 4) -- Mehr Padding für bessere Lesbarkeit
+                else
+                    element.ilvl:SetFormattedText("")
+                    element.ilvlBackground:Hide()
+                end
+
+                if addon.db["showEnchantOnCharframe"] then
+                    local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
+                    tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+                    tooltip:SetHyperlink(link)
+                    local foundEnchant = false
+                    for i = 1, tooltip:NumLines() do
+                        local line = _G["ScanTooltipTextLeft" .. i]:GetText()
+                        if line then
+                            local enchant = strmatch(line, addon.variables.enchantString)
+                            if enchant then
+                                local color1, color2 = strmatch(enchant, '(|cn.-:).-(|r)')
+                                local text = strmatch(gsub(gsub(gsub(line, '%s?|A.-|a', ''), '|cn.-:(.-)|r', '%1'),
+                                    '[&+] ?', ''), addon.variables.enchantString)
+
+                                foundEnchant = true
+
+                                local enchantText = gsub(text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", ""),
+                                    '(%w%w%w)%w+', '%1')
+                                -- local shortAbbrev = gsub(enchantText, '(%w%w%w)%w+', '%1')
+                                local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
+                                local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
+
+                                enchantText = enchantText:gsub("%%", "%%%%")
+
+                                if color1 or color2 then
+                                    element.enchant:SetFormattedText(
+                                        format('%s%s%s', color1 or '', string.utf8sub(enchantText, 1, 20), color2 or ''))
+                                else
+                                    element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
+                                end
+                                break
+                            end
+                        end
+                    end
+
+                    if foundEnchant == false then
+                        element.enchant:SetText("")
+                    end
+                    tooltip:Hide()
+                else
                     element.enchant:SetText("")
                 end
-                tooltip:Hide()
-            else
-                element.enchant:SetText("")
-            end
-        end)
-    else
-        element.ilvl:SetFormattedText("")
-        element.ilvlBackground:Hide()
-        element.enchant:SetText("")
+            end)
+        else
+            element.ilvl:SetFormattedText("")
+            element.ilvlBackground:Hide()
+            element.enchant:SetText("")
+        end
     end
 end
 
@@ -517,7 +519,7 @@ local function eventHandler(self, event, arg1, arg2)
                 StaticPopup1.button1:Click()
             end
         end
-    elseif event == "PLAYER_EQUIPMENT_CHANGED" and PaperDollFrame:IsShown() then
+    elseif event == "PLAYER_EQUIPMENT_CHANGED" and addon.variables.itemSlots[arg1] and PaperDollFrame:IsShown() then
         setIlvlText(addon.variables.itemSlots[arg1], arg1)
     elseif event == "SOCKET_INFO_ACCEPT" and PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then
         C_Timer.After(0.5, function()
