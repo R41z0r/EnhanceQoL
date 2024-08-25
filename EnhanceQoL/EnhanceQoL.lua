@@ -55,7 +55,7 @@ end
 
 local function setIlvlText(element, slot)
     -- Hide all gemslots
-    if element.gems then
+    if element and element.gems then
         for i = 1, 3 do
             if element.gems[i] then
                 element.gems[i]:Hide()
