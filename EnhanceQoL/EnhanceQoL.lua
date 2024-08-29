@@ -634,7 +634,7 @@ local function eventHandler(self, event, arg1, arg2)
     elseif event == "QUEST_COMPLETE" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local numQuestRewards = GetNumQuestChoices()
         if numQuestRewards > 0 then
-            
+
         else
             GetQuestReward()
         end
