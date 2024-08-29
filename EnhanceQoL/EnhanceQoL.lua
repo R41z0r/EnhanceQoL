@@ -222,6 +222,7 @@ function loadMain()
     addon.frame = frame
     addon.checkboxes = {}
     addon.db = EnhanceQoLDB
+    addon.variables.acceptQuestID = {}
 
     if nil == addon.db["hideRaidTools"] then
         addon.db["hideRaidTools"] = false
@@ -533,11 +534,47 @@ local function eventHandler(self, event, arg1, arg2)
         end
     elseif event == "GOSSIP_SHOW" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
         local options = C_GossipInfo.GetOptions()
+        local aQuests = C_GossipInfo.GetAvailableQuests()
 
-        if #options == 1 then
+        if C_GossipInfo.GetNumActiveQuests() > 0 then
+            for i, quest in pairs(C_GossipInfo.GetActiveQuests()) do
+                if quest.isComplete then
+                    C_GossipInfo.SelectActiveQuest(quest.questID)
+                end
+            end
+        end
+
+        if #aQuests > 0 then
+            for i, quest in pairs(aQuests) do
+                if not quest.isTrivial then
+                    C_GossipInfo.SelectAvailableQuest(quest.questID)
+                end
+            end
+        elseif #options == 1 then
             if options and options[1] then
                 C_GossipInfo.SelectOption(options[1].gossipOptionID)
             end
+        end
+    elseif event == "QUEST_DETAIL" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
+        local id = GetQuestID()
+        addon.variables.acceptQuestID[id] = true
+        C_QuestLog.RequestLoadQuestByID(id)
+    elseif event == "QUEST_DATA_LOAD_RESULT" and arg1 and addon.variables.acceptQuestID[arg1] and
+        addon.db["autoChooseGossip"] then
+        if (UnitLevel("player") - C_QuestLog.GetQuestDifficultyLevel(arg1)) < 10 then
+            AcceptQuest()
+        end
+    elseif event == "QUEST_PROGRESS" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
+        if IsQuestCompletable() then
+            CompleteQuest()
+        end
+    elseif event == "QUEST_COMPLETE" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
+        local numQuestRewards = GetNumQuestChoices()
+        if numQuestRewards > 0 then
+            -- GetQuestReward(1)
+            print("Mehr als 1 reward - warten")
+        else
+            GetQuestReward()
         end
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then
@@ -554,6 +591,10 @@ frameLoad:RegisterEvent("SOCKET_INFO_ACCEPT")
 frameLoad:RegisterEvent("ENCHANT_SPELL_COMPLETED")
 frameLoad:RegisterEvent("DELETE_ITEM_CONFIRM")
 frameLoad:RegisterEvent("GOSSIP_SHOW")
+frameLoad:RegisterEvent("QUEST_DETAIL")
+frameLoad:RegisterEvent("QUEST_COMPLETE")
+frameLoad:RegisterEvent("QUEST_PROGRESS")
+frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)
