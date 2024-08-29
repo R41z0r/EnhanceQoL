@@ -37,3 +37,4 @@ L["autoChooseDelvePower"] = "옵션이 1개만 있을 때 델브 파워 자동 �
 
 -- Quest
 L["ignoreTrivialQuests"] = "사소한 퀘스트 무시"
+L["ignoreDailyQuests"] = "일일/주간 퀘스트 무시"

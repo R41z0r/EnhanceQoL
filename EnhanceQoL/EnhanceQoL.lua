@@ -334,11 +334,16 @@ local function addQuestFrame(tab)
     if nil == addon.db["ignoreTrivialQuests"] then
         addon.db["ignoreTrivialQuests"] = true
     end
+    if nil == addon.db["ignoreDailyQuests"] then
+        addon.db["ignoreDailyQuests"] = true
+    end
     local fQuest = addon.functions.createTabFrameMain(L["Quest"], tab)
 
     local cbAutoChooseQuest = addon.functions.createCheckbox("autoChooseQuest", fQuest, L["autoChooseQuest"], 10, -10)
+    local cbIgnoreDailyQuests = addon.functions.createCheckbox("ignoreDailyQuests", fQuest, L["ignoreDailyQuests"], 10,
+        (addon.functions.getHeightOffset(cbAutoChooseQuest)))
     local cbIgnoreTrivialQuests = addon.functions.createCheckbox("ignoreTrivialQuests", fQuest,
-        L["ignoreTrivialQuests"], 10, (addon.functions.getHeightOffset(cbAutoChooseQuest)))
+        L["ignoreTrivialQuests"], 10, (addon.functions.getHeightOffset(cbIgnoreDailyQuests)))
 
 end
 
@@ -594,7 +599,11 @@ local function eventHandler(self, event, arg1, arg2)
 
         if #aQuests > 0 then
             for i, quest in pairs(aQuests) do
-                if not quest.isTrivial then
+                if addon.db["ignoreTrivialQuests"] and quest.isTrivial then
+                    -- ignore trivial
+                elseif addon.db["ignoreDailyQuests"] and (quest.frequency == 1 or quest.frequency == 2) then
+                    -- ignore daily/weekly
+                else
                     C_GossipInfo.SelectAvailableQuest(quest.questID)
                 end
             end
@@ -609,10 +618,15 @@ local function eventHandler(self, event, arg1, arg2)
         C_QuestLog.RequestLoadQuestByID(id)
     elseif event == "QUEST_DATA_LOAD_RESULT" and arg1 and addon.variables.acceptQuestID[arg1] and
         addon.db["autoChooseQuest"] then
-        if addon.db["ignoreTrivialQuests"] == false or (UnitLevel("player") - C_QuestLog.GetQuestDifficultyLevel(arg1)) <
-            10 then
-            AcceptQuest()
+
+        if addon.db["ignoreDailyQuests"] and C_QuestLog.IsQuestRepeatableType(arg1) then
+            return
         end
+
+        if addon.db["ignoreTrivialQuests"] and C_QuestLog.IsQuestTrivial(arg1) then
+            return
+        end
+        AcceptQuest()
     elseif event == "QUEST_PROGRESS" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         if IsQuestCompletable() then
             CompleteQuest()
@@ -620,8 +634,7 @@ local function eventHandler(self, event, arg1, arg2)
     elseif event == "QUEST_COMPLETE" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local numQuestRewards = GetNumQuestChoices()
         if numQuestRewards > 0 then
-            -- GetQuestReward(1)
-            print("Mehr als 1 reward - warten")
+            
         else
             GetQuestReward()
         end

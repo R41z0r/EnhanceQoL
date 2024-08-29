@@ -33,3 +33,4 @@ L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ignore trivial quests"
+L["ignoreDailyQuests"] = "Ignore daily/weekly quests"

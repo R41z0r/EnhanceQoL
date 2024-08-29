@@ -23,7 +23,8 @@ L["showIlvlOnCharframe"] = "Mostrar el nivel de objeto en el marco de equipo del
 L["showGemsOnCharframe"] = "Mostrar ranuras de gemas en el marco de equipo del personaje"
 L["showEnchantOnCharframe"] = "Mostrar encantamientos en el marco de equipo del personaje"
 
-L["deleteItemFillDialog"] = "Agregar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" al \"Popup de confirmación de eliminación\""
+L["deleteItemFillDialog"] = "Agregar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
+                                "\" al \"Popup de confirmación de eliminación\""
 L["autoChooseQuest"] = "Aceptar y completar misiones automáticamente"
 
 L["General"] = "General"
@@ -37,3 +38,4 @@ L["autoChooseDelvePower"] = "Seleccionar poder de incursión automáticamente\nc
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ignorar misiones triviales"
+L["ignoreDailyQuests"] = "Ignorar misiones diarias/semanales"

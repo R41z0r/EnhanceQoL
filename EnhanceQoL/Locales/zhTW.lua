@@ -37,3 +37,4 @@ L["autoChooseDelvePower"] = "僅有一個選項時自動選擇探險力量"
 
 -- Quest
 L["ignoreTrivialQuests"] = "忽略瑣碎任務"
+L["ignoreDailyQuests"] = "忽略每日/每週任務"

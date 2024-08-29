@@ -1,6 +1,6 @@
 if (GAME_LOCALE or GetLocale()) ~= "deDE" then
     return
-  end
+end
 
 local addonName, addon = ...
 
@@ -23,7 +23,8 @@ L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anz
 L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"
 L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster anzeigen"
 
-L["deleteItemFillDialog"] = "Füge \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" zum \"Löschbestätigungs-Popup\" hinzu"
+L["deleteItemFillDialog"] = "Füge \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
+                                "\" zum \"Löschbestätigungs-Popup\" hinzu"
 L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
 
 L["General"] = "Allgemein"
@@ -37,3 +38,4 @@ L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen,\nwenn nur 1 Opt
 
 -- Quest
 L["ignoreTrivialQuests"] = "Triviale Quests ignorieren"
+L["ignoreDailyQuests"] = "Tägliche/Wöchentliche Quests ignorieren"

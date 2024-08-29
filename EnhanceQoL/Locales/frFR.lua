@@ -38,3 +38,4 @@ L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée\nl
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ignorer les quêtes triviales"
+L["ignoreDailyQuests"] = "Ignorer les quêtes journalières/hebdomadaires"

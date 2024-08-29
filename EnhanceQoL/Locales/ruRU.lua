@@ -41,3 +41,4 @@ L["autoChooseDelvePower"] =
 
 -- Quest
 L["ignoreTrivialQuests"] = "Игнорировать тривиальные задания"
+L["ignoreDailyQuests"] = "Игнорировать ежедневные/еженедельные задания"

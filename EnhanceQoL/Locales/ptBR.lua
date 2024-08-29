@@ -38,3 +38,4 @@ L["autoChooseDelvePower"] = "Selecionar automaticamente o poder de\nincursão qu
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ignorar missões triviais"
+L["ignoreDailyQuests"] = "Ignorar missões diárias/semanal"
