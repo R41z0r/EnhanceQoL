@@ -24,4 +24,16 @@ L["showGemsOnCharframe"] = "在角色装备框架上显示宝石插槽"
 L["showEnchantOnCharframe"] = "在角色装备框架上显示附魔"
 
 L["deleteItemFillDialog"] = "将 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 添加到“删除确认弹窗”"
-L["autoChooseGossip"] = "只有一个响应时自动选择 Gossip"
+L["autoChooseQuest"] = "自动接受并完成任务"
+
+L["General"] = "通用"
+L["Character"] = "角色"
+L["Dungeon"] = "地下城"
+L["Misc"] = "杂项"
+L["Quest"] = "任务"
+
+-- Dungeon
+L["autoChooseDelvePower"] = "仅有一个选项时自动选择探险力量"
+
+-- Quest
+L["ignoreTrivialQuests"] = "忽略琐碎任务"

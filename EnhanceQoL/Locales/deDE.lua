@@ -24,4 +24,16 @@ L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeig
 L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster anzeigen"
 
 L["deleteItemFillDialog"] = "Füge \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" zum \"Löschbestätigungs-Popup\" hinzu"
-L["autoChooseGossip"] = "Automatisch Gossip wählen, wenn nur eine Antwort verfügbar ist"
+L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
+
+L["General"] = "Allgemein"
+L["Character"] = "Charakter"
+L["Dungeon"] = "Dungeon"
+L["Misc"] = "Sonstiges"
+L["Quest"] = "Quest"
+
+-- Dungeon
+L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen,\nwenn nur 1 Option verfügbar ist"
+
+-- Quest
+L["ignoreTrivialQuests"] = "Triviale Quests ignorieren"

@@ -4,6 +4,9 @@ addon.saveVariables = {} -- Cross-Module variables for DB Save
 
 addon.variables = {}
 addon.variables.numOfTabs = 0
+addon.general = {}
+addon.general.variables = {}
+addon.general.variables.numOfTabs = 0
 addon.L = {} -- Language
 
 addon.variables.enchantString = ENCHANTED_TOOLTIP_LINE:gsub('%%s', '(.+)')

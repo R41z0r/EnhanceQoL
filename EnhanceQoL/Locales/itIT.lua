@@ -24,4 +24,16 @@ L["showGemsOnCharframe"] = "Mostra le gemme nel pannello\ndell'equipaggiamento d
 L["showEnchantOnCharframe"] = "Mostra gli incantamenti nel\npannello dell'equipaggiamento del personaggio"
 
 L["deleteItemFillDialog"] = "Aggiungi \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" al \"Popup di conferma eliminazione\""
-L["autoChooseGossip"] = "Scegli automaticamente il pettegolezzo quando è disponibile solo una risposta"
+L["autoChooseQuest"] = "Accetta e completa le missioni automaticamente"
+
+L["General"] = "Generale"
+L["Character"] = "Personaggio"
+L["Dungeon"] = "Spedizione"
+L["Misc"] = "Varie"
+L["Quest"] = "Missione"
+
+-- Dungeon
+L["autoChooseDelvePower"] = "Seleziona automaticamente il potere di\nimmersione quando c'è solo 1 opzione"
+
+-- Quest
+L["ignoreTrivialQuests"] = "Ignora le missioni banali"

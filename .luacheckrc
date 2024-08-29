@@ -43,6 +43,9 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"C_PlayerChoice",
+	"PlayerChoiceFrame",
+	"C_QuestLog",
 	"GetMaxLevelForPlayerExpansion",
 	"UIDropDownMenu_GetSelectedID",
 	"ITEM_UPGRADE_TOOLTIP_FORMAT_STRING",

@@ -20,4 +20,16 @@ L["showGemsOnCharframe"] = "Display gem slots on Character Equipment Frame"
 L["showEnchantOnCharframe"] = "Display enchants on Character Equipment Frame"
 
 L["deleteItemFillDialog"] = "Add \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" to the \"Delete confirmation Popup\""
-L["autoChooseGossip"] = "Automatically accept and complete Quests"
+L["autoChooseQuest"] = "Automatically accept and complete Quests"
+
+L["General"] = "General"
+L["Character"] = "Character"
+L["Dungeon"] = "Dungeon"
+L["Misc"] = "Misc."
+L["Quest"] = "Quest"
+
+-- Dungeon
+L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option"
+
+-- Quest
+L["ignoreTrivialQuests"] = "Ignore trivial quests"

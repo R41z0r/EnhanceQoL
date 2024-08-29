@@ -81,6 +81,26 @@ function addon.functions.createTabFrame(text)
     return addon.frame.tabs[addon.variables.numOfTabs]
 end
 
+function addon.functions.createTabFrameMain(text, frame)
+    addon.general.variables.numOfTabs = addon.general.variables.numOfTabs + 1
+    local tab1 = addon.functions.createTabButton(frame, addon.general.variables.numOfTabs, text)
+    tab1:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
+
+    PanelTemplates_SetNumTabs(frame, addon.general.variables.numOfTabs)
+    PanelTemplates_SetTab(frame, 1)
+
+    frame.tabs[addon.general.variables.numOfTabs] = CreateFrame("Frame", nil, frame, "InsetFrameTemplate")
+    frame.tabs[addon.general.variables.numOfTabs]:SetSize((frame:GetWidth() - 8), (frame:GetHeight() - 20))
+    frame.tabs[addon.general.variables.numOfTabs]:SetPoint("TOPLEFT", 3, -2 - (tab1:GetHeight()))
+
+    if addon.general.variables.numOfTabs == 1 then
+        frame.tabs[addon.general.variables.numOfTabs]:Show()
+    else
+        frame.tabs[addon.general.variables.numOfTabs]:Hide()
+    end
+    return frame.tabs[addon.general.variables.numOfTabs]
+end
+
 function addon.functions.getHeightOffset(element)
     local _, _, _, _, headerY = element:GetPoint()
     return headerY - element:GetHeight()

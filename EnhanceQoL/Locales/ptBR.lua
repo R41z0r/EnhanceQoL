@@ -25,4 +25,16 @@ L["showEnchantOnCharframe"] = "Exibir encantamentos no quadro de equipamentos do
 
 L["deleteItemFillDialog"] = "Adicionar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" ao \"Popup de confirmação de exclusão\""
-L["autoChooseGossip"] = "Escolher automaticamente o boato quando houver apenas uma resposta disponível"
+L["autoChooseQuest"] = "Aceitar e completar missões automaticamente"
+
+L["General"] = "Geral"
+L["Character"] = "Personagem"
+L["Dungeon"] = "Masmorra"
+L["Misc"] = "Diversos"
+L["Quest"] = "Missão"
+
+-- Dungeon
+L["autoChooseDelvePower"] = "Selecionar automaticamente o poder de\nincursão quando houver apenas 1 opção"
+
+-- Quest
+L["ignoreTrivialQuests"] = "Ignorar missões triviais"

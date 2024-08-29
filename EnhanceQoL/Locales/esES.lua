@@ -24,4 +24,16 @@ L["showGemsOnCharframe"] = "Mostrar ranuras de gemas en el marco de equipo del p
 L["showEnchantOnCharframe"] = "Mostrar encantamientos en el marco de equipo del personaje"
 
 L["deleteItemFillDialog"] = "Agregar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" al \"Popup de confirmación de eliminación\""
-L["autoChooseGossip"] = "Elegir automáticamente el chisme cuando solo haya una respuesta disponible"
+L["autoChooseQuest"] = "Aceptar y completar misiones automáticamente"
+
+L["General"] = "General"
+L["Character"] = "Personaje"
+L["Dungeon"] = "Mazmorra"
+L["Misc"] = "Varios"
+L["Quest"] = "Misión"
+
+-- Dungeon
+L["autoChooseDelvePower"] = "Seleccionar poder de incursión automáticamente\ncuando solo hay 1 opción"
+
+-- Quest
+L["ignoreTrivialQuests"] = "Ignorar misiones triviales"

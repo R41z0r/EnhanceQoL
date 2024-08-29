@@ -24,4 +24,16 @@ L["showGemsOnCharframe"] = "캐릭터 장비 창에 보석 슬롯 표시"
 L["showEnchantOnCharframe"] = "캐릭터 장비 창에 마법 부여 표시"
 
 L["deleteItemFillDialog"] = "\"삭제 확인 팝업\"에 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 추가"
-L["autoChooseGossip"] = "응답이 하나만 있는 경우 자동으로 Gossip 선택"
+L["autoChooseQuest"] = "퀘스트 자동 수락 및 완료"
+
+L["General"] = "일반"
+L["Character"] = "캐릭터"
+L["Dungeon"] = "던전"
+L["Misc"] = "기타"
+L["Quest"] = "퀘스트"
+
+-- Dungeon
+L["autoChooseDelvePower"] = "옵션이 1개만 있을 때 델브 파워 자동 선택"
+
+-- Quest
+L["ignoreTrivialQuests"] = "사소한 퀘스트 무시"

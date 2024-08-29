@@ -176,66 +176,23 @@ local function setCharFrame()
     end
 end
 
-function loadMain()
-    -- Erstelle das Hauptframe
-    local frame = CreateFrame("Frame", "MyAddonFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(500, 550)
-
-    frame:SetPoint("CENTER", UIParent, "CENTER")
-    frame:SetMovable(true)
-    frame:EnableMouse(true)
-    frame:RegisterForDrag("LeftButton")
-    frame:SetScript("OnDragStart", frame.StartMoving)
-    frame:SetScript("OnDragStop", function(self)
-        self:StopMovingOrSizing()
-        -- Position speichern
-        local point, _, _, xOfs, yOfs = self:GetPoint()
-        EnhanceQoLDB.point = point
-        EnhanceQoLDB.x = xOfs
-        EnhanceQoLDB.y = yOfs
-    end)
-    frame:Hide() -- Das Frame wird initial versteckt
-    frame.tabs = {}
-
-    frame:SetScript("OnSizeChanged", function(self, width, height)
-        for i, tab in ipairs(frame.tabs) do
-            tab:SetSize(width - 8, height - 20)
-        end
-    end)
-
-    function frame:ShowTab(id)
-        for _, tabContent in pairs(self.tabs) do
-            tabContent:Hide()
-        end
-        if self.tabs[id] then
-            self.tabs[id]:Show()
-        end
+local function addDungeonFrame(tab)
+    if nil == addon.db["autoChooseDelvePower"] then
+        addon.db["autoChooseDelvePower"] = true
     end
-    -- Titel des Frames
-    frame.title = frame:CreateFontString(nil, "OVERLAY")
-    frame.title:SetFontObject("GameFontHighlight")
-    frame.title:SetPoint("CENTER", frame.TitleBg, "CENTER", 0, 0)
-    frame.title:SetText(addonName)
-    frame:SetFrameStrata("DIALOG")
+    local fDungeon = addon.functions.createTabFrameMain(L["Dungeon"], tab)
 
-    -- Schleife zur Erzeugung der Checkboxen
-    addon.frame = frame
-    addon.checkboxes = {}
-    addon.db = EnhanceQoLDB
-    addon.variables.acceptQuestID = {}
+    local cbPersistSignUpNote = addon.functions.createCheckbox("persistSignUpNote", fDungeon,
+        L["Persist LFG signup note"], 10, -10)
 
-    if nil == addon.db["hideRaidTools"] then
-        addon.db["hideRaidTools"] = false
-    end
-    if nil == addon.db["autoRepair"] then
-        addon.db["autoRepair"] = false
-    end
-    if nil == addon.db["sellAllJunk"] then
-        addon.db["sellAllJunk"] = false
-    end
-    if nil == addon.db["ignoreTalkingHead"] then
-        addon.db["ignoreTalkingHead"] = true
-    end
+    local cbSkipSignup = addon.functions.createCheckbox("skipSignUpDialog", fDungeon, L["Quick signup"], 10,
+        (addon.functions.getHeightOffset(cbPersistSignUpNote)))
+
+    local cbAutoChooseDelvePower = addon.functions.createCheckbox("autoChooseDelvePower", fDungeon,
+        L["autoChooseDelvePower"], 10, (addon.functions.getHeightOffset(cbSkipSignup)))
+end
+
+local function addCharacterFrame(tab)
     if nil == addon.db["showIlvlOnCharframe"] then
         addon.db["showIlvlOnCharframe"] = false
     end
@@ -245,74 +202,21 @@ function loadMain()
     if nil == addon.db["showEnchantOnCharframe"] then
         addon.db["showEnchantOnCharframe"] = false
     end
-    if nil == addon.db["deleteItemFillDialog"] then
-        addon.db["deleteItemFillDialog"] = false
-    end
-    if nil == addon.db["autoChooseGossip"] then
-        addon.db["autoChooseGossip"] = false
-    end
+    local fCharacter = addon.functions.createTabFrameMain(L["Character"], tab)
 
-    local fTab = addon.functions.createTabFrame("General")
-    local header = addon.functions.createHeader(fTab, "General", 0, -10)
-
-    local checkbox = addon.functions.createCheckbox("skipSignUpDialog", fTab, L["Quick signup"], 10,
-        (addon.functions.getHeightOffset(header) - 10))
-
-    local checkbox2 = addon.functions.createCheckbox("persistSignUpNote", fTab, L["Persist LFG signup note"], 10,
-        (addon.functions.getHeightOffset(checkbox)))
-
-    local checkbox3 = addon.functions.createCheckbox("hideMinimapButton", fTab, L["Hide Minimap Button"], 10,
-        (addon.functions.getHeightOffset(checkbox2)))
-    checkbox3:SetScript("OnClick", function(self)
-        addon.db["hideMinimapButton"] = self:GetChecked()
-        addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
-    end)
-
-    local cbHideRaidTools = addon.functions.createCheckbox("hideRaidTools", fTab, L["Hide Raid Tools"], 10,
-        (addon.functions.getHeightOffset(checkbox3)))
-    cbHideRaidTools:SetScript("OnClick", function(self)
-        addon.db["hideRaidTools"] = self:GetChecked()
-        addon.functions.toggleRaidTools(addon.db["hideRaidTools"], _G.CompactRaidFrameManager)
-    end)
-
-    local cbIgnoreTalkingHead = addon.functions.createCheckbox("ignoreTalkingHead", fTab, L["ignoreTalkingHead"], 10,
-        (addon.functions.getHeightOffset(cbHideRaidTools)))
-
-    local cbDeleteItemFill = addon.functions.createCheckbox("deleteItemFillDialog", fTab, L["deleteItemFillDialog"], 10,
-        (addon.functions.getHeightOffset(cbIgnoreTalkingHead)))
-
-    local cbAutoChooseGossip = addon.functions.createCheckbox("autoChooseGossip", fTab, L["autoChooseGossip"], 10,
-        (addon.functions.getHeightOffset(cbDeleteItemFill)))
-
-    _G.CompactRaidFrameManager:SetScript("OnShow", function(self)
-        addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self)
-    end)
-
-    hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
-        if addon.db["ignoreTalkingHead"] then
-            self:Hide()
-        end
-    end)
-
-    local cbAutoRepair = addon.functions.createCheckbox("autoRepair", fTab, L["autoRepair"], 10,
-        (addon.functions.getHeightOffset(cbAutoChooseGossip)))
-
-    local cbSellAllJunk = addon.functions.createCheckbox("sellAllJunk", fTab, L["sellAllJunk"], 10,
-        (addon.functions.getHeightOffset(cbAutoRepair)))
-
-    local cbShowIlvlCharframe = addon.functions.createCheckbox("showIlvlOnCharframe", fTab, L["showIlvlOnCharframe"],
-        10, (addon.functions.getHeightOffset(cbSellAllJunk)) - 10)
+    local cbShowIlvlCharframe = addon.functions.createCheckbox("showIlvlOnCharframe", fCharacter,
+        L["showIlvlOnCharframe"], 10, -10)
     cbShowIlvlCharframe:SetScript("OnClick", function(self)
         addon.db["showIlvlOnCharframe"] = self:GetChecked()
         setCharFrame()
     end)
-    local cbShowGemsCharframe = addon.functions.createCheckbox("showGemsOnCharframe", fTab, L["showGemsOnCharframe"],
-        10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)) - 10)
+    local cbShowGemsCharframe = addon.functions.createCheckbox("showGemsOnCharframe", fCharacter,
+        L["showGemsOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)) - 10)
     cbShowGemsCharframe:SetScript("OnClick", function(self)
         addon.db["showGemsOnCharframe"] = self:GetChecked()
         setCharFrame()
     end)
-    local cbShowEnchantCharframe = addon.functions.createCheckbox("showEnchantOnCharframe", fTab,
+    local cbShowEnchantCharframe = addon.functions.createCheckbox("showEnchantOnCharframe", fCharacter,
         L["showEnchantOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowGemsCharframe)) - 10)
     cbShowEnchantCharframe:SetScript("OnClick", function(self)
         addon.db["showEnchantOnCharframe"] = self:GetChecked()
@@ -367,6 +271,150 @@ function loadMain()
     PaperDollFrame:HookScript("OnShow", function(self)
         setCharFrame()
     end)
+end
+
+local function addMiscFrame(tab)
+    if nil == addon.db["deleteItemFillDialog"] then
+        addon.db["deleteItemFillDialog"] = false
+    end
+    if nil == addon.db["hideRaidTools"] then
+        addon.db["hideRaidTools"] = false
+    end
+    if nil == addon.db["autoRepair"] then
+        addon.db["autoRepair"] = false
+    end
+    if nil == addon.db["sellAllJunk"] then
+        addon.db["sellAllJunk"] = false
+    end
+    if nil == addon.db["ignoreTalkingHead"] then
+        addon.db["ignoreTalkingHead"] = true
+    end
+
+    local fMisc = addon.functions.createTabFrameMain(L["Misc"], tab)
+
+    local cbIgnoreTalkingHead = addon.functions.createCheckbox("ignoreTalkingHead", fMisc, L["ignoreTalkingHead"], 10,
+        -10)
+    hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
+        if addon.db["ignoreTalkingHead"] then
+            self:Hide()
+        end
+    end)
+
+    local cbAutoRepair = addon.functions.createCheckbox("autoRepair", fMisc, L["autoRepair"], 10,
+        (addon.functions.getHeightOffset(cbIgnoreTalkingHead)))
+
+    local cbSellAllJunk = addon.functions.createCheckbox("sellAllJunk", fMisc, L["sellAllJunk"], 10,
+        (addon.functions.getHeightOffset(cbAutoRepair)))
+
+    local cbDeleteItemFill = addon.functions.createCheckbox("deleteItemFillDialog", fMisc, L["deleteItemFillDialog"],
+        10, (addon.functions.getHeightOffset(cbSellAllJunk)))
+
+    local cbMinimapHide = addon.functions.createCheckbox("hideMinimapButton", fMisc, L["Hide Minimap Button"], 10,
+        (addon.functions.getHeightOffset(cbDeleteItemFill)))
+    cbMinimapHide:SetScript("OnClick", function(self)
+        addon.db["hideMinimapButton"] = self:GetChecked()
+        addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
+    end)
+
+    local cbHideRaidTools = addon.functions.createCheckbox("hideRaidTools", fMisc, L["Hide Raid Tools"], 10,
+        (addon.functions.getHeightOffset(cbMinimapHide)))
+    cbHideRaidTools:SetScript("OnClick", function(self)
+        addon.db["hideRaidTools"] = self:GetChecked()
+        addon.functions.toggleRaidTools(addon.db["hideRaidTools"], _G.CompactRaidFrameManager)
+    end)
+    _G.CompactRaidFrameManager:SetScript("OnShow", function(self)
+        addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self)
+    end)
+end
+
+local function addQuestFrame(tab)
+    if nil == addon.db["autoChooseQuest"] then
+        addon.db["autoChooseQuest"] = false
+    end
+    if nil == addon.db["ignoreTrivialQuests"] then
+        addon.db["ignoreTrivialQuests"] = true
+    end
+    local fQuest = addon.functions.createTabFrameMain(L["Quest"], tab)
+
+    local cbAutoChooseQuest = addon.functions.createCheckbox("autoChooseQuest", fQuest, L["autoChooseQuest"], 10, -10)
+    local cbIgnoreTrivialQuests = addon.functions.createCheckbox("ignoreTrivialQuests", fQuest,
+        L["ignoreTrivialQuests"], 10, (addon.functions.getHeightOffset(cbAutoChooseQuest)))
+
+end
+
+function loadMain()
+    -- Erstelle das Hauptframe
+    local frame = CreateFrame("Frame", "MyAddonFrame", UIParent, "BasicFrameTemplateWithInset")
+    frame:SetSize(500, 550)
+
+    frame:SetPoint("CENTER", UIParent, "CENTER")
+    frame:SetMovable(true)
+    frame:EnableMouse(true)
+    frame:RegisterForDrag("LeftButton")
+    frame:SetScript("OnDragStart", frame.StartMoving)
+    frame:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+        -- Position speichern
+        local point, _, _, xOfs, yOfs = self:GetPoint()
+        EnhanceQoLDB.point = point
+        EnhanceQoLDB.x = xOfs
+        EnhanceQoLDB.y = yOfs
+    end)
+    frame:Hide() -- Das Frame wird initial versteckt
+    frame.tabs = {}
+
+    frame:SetScript("OnSizeChanged", function(self, width, height)
+        for i, tab in ipairs(frame.tabs) do
+            tab:SetSize(width - 8, height - 20)
+        end
+    end)
+
+    function frame:ShowTab(id)
+        for _, tabContent in pairs(self.tabs) do
+            tabContent:Hide()
+        end
+        if self.tabs[id] then
+            self.tabs[id]:Show()
+        end
+    end
+    -- Titel des Frames
+    frame.title = frame:CreateFontString(nil, "OVERLAY")
+    frame.title:SetFontObject("GameFontHighlight")
+    frame.title:SetPoint("CENTER", frame.TitleBg, "CENTER", 0, 0)
+    frame.title:SetText(addonName)
+    frame:SetFrameStrata("DIALOG")
+
+    -- Schleife zur Erzeugung der Checkboxen
+    addon.frame = frame
+    addon.checkboxes = {}
+    addon.db = EnhanceQoLDB
+    addon.variables.acceptQuestID = {}
+
+    local fTab = addon.functions.createTabFrame(L["General"])
+    fTab.tabs = {} -- Add the tabs to switch
+
+    fTab:SetScript("OnSizeChanged", function(self, width, height)
+        for i, tab in ipairs(fTab.tabs) do
+            tab:SetSize(width - 5, height - 35)
+        end
+    end)
+    function fTab:ShowTab(id)
+        for _, tabContent in pairs(self.tabs) do
+            tabContent:Hide()
+        end
+        if self.tabs[id] then
+            self.tabs[id]:Show()
+        end
+    end
+
+    -- character
+    addCharacterFrame(fTab)
+    -- dungeon
+    addDungeonFrame(fTab)
+    -- Misc
+    addMiscFrame(fTab)
+    -- quest
+    addQuestFrame(fTab)
 
     -- Slash-Command hinzufügen
     SLASH_ENHANCEQOL1 = "/eqol"
@@ -532,7 +580,7 @@ local function eventHandler(self, event, arg1, arg2)
                 setIlvlText(addon.variables.itemSlots[arg2.equipmentSlotIndex], arg2.equipmentSlotIndex)
             end)
         end
-    elseif event == "GOSSIP_SHOW" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
+    elseif event == "GOSSIP_SHOW" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local options = C_GossipInfo.GetOptions()
         local aQuests = C_GossipInfo.GetAvailableQuests()
 
@@ -555,26 +603,37 @@ local function eventHandler(self, event, arg1, arg2)
                 C_GossipInfo.SelectOption(options[1].gossipOptionID)
             end
         end
-    elseif event == "QUEST_DETAIL" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
+    elseif event == "QUEST_DETAIL" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local id = GetQuestID()
         addon.variables.acceptQuestID[id] = true
         C_QuestLog.RequestLoadQuestByID(id)
     elseif event == "QUEST_DATA_LOAD_RESULT" and arg1 and addon.variables.acceptQuestID[arg1] and
-        addon.db["autoChooseGossip"] then
-        if (UnitLevel("player") - C_QuestLog.GetQuestDifficultyLevel(arg1)) < 10 then
+        addon.db["autoChooseQuest"] then
+        if addon.db["ignoreTrivialQuests"] == false or (UnitLevel("player") - C_QuestLog.GetQuestDifficultyLevel(arg1)) <
+            10 then
             AcceptQuest()
         end
-    elseif event == "QUEST_PROGRESS" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
+    elseif event == "QUEST_PROGRESS" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         if IsQuestCompletable() then
             CompleteQuest()
         end
-    elseif event == "QUEST_COMPLETE" and addon.db["autoChooseGossip"] and not IsShiftKeyDown() then
+    elseif event == "QUEST_COMPLETE" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local numQuestRewards = GetNumQuestChoices()
         if numQuestRewards > 0 then
             -- GetQuestReward(1)
             print("Mehr als 1 reward - warten")
         else
             GetQuestReward()
+        end
+    elseif event == "PLAYER_CHOICE_UPDATE" and select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
+        -- We are in a delve and have a choice for buff - autopick it
+        local choiceInfo = C_PlayerChoice.GetCurrentPlayerChoiceInfo()
+
+        if choiceInfo and choiceInfo.options and #choiceInfo.options == 1 then
+            C_PlayerChoice.SendPlayerChoiceResponse(choiceInfo.options[1].buttons[1].id)
+            if PlayerChoiceFrame:IsShown() then
+                PlayerChoiceFrame:Hide()
+            end
         end
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then
@@ -595,6 +654,7 @@ frameLoad:RegisterEvent("QUEST_DETAIL")
 frameLoad:RegisterEvent("QUEST_COMPLETE")
 frameLoad:RegisterEvent("QUEST_PROGRESS")
 frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
+frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)

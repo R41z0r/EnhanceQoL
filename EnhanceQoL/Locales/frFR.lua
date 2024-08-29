@@ -25,4 +25,16 @@ L["showEnchantOnCharframe"] = "Afficher les enchantements sur l'équipement du p
 
 L["deleteItemFillDialog"] = "Ajouter \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" au \"Popup de confirmation de suppression\""
-L["autoChooseGossip"] = "Choisir automatiquement le potin lorsqu'une seule réponse est disponible"
+L["autoChooseQuest"] = "Accepter et compléter les quêtes automatiquement"
+
+L["General"] = "Général"
+L["Character"] = "Personnage"
+L["Dungeon"] = "Donjon"
+L["Misc"] = "Divers"
+L["Quest"] = "Quête"
+
+-- Dungeon
+L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée\nlorsqu'il n'y a qu'une seule option"
+
+-- Quest
+L["ignoreTrivialQuests"] = "Ignorer les quêtes triviales"
