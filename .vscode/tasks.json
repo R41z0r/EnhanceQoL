@@ -10,6 +10,26 @@
                 "isDefault": true
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Build and Deploy Addon BigWigsPackager",
+            "type": "shell",
+            "command": "./.release/release.sh",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "args": [
+                // "-alpha",
+                "-d",
+                "-e",
+                "-z",
+                "-r",
+                "/Applications/World of Warcraft/_retail_/Interface/AddOns",
+                "-m",
+                ".release/.pkgmeta_with_query"
+            ],
+            "problemMatcher": []
         }
     ]
 }

@@ -340,10 +340,13 @@ local function addQuestFrame(tab)
     local fQuest = addon.functions.createTabFrameMain(L["Quest"], tab)
 
     local cbAutoChooseQuest = addon.functions.createCheckbox("autoChooseQuest", fQuest, L["autoChooseQuest"], 10, -10)
+    -- @debug@
+
     local cbIgnoreDailyQuests = addon.functions.createCheckbox("ignoreDailyQuests", fQuest, L["ignoreDailyQuests"], 10,
         (addon.functions.getHeightOffset(cbAutoChooseQuest)))
     local cbIgnoreTrivialQuests = addon.functions.createCheckbox("ignoreTrivialQuests", fQuest,
         L["ignoreTrivialQuests"], 10, (addon.functions.getHeightOffset(cbIgnoreDailyQuests)))
+    -- @end-debug@
 
 end
 
