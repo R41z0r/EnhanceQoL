@@ -45,6 +45,8 @@ L["Mythic+ Score"] = "Рейтинг Мифик+"
 L["BestMythic+run"] = "Лучший забег"
 L["TooltipShowMythicScore"] = "Показывать рейтинг Мифик+ в подсказке"
 L["TooltipShowClassColor"] = "Показывать цвет класса в подсказке"
+L["TooltipShowNPCID"] = "Показать ID NPC"
+L["NPCID"] = "ID"
 
 -- Spell
 L["TooltipSpellHideType"] = "Скрыть подсказку на заклинания"

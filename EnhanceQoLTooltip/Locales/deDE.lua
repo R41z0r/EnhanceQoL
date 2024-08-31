@@ -44,6 +44,8 @@ L["Mythic+ Score"] = "Mythic+ Wertung"
 L["BestMythic+run"] = "Bester Lauf"
 L["TooltipShowMythicScore"] = "Mythic+ Wertung im Tooltip anzeigen"
 L["TooltipShowClassColor"] = "Klassenfarbe im Tooltip anzeigen"
+L["TooltipShowNPCID"] = "NPC-ID anzeigen"
+L["NPCID"] = "ID"
 
 -- Spell
 L["TooltipSpellHideType"] = "Tooltip bei Zaubern ausblenden"

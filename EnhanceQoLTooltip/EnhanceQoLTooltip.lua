@@ -11,6 +11,16 @@ local L = addon.LTooltip
 
 local frameLoad = CreateFrame("Frame")
 
+local function GetNPCIDFromGUID(guid)
+    if guid then
+        local type, _, _, _, _, npcID = strsplit("-", guid)
+        if type == "Creature" or type == "Vehicle" then
+            return tonumber(npcID)
+        end
+    end
+    return nil
+end
+
 local function checkSpell(tooltip, id, name)
     if addon.db["TooltipShowSpellID"] then
         if id then
@@ -31,6 +41,14 @@ local function checkSpell(tooltip, id, name)
 end
 
 local function checkAdditionalTooltip(tooltip)
+
+    if addon.db["TooltipShowNPCID"] and not UnitPlayerControlled("mouseover") then
+        local id = GetNPCIDFromGUID(UnitGUID("mouseover"))
+        if id then
+            tooltip:AddLine(" ")
+            tooltip:AddDoubleLine(L["NPCID"], id)
+        end
+    end
     if addon.db["TooltipShowClassColor"] and UnitPlayerControlled("mouseover") then
         local classDisplayName, class, classID = UnitClass("mouseover")
         if classDisplayName then
@@ -316,6 +334,9 @@ local cbTooltipShowMythicScore = addon.functions.createCheckbox("TooltipShowMyth
 
 local cbTooltipShowClassColor = addon.functions.createCheckbox("TooltipShowClassColor", tabFrameUnit,
     L["TooltipShowClassColor"], 10, (addon.functions.getHeightOffset(cbTooltipShowMythicScore) - 5))
+
+local cbTooltipShowNPCID = addon.functions.createCheckbox("TooltipShowNPCID", tabFrameUnit, L["TooltipShowNPCID"], 10,
+    (addon.functions.getHeightOffset(cbTooltipShowClassColor) - 5))
 
 -- Spells
 

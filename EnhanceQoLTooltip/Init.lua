@@ -23,6 +23,9 @@ end
 if nil == addon.db["TooltipShowClassColor"] then
     addon.db["TooltipShowClassColor"] = false
 end
+if nil == addon.db["TooltipShowNPCID"] then
+    addon.db["TooltipShowNPCID"] = true
+end
 
 -- Spell
 if nil == addon.db["TooltipSpellHideType"] then

@@ -44,6 +44,8 @@ L["Mythic+ Score"] = "Score Mythique+"
 L["BestMythic+run"] = "Meilleure course"
 L["TooltipShowMythicScore"] = "Afficher le score Mythique+ dans l'infobulle"
 L["TooltipShowClassColor"] = "Afficher la couleur de la classe dans l'infobulle"
+L["TooltipShowNPCID"] = "Afficher l'ID du PNJ"
+L["NPCID"] = "ID"
 
 -- Spell
 L["TooltipSpellHideType"] = "Masquer l'infobulle sur les sorts"
