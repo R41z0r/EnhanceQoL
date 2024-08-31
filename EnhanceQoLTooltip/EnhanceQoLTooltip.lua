@@ -67,7 +67,7 @@ local function checkAdditionalTooltip(tooltip)
             if bestDungeon and bestDungeon.mapScore > 0 then
                 name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(bestDungeon.challengeModeID)
                 r, g, b = C_ChallengeMode.GetKeystoneLevelRarityColor(bestDungeon.bestRunLevel):GetRGB()
-                local stars
+                local stars = ""
                 local hexColor = string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
                 if bestDungeon.finishedSuccess then
                     local bestRunDuration = bestDungeon.bestRunDurationMS / 1000
