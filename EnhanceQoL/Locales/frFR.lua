@@ -25,7 +25,10 @@ L["showEnchantOnCharframe"] = "Afficher les enchantements sur l'équipement du p
 
 L["deleteItemFillDialog"] = "Ajouter \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" au \"Popup de confirmation de suppression\""
+L["autoChooseQuest"] = "Choisir automatiquement le potin lorsqu'une seule réponse est disponible"
+-- @debug@
 L["autoChooseQuest"] = "Accepter et compléter les quêtes automatiquement"
+-- @end-debug@
 
 L["General"] = "Général"
 L["Character"] = "Personnage"

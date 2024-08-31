@@ -20,7 +20,10 @@ L["showGemsOnCharframe"] = "Display gem slots on Character Equipment Frame"
 L["showEnchantOnCharframe"] = "Display enchants on Character Equipment Frame"
 
 L["deleteItemFillDialog"] = "Add \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" to the \"Delete confirmation Popup\""
+L["autoChooseQuest"] = "Autopick Gossip when only one response available"
+-- @debug@
 L["autoChooseQuest"] = "Automatically accept and complete Quests"
+-- @end-debug@
 
 L["General"] = "General"
 L["Character"] = "Character"

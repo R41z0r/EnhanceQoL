@@ -25,7 +25,10 @@ L["showEnchantOnCharframe"] = "Mostra gli incantamenti nel\npannello dell'equipa
 
 L["deleteItemFillDialog"] = "Aggiungi \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" al \"Popup di conferma eliminazione\""
+L["autoChooseQuest"] = "Scegli automaticamente il pettegolezzo quando è disponibile solo una risposta"
+-- @debug@
 L["autoChooseQuest"] = "Accetta e completa le missioni automaticamente"
+-- @end-debug@
 
 L["General"] = "Generale"
 L["Character"] = "Personaggio"

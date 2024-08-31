@@ -589,6 +589,8 @@ local function eventHandler(self, event, arg1, arg2)
         end
     elseif event == "GOSSIP_SHOW" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local options = C_GossipInfo.GetOptions()
+
+        -- @debug@
         local aQuests = C_GossipInfo.GetAvailableQuests()
 
         if C_GossipInfo.GetNumActiveQuests() > 0 then
@@ -603,18 +605,22 @@ local function eventHandler(self, event, arg1, arg2)
             for i, quest in pairs(aQuests) do
                 if addon.db["ignoreTrivialQuests"] and quest.isTrivial then
                     -- ignore trivial
-                elseif addon.db["ignoreDailyQuests"] and (quest.frequency > 0 ) then
+                elseif addon.db["ignoreDailyQuests"] and (quest.frequency > 0) then
                     -- ignore daily/weekly
                 else
                     C_GossipInfo.SelectAvailableQuest(quest.questID)
                 end
             end
-        elseif #options == 1 then
-            if options and options[1] and not gossipClicked[options[1].gossipOptionID] then
+        else
+            -- @end-debug@
+            if options and #options == 1 and options[1] and not gossipClicked[options[1].gossipOptionID] then
                 gossipClicked[options[1].gossipOptionID] = true
                 C_GossipInfo.SelectOption(options[1].gossipOptionID)
             end
+            -- @debug@
         end
+        -- @end-debug@
+
     elseif event == "GOSSIP_CLOSED" then
         gossipClicked = {} -- clear all already clicked gossips
     elseif event == "QUEST_DETAIL" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
@@ -669,10 +675,14 @@ frameLoad:RegisterEvent("ENCHANT_SPELL_COMPLETED")
 frameLoad:RegisterEvent("DELETE_ITEM_CONFIRM")
 frameLoad:RegisterEvent("GOSSIP_SHOW")
 frameLoad:RegisterEvent("GOSSIP_CLOSED")
+
+-- @debug@
 frameLoad:RegisterEvent("QUEST_DETAIL")
 frameLoad:RegisterEvent("QUEST_COMPLETE")
 frameLoad:RegisterEvent("QUEST_PROGRESS")
 frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
+-- @end-debug@
+
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 
 -- Setze den Event-Handler

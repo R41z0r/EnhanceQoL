@@ -25,7 +25,10 @@ L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster an
 
 L["deleteItemFillDialog"] = "Füge \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" zum \"Löschbestätigungs-Popup\" hinzu"
+L["autoChooseQuest"] = "Automatisch Gossip wählen, wenn nur eine Antwort verfügbar ist"
+-- @debug@
 L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
+-- @end-debug@
 
 L["General"] = "Allgemein"
 L["Character"] = "Charakter"

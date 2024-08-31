@@ -24,7 +24,10 @@ L["showGemsOnCharframe"] = "在角色装备框架上显示宝石插槽"
 L["showEnchantOnCharframe"] = "在角色装备框架上显示附魔"
 
 L["deleteItemFillDialog"] = "将 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 添加到“删除确认弹窗”"
+L["autoChooseQuest"] = "只有一个响应时自动选择 Gossip"
+-- @debug@
 L["autoChooseQuest"] = "自动接受并完成任务"
+-- @end-debug@
 
 L["General"] = "通用"
 L["Character"] = "角色"

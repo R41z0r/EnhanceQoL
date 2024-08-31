@@ -25,7 +25,10 @@ L["showEnchantOnCharframe"] = "Exibir encantamentos no quadro de equipamentos do
 
 L["deleteItemFillDialog"] = "Adicionar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" ao \"Popup de confirmação de exclusão\""
+L["autoChooseQuest"] = "Escolher automaticamente o boato quando houver apenas uma resposta disponível"
+-- @debug@
 L["autoChooseQuest"] = "Aceitar e completar missões automaticamente"
+-- @end-debug@
 
 L["General"] = "Geral"
 L["Character"] = "Personagem"
