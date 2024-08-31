@@ -352,7 +352,7 @@ end
 
 function loadMain()
     -- Erstelle das Hauptframe
-    local frame = CreateFrame("Frame", "MyAddonFrame", UIParent, "BasicFrameTemplateWithInset")
+    local frame = CreateFrame("Frame", "EnhanceQoLMainFrame", UIParent, "BasicFrameTemplateWithInset")
     frame:SetSize(500, 550)
 
     frame:SetPoint("CENTER", UIParent, "CENTER")
@@ -368,6 +368,9 @@ function loadMain()
         EnhanceQoLDB.x = xOfs
         EnhanceQoLDB.y = yOfs
     end)
+    if UISpecialFrames then
+        table.insert(UISpecialFrames, frame:GetName())
+    end
     frame:Hide() -- Das Frame wird initial versteckt
     frame.tabs = {}
 
