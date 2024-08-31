@@ -31,6 +31,9 @@ jobs:
       - name: Generate Changelog
         run: ./generate_changelog.sh
 
+      - name: Prepare Packager --@ Parameters
+        run: ./scripts/prepare_packager.sh
+    
       - name: Create Package
         uses: BigWigsMods/packager@v2
         env:

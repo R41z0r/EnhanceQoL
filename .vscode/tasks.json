@@ -20,7 +20,6 @@
                 "isDefault": true
             },
             "args": [
-                // "-alpha",
                 "-d",
                 "-e",
                 "-z",
