@@ -232,9 +232,9 @@ local function onEvent(self, event, ...)
         end
     elseif event == "ITEM_PUSH" and frame:IsShown() then
         onItemPush(...)
-    elseif event == "GET_ITEM_INFO_RECEIVED" then
+    elseif event == "GET_ITEM_INFO_RECEIVED" and frame:IsShown() then
         onGetItemInfoReceived(...)
-    else
+    elseif frame:IsShown() then
         onAuctionHouseEvent(self, event, ...)
     end
 end
@@ -247,7 +247,7 @@ frame:SetScript("OnEvent", onEvent)
 
 -- Handling Shift+Click to add item link to the EditBox and clear previous item
 hooksecurefunc("ChatEdit_InsertLink", function(itemLink)
-    if itemLink then
+    if itemLink and frame:IsShown() then
         handleItemLink(itemLink)
         return true
     end

@@ -545,6 +545,8 @@ end
 -- Erstelle ein Frame für Events
 local frameLoad = CreateFrame("Frame")
 
+local gossipClicked = {}
+
 -- Funktion zum Umgang mit Events
 local function eventHandler(self, event, arg1, arg2)
     if event == "ADDON_LOADED" and arg1 == addonName then
@@ -608,10 +610,13 @@ local function eventHandler(self, event, arg1, arg2)
                 end
             end
         elseif #options == 1 then
-            if options and options[1] then
+            if options and options[1] and not gossipClicked[options[1].gossipOptionID] then
+                gossipClicked[options[1].gossipOptionID] = true
                 C_GossipInfo.SelectOption(options[1].gossipOptionID)
             end
         end
+    elseif event == "GOSSIP_CLOSED" then
+        gossipClicked = {} -- clear all already clicked gossips
     elseif event == "QUEST_DETAIL" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local id = GetQuestID()
         addon.variables.acceptQuestID[id] = true
@@ -663,6 +668,7 @@ frameLoad:RegisterEvent("SOCKET_INFO_ACCEPT")
 frameLoad:RegisterEvent("ENCHANT_SPELL_COMPLETED")
 frameLoad:RegisterEvent("DELETE_ITEM_CONFIRM")
 frameLoad:RegisterEvent("GOSSIP_SHOW")
+frameLoad:RegisterEvent("GOSSIP_CLOSED")
 frameLoad:RegisterEvent("QUEST_DETAIL")
 frameLoad:RegisterEvent("QUEST_COMPLETE")
 frameLoad:RegisterEvent("QUEST_PROGRESS")
