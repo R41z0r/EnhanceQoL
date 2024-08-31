@@ -603,7 +603,7 @@ local function eventHandler(self, event, arg1, arg2)
             for i, quest in pairs(aQuests) do
                 if addon.db["ignoreTrivialQuests"] and quest.isTrivial then
                     -- ignore trivial
-                elseif addon.db["ignoreDailyQuests"] and (quest.frequency == 1 or quest.frequency == 2) then
+                elseif addon.db["ignoreDailyQuests"] and (quest.frequency > 0 ) then
                     -- ignore daily/weekly
                 else
                     C_GossipInfo.SelectAvailableQuest(quest.questID)
