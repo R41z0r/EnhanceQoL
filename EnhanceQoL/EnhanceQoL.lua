@@ -12,21 +12,15 @@ EQOL.C = {}
 hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
     local panel = LFGListFrame.SearchPanel
     if button ~= "RightButton" and LFGListSearchPanelUtil_CanSelectResult(s.resultID) and panel.SignUpButton:IsEnabled() then
-        if panel.selectedResult ~= s.resultID then
-            LFGListSearchPanel_SelectResult(panel, s.resultID)
-        end
+        if panel.selectedResult ~= s.resultID then LFGListSearchPanel_SelectResult(panel, s.resultID) end
         LFGListSearchPanel_SignUp(panel)
     end
 end)
 
 LFGListApplicationDialog:HookScript("OnShow", function(self)
-    if not EnhanceQoLDB.skipSignUpDialog then
-        return
-    end
+    if not EnhanceQoLDB.skipSignUpDialog then return end
 
-    if self.SignUpButton:IsEnabled() and not IsShiftKeyDown() then
-        self.SignUpButton:Click()
-    end
+    if self.SignUpButton:IsEnabled() and not IsShiftKeyDown() then self.SignUpButton:Click() end
 end)
 
 local didApplyPatch = false
@@ -154,9 +148,7 @@ local function setIlvlText(element, slot)
                         end
                     end
 
-                    if foundEnchant == false then
-                        element.enchant:SetText("")
-                    end
+                    if foundEnchant == false then element.enchant:SetText("") end
                     tooltip:Hide()
                 else
                     element.enchant:SetText("")
@@ -170,16 +162,10 @@ local function setIlvlText(element, slot)
     end
 end
 
-local function setCharFrame()
-    for key, value in pairs(addon.variables.itemSlots) do
-        setIlvlText(value, key)
-    end
-end
+local function setCharFrame() for key, value in pairs(addon.variables.itemSlots) do setIlvlText(value, key) end end
 
 local function addDungeonFrame(tab)
-    if nil == addon.db["autoChooseDelvePower"] then
-        addon.db["autoChooseDelvePower"] = true
-    end
+    if nil == addon.db["autoChooseDelvePower"] then addon.db["autoChooseDelvePower"] = true end
     local fDungeon = addon.functions.createTabFrameMain(L["Dungeon"], tab)
 
     local cbPersistSignUpNote = addon.functions.createCheckbox("persistSignUpNote", fDungeon,
@@ -193,15 +179,9 @@ local function addDungeonFrame(tab)
 end
 
 local function addCharacterFrame(tab)
-    if nil == addon.db["showIlvlOnCharframe"] then
-        addon.db["showIlvlOnCharframe"] = false
-    end
-    if nil == addon.db["showGemsOnCharframe"] then
-        addon.db["showGemsOnCharframe"] = false
-    end
-    if nil == addon.db["showEnchantOnCharframe"] then
-        addon.db["showEnchantOnCharframe"] = false
-    end
+    if nil == addon.db["showIlvlOnCharframe"] then addon.db["showIlvlOnCharframe"] = false end
+    if nil == addon.db["showGemsOnCharframe"] then addon.db["showGemsOnCharframe"] = false end
+    if nil == addon.db["showEnchantOnCharframe"] then addon.db["showEnchantOnCharframe"] = false end
     local fCharacter = addon.functions.createTabFrameMain(L["Character"], tab)
 
     local cbShowIlvlCharframe = addon.functions.createCheckbox("showIlvlOnCharframe", fCharacter,
@@ -268,37 +248,22 @@ local function addCharacterFrame(tab)
         end
     end
 
-    PaperDollFrame:HookScript("OnShow", function(self)
-        setCharFrame()
-    end)
+    PaperDollFrame:HookScript("OnShow", function(self) setCharFrame() end)
 end
 
 local function addMiscFrame(tab)
-    if nil == addon.db["deleteItemFillDialog"] then
-        addon.db["deleteItemFillDialog"] = false
-    end
-    if nil == addon.db["hideRaidTools"] then
-        addon.db["hideRaidTools"] = false
-    end
-    if nil == addon.db["autoRepair"] then
-        addon.db["autoRepair"] = false
-    end
-    if nil == addon.db["sellAllJunk"] then
-        addon.db["sellAllJunk"] = false
-    end
-    if nil == addon.db["ignoreTalkingHead"] then
-        addon.db["ignoreTalkingHead"] = true
-    end
+    if nil == addon.db["deleteItemFillDialog"] then addon.db["deleteItemFillDialog"] = false end
+    if nil == addon.db["hideRaidTools"] then addon.db["hideRaidTools"] = false end
+    if nil == addon.db["autoRepair"] then addon.db["autoRepair"] = false end
+    if nil == addon.db["sellAllJunk"] then addon.db["sellAllJunk"] = false end
+    if nil == addon.db["ignoreTalkingHead"] then addon.db["ignoreTalkingHead"] = true end
 
     local fMisc = addon.functions.createTabFrameMain(L["Misc"], tab)
 
     local cbIgnoreTalkingHead = addon.functions.createCheckbox("ignoreTalkingHead", fMisc, L["ignoreTalkingHead"], 10,
         -10)
-    hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
-        if addon.db["ignoreTalkingHead"] then
-            self:Hide()
-        end
-    end)
+    hooksecurefunc(TalkingHeadFrame, "PlayCurrent",
+        function(self) if addon.db["ignoreTalkingHead"] then self:Hide() end end)
 
     local cbAutoRepair = addon.functions.createCheckbox("autoRepair", fMisc, L["autoRepair"], 10,
         (addon.functions.getHeightOffset(cbIgnoreTalkingHead)))
@@ -328,15 +293,9 @@ local function addMiscFrame(tab)
 end
 
 local function addQuestFrame(tab)
-    if nil == addon.db["autoChooseQuest"] then
-        addon.db["autoChooseQuest"] = false
-    end
-    if nil == addon.db["ignoreTrivialQuests"] then
-        addon.db["ignoreTrivialQuests"] = true
-    end
-    if nil == addon.db["ignoreDailyQuests"] then
-        addon.db["ignoreDailyQuests"] = true
-    end
+    if nil == addon.db["autoChooseQuest"] then addon.db["autoChooseQuest"] = false end
+    if nil == addon.db["ignoreTrivialQuests"] then addon.db["ignoreTrivialQuests"] = true end
+    if nil == addon.db["ignoreDailyQuests"] then addon.db["ignoreDailyQuests"] = true end
     local fQuest = addon.functions.createTabFrameMain(L["Quest"], tab)
 
     local cbAutoChooseQuest = addon.functions.createCheckbox("autoChooseQuest", fQuest, L["autoChooseQuest"], 10, -10)
@@ -368,25 +327,17 @@ function loadMain()
         EnhanceQoLDB.x = xOfs
         EnhanceQoLDB.y = yOfs
     end)
-    if UISpecialFrames then
-        table.insert(UISpecialFrames, frame:GetName())
-    end
+    if UISpecialFrames then table.insert(UISpecialFrames, frame:GetName()) end
     frame:Hide() -- Das Frame wird initial versteckt
     frame.tabs = {}
 
     frame:SetScript("OnSizeChanged", function(self, width, height)
-        for i, tab in ipairs(frame.tabs) do
-            tab:SetSize(width - 8, height - 20)
-        end
+        for i, tab in ipairs(frame.tabs) do tab:SetSize(width - 8, height - 20) end
     end)
 
     function frame:ShowTab(id)
-        for _, tabContent in pairs(self.tabs) do
-            tabContent:Hide()
-        end
-        if self.tabs[id] then
-            self.tabs[id]:Show()
-        end
+        for _, tabContent in pairs(self.tabs) do tabContent:Hide() end
+        if self.tabs[id] then self.tabs[id]:Show() end
     end
     -- Titel des Frames
     frame.title = frame:CreateFontString(nil, "OVERLAY")
@@ -405,17 +356,11 @@ function loadMain()
     fTab.tabs = {} -- Add the tabs to switch
 
     fTab:SetScript("OnSizeChanged", function(self, width, height)
-        for i, tab in ipairs(fTab.tabs) do
-            tab:SetSize(width - 5, height - 35)
-        end
+        for i, tab in ipairs(fTab.tabs) do tab:SetSize(width - 5, height - 35) end
     end)
     function fTab:ShowTab(id)
-        for _, tabContent in pairs(self.tabs) do
-            tabContent:Hide()
-        end
-        if self.tabs[id] then
-            self.tabs[id]:Show()
-        end
+        for _, tabContent in pairs(self.tabs) do tabContent:Hide() end
+        if self.tabs[id] then self.tabs[id]:Show() end
     end
 
     -- character
@@ -449,11 +394,9 @@ function loadMain()
     end
 
     -- Datenobjekt für den Minimap-Button
-    local EnhanceQoLLDB = LDB:NewDataObject("EnhanceQoL", {
-        type = "launcher",
-        text = addonName,
-        icon = "Interface\\AddOns\\" .. addonName .. "\\Icons\\Icon.tga", -- Hier kannst du dein eigenes Icon verwenden
-        OnClick = function(_, msg)
+    local EnhanceQoLLDB = LDB:NewDataObject("EnhanceQoL",
+        {type = "launcher", text = addonName, icon = "Interface\\AddOns\\" .. addonName .. "\\Icons\\Icon.tga", -- Hier kannst du dein eigenes Icon verwenden
+         OnClick = function(_, msg)
 
             if msg == "LeftButton" then
                 if frame:IsShown() then
@@ -462,40 +405,26 @@ function loadMain()
                     frame:Show()
                 end
             end
-        end,
-        OnTooltipShow = function(tt)
+        end, OnTooltipShow = function(tt)
             tt:AddLine(addonName)
             tt:AddLine(L["Left-Click to show options"])
-        end
-    })
+        end})
     -- Toggle Minimap Button based on settings
     LDBIcon:Register(addonName, EnhanceQoLLDB, EnhanceQoLDB)
 
     -- Register to addon compartment
-    AddonCompartmentFrame:RegisterAddon({
-        text = "Enhance QoL",
-        icon = "Interface\\AddOns\\EnhanceQoL\\Icons\\Icon.tga",
-        notCheckable = true,
-        func = function(button, menuInputData, menu)
-            if frame:IsShown() then
-                frame:Hide()
-            else
-                frame:Show()
-            end
-        end,
-        funcOnEnter = function(button)
-            MenuUtil.ShowTooltip(button, function(tooltip)
-                tooltip:SetText(L["Left-Click to show options"])
-            end)
-        end,
-        funcOnLeave = function(button)
-            MenuUtil.HideTooltip(button)
+    AddonCompartmentFrame:RegisterAddon({text = "Enhance QoL", icon = "Interface\\AddOns\\EnhanceQoL\\Icons\\Icon.tga",
+                                         notCheckable = true, func = function(button, menuInputData, menu)
+        if frame:IsShown() then
+            frame:Hide()
+        else
+            frame:Show()
         end
-    })
+    end, funcOnEnter = function(button)
+        MenuUtil.ShowTooltip(button, function(tooltip) tooltip:SetText(L["Left-Click to show options"]) end)
+    end, funcOnLeave = function(button) MenuUtil.HideTooltip(button) end})
 
-    if nil == addon.db["hideMinimapButton"] then
-        addon.db["hideMinimapButton"] = false
-    end
+    if nil == addon.db["hideMinimapButton"] then addon.db["hideMinimapButton"] = false end
 
     function addon.functions.toggleMinimapButton(value)
         if value == false then
@@ -543,9 +472,7 @@ function loadMain()
     end
 
     -- Frame wiederherstellen und überprüfen, wenn das Addon geladen wird
-    frame:SetScript("OnShow", function()
-        RestorePosition()
-    end)
+    frame:SetScript("OnShow", function() RestorePosition() end)
 end
 
 -- Erstelle ein Frame für Events
@@ -557,9 +484,7 @@ local gossipClicked = {}
 local function eventHandler(self, event, arg1, arg2)
     if event == "ADDON_LOADED" and arg1 == addonName then
         -- Dein Code zur Initialisierung der Datenbank
-        if not EnhanceQoLDB then
-            EnhanceQoLDB = {}
-        end
+        if not EnhanceQoLDB then EnhanceQoLDB = {} end
 
         loadMain()
         EQOL.PersistSignUpNote()
@@ -577,16 +502,12 @@ local function eventHandler(self, event, arg1, arg2)
 
         if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then
             MerchantSellAllJunkButton:Click()
-            if StaticPopup1 and StaticPopup1:IsShown() then
-                StaticPopup1.button1:Click()
-            end
+            if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end
         end
     elseif event == "PLAYER_EQUIPMENT_CHANGED" and addon.variables.itemSlots[arg1] and PaperDollFrame:IsShown() then
         setIlvlText(addon.variables.itemSlots[arg1], arg1)
     elseif event == "SOCKET_INFO_ACCEPT" and PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then
-        C_Timer.After(0.5, function()
-            setCharFrame()
-        end)
+        C_Timer.After(0.5, function() setCharFrame() end)
     elseif event == "ENCHANT_SPELL_COMPLETED" and PaperDollFrame:IsShown() and addon.db["showEnchantOnCharframe"] then
         if arg1 == true and arg2 and arg2.equipmentSlotIndex then
             C_Timer.After(1, function()
@@ -601,9 +522,7 @@ local function eventHandler(self, event, arg1, arg2)
 
         if C_GossipInfo.GetNumActiveQuests() > 0 then
             for i, quest in pairs(C_GossipInfo.GetActiveQuests()) do
-                if quest.isComplete then
-                    C_GossipInfo.SelectActiveQuest(quest.questID)
-                end
+                if quest.isComplete then C_GossipInfo.SelectActiveQuest(quest.questID) end
             end
         end
 
@@ -636,18 +555,12 @@ local function eventHandler(self, event, arg1, arg2)
     elseif event == "QUEST_DATA_LOAD_RESULT" and arg1 and addon.variables.acceptQuestID[arg1] and
         addon.db["autoChooseQuest"] then
 
-        if addon.db["ignoreDailyQuests"] and C_QuestLog.IsQuestRepeatableType(arg1) then
-            return
-        end
+        if addon.db["ignoreDailyQuests"] and C_QuestLog.IsQuestRepeatableType(arg1) then return end
 
-        if addon.db["ignoreTrivialQuests"] and C_QuestLog.IsQuestTrivial(arg1) then
-            return
-        end
+        if addon.db["ignoreTrivialQuests"] and C_QuestLog.IsQuestTrivial(arg1) then return end
         AcceptQuest()
     elseif event == "QUEST_PROGRESS" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
-        if IsQuestCompletable() then
-            CompleteQuest()
-        end
+        if IsQuestCompletable() then CompleteQuest() end
     elseif event == "QUEST_COMPLETE" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local numQuestRewards = GetNumQuestChoices()
         if numQuestRewards > 0 then
@@ -661,14 +574,10 @@ local function eventHandler(self, event, arg1, arg2)
 
         if choiceInfo and choiceInfo.options and #choiceInfo.options == 1 then
             C_PlayerChoice.SendPlayerChoiceResponse(choiceInfo.options[1].buttons[1].id)
-            if PlayerChoiceFrame:IsShown() then
-                PlayerChoiceFrame:Hide()
-            end
+            if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
         end
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
-        if StaticPopup1:IsShown() then
-            StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING)
-        end
+        if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
     end
 end
 
