@@ -43,6 +43,7 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"QuestFrame",
 	"C_PlayerChoice",
 	"PlayerChoiceFrame",
 	"C_QuestLog",
