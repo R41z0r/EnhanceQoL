@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "zhCN" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "zhCN" then return end
 
 local addonName, addon = ...
 
@@ -24,10 +22,7 @@ L["showGemsOnCharframe"] = "在角色装备框架上显示宝石插槽"
 L["showEnchantOnCharframe"] = "在角色装备框架上显示附魔"
 
 L["deleteItemFillDialog"] = "将 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 添加到“删除确认弹窗”"
-L["autoChooseQuest"] = "只有一个响应时自动选择 Gossip"
--- @debug@
 L["autoChooseQuest"] = "自动接受并完成任务"
--- @end-debug@
 
 L["General"] = "通用"
 L["Character"] = "角色"
@@ -41,3 +36,5 @@ L["autoChooseDelvePower"] = "仅有一个选项时自动选择探险力量"
 -- Quest
 L["ignoreTrivialQuests"] = "忽略琐碎任务"
 L["ignoreDailyQuests"] = "忽略每日/每周任务"
+
+L["autoQuickLoot"] = "快速拾取物品"

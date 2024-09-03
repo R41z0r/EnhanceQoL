@@ -290,6 +290,8 @@ local function addMiscFrame(tab)
     _G.CompactRaidFrameManager:SetScript("OnShow", function(self)
         addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self)
     end)
+    local cbQuickLoot = addon.functions.createCheckbox("autoQuickLoot", fMisc, L["autoQuickLoot"], 10,
+        (addon.functions.getHeightOffset(cbHideRaidTools)))
 end
 
 local function addQuestFrame(tab)
@@ -299,14 +301,10 @@ local function addQuestFrame(tab)
     local fQuest = addon.functions.createTabFrameMain(L["Quest"], tab)
 
     local cbAutoChooseQuest = addon.functions.createCheckbox("autoChooseQuest", fQuest, L["autoChooseQuest"], 10, -10)
-    -- @debug@
-
     local cbIgnoreDailyQuests = addon.functions.createCheckbox("ignoreDailyQuests", fQuest, L["ignoreDailyQuests"], 10,
         (addon.functions.getHeightOffset(cbAutoChooseQuest)))
     local cbIgnoreTrivialQuests = addon.functions.createCheckbox("ignoreTrivialQuests", fQuest,
         L["ignoreTrivialQuests"], 10, (addon.functions.getHeightOffset(cbIgnoreDailyQuests)))
-    -- @end-debug@
-
 end
 
 function loadMain()
@@ -517,7 +515,6 @@ local function eventHandler(self, event, arg1, arg2)
     elseif event == "GOSSIP_SHOW" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local options = C_GossipInfo.GetOptions()
 
-        -- @debug@
         local aQuests = C_GossipInfo.GetAvailableQuests()
 
         if C_GossipInfo.GetNumActiveQuests() > 0 then
@@ -537,17 +534,16 @@ local function eventHandler(self, event, arg1, arg2)
                 end
             end
         else
-            -- @end-debug@
             if options and #options == 1 and options[1] and not gossipClicked[options[1].gossipOptionID] then
                 gossipClicked[options[1].gossipOptionID] = true
                 C_GossipInfo.SelectOption(options[1].gossipOptionID)
             end
-            -- @debug@
         end
-        -- @end-debug@
 
     elseif event == "GOSSIP_CLOSED" then
         gossipClicked = {} -- clear all already clicked gossips
+    elseif event == "LOOT_READY" and addon.db["autoQuickLoot"] and not IsShiftKeyDown() then
+        for i = 1, GetNumLootItems() do C_Timer.After(0.1, function() LootSlot(i) end) end
     elseif event == "QUEST_DETAIL" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         local id = GetQuestID()
         addon.variables.acceptQuestID[id] = true
@@ -559,6 +555,7 @@ local function eventHandler(self, event, arg1, arg2)
 
         if addon.db["ignoreTrivialQuests"] and C_QuestLog.IsQuestTrivial(arg1) then return end
         AcceptQuest()
+        if QuestFrame:IsShown() then QuestFrame:Hide() end -- Sometimes the frame is still stuck - hide it forcefully than
     elseif event == "QUEST_PROGRESS" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         if IsQuestCompletable() then CompleteQuest() end
     elseif event == "QUEST_COMPLETE" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
@@ -591,12 +588,11 @@ frameLoad:RegisterEvent("DELETE_ITEM_CONFIRM")
 frameLoad:RegisterEvent("GOSSIP_SHOW")
 frameLoad:RegisterEvent("GOSSIP_CLOSED")
 
--- @debug@
 frameLoad:RegisterEvent("QUEST_DETAIL")
 frameLoad:RegisterEvent("QUEST_COMPLETE")
 frameLoad:RegisterEvent("QUEST_PROGRESS")
 frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
--- @end-debug@
+frameLoad:RegisterEvent("LOOT_READY")
 
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 

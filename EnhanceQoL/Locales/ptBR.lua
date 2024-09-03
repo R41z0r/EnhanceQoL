@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "ptBR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "ptBR" then return end
 
 local addonName, addon = ...
 
@@ -25,10 +23,7 @@ L["showEnchantOnCharframe"] = "Exibir encantamentos no quadro de equipamentos do
 
 L["deleteItemFillDialog"] = "Adicionar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" ao \"Popup de confirmação de exclusão\""
-L["autoChooseQuest"] = "Escolher automaticamente o boato quando houver apenas uma resposta disponível"
--- @debug@
 L["autoChooseQuest"] = "Aceitar e completar missões automaticamente"
--- @end-debug@
 
 L["General"] = "Geral"
 L["Character"] = "Personagem"
@@ -42,3 +37,5 @@ L["autoChooseDelvePower"] = "Selecionar automaticamente o poder de\nincursão qu
 -- Quest
 L["ignoreTrivialQuests"] = "Ignorar missões triviais"
 L["ignoreDailyQuests"] = "Ignorar missões diárias/semanal"
+
+L["autoQuickLoot"] = "Saque rápido de itens"

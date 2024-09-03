@@ -6,74 +6,34 @@ else
     error(parentAddonName .. " is not loaded")
 end
 
-if nil == addon.db["TooltipUnitHideType"] then
-    addon.db["TooltipUnitHideType"] = 1
-end
-if nil == addon.db["TooltipUnitHideInCombat"] then
-    addon.db["TooltipUnitHideInCombat"] = true
-end
-if nil == addon.db["TooltipUnitHideInDungeon"] then
-    addon.db["TooltipUnitHideInDungeon"] = false
-end
+if nil == addon.db["TooltipUnitHideType"] then addon.db["TooltipUnitHideType"] = 1 end
+if nil == addon.db["TooltipUnitHideInCombat"] then addon.db["TooltipUnitHideInCombat"] = true end
+if nil == addon.db["TooltipUnitHideInDungeon"] then addon.db["TooltipUnitHideInDungeon"] = false end
 
-if nil == addon.db["TooltipShowMythicScore"] then
-    addon.db["TooltipShowMythicScore"] = false
-end
+if nil == addon.db["TooltipShowMythicScore"] then addon.db["TooltipShowMythicScore"] = false end
 
-if nil == addon.db["TooltipShowClassColor"] then
-    addon.db["TooltipShowClassColor"] = false
-end
-if nil == addon.db["TooltipShowNPCID"] then
-    addon.db["TooltipShowNPCID"] = true
-end
+if nil == addon.db["TooltipShowClassColor"] then addon.db["TooltipShowClassColor"] = false end
+if nil == addon.db["TooltipShowNPCID"] then addon.db["TooltipShowNPCID"] = true end
 
 -- Spell
-if nil == addon.db["TooltipSpellHideType"] then
-    addon.db["TooltipSpellHideType"] = 1
-end
-if nil == addon.db["TooltipSpellHideInCombat"] then
-    addon.db["TooltipSpellHideInCombat"] = false
-end
-if nil == addon.db["TooltipSpellHideInDungeon"] then
-    addon.db["TooltipSpellHideInDungeon"] = false
-end
-if nil == addon.db["TooltipShowSpellID"] then
-    addon.db["TooltipShowSpellID"] = true
-end
+if nil == addon.db["TooltipSpellHideType"] then addon.db["TooltipSpellHideType"] = 1 end
+if nil == addon.db["TooltipSpellHideInCombat"] then addon.db["TooltipSpellHideInCombat"] = false end
+if nil == addon.db["TooltipSpellHideInDungeon"] then addon.db["TooltipSpellHideInDungeon"] = false end
+if nil == addon.db["TooltipShowSpellID"] then addon.db["TooltipShowSpellID"] = true end
 
-if nil == addon.db["TooltipItemHideType"] then
-    addon.db["TooltipItemHideType"] = 1
-end
-if nil == addon.db["TooltipItemHideInCombat"] then
-    addon.db["TooltipItemHideInCombat"] = false
-end
-if nil == addon.db["TooltipItemHideInDungeon"] then
-    addon.db["TooltipItemHideInDungeon"] = false
-end
-if nil == addon.db["TooltipShowItemID"] then
-    addon.db["TooltipShowItemID"] = true
-end
+if nil == addon.db["TooltipItemHideType"] then addon.db["TooltipItemHideType"] = 1 end
+if nil == addon.db["TooltipItemHideInCombat"] then addon.db["TooltipItemHideInCombat"] = false end
+if nil == addon.db["TooltipItemHideInDungeon"] then addon.db["TooltipItemHideInDungeon"] = false end
+if nil == addon.db["TooltipShowItemID"] then addon.db["TooltipShowItemID"] = true end
 
 -- Buff
-if nil == addon.db["TooltipBuffHideType"] then
-    addon.db["TooltipBuffHideType"] = 1
-end
-if nil == addon.db["TooltipBuffHideInCombat"] then
-    addon.db["TooltipBuffHideInCombat"] = false
-end
-if nil == addon.db["TooltipBuffHideInDungeon"] then
-    addon.db["TooltipBuffHideInDungeon"] = false
-end
+if nil == addon.db["TooltipBuffHideType"] then addon.db["TooltipBuffHideType"] = 1 end
+if nil == addon.db["TooltipBuffHideInCombat"] then addon.db["TooltipBuffHideInCombat"] = false end
+if nil == addon.db["TooltipBuffHideInDungeon"] then addon.db["TooltipBuffHideInDungeon"] = false end
 -- Debuff
-if nil == addon.db["TooltipDebuffHideType"] then
-    addon.db["TooltipDebuffHideType"] = 1
-end
-if nil == addon.db["TooltipDebuffHideInCombat"] then
-    addon.db["TooltipDebuffHideInCombat"] = false
-end
-if nil == addon.db["TooltipDebuffHideInDungeon"] then
-    addon.db["TooltipDebuffHideInDungeon"] = false
-end
+if nil == addon.db["TooltipDebuffHideType"] then addon.db["TooltipDebuffHideType"] = 1 end
+if nil == addon.db["TooltipDebuffHideInCombat"] then addon.db["TooltipDebuffHideInCombat"] = false end
+if nil == addon.db["TooltipDebuffHideInDungeon"] then addon.db["TooltipDebuffHideInDungeon"] = false end
 
 addon.Tooltip = {}
 addon.LTooltip = {} -- Locales for MythicPlus
@@ -86,34 +46,33 @@ addon.Tooltip.variables.numOfTabs = 0
 
 addon.Tooltip.variables.maxLevel = GetMaxLevelForPlayerExpansion()
 
-addon.Tooltip.variables.kindsByID = {
-    [0] = "item", -- Item
-    [1] = "spell", -- Spell
-    [2] = "unit", -- Unit
-    [3] = "unit", -- Corpse
-    [4] = "object", -- Object
-    [5] = "currency", -- Currency
-    [6] = "unit", -- BattlePet
-    [7] = "spell", -- UnitAura
-    [8] = "spell", -- AzeriteEssence
-    [9] = "unit", -- CompanionPet
-    [10] = "mount", -- Mount
-    [11] = "spell", -- PetAction
-    [12] = "achievement", -- Achievement
-    [13] = "spell", -- EnhancedConduit
-    [14] = "set", -- EquipmentSet
-    [15] = "", -- InstanceLock
-    [16] = "", -- PvPBrawl
-    [17] = "spell", -- RecipeRankInfo
-    [18] = "spell", -- Totem
-    [19] = "item", -- Toy
-    [20] = "", -- CorruptionCleanser
-    [21] = "", -- MinimapMouseover
-    [22] = "", -- Flyout
-    [23] = "quest", -- Quest
-    [24] = "quest", -- QuestPartyProgress
-    [25] = "macro", -- Macro
-    [26] = "" -- Debug
+addon.Tooltip.variables.kindsByID = {[0] = "item", -- Item
+[1] = "spell", -- Spell
+[2] = "unit", -- Unit
+[3] = "unit", -- Corpse
+[4] = "object", -- Object
+[5] = "currency", -- Currency
+[6] = "unit", -- BattlePet
+[7] = "spell", -- UnitAura
+[8] = "spell", -- AzeriteEssence
+[9] = "unit", -- CompanionPet
+[10] = "mount", -- Mount
+[11] = "spell", -- PetAction
+[12] = "achievement", -- Achievement
+[13] = "spell", -- EnhancedConduit
+[14] = "set", -- EquipmentSet
+[15] = "", -- InstanceLock
+[16] = "", -- PvPBrawl
+[17] = "spell", -- RecipeRankInfo
+[18] = "spell", -- Totem
+[19] = "item", -- Toy
+[20] = "", -- CorruptionCleanser
+[21] = "", -- MinimapMouseover
+[22] = "", -- Flyout
+[23] = "quest", -- Quest
+[24] = "quest", -- QuestPartyProgress
+[25] = "macro", -- Macro
+[26] = "" -- Debug
 }
 
 function addon.Tooltip.functions.createTabFrame(text, frame)

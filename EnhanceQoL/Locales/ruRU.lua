@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "ruRU" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "ruRU" then return end
 
 local addonName, addon = ...
 
@@ -27,11 +25,7 @@ L["showEnchantOnCharframe"] = "Отображать чары на экране �
 
 L["deleteItemFillDialog"] = "Добавить \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" в \"Окно подтверждения удаления\""
-L["autoChooseQuest"] =
-    "Автоматически выбирать сплетню, если доступен только один ответ"
--- @debug@
 L["autoChooseQuest"] = "Автоматически принимать и завершать задания"
--- @end-debug@
 
 L["General"] = "Общий"
 L["Character"] = "Персонаж"
@@ -46,3 +40,5 @@ L["autoChooseDelvePower"] =
 -- Quest
 L["ignoreTrivialQuests"] = "Игнорировать тривиальные задания"
 L["ignoreDailyQuests"] = "Игнорировать ежедневные/еженедельные задания"
+
+L["autoQuickLoot"] = "Быстрое получение предметов"

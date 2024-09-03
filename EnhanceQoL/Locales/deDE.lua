@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "deDE" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "deDE" then return end
 
 local addonName, addon = ...
 
@@ -25,10 +23,7 @@ L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster an
 
 L["deleteItemFillDialog"] = "Füge \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" zum \"Löschbestätigungs-Popup\" hinzu"
-L["autoChooseQuest"] = "Automatisch Gossip wählen, wenn nur eine Antwort verfügbar ist"
--- @debug@
 L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
--- @end-debug@
 
 L["General"] = "Allgemein"
 L["Character"] = "Charakter"
@@ -42,3 +37,5 @@ L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen,\nwenn nur 1 Opt
 -- Quest
 L["ignoreTrivialQuests"] = "Triviale Quests ignorieren"
 L["ignoreDailyQuests"] = "Tägliche/Wöchentliche Quests ignorieren"
+
+L["autoQuickLoot"] = "Gegenstände schnell plündern"

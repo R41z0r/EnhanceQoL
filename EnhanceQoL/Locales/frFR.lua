@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "frFR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "frFR" then return end
 
 local addonName, addon = ...
 
@@ -25,10 +23,7 @@ L["showEnchantOnCharframe"] = "Afficher les enchantements sur l'équipement du p
 
 L["deleteItemFillDialog"] = "Ajouter \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" au \"Popup de confirmation de suppression\""
-L["autoChooseQuest"] = "Choisir automatiquement le potin lorsqu'une seule réponse est disponible"
--- @debug@
 L["autoChooseQuest"] = "Accepter et compléter les quêtes automatiquement"
--- @end-debug@
 
 L["General"] = "Général"
 L["Character"] = "Personnage"
@@ -42,3 +37,5 @@ L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée\nl
 -- Quest
 L["ignoreTrivialQuests"] = "Ignorer les quêtes triviales"
 L["ignoreDailyQuests"] = "Ignorer les quêtes journalières/hebdomadaires"
+
+L["autoQuickLoot"] = "Butin rapide des objets"

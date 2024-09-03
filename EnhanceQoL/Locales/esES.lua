@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "esMX" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "esMX" then return end
 
 local addonName, addon = ...
 
@@ -25,10 +23,7 @@ L["showEnchantOnCharframe"] = "Mostrar encantamientos en el marco de equipo del 
 
 L["deleteItemFillDialog"] = "Agregar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" al \"Popup de confirmación de eliminación\""
-L["autoChooseQuest"] = "Elegir automáticamente el chisme cuando solo haya una respuesta disponible"
--- @debug@
 L["autoChooseQuest"] = "Aceptar y completar misiones automáticamente"
--- @end-debug@
 
 L["General"] = "General"
 L["Character"] = "Personaje"
@@ -42,3 +37,5 @@ L["autoChooseDelvePower"] = "Seleccionar poder de incursión automáticamente\nc
 -- Quest
 L["ignoreTrivialQuests"] = "Ignorar misiones triviales"
 L["ignoreDailyQuests"] = "Ignorar misiones diarias/semanales"
+
+L["autoQuickLoot"] = "Saqueo rápido de objetos"
