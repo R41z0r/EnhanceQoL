@@ -43,6 +43,9 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"TotemFrame",
+	"RogueComboPointBarFrame",
+	"PaladinPowerBarFrame",
 	"QuestFrame",
 	"C_PlayerChoice",
 	"PlayerChoiceFrame",

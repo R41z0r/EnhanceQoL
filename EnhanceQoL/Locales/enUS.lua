@@ -36,3 +36,17 @@ L["ignoreTrivialQuests"] = "Ignore trivial quests"
 L["ignoreDailyQuests"] = "Ignore daily/weekly quests"
 
 L["autoQuickLoot"] = "Quick loot items"
+
+L["headerClassInfo"] = "These settings only apply to " .. select(1, UnitClass("player"))
+
+-- Evoker
+L["evoker_HideEssence"] = "Hide Essencebar"
+
+-- Paladin
+L["paladin_HideHolyPower"] = "Hide Holypowerbar"
+
+-- Rogue
+L["rogue_HideComboPoint"] = "Hide Combopointbar"
+
+-- Shaman
+L["shaman_HideTotem"] = "Hide Totembar"

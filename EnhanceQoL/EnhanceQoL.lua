@@ -178,6 +178,28 @@ local function addDungeonFrame(tab)
         L["autoChooseDelvePower"], 10, (addon.functions.getHeightOffset(cbSkipSignup)))
 end
 
+local function addHideOption(type, parent, anchor, className)
+    if type == "TOTEM" then
+        local cbHideTotemFrame = addon.functions.createCheckbox(className .. "_HideTotem", parent,
+            L["shaman_HideTotem"], 10, (addon.functions.getHeightOffset(anchor)) - 10)
+        cbHideTotemFrame:SetScript("OnClick", function(self)
+            addon.db[className .. "_HideTotem"] = self:GetChecked()
+            if self:GetChecked() then
+                TotemFrame:Hide()
+            else
+                TotemFrame:Show()
+            end
+        end)
+        TotemFrame:HookScript("OnShow", function(self)
+            if addon.db[className .. "_HideTotem"] then
+                TotemFrame:Hide()
+            else
+                TotemFrame:Show()
+            end
+        end)
+    end
+end
+
 local function addCharacterFrame(tab)
     if nil == addon.db["showIlvlOnCharframe"] then addon.db["showIlvlOnCharframe"] = false end
     if nil == addon.db["showGemsOnCharframe"] then addon.db["showGemsOnCharframe"] = false end
@@ -249,8 +271,107 @@ local function addCharacterFrame(tab)
     end
 
     PaperDollFrame:HookScript("OnShow", function(self) setCharFrame() end)
+
+    -- @debug@
+    local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0, (addon.functions
+        .getHeightOffset(cbShowEnchantCharframe)) - 20, "TOP", "TOP")
+
+    local classname = select(2, UnitClass("player"))
+
+    -- Classspecific stuff
+    if classname == "EVOKER" then
+        local cbHideEssenceFrame = addon.functions.createCheckbox("evoker_HideEssence", fCharacter,
+            L["evoker_HideEssence"], 10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
+        cbHideEssenceFrame:SetScript("OnClick", function(self)
+            addon.db["evoker_HideEssence"] = self:GetChecked()
+            if self:GetChecked() then
+                EssencePlayerFrame:Hide()
+            else
+                EssencePlayerFrame:Show()
+            end
+        end)
+        EssencePlayerFrame:HookScript("OnShow", function(self)
+            if addon.db["evoker_HideEssence"] then EssencePlayerFrame:Hide() end
+        end)
+        if addon.db["evoker_HideEssence"] then EssencePlayerFrame:Hide() end -- Initialset
+    elseif classname == "SHAMAN" then
+        local cbHideTotemFrame = addon.functions.createCheckbox("shaman_HideTotem", fCharacter, L["shaman_HideTotem"],
+            10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
+        cbHideTotemFrame:SetScript("OnClick", function(self)
+            addon.db["shaman_HideTotem"] = self:GetChecked()
+            if self:GetChecked() then
+                TotemFrame:Hide()
+            else
+                TotemFrame:Show()
+            end
+        end)
+        TotemFrame:HookScript("OnShow", function(self)
+            if addon.db["shaman_HideTotem"] then
+                TotemFrame:Hide()
+            else
+                TotemFrame:Show()
+            end
+        end)
+    elseif classname == "ROGUE" then
+        local cbHideRogueCPFrame = addon.functions.createCheckbox("rogue_HideComboPoint", fCharacter,
+            L["rogue_HideComboPoint"], 10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
+        cbHideRogueCPFrame:SetScript("OnClick", function(self)
+            addon.db["rogue_HideComboPoint"] = self:GetChecked()
+            if self:GetChecked() then
+                RogueComboPointBarFrame:Hide()
+            else
+                RogueComboPointBarFrame:Show()
+            end
+        end)
+        RogueComboPointBarFrame:HookScript("OnShow", function(self)
+            if addon.db["rogue_HideComboPoint"] then
+                RogueComboPointBarFrame:Hide()
+            else
+                RogueComboPointBarFrame:Show()
+            end
+        end)
+        if addon.db["rogue_HideComboPoint"] then RogueComboPointBarFrame:Hide() end
+    elseif classname == "PALADIN" then
+        local cbHidePaladinHolyFrame = addon.functions.createCheckbox("paladin_HideHolyPower", fCharacter,
+            L["paladin_HideHolyPower"], 10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
+        cbHidePaladinHolyFrame:SetScript("OnClick", function(self)
+            addon.db["paladin_HideHolyPower"] = self:GetChecked()
+            if self:GetChecked() then
+                PaladinPowerBarFrame:Hide()
+            else
+                PaladinPowerBarFrame:Show()
+            end
+        end)
+        PaladinPowerBarFrame:HookScript("OnShow", function(self)
+            if addon.db["paladin_HideHolyPower"] then
+                PaladinPowerBarFrame:Hide()
+            else
+                PaladinPowerBarFrame:Show()
+            end
+        end)
+        if addon.db["paladin_HideHolyPower"] then PaladinPowerBarFrame:Hide() end
+    else
+        labelClassSpecific:Hide()
+    end
+    -- @end-debug@
 end
 
+-- @dubug@
+-- /dump PlayerFrame.PlayerFrameContainer.PlayerPortrait:Hide()
+-- /dump PlayerFrame.PlayerFrameContainer.PlayerPortraitMask:Hide()
+-- /dump PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerPortraitCornerIcon:Hide()
+-- /dump PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerRestLoop:Hide()
+-- /dump PlayerFrame.PlayerFrameContainer.FrameTexture:Hide()
+-- /dump PlayerFrame.PlayerFrameContainer.FrameTexture:Show()
+
+-- PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerPortraitCornerIcon:HookScript("OnShow", function(self)
+--     self:Hide()
+-- end)
+-- PlayerFrame.PlayerFrameContainer.PlayerPortrait:Hide()
+-- PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerPortraitCornerIcon:Hide()
+-- PlayerFrame.PlayerFrameContainer.PlayerPortraitMask:Hide()
+-- PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerRestLoop:Hide()
+-- @end-dubug@
 local function addMiscFrame(tab)
     if nil == addon.db["deleteItemFillDialog"] then addon.db["deleteItemFillDialog"] = false end
     if nil == addon.db["hideRaidTools"] then addon.db["hideRaidTools"] = false end
@@ -565,6 +686,13 @@ local function eventHandler(self, event, arg1, arg2)
         else
             GetQuestReward()
         end
+    elseif event == "QUEST_GREETING" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
+        for i = 1, GetNumAvailableQuests() do
+            if addon.db["ignoreTrivialQuests"] and IsAvailableQuestTrivial(i) then
+            else
+                SelectAvailableQuest(i)
+            end
+        end
     elseif event == "PLAYER_CHOICE_UPDATE" and select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
         -- We are in a delve and have a choice for buff - autopick it
         local choiceInfo = C_PlayerChoice.GetCurrentPlayerChoiceInfo()
@@ -589,6 +717,7 @@ frameLoad:RegisterEvent("GOSSIP_SHOW")
 frameLoad:RegisterEvent("GOSSIP_CLOSED")
 
 frameLoad:RegisterEvent("QUEST_DETAIL")
+frameLoad:RegisterEvent("QUEST_GREETING")
 frameLoad:RegisterEvent("QUEST_COMPLETE")
 frameLoad:RegisterEvent("QUEST_PROGRESS")
 frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
