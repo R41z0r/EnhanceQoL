@@ -44,6 +44,7 @@ globals = {
 	
 	-- EnhanceQoL
 	"TotemFrame",
+	"EssencePlayerFrame",
 	"RogueComboPointBarFrame",
 	"PaladinPowerBarFrame",
 	"QuestFrame",
