@@ -693,6 +693,12 @@ local function eventHandler(self, event, arg1, arg2)
                 SelectAvailableQuest(i)
             end
         end
+
+        for i = 1, GetNumActiveQuests() do
+            if select(2, GetActiveTitle(1)) then
+                SelectActiveQuest(1)
+            end
+        end
     elseif event == "PLAYER_CHOICE_UPDATE" and select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
         -- We are in a delve and have a choice for buff - autopick it
         local choiceInfo = C_PlayerChoice.GetCurrentPlayerChoiceInfo()
