@@ -129,8 +129,12 @@ local function setIlvlText(element, slot)
 
                                 foundEnchant = true
 
-                                local enchantText = gsub(text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", ""),
-                                    '(%w%w%w)%w+', '%1')
+                                -- local enchantText = gsub(text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", ""),
+                                --     '(%w%w%w)%w+', '%1')
+                                local enchantText = text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", "") -- Entferne den Text vor dem Enchant
+                                enchantText = enchantText:gsub('(%d+)', '%1')
+                                enchantText = enchantText:gsub('(%a%a%a)%a+', '%1')
+
                                 -- local shortAbbrev = gsub(enchantText, '(%w%w%w)%w+', '%1')
                                 local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
                                 local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
@@ -694,11 +698,7 @@ local function eventHandler(self, event, arg1, arg2)
             end
         end
 
-        for i = 1, GetNumActiveQuests() do
-            if select(2, GetActiveTitle(1)) then
-                SelectActiveQuest(1)
-            end
-        end
+        for i = 1, GetNumActiveQuests() do if select(2, GetActiveTitle(1)) then SelectActiveQuest(1) end end
     elseif event == "PLAYER_CHOICE_UPDATE" and select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
         -- We are in a delve and have a choice for buff - autopick it
         local choiceInfo = C_PlayerChoice.GetCurrentPlayerChoiceInfo()
@@ -709,6 +709,22 @@ local function eventHandler(self, event, arg1, arg2)
         end
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
+        -- elseif event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
+        --     local btn = addon.functions.createButton(ProfessionsCustomerOrdersFrame.Form.ReagentContainer, 0, 0, 100, 20,
+        --         "Add", function()
+        --             local frame = ProfessionsCustomerOrdersFrame.Form.ReagentContainer.Reagents
+        --             for i, j in ipairs(frame:GetLayoutChildren()) do
+        --                 if j.reagentSlotSchematic then
+        --                     local rss = j.reagentSlotSchematic
+        --                     if rss.required then
+        --                         local name = C_Item.GetItemInfo(rss.reagents[1].itemID)
+        --                         print(rss.reagents[1].itemID, name, rss.quantityRequired)
+        --                     end
+        --                 end
+        --             end
+        --         end)
+        --     btn:ClearAllPoints()
+        --     btn:SetPoint("TOPRIGHT", ProfessionsCustomerOrdersFrame.Form.ReagentContainer, "TOPRIGHT", -5, -5)
     end
 end
 
@@ -730,6 +746,7 @@ frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
 frameLoad:RegisterEvent("LOOT_READY")
 
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
+-- frameLoad:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER") -- for Shoppinglist
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)

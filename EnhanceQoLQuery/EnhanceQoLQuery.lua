@@ -37,9 +37,7 @@ frame.editEditBox:SetMultiLine(true)
 frame.editEditBox:SetAutoFocus(false)
 frame.editEditBox:SetFontObject("ChatFontNormal")
 frame.editBox:SetScrollChild(frame.editEditBox)
-frame.editEditBox:SetScript("OnEnterPressed", function(self)
-    self:ClearFocus()
-end)
+frame.editEditBox:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
 
 frame.outputBox = CreateFrame("ScrollFrame", nil, frame, "UIPanelScrollFrameTemplate")
 frame.outputBox:SetSize(360, 150)
@@ -51,9 +49,7 @@ frame.outputEditBox:SetMultiLine(true)
 frame.outputEditBox:SetAutoFocus(false)
 frame.outputEditBox:SetFontObject("ChatFontNormal")
 frame.outputBox:SetScrollChild(frame.outputEditBox)
-frame.outputEditBox:SetScript("OnEnterPressed", function(self)
-    self:ClearFocus()
-end)
+frame.outputEditBox:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
 
 local addedItems = {}
 
@@ -103,9 +99,7 @@ local function extractWellFedFromTooltip(itemLink)
 end
 
 local function updateItemInfo(itemLink)
-    if not itemLink then
-        return
-    end
+    if not itemLink then return end
     local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = C_Item.GetItemInfo(
         itemLink)
     local mana = extractManaFromTooltip(itemLink)
@@ -135,9 +129,7 @@ frame.editEditBox:SetScript("OnTextChanged", function(self)
             else
                 result = loadedResults[itemID]
             end
-            if result then
-                table.insert(results, result)
-            end
+            if result then table.insert(results, result) end
         end
     end
 
@@ -181,23 +173,15 @@ end
 local function onAddonLoaded(event, addonName)
     if addonName == "EnhanceQoLQuery" then
         SLASH_EnhanceQoLQUERY1 = "/rq"
-        SlashCmdList["EnhanceQoLQUERY"] = function(msg)
-            frame:Show()
-        end
+        SlashCmdList["EnhanceQoLQUERY"] = function(msg) frame:Show() end
     end
 end
 
 local function onItemPush(bag, slot)
-    if nil == bag or nil == slot then
-        return
-    end
-    if bag < 0 or bag > 5 or slot < 1 or slot > C_Container.GetContainerNumSlots(bag) then
-        return
-    end
+    if nil == bag or nil == slot then return end
+    if bag < 0 or bag > 5 or slot < 1 or slot > C_Container.GetContainerNumSlots(bag) then return end
     local itemLink = GetContainerItemLink(bag, slot)
-    if itemLink then
-        handleItemLink(itemLink)
-    end
+    if itemLink then handleItemLink(itemLink) end
 end
 
 local function onAuctionHouseEvent(self, event, ...)
@@ -219,17 +203,13 @@ end
 
 local function onGetItemInfoReceived(...)
     itemID, success = ...
-    if success == true and reSearchList[itemID] == true then
-        addToSearchResult(itemID)
-    end
+    if success == true and reSearchList[itemID] == true then addToSearchResult(itemID) end
 end
 
 local function onEvent(self, event, ...)
     if event == "ADDON_LOADED" then
         onAddonLoaded(event, ...)
-        for _, drink in ipairs(addon.Drinks.drinkList) do
-            addedItems["" .. drink.id] = true
-        end
+        for _, drink in ipairs(addon.Drinks.drinkList) do addedItems["" .. drink.id] = true end
     elseif event == "ITEM_PUSH" and frame:IsShown() then
         onItemPush(...)
     elseif event == "GET_ITEM_INFO_RECEIVED" and frame:IsShown() then
@@ -262,9 +242,7 @@ copyButton:SetScript("OnClick", function()
     if frame.outputEditBox:GetText() ~= "" then
         frame.outputEditBox:HighlightText()
         frame.outputEditBox:SetFocus()
-        C_Timer.After(1, function()
-            frame.outputEditBox:ClearFocus()
-        end)
+        C_Timer.After(1, function() frame.outputEditBox:ClearFocus() end)
     end
 end)
 
@@ -276,6 +254,36 @@ scanButton:SetText("Scan AH")
 scanButton:SetScript("OnClick", function()
     executeSearch = true
     if AuctionHouseFrame and AuctionHouseFrame:IsShown() then
+
+        -- local function SearchAuctionHouseByMultipleItemIDs(itemIDs)
+        --     local itemKeys = {}
+
+        --     for _, itemID in ipairs(itemIDs) do
+        --         local itemKey = C_AuctionHouse.MakeItemKey(itemID)
+        --         if itemKey then
+        --             table.insert(itemKeys, itemKey)
+        --         else
+        --             print("Kein ItemKey für ItemID:", itemID)
+        --         end
+        --     end
+
+        --     if #itemKeys > 0 then
+        --         -- Sortieren nach Preis aufsteigend
+        --         local sorts =
+        --             {{sortOrder = 0, reverseSort = false} -- 0 ist der Index für Preis, "false" bedeutet aufsteigend
+        --             }
+
+        --         -- Suche nach allen ItemKeys gleichzeitig mit Sortierung
+        --         C_AuctionHouse.SearchForItemKeys(itemKeys, sorts)
+        --         print("Suche nach den ItemIDs:", table.concat(itemIDs, ", "))
+        --     else
+        --         print("Keine gültigen ItemKeys gefunden.")
+        --     end
+        -- end
+
+        -- -- Beispielaufruf mit einer Liste von ItemIDs
+        -- SearchAuctionHouseByMultipleItemIDs({221853, 221854, 221855, 221859, 221860, 221861, 221856, 221857, 221858})
+
         -- Search for consumables in the Food & Drink category
         local query = {
             searchString = "",
