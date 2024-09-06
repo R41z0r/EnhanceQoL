@@ -429,8 +429,8 @@ addon.Drinks.drinkList = { -- Special Food
 {key = "TimelessTea", id = 104348, requiredLevel = 32, mana = 5500, isBuffFood = false},
 {key = "Winter Veil Cookie", id = 21254, requiredLevel = 1, mana = 3984, isBuffFood = true},
 {key = "WildfowlGinsengSoup", id = 86070, requiredLevel = 33, mana = 20000, isBuffFood = true},
-{key = "ZestyWater", id = 197770, requiredLevel = 60, mana = 540000, isBuffFood = false}, 
--- TWW 
+{key = "ZestyWater", id = 197770, requiredLevel = 60, mana = 540000, isBuffFood = false},
+-- TWW
 {key = "MeatandPotatoes", id = 222710, requiredLevel = 1, mana = 2900000, isBuffFood = true},
 {key = "RibStickers", id = 222711, requiredLevel = 1, mana = 2900000, isBuffFood = true},
 {key = "SweetandSourMeatballs", id = 222712, requiredLevel = 1, mana = 2900000, isBuffFood = true},
