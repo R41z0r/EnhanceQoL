@@ -88,7 +88,7 @@ local function extractWellFedFromTooltip(itemLink)
 
     for i = 1, tooltip:NumLines() do
         local text = _G["EnhanceQoLQueryTooltipTextLeft" .. i]:GetText()
-        if text and text:match("well fed") then
+        if text and (text:match("well fed") or text:match("Well Fed")) then
             buffFood = "true"
             break
         end
@@ -106,9 +106,13 @@ local function updateItemInfo(itemLink)
     if name and type and subType and minLevel and mana > 0 then
         local buffFood = extractWellFedFromTooltip(itemLink)
         local formattedKey = name:gsub("%s+", "")
-        return string.format(
-            "{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " .. buffFood .. " }", formattedKey,
-            itemLink:match("item:(%d+)"), minLevel, mana)
+        if type == "Gem" then
+            return string.format("{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " .. buffFood ..
+                                     ", isEarthenFood = true, earthenOnly = true }", formattedKey, itemLink:match("item:(%d+)"), minLevel, mana)
+        else
+            return string.format("{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " .. buffFood ..
+                                     " }", formattedKey, itemLink:match("item:(%d+)"), minLevel, mana)
+        end
     end
     return nil
 end
@@ -155,7 +159,8 @@ end
 
 local function handleItemLink(text)
     local name, link, quality, level, minLevel, type, subType, stackCount, equipLoc, texture = C_Item.GetItemInfo(text)
-    if type == "Consumable" and subType == "Food & Drink" then
+    if (type == "Consumable" and subType == "Food & Drink") or select(2, UnitRace("player")) == "EarthenDwarf" and type ==
+        "Gem" then
         local itemId = text:match("item:(%d+)")
         if not addedItems[itemId] then
             addedItems[itemId] = true
@@ -285,19 +290,11 @@ scanButton:SetScript("OnClick", function()
         -- SearchAuctionHouseByMultipleItemIDs({221853, 221854, 221855, 221859, 221860, 221861, 221856, 221857, 221858})
 
         -- Search for consumables in the Food & Drink category
-        local query = {
-            searchString = "",
-            sorts = { -- {sortOrder = Enum.AuctionHouseSortOrder.Price, reverseSort = false},
-            {
-                sortOrder = Enum.AuctionHouseSortOrder.Name,
-                reverseSort = true
-            }},
-            filters = {Enum.AuctionHouseFilter.Potions},
-            itemClassFilters = {{
-                classID = Enum.ItemClass.Consumable,
-                subClassID = Enum.ItemConsumableSubclass.Fooddrink
-            }}
-        }
+        local query = {searchString = "",
+                       sorts = { -- {sortOrder = Enum.AuctionHouseSortOrder.Price, reverseSort = false},
+        {sortOrder = Enum.AuctionHouseSortOrder.Name, reverseSort = true}}, filters = {Enum.AuctionHouseFilter.Potions},
+                       itemClassFilters = {{classID = Enum.ItemClass.Consumable,
+                                            subClassID = Enum.ItemConsumableSubclass.Fooddrink}}}
         -- Clear the reSearchList
         reSearchList = {}
         resultsAHSearch = {}

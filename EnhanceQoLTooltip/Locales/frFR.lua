@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "frFR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "frFR" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
@@ -65,3 +63,10 @@ L["TooltipItemHideInDungeon"] = "Masquer uniquement en donjons"
 
 L["ItemID"] = "ID de l'objet"
 L["TooltipShowItemID"] = "Afficher l'ID de l'objet dans l'infobulle"
+
+L["TooltipShowItemCount"] = "Afficher le nombre d'objets dans l'infobulle"
+L["TooltipShowSeperateItemCount"] = "Afficher le nombre d'objets séparés par emplacement"
+L["Reagentbank"] = "Banque de composants"
+L["Bank"] = "Banque"
+L["Bag"] = "Sac"
+L["Itemcount"] = "Nombre d'objets"

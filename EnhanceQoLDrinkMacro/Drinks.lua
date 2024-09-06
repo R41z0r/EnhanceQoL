@@ -10,16 +10,16 @@ end
 addon.Drinks.drinkList = { -- Special Food
 {key = "CandyBar", id = 20390, requiredLevel = 1, mana = 18000, isBuffFood = false}, -- We don't know the right amount on level 41 it's 18000
 {key = "CandyCorn", id = 20389, requiredLevel = 1, mana = 18000, isBuffFood = false}, -- We don't know the right amount on level 41 it's 18000
-{key = "ConjuredManaBun", id = 113509, requiredLevel = 40, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaFritter", id = 80618, requiredLevel = 35, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaPudding", id = 80610, requiredLevel = 35, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaCake", id = 65499, requiredLevel = 32, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaStrudel", id = 43523, requiredLevel = 30, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaPie", id = 43518, requiredLevel = 28, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaLollipop", id = 65517, requiredLevel = 26, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaCupcake", id = 65516, requiredLevel = 23, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaBrownie", id = 65515, requiredLevel = 19, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
-{key = "ConjuredManaCookie", id = 65500, requiredLevel = 14, mana = 0, isMageFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaBun", id = 113509, requiredLevel = 40, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaFritter", id = 80618, requiredLevel = 35, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaPudding", id = 80610, requiredLevel = 35, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaCake", id = 65499, requiredLevel = 32, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaStrudel", id = 43523, requiredLevel = 30, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaPie", id = 43518, requiredLevel = 28, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaLollipop", id = 65517, requiredLevel = 26, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaCupcake", id = 65516, requiredLevel = 23, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaBrownie", id = 65515, requiredLevel = 19, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
+{key = "ConjuredManaCookie", id = 65500, requiredLevel = 14, mana = 0, isMageFood = true, isEarthenFood = true}, -- set mana to zero, because we update it anyway
 {key = "GourmetPumpkinPie", id = 116409, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true}, -- Restores 100% mana und health
 {key = "Herb-InfusedStuffing", id = 116408, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true}, -- Restores 100% mana und health
 {key = "Sugar-CrustedFishFeast", id = 126936, requiredLevel = 1, mana = UnitPowerMax("player", 0), isBuffFood = true}, -- Restores 100% mana und health
@@ -429,7 +429,8 @@ addon.Drinks.drinkList = { -- Special Food
 {key = "TimelessTea", id = 104348, requiredLevel = 32, mana = 5500, isBuffFood = false},
 {key = "Winter Veil Cookie", id = 21254, requiredLevel = 1, mana = 3984, isBuffFood = true},
 {key = "WildfowlGinsengSoup", id = 86070, requiredLevel = 33, mana = 20000, isBuffFood = true},
-{key = "ZestyWater", id = 197770, requiredLevel = 60, mana = 540000, isBuffFood = false}, -- TWW
+{key = "ZestyWater", id = 197770, requiredLevel = 60, mana = 540000, isBuffFood = false}, 
+-- TWW 
 {key = "MeatandPotatoes", id = 222710, requiredLevel = 1, mana = 2900000, isBuffFood = true},
 {key = "RibStickers", id = 222711, requiredLevel = 1, mana = 2900000, isBuffFood = true},
 {key = "SweetandSourMeatballs", id = 222712, requiredLevel = 1, mana = 2900000, isBuffFood = true},
@@ -458,13 +459,84 @@ addon.Drinks.drinkList = { -- Special Food
 {key = "LavaCola", id = 227317, requiredLevel = 75, mana = 3700000, isBuffFood = false},
 {key = "ChalcociteLavaCake", id = 227326, requiredLevel = 75, mana = 3700000, isBuffFood = false},
 {key = "StoneSoup", id = 227325, requiredLevel = 75, mana = 3700000, isBuffFood = false},
-{key = "RockyRoad", id = 227327, requiredLevel = 75, mana = 3700000, isBuffFood = false}}
+{key = "RockyRoad", id = 227327, requiredLevel = 75, mana = 3700000, isBuffFood = false},
+
+-- Earthen food
+{ key = "DeadlyAmber", id = 213503, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyAmber", id = 213502, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyAmber", id = 213501, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulAmber", id = 213509, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulAmber", id = 213508, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulAmber", id = 213507, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickAmber", id = 213506, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickAmber", id = 213505, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickAmber", id = 213504, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "SolidAmber", id = 213517, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "SolidAmber", id = 213516, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "SolidAmber", id = 213515, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileAmber", id = 213512, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileAmber", id = 213511, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileAmber", id = 213510, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyEmerald", id = 213479, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyEmerald", id = 213478, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyEmerald", id = 213477, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulEmerald", id = 213482, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulEmerald", id = 213481, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulEmerald", id = 213480, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickEmerald", id = 213488, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickEmerald", id = 213487, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickEmerald", id = 213486, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileEmerald", id = 213485, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileEmerald", id = 213484, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileEmerald", id = 213483, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyOnyx", id = 213491, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyOnyx", id = 213490, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyOnyx", id = 213489, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulOnyx", id = 213500, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulOnyx", id = 213499, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulOnyx", id = 213498, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickOnyx", id = 213494, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickOnyx", id = 213493, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickOnyx", id = 213492, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileOnyx", id = 213497, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileOnyx", id = 213496, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileOnyx", id = 213495, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyRuby", id = 213464, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyRuby", id = 213463, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlyRuby", id = 213462, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulRuby", id = 213458, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulRuby", id = 213457, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulRuby", id = 213456, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickRuby", id = 213455, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickRuby", id = 213454, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickRuby", id = 213453, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileRuby", id = 213461, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileRuby", id = 213460, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileRuby", id = 213459, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlySapphire", id = 213467, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlySapphire", id = 213466, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "DeadlySapphire", id = 213465, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulSapphire", id = 213473, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulSapphire", id = 213472, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "MasterfulSapphire", id = 213471, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickSapphire", id = 213470, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickSapphire", id = 213469, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "QuickSapphire", id = 213468, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileSapphire", id = 213476, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileSapphire", id = 213475, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+{ key = "VersatileSapphire", id = 213474, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
+
+{ key = "CrunchyRockCandy", id = 228494, requiredLevel = 1, mana = 3700000, isBuffFood = false, isEarthenFood = true, earthenOnly = true}, -- Tooltip is wrong on this with "Buff Food"
+{ key = "SpicyRubies", id = 228492, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true},
+{ key = "SourTopazBites", id = 228493, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true }
+}
 
 table.sort(addon.Drinks.drinkList, function(a, b) return a.mana > b.mana end)
 
 function addon.functions.updateAllowedDrinks()
     local playerLevel = UnitLevel("Player")
     local mana = UnitPowerMax("player", 0)
+    local isEarthen = select(2, UnitRace("player")) == "EarthenDwarf"
     if mana <= 0 then return end
 
     local minManaValue = mana * (addon.db["minManaFoodValue"] / 100)
@@ -477,6 +549,12 @@ function addon.functions.updateAllowedDrinks()
         if (drink.requiredLevel >= 0 and drink.requiredLevel <= playerLevel) and (drink.mana >= minManaValue) then
             if drink.isBuffFood and nil ~= addon.db["ignoreBuffFood"] and addon.db["ignoreBuffFood"] == true then
                 -- do nothing because there is not "continue"
+            elseif isEarthen and not drink.isEarthenFood then
+                -- ignore drinks which are not for earthen
+            elseif drink.earthenOnly and not isEarthen then
+                -- ignore only earthen food when not earthen
+            elseif drink.earthenOnly and drink.isGem and addon.db["ignoreGemsEarthen"] then
+                -- ignore gems from jewelcrafting for earthen
             else
                 if drink.isMageFood and nil ~= addon.db["preferMageFood"] and addon.db["preferMageFood"] == true then
                     table.insert(addon.Drinks.filteredDrinks, 1, addon.functions.newItem(drink.id, drink.desc))

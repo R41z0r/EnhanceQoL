@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "ptBR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "ptBR" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -66,3 +64,10 @@ L["TooltipItemHideInDungeon"] = "Ocultar apenas em masmorras"
 
 L["ItemID"] = "ID do item"
 L["TooltipShowItemID"] = "Mostrar ID do item na dica de tela"
+
+L["TooltipShowItemCount"] = "Mostrar contagem de itens na dica de ferramenta"
+L["TooltipShowSeperateItemCount"] = "Mostrar contagem de itens separada por local"
+L["Reagentbank"] = "Banco de Reagentes"
+L["Bank"] = "Banco"
+L["Bag"] = "Bolsa"
+L["Itemcount"] = "Contagem de itens"

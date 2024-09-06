@@ -11,9 +11,7 @@ end
 local L = addon.LDrinkMacro
 
 local function createMacroIfMissing()
-    if GetMacroInfo(drinkMacroName) == nil then
-        CreateMacro(drinkMacroName, "INV_Misc_QuestionMark")
-    end
+    if GetMacroInfo(drinkMacroName) == nil then CreateMacro(drinkMacroName, "INV_Misc_QuestionMark") end
 end
 
 local function buildMacroString(item)
@@ -57,12 +55,9 @@ if addon.db["minManaFoodValue"] then
 else
     addon.db["minManaFoodValue"] = initialValue
 end
-if nil == addon.db["preferMageFood"] then
-    addon.db["preferMageFood"] = true
-end
-if nil == addon.db["ignoreBuffFood"] then
-    addon.db["ignoreBuffFood"] = true
-end
+if nil == addon.db["preferMageFood"] then addon.db["preferMageFood"] = true end
+if nil == addon.db["ignoreBuffFood"] then addon.db["ignoreBuffFood"] = true end
+if nil == addon.db["ignoreGemsEarthen"] then addon.db["ignoreGemsEarthen"] = true end
 
 -- Extend the option menu
 local frame = addon.functions.createTabFrame(L["Drink Macro"])
@@ -87,8 +82,17 @@ cbBuffFood:SetScript("OnClick", function(self)
     addon.functions.updateAvailableDrinks(false)
 end)
 
+local cbGemFoodEarthen = addon.functions.createCheckbox("ignoreGemsEarthen", frame, L["ignoreGemsEarthen"], 10,
+    (addon.functions.getHeightOffset(cbBuffFood)))
+
+cbGemFoodEarthen:SetScript("OnClick", function(self)
+    addon.db["ignoreGemsEarthen"] = self:GetChecked()
+    addon.functions.updateAllowedDrinks()
+    addon.functions.updateAvailableDrinks(false)
+end)
+
 local sliderDrinkValue = addon.functions.createSlider("minManaFoodValue", frame, L["Minimum mana restore for food"], 15,
-    (addon.functions.getHeightOffset(cbBuffFood) - 25), initialValue, 0, 100, "%")
+    (addon.functions.getHeightOffset(cbGemFoodEarthen) - 25), initialValue, 0, 100, "%")
 sliderDrinkValue:SetScript("OnValueChanged", function(self, value)
     value = math.floor(value)
     _G[self:GetName() .. 'Text']:SetText(L["Minimum mana restore for food"] .. ': ' .. value .. "%")

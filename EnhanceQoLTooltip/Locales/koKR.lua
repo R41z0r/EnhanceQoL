@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "koKR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "koKR" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -64,3 +62,10 @@ L["TooltipItemHideInDungeon"] = "던전에서만 숨기기"
 
 L["ItemID"] = "아이템 ID"
 L["TooltipShowItemID"] = "툴팁에 아이템 ID 표시"
+
+L["TooltipShowItemCount"] = "툴팁에 아이템 개수 표시"
+L["TooltipShowSeperateItemCount"] = "위치별로 분리된 아이템 개수 표시"
+L["Reagentbank"] = "재료 은행"
+L["Bank"] = "은행"
+L["Bag"] = "가방"
+L["Itemcount"] = "아이템 개수"

@@ -62,3 +62,10 @@ L["TooltipItemHideInDungeon"] = "Only hide it in dungeons"
 
 L["ItemID"] = "ItemID"
 L["TooltipShowItemID"] = "Show ItemID on Tooltip"
+
+L["TooltipShowItemCount"] = "Show item count on Tooltip"
+L["TooltipShowSeperateItemCount"] = "Show item count separated per location"
+L["Reagentbank"] = "Reagentbank"
+L["Bank"] = "Bank"
+L["Bag"] = "Bag"
+L["Itemcount"] = "Itemcount"

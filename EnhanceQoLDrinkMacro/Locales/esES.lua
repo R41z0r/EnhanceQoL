@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "esMX" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "esMX" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -16,3 +14,4 @@ L["Minimum mana restore for food"] = "Restauración mínima de maná para comida
 L["Ignore bufffood"] = "Ignorar comida \"Bien alimentado\""
 L["Drink Macro"] = "Macro de bebida"
 L[addonName] = "Macro de bebida"
+L["ignoreGemsEarthen"] = "Ignorar gemas de orfebrería para la raza terránea"

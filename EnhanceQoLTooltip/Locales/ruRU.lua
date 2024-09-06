@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "ruRU" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "ruRU" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -66,3 +64,11 @@ L["TooltipItemHideInDungeon"] = "Скрывать только в подземе
 
 L["ItemID"] = "ID предмета"
 L["TooltipShowItemID"] = "Показать ID предмета в подсказке"
+
+L["TooltipShowItemCount"] = "Показать количество предметов в подсказке"
+L["TooltipShowSeperateItemCount"] =
+    "Показать количество предметов по отдельным местам"
+L["Reagentbank"] = "Банк реагентов"
+L["Bank"] = "Банк"
+L["Bag"] = "Сумка"
+L["Itemcount"] = "Количество предметов"

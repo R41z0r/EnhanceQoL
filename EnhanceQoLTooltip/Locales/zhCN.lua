@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "zhCN" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "zhCN" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -66,3 +64,10 @@ L["TooltipItemHideInDungeon"] = "仅在副本中隐藏"
 
 L["ItemID"] = "物品ID"
 L["TooltipShowItemID"] = "在工具提示中显示物品ID"
+
+L["TooltipShowItemCount"] = "在提示框中显示物品数量"
+L["TooltipShowSeperateItemCount"] = "按位置分开显示物品数量"
+L["Reagentbank"] = "材料银行"
+L["Bank"] = "银行"
+L["Bag"] = "背包"
+L["Itemcount"] = "物品数量"

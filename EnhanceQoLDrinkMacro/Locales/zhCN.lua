@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "zhCN" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "zhCN" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -16,3 +14,4 @@ L["Minimum mana restore for food"] = "食物的最低法力恢复"
 L["Ignore bufffood"] = "忽略“吃饱喝足”的食物"
 L["Drink Macro"] = "饮料宏"
 L[addonName] = "饮料宏"
+L["ignoreGemsEarthen"] = "忽略土灵种族的珠宝工艺宝石"

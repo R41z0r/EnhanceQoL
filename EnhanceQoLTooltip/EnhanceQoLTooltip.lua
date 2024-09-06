@@ -14,9 +14,7 @@ local frameLoad = CreateFrame("Frame")
 local function GetNPCIDFromGUID(guid)
     if guid then
         local type, _, _, _, _, npcID = strsplit("-", guid)
-        if type == "Creature" or type == "Vehicle" then
-            return tonumber(npcID)
-        end
+        if type == "Creature" or type == "Vehicle" then return tonumber(npcID) end
     end
     return nil
 end
@@ -28,15 +26,9 @@ local function checkSpell(tooltip, id, name)
             tooltip:AddDoubleLine(name, id)
         end
     end
-    if addon.db["TooltipSpellHideType"] == 1 then
-        return
-    end -- only hide when ON
-    if addon.db["TooltipSpellHideInDungeon"] and select(1, IsInInstance()) == false then
-        return
-    end -- only hide in dungeons
-    if addon.db["TooltipSpellHideInCombat"] and UnitAffectingCombat("player") == false then
-        return
-    end -- only hide in combat
+    if addon.db["TooltipSpellHideType"] == 1 then return end -- only hide when ON
+    if addon.db["TooltipSpellHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
+    if addon.db["TooltipSpellHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
     tooltip:Hide()
 end
 
@@ -75,9 +67,7 @@ local function checkAdditionalTooltip(tooltip)
                 if nil == bestDungeon then
                     bestDungeon = key
                 else
-                    if bestDungeon.mapScore < key.mapScore then
-                        bestDungeon = key
-                    end
+                    if bestDungeon.mapScore < key.mapScore then bestDungeon = key end
                 end
             end
             tooltip:AddLine(" ")
@@ -122,16 +112,24 @@ local function checkUnit(tooltip)
         checkAdditionalTooltip(tooltip)
         return
     end -- hide never
-    if addon.db["TooltipUnitHideType"] == 4 then
-        tooltip:Hide()
-    end -- hide always because we selected BOTH
-    if addon.db["TooltipUnitHideType"] == 2 and UnitCanAttack("player", "mouseover") then
-        tooltip:Hide()
-    end
-    if addon.db["TooltipUnitHideType"] == 3 and UnitCanAttack("player", "mouseover") == false then
-        tooltip:Hide()
-    end
+    if addon.db["TooltipUnitHideType"] == 4 then tooltip:Hide() end -- hide always because we selected BOTH
+    if addon.db["TooltipUnitHideType"] == 2 and UnitCanAttack("player", "mouseover") then tooltip:Hide() end
+    if addon.db["TooltipUnitHideType"] == 3 and UnitCanAttack("player", "mouseover") == false then tooltip:Hide() end
     checkAdditionalTooltip(tooltip)
+end
+
+local function CheckReagentBankCount(itemID)
+    local count = 0
+    if IsReagentBankUnlocked() then
+        for i = 1, C_Container.GetContainerNumSlots(REAGENTBANK_CONTAINER) do
+            local itemInSlot = C_Container.GetContainerItemID(REAGENTBANK_CONTAINER, i)
+            if itemInSlot == itemID then
+                local info = C_Container.GetContainerItemInfo(REAGENTBANK_CONTAINER, i)
+                count = count + info.stackCount
+            end
+        end
+    end
+    return count
 end
 
 local function checkItem(tooltip, id, name)
@@ -141,41 +139,42 @@ local function checkItem(tooltip, id, name)
             tooltip:AddDoubleLine(name, id)
         end
     end
-    if addon.db["TooltipItemHideType"] == 1 then
-        return
-    end -- only hide when ON
-    if addon.db["TooltipItemHideInDungeon"] and select(1, IsInInstance()) == false then
-        return
-    end -- only hide in dungeons
-    if addon.db["TooltipItemHideInCombat"] and UnitAffectingCombat("player") == false then
-        return
-    end -- only hide in combat
+    if addon.db["TooltipShowItemCount"] then
+        if id then
+            local rBankCount = CheckReagentBankCount(id)
+            local bagCount = C_Item.GetItemCount(id)
+            local bankCount = C_Item.GetItemCount(id, true)
+            local totalCount = rBankCount + bankCount
+
+            if addon.db["TooltipShowSeperateItemCount"] then
+                if bagCount > 0 then
+                    bankCount = bankCount - bagCount
+                    tooltip:AddDoubleLine(L["Bag"], bagCount)
+                end
+                if bankCount > 0 then tooltip:AddDoubleLine(L["Bank"], bankCount) end
+                if rBankCount > 0 then tooltip:AddDoubleLine(L["Reagentbank"], rBankCount) end
+            else
+                tooltip:AddDoubleLine(L["Itemcount"], totalCount)
+            end
+        end
+    end
+    if addon.db["TooltipItemHideType"] == 1 then return end -- only hide when ON
+    if addon.db["TooltipItemHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
+    if addon.db["TooltipItemHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
     tooltip:Hide()
 end
 
 local function checkAura(tooltip)
-    if addon.db["TooltipBuffHideType"] == 1 then
-        return
-    end -- only hide when ON
-    if addon.db["TooltipBuffHideInDungeon"] and select(1, IsInInstance()) == false then
-        return
-    end -- only hide in dungeons
-    if addon.db["TooltipBuffHideInCombat"] and UnitAffectingCombat("player") == false then
-        return
-    end -- only hide in combat
+    if addon.db["TooltipBuffHideType"] == 1 then return end -- only hide when ON
+    if addon.db["TooltipBuffHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
+    if addon.db["TooltipBuffHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
     tooltip:Hide()
 end
 
 local function checkDebuff(tooltip)
-    if addon.db["TooltipDebuffHideType"] == 1 then
-        return
-    end -- only hide when ON
-    if addon.db["TooltipDebuffHideInDungeon"] and select(1, IsInInstance()) == false then
-        return
-    end -- only hide in dungeons
-    if addon.db["TooltipDebuffHideInCombat"] and UnitAffectingCombat("player") == false then
-        return
-    end -- only hide in combat
+    if addon.db["TooltipDebuffHideType"] == 1 then return end -- only hide when ON
+    if addon.db["TooltipDebuffHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
+    if addon.db["TooltipDebuffHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
     tooltip:Hide()
 end
 
@@ -225,9 +224,7 @@ end
 
 if TooltipDataProcessor then
     TooltipDataProcessor.AddTooltipPostCall(TooltipDataProcessor.AllTypes, function(tooltip, data)
-        if not data or not data.type then
-            return
-        end
+        if not data or not data.type then return end
         local id, name, _, timeLimit
         local kind = addon.Tooltip.variables.kindsByID[tonumber(data.type)]
         if kind == "spell" then
@@ -257,17 +254,11 @@ end
 local frame = addon.functions.createTabFrame(L["Tooltip"])
 frame.tabs = {}
 frame:SetScript("OnSizeChanged", function(self, width, height)
-    for i, tab in ipairs(frame.tabs) do
-        tab:SetSize(width - 5, height - 35)
-    end
+    for i, tab in ipairs(frame.tabs) do tab:SetSize(width - 5, height - 35) end
 end)
 function frame:ShowTab(id)
-    for _, tabContent in pairs(self.tabs) do
-        tabContent:Hide()
-    end
-    if self.tabs[id] then
-        self.tabs[id]:Show()
-    end
+    for _, tabContent in pairs(self.tabs) do tabContent:Hide() end
+    if self.tabs[id] then self.tabs[id]:Show() end
 end
 
 local tabFrameBuff = addon.Tooltip.functions.createTabFrame(L["Buff"], frame)
@@ -278,13 +269,11 @@ local tabFrameUnit = addon.Tooltip.functions.createTabFrame(L["Unit"], frame)
 
 -- Buffs
 
-local labelBuffHideType = addon.functions.createDropdown("TooltipBuffHideType", tabFrameBuff, {{
-    text = L["TooltipOFF"],
-    value = 1
-}, {
-    text = L["TooltipON"],
-    value = 2
-}}, 150, L["TooltipBuffHideType"], 10, -10, addon.db["TooltipBuffHideType"])
+local labelBuffHideType = addon.functions.createDropdown("TooltipBuffHideType", tabFrameBuff, {{text = L["TooltipOFF"],
+                                                                                                value = 1},
+                                                                                               {text = L["TooltipON"],
+                                                                                                value = 2}}, 150,
+    L["TooltipBuffHideType"], 10, -10, addon.db["TooltipBuffHideType"])
 
 local cbTooltipBuffHideCombat = addon.functions.createCheckbox("TooltipBuffHideInCombat", tabFrameBuff,
     L["TooltipBuffHideInCombat"], 10, (addon.functions.getHeightOffset(labelBuffHideType) - 50))
@@ -294,13 +283,9 @@ local cbTooltipBuffHideDungeon = addon.functions.createCheckbox("TooltipBuffHide
 
 -- Debuffs
 
-local labelDebuffHideType = addon.functions.createDropdown("TooltipDebuffHideType", tabFrameDebuff, {{
-    text = L["TooltipOFF"],
-    value = 1
-}, {
-    text = L["TooltipON"],
-    value = 2
-}}, 150, L["TooltipDebuffHideType"], 10, -10, addon.db["TooltipDebuffHideType"])
+local labelDebuffHideType = addon.functions.createDropdown("TooltipDebuffHideType", tabFrameDebuff,
+    {{text = L["TooltipOFF"], value = 1}, {text = L["TooltipON"], value = 2}}, 150, L["TooltipDebuffHideType"], 10, -10,
+    addon.db["TooltipDebuffHideType"])
 
 local cbTooltipDebuffHideCombat = addon.functions.createCheckbox("TooltipDebuffHideInCombat", tabFrameDebuff,
     L["TooltipDebuffHideInCombat"], 10, (addon.functions.getHeightOffset(labelDebuffHideType) - 50))
@@ -309,19 +294,9 @@ local cbTooltipDebuffHideDungeon = addon.functions.createCheckbox("TooltipDebuff
     L["TooltipDebuffHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipDebuffHideCombat) - 5))
 
 -- Unit
-local labelPullTimerType = addon.functions.createDropdown("TooltipUnitHideType", tabFrameUnit, {{
-    text = L["None"],
-    value = 1
-}, {
-    text = L["Enemies"],
-    value = 2
-}, {
-    text = L["Friendly"],
-    value = 3
-}, {
-    text = L["Both"],
-    value = 4
-}}, 150, L["TooltipUnitHideType"], 10, -10, addon.db["TooltipUnitHideType"])
+local labelPullTimerType = addon.functions.createDropdown("TooltipUnitHideType", tabFrameUnit,
+    {{text = L["None"], value = 1}, {text = L["Enemies"], value = 2}, {text = L["Friendly"], value = 3},
+     {text = L["Both"], value = 4}}, 150, L["TooltipUnitHideType"], 10, -10, addon.db["TooltipUnitHideType"])
 
 local cbTooltipHideCombat = addon.functions.createCheckbox("TooltipUnitHideInCombat", tabFrameUnit,
     L["TooltipUnitHideInCombat"], 10, (addon.functions.getHeightOffset(labelPullTimerType) - 50))
@@ -340,13 +315,9 @@ local cbTooltipShowNPCID = addon.functions.createCheckbox("TooltipShowNPCID", ta
 
 -- Spells
 
-local labelSpellHideType = addon.functions.createDropdown("TooltipSpellHideType", tabFrameSpell, {{
-    text = L["TooltipOFF"],
-    value = 1
-}, {
-    text = L["TooltipON"],
-    value = 2
-}}, 150, L["TooltipSpellHideType"], 10, -10, addon.db["TooltipSpellHideType"])
+local labelSpellHideType = addon.functions.createDropdown("TooltipSpellHideType", tabFrameSpell,
+    {{text = L["TooltipOFF"], value = 1}, {text = L["TooltipON"], value = 2}}, 150, L["TooltipSpellHideType"], 10, -10,
+    addon.db["TooltipSpellHideType"])
 
 local cbTooltipSpellHideCombat = addon.functions.createCheckbox("TooltipSpellHideInCombat", tabFrameSpell,
     L["TooltipSpellHideInCombat"], 10, (addon.functions.getHeightOffset(labelSpellHideType) - 50))
@@ -358,13 +329,11 @@ local cbTooltipSpellShowID = addon.functions.createCheckbox("TooltipShowSpellID"
     L["TooltipShowSpellID"], 10, (addon.functions.getHeightOffset(cbTooltipSpellHideDungeon) - 5))
 
 -- Items
-local labelItemHideType = addon.functions.createDropdown("TooltipItemHideType", tabFrameItem, {{
-    text = L["TooltipOFF"],
-    value = 1
-}, {
-    text = L["TooltipON"],
-    value = 2
-}}, 150, L["TooltipItemHideType"], 10, -10, addon.db["TooltipItemHideType"])
+local labelItemHideType = addon.functions.createDropdown("TooltipItemHideType", tabFrameItem, {{text = L["TooltipOFF"],
+                                                                                                value = 1},
+                                                                                               {text = L["TooltipON"],
+                                                                                                value = 2}}, 150,
+    L["TooltipItemHideType"], 10, -10, addon.db["TooltipItemHideType"])
 
 local cbTooltipItemHideCombat = addon.functions.createCheckbox("TooltipItemHideInCombat", tabFrameItem,
     L["TooltipItemHideInCombat"], 10, (addon.functions.getHeightOffset(labelItemHideType) - 50))
@@ -374,3 +343,10 @@ local cbTooltipItemHideDungeon = addon.functions.createCheckbox("TooltipItemHide
 
 local cbTooltipItemShowID = addon.functions.createCheckbox("TooltipShowItemID", tabFrameItem, L["TooltipShowItemID"],
     10, (addon.functions.getHeightOffset(cbTooltipItemHideDungeon) - 5))
+
+local cbTooltipShowItemCount = addon.functions.createCheckbox("TooltipShowItemCount", tabFrameItem,
+    L["TooltipShowItemCount"], 10, (addon.functions.getHeightOffset(cbTooltipItemShowID) - 5))
+
+local cbTooltipShowSeperateItemCount = addon.functions.createCheckbox("TooltipShowSeperateItemCount", tabFrameItem,
+    L["TooltipShowSeperateItemCount"], 10, (addon.functions.getHeightOffset(cbTooltipShowItemCount) - 5))
+
