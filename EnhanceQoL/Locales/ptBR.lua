@@ -31,6 +31,8 @@ L["Dungeon"] = "Masmorra"
 L["Misc"] = "Diversos"
 L["Quest"] = "Missão"
 
+L["hideBagsBar"] = "Ocultar barra de sacolas"
+
 -- Dungeon
 L["autoChooseDelvePower"] = "Selecionar automaticamente o poder de\nincursão quando houver apenas 1 opção"
 

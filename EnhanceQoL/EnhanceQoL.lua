@@ -397,8 +397,15 @@ local function addMiscFrame(tab)
     local cbDeleteItemFill = addon.functions.createCheckbox("deleteItemFillDialog", fMisc, L["deleteItemFillDialog"],
         10, (addon.functions.getHeightOffset(cbSellAllJunk)))
 
-    local cbMinimapHide = addon.functions.createCheckbox("hideMinimapButton", fMisc, L["Hide Minimap Button"], 10,
+    local cbHideBagBar = addon.functions.createCheckbox("hideBagsBar", fMisc, L["hideBagsBar"], 10,
         (addon.functions.getHeightOffset(cbDeleteItemFill)))
+    cbHideBagBar:SetScript("OnClick", function(self)
+        addon.db["hideBagsBar"] = self:GetChecked()
+        addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
+    end)
+
+    local cbMinimapHide = addon.functions.createCheckbox("hideMinimapButton", fMisc, L["Hide Minimap Button"], 10,
+        (addon.functions.getHeightOffset(cbHideBagBar)))
     cbMinimapHide:SetScript("OnClick", function(self)
         addon.db["hideMinimapButton"] = self:GetChecked()
         addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
@@ -554,6 +561,14 @@ function loadMain()
             LDBIcon:Hide(addonName)
         end
     end
+    function addon.functions.toggleBagsBar(value)
+        if value == false then
+            BagsBar:Show()
+        else
+            BagsBar:Hide()
+        end
+    end
+    addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
 
     local eventFrame = CreateFrame("Frame")
     eventFrame:SetScript("OnUpdate", function(self)

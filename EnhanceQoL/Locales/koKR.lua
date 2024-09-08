@@ -30,6 +30,8 @@ L["Dungeon"] = "던전"
 L["Misc"] = "기타"
 L["Quest"] = "퀘스트"
 
+L["hideBagsBar"] = "가방 바 숨기기"
+
 -- Dungeon
 L["autoChooseDelvePower"] = "옵션이 1개만 있을 때 델브 파워 자동 선택"
 

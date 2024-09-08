@@ -31,6 +31,8 @@ L["Dungeon"] = "Spedizione"
 L["Misc"] = "Varie"
 L["Quest"] = "Missione"
 
+L["hideBagsBar"] = "Nascondi la barra delle borse"
+
 -- Dungeon
 L["autoChooseDelvePower"] = "Seleziona automaticamente il potere di\nimmersione quando c'è solo 1 opzione"
 

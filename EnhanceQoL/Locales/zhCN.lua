@@ -30,6 +30,8 @@ L["Dungeon"] = "地下城"
 L["Misc"] = "杂项"
 L["Quest"] = "任务"
 
+L["hideBagsBar"] = "隐藏背包栏"
+
 -- Dungeon
 L["autoChooseDelvePower"] = "仅有一个选项时自动选择探险力量"
 

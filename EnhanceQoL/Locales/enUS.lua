@@ -28,6 +28,8 @@ L["Dungeon"] = "Dungeon"
 L["Misc"] = "Misc."
 L["Quest"] = "Quest"
 
+L["hideBagsBar"] = "Hide Bagsbar"
+
 -- Dungeon
 L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option"
 

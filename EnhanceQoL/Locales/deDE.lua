@@ -31,6 +31,8 @@ L["Dungeon"] = "Dungeon"
 L["Misc"] = "Sonstiges"
 L["Quest"] = "Quest"
 
+L["hideBagsBar"] = "Taschenleiste ausblenden"
+
 -- Dungeon
 L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen,\nwenn nur 1 Option verfügbar ist"
 
