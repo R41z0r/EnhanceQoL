@@ -30,7 +30,7 @@ addon.variables.itemSlots = {
     [17] = CharacterSecondaryHandSlot
 }
 
-addon.variables.itemSlotSide = { -- 0 = left, 1 = right, 2 = bottom (Weapons)
+addon.variables.itemSlotSide = { -- 0 = Text to right side, 1 = Text to left side
     [1] = 0,
     [2] = 0,
     [3] = 0,
@@ -45,8 +45,8 @@ addon.variables.itemSlotSide = { -- 0 = left, 1 = right, 2 = bottom (Weapons)
     [12] = 1,
     [13] = 1,
     [14] = 1,
-    [16] = 2,
-    [17] = 2
+    [16] = 1,
+    [17] = 0
 }
 
 addon.variables.allowedSockets = {

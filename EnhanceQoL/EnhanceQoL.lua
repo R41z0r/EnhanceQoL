@@ -244,8 +244,6 @@ local function addCharacterFrame(tab)
         value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
         if addon.variables.itemSlotSide[key] == 0 then
             value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, 1)
-        elseif addon.variables.itemSlotSide[key] == 1 then
-            value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
         else
             value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
         end
@@ -725,6 +723,8 @@ local function eventHandler(self, event, arg1, arg2)
         --         end)
         --     btn:ClearAllPoints()
         --     btn:SetPoint("TOPRIGHT", ProfessionsCustomerOrdersFrame.Form.ReagentContainer, "TOPRIGHT", -5, -5)
+    elseif event == "MAIL_INBOX_UPDATE" and not IsShiftKeyDown() then
+        if OpenAllMail then OpenAllMail:Click() end
     end
 end
 
@@ -744,6 +744,8 @@ frameLoad:RegisterEvent("QUEST_COMPLETE")
 frameLoad:RegisterEvent("QUEST_PROGRESS")
 frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
 frameLoad:RegisterEvent("LOOT_READY")
+
+frameLoad:RegisterEvent("MAIL_INBOX_UPDATE")
 
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 -- frameLoad:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER") -- for Shoppinglist
