@@ -10,156 +10,50 @@ end
 local L = addon.LMythicPlus
 
 -- Addition für Potion Cooldown tracker
-local allowedSpells = {
-    -- Tinker Engineering
-    [55004] = {
-        duration = 60,
-        isInvis = false,
-        text = L["Tinker"]
-    }, -- Nitro boost - Shares CD with combat potions but only 60s
-    -- [255974] = 300, --Personal Space Amplifier - Shares CD with combat potions but only 60s --Wurde wohl rausgepatcht
+local allowedSpells = { -- Tinker Engineering
+[55004] = {duration = 60, isInvis = false, text = L["Tinker"]}, -- Nitro boost - Shares CD with combat potions but only 60s
+-- [255974] = 300, --Personal Space Amplifier - Shares CD with combat potions but only 60s --Wurde wohl rausgepatcht
 
-    -- Dragonflight
-    [371028] = {
-        duration = 300,
-        isInvis = false
-    }, -- Elemental potion of ultimate power
-    [371134] = {
-        duration = 300,
-        isInvis = true
-    }, -- Potion of the Hushed Zephyr
-    [371024] = {
-        duration = 300,
-        isInvis = false
-    }, -- Elemental potion of power
-    [371622] = {
-        duration = 300,
-        isInvis = false
-    }, -- Residual Neural Channeling Agent
-    [372046] = {
-        duration = 300,
-        isInvis = false
-    }, -- Bottled Putrescence
-    [371055] = {
-        duration = 300,
-        isInvis = false
-    }, -- Delicate Suspension of Spores
-    [371152] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion of Chilled Clarity
-    -- [371653] = 120, -- Potion of Frozen Fatality (Feign death out of combat)
-    [371033] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion of chilled focus
-    [371167] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion of Gusts
-    [370816] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion of Shocking disclosure
-    [423414] = {
-        duration = 300,
-        isHealpot = true
-    }, -- Potion of Withering Dreams
-    [370607] = {
-        duration = 300
-    }, -- Aerated Mana Potion - Count as Combatpotion
-    [415569] = {
-        duration = 300,
-        isHealpot = true
-    }, -- Dreamwalker's Healing Potion
-    [370511] = {
-        duration = 300,
-        isHealpot = true
-    }, -- Refreshing Healing Potion
-
-    -- Battle for Azeroth
-    [279153] = {
-        duration = 300,
-        isInvis = false
-    }, -- Battle Potion of Strength
-    [279154] = {
-        duration = 300,
-        isInvis = false
-    }, -- Battle Potion of Stamina
-    [279151] = {
-        duration = 300,
-        isInvis = false
-    }, -- Battle Potion of Int
-    [279152] = {
-        duration = 300,
-        isInvis = false
-    }, -- Battle Potion of Agi
-
-    -- The War Within
-    [431932] = {
-        duration = 300,
-        isInvis = false
-    }, -- Tempered Potion
-    [431422] = {
-        duration = 300,
-        isInvis = false
-    }, -- Slumbering Soul Serum
-    [431941] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion of the Reborn Cheetah
-    [431432] = {
-        duration = 300,
-        isInvis = false
-    }, -- Draugth of Shocking Revelations
-    [431925] = {
-        duration = 300,
-        isInvis = false
-    }, -- Frontline Potion
-    [453040] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion Bomb of Speed
-    [453162] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion Bomb of Recobery
-    [453205] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion Bomb of Power
-    [431914] = {
-        duration = 300,
-        isInvis = false
-    }, -- Potion of Unwavering Focus
-    [431424] = {
-        duration = 600,
-        isInvis = true
-    }, -- Potion of Silent Footfalls
-    [431419] = {
-        duration = 600,
-        isInvis = false
-    }, -- Cavedweller's Delight Heal/Mana Pot counts as combat, -- Potion of Silent Footfalls
-    [431418] = {
-        duration = 600,
-        isInvis = false
-    }, -- Algari Mana Potion
-    [431416] = {
-        duration = 600,
-        isInvis = false,
-        isHealpot = true
-    }, -- Algari Healing Potion
-    [460074] = {
-        duration = 600,
-        isInvis = false,
-        isHealpot = true
-    } -- Grotesque Vial
-
-    -- [279153] = 300, --
-    -- [279153] = 300, --
-    -- [279153] = 300, --
-
-    -- [279153] = 300, --
+-- Dragonflight
+[371028] = {duration = 300, isInvis = false}, -- Elemental potion of ultimate power
+[371134] = {duration = 300, isInvis = true}, -- Potion of the Hushed Zephyr
+[371024] = {duration = 300, isInvis = false}, -- Elemental potion of power
+[371622] = {duration = 300, isInvis = false}, -- Residual Neural Channeling Agent
+[372046] = {duration = 300, isInvis = false}, -- Bottled Putrescence
+[371055] = {duration = 300, isInvis = false}, -- Delicate Suspension of Spores
+[371152] = {duration = 300, isInvis = false}, -- Potion of Chilled Clarity
+-- [371653] = 120, -- Potion of Frozen Fatality (Feign death out of combat)
+[371033] = {duration = 300, isInvis = false}, -- Potion of chilled focus
+[371167] = {duration = 300, isInvis = false}, -- Potion of Gusts
+[370816] = {duration = 300, isInvis = false}, -- Potion of Shocking disclosure
+[423414] = {duration = 300, isHealpot = true}, -- Potion of Withering Dreams
+[370607] = {duration = 300}, -- Aerated Mana Potion - Count as Combatpotion
+[415569] = {duration = 300, isHealpot = true}, -- Dreamwalker's Healing Potion
+[370511] = {duration = 300, isHealpot = true}, -- Refreshing Healing Potion
+-- Battle for Azeroth
+[279153] = {duration = 300, isInvis = false}, -- Battle Potion of Strength
+[279154] = {duration = 300, isInvis = false}, -- Battle Potion of Stamina
+[279151] = {duration = 300, isInvis = false}, -- Battle Potion of Int
+[279152] = {duration = 300, isInvis = false}, -- Battle Potion of Agi
+-- The War Within
+[431932] = {duration = 300, isInvis = false}, -- Tempered Potion
+[431422] = {duration = 300, isInvis = false}, -- Slumbering Soul Serum
+[431941] = {duration = 300, isInvis = false}, -- Potion of the Reborn Cheetah
+[431432] = {duration = 300, isInvis = false}, -- Draugth of Shocking Revelations
+[431925] = {duration = 300, isInvis = false}, -- Frontline Potion
+[453040] = {duration = 300, isInvis = false}, -- Potion Bomb of Speed
+[453162] = {duration = 300, isInvis = false}, -- Potion Bomb of Recobery
+[453205] = {duration = 300, isInvis = false}, -- Potion Bomb of Power
+[431914] = {duration = 300, isInvis = false}, -- Potion of Unwavering Focus
+[431424] = {duration = 600, isInvis = true}, -- Draught of Silent Footfalls
+[431419] = {duration = 300, isInvis = false}, -- Cavedweller's Delight Heal/Mana Pot counts as combat, -- Potion of Silent Footfalls
+[431418] = {duration = 300, isInvis = false}, -- Algari Mana Potion
+[431416] = {duration = 300, isInvis = false, isHealpot = true}, -- Algari Healing Potion
+[460074] = {duration = 300, isInvis = false, isHealpot = true} -- Grotesque Vial
+-- [279153] = 300, --
+-- [279153] = 300, --
+-- [279153] = 300, --
+-- [279153] = 300, --
 }
 local activeBars = {}
 local frameAnchor = CreateFrame("StatusBar", nil, UIParent)
@@ -167,9 +61,7 @@ addon.MythicPlus.anchorFrame = frameAnchor
 
 function addon.MythicPlus.functions.resetCooldownBars()
     -- Entferne alle aktiven Cooldown-Balken
-    for i, bar in ipairs(activeBars) do
-        bar:Hide()
-    end
+    for i, bar in ipairs(activeBars) do bar:Hide() end
     activeBars = {}
 end
 
@@ -177,9 +69,7 @@ function addon.MythicPlus.functions.updateBars()
     local yOffset = 0
     local newActiveBars = {}
 
-    table.sort(activeBars, function(a, b)
-        return a:GetValue() < b:GetValue()
-    end)
+    table.sort(activeBars, function(a, b) return a:GetValue() < b:GetValue() end)
 
     for _, bar in ipairs(activeBars) do
         if ((UnitInRaid(bar.unit) and UnitGUID(bar.unit) == bar.guid) or
@@ -207,23 +97,15 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
     local potInfo = allowedSpells[spellID]
     local duration = potInfo.duration
 
-    if string.len(playerName) > 6 then
-        playerName = string.sub(playerName, 1, 6)
-    end
+    if string.len(playerName) > 6 then playerName = string.sub(playerName, 1, 6) end
 
     local textLeft = playerName
-    if potInfo.isInvis then
-        textLeft = textLeft .. " - " .. L["InvisPotion"]
-    end
+    if potInfo.isInvis then textLeft = textLeft .. " - " .. L["InvisPotion"] end
     if potInfo.isHealpot then
-        if addon.db["potionTrackerHealingPotions"] == false then
-            return
-        end
+        if addon.db["potionTrackerHealingPotions"] == false then return end
         textLeft = textLeft .. " - " .. L["HealingPotion"]
     end
-    if potInfo.text then
-        textLeft = textLeft .. " - " .. potInfo.text
-    end
+    if potInfo.text then textLeft = textLeft .. " - " .. potInfo.text end
 
     local frame = CreateFrame("StatusBar", nil, UIParent, "BackdropTemplate")
     frame:SetSize(anchorFrame:GetWidth() - addon.db["CooldownTrackerBarHeight"], addon.db["CooldownTrackerBarHeight"]) -- Größe des Balkens
@@ -232,17 +114,9 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
     frame:SetValue(duration)
     frame:SetPoint("TOPLEFT", anchorFrame, "TOPLEFT", 0, 0)
     -- Hintergrund (leicht schwarzer Rahmen)
-    frame:SetBackdrop({
-        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        edgeSize = 3,
-        insets = {
-            left = 0,
-            right = 0,
-            top = 0,
-            bottom = 0
-        }
-    })
+    frame:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+                       edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 3,
+                       insets = {left = 0, right = 0, top = 0, bottom = 0}})
     if addon.db["potionTrackerClassColor"] then
         local rPerc, gPerc, bPerc = GetClassColor(select(2, UnitClass(unit)))
         frame:SetStatusBarColor(rPerc, gPerc, bPerc)
@@ -281,9 +155,7 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
             GameTooltip:SetSpellByID(spellID) -- SpellID verwenden, um Tooltip anzuzeigen
             GameTooltip:Show()
         end)
-        frame.icon:SetScript("OnLeave", function(self)
-            GameTooltip:Hide()
-        end)
+        frame.icon:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
     end
 
     -- Speichere das unit, um später überprüfen zu können, ob die Einheit noch existiert
@@ -353,9 +225,7 @@ local function RestorePosition()
 end
 
 -- Frame wiederherstellen und überprüfen, wenn das Addon geladen wird
-frameAnchor:SetScript("OnShow", function()
-    RestorePosition()
-end)
+frameAnchor:SetScript("OnShow", function() RestorePosition() end)
 RestorePosition()
 
 frameAnchor:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
@@ -400,7 +270,8 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
                 createBar(arg1, arg3)
                 return
             end
-        elseif event == "CHALLENGE_MODE_RESET" or (event == "ENCOUNTER_END" and addon.MythicPlus.variables.resetCooldownEncounterDifficult[arg3]) then
+        elseif event == "CHALLENGE_MODE_RESET" or
+            (event == "ENCOUNTER_END" and addon.MythicPlus.variables.resetCooldownEncounterDifficult[arg3]) then
             addon.MythicPlus.functions.resetCooldownBars()
         elseif event == "GROUP_ROSTER_UPDATE" then
             addon.MythicPlus.functions.updateBars()
