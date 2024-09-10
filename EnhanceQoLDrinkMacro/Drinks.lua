@@ -460,6 +460,13 @@ addon.Drinks.drinkList = { -- Special Food
 {key = "ChalcociteLavaCake", id = 227326, requiredLevel = 75, mana = 3700000, isBuffFood = false},
 {key = "StoneSoup", id = 227325, requiredLevel = 75, mana = 3700000, isBuffFood = false},
 {key = "RockyRoad", id = 227327, requiredLevel = 75, mana = 3700000, isBuffFood = false},
+{ key = "TarragonSoda", id = 227315, requiredLevel = 70, mana = 1100000, isBuffFood = false },
+{ key = "Eggnog", id = 227316, requiredLevel = 70, mana = 1100000, isBuffFood = false },
+{ key = "Nerub'arNectar", id = 227324, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+{ key = "MushroomTea", id = 227323, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+{ key = "MoleMole", id = 227334, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+{ key = "BorerBloodPudding", id = 227335, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+{ key = "SugarSlurry", id = 227336, requiredLevel = 75, mana = 3700000, isBuffFood = false },
 
 -- Earthen food
 { key = "DeadlyAmber", id = 213503, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
