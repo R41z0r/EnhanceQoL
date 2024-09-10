@@ -80,7 +80,12 @@ local function checkItem()
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
             containerInfo = C_Container.GetContainerItemInfo(bag, slot)
             if containerInfo then
-                if addon.db["vendorExcludeSellList"][containerInfo.itemID] then -- ignore everything and exclude in sell
+                -- check if cosmetic
+                local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(containerInfo.itemID)
+
+                if classID == 4 and subclassID == 5 and not C_TransmogCollection.PlayerHasTransmog(containerInfo.itemID) then
+                    -- Transmog not used don't sell
+                elseif addon.db["vendorExcludeSellList"][containerInfo.itemID] then -- ignore everything and exclude in sell
                     -- do nothing
                 elseif addon.db["vendorIncludeSellList"][containerInfo.itemID] then -- ignore everything and include in sell
                     local itemName, itemLink, _, itemLevel, _, _, _, _, _, _, sellPrice, classID, subclassID, bindType,
