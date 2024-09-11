@@ -22,10 +22,10 @@ function addon.functions.newItem(id, name, isSpell)
         if itemInfoName ~= nil then self.name = itemInfoName end
     end
 
-    function self.getId() 
+    function self.getId()
         if self.isSpell then return C_Spell.GetSpellName(self.id) end
         return "item:" .. self.id
-     end
+    end
 
     function self.getName() return self.name end
 
