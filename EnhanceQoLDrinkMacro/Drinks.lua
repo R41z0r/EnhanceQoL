@@ -535,7 +535,9 @@ addon.Drinks.drinkList = { -- Special Food
 
 { key = "CrunchyRockCandy", id = 228494, requiredLevel = 1, mana = 3700000, isBuffFood = false, isEarthenFood = true, earthenOnly = true}, -- Tooltip is wrong on this with "Buff Food"
 { key = "SpicyRubies", id = 228492, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true},
-{ key = "SourTopazBites", id = 228493, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true }
+{ key = "SourTopazBites", id = 228493, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true },
+-- Mana of this spell is adjusted per level
+{ key = "QuietContemplation", id = 461063, requiredLevel = 1, mana = 3700000, isBuffFood = false, isEarthenFood = true, earthenOnly = true, isSpell = true }
 }
 
 table.sort(addon.Drinks.drinkList, function(a, b) return a.mana > b.mana end)
@@ -562,11 +564,13 @@ function addon.functions.updateAllowedDrinks()
                 -- ignore only earthen food when not earthen
             elseif drink.earthenOnly and drink.isGem and addon.db["ignoreGemsEarthen"] then
                 -- ignore gems from jewelcrafting for earthen
+            elseif drink.isSpell and not IsSpellKnown(drink.id) then
+                -- skip - Spell not known
             else
                 if drink.isMageFood and nil ~= addon.db["preferMageFood"] and addon.db["preferMageFood"] == true then
-                    table.insert(addon.Drinks.filteredDrinks, 1, addon.functions.newItem(drink.id, drink.desc))
+                    table.insert(addon.Drinks.filteredDrinks, 1, addon.functions.newItem(drink.id, drink.desc, drink.isSpell))
                 else
-                    table.insert(addon.Drinks.filteredDrinks, addon.functions.newItem(drink.id, drink.desc))
+                    table.insert(addon.Drinks.filteredDrinks, addon.functions.newItem(drink.id, drink.desc, drink.isSpell))
                 end
             end
         end

@@ -20,7 +20,7 @@ local function buildMacroString(item)
     if item == nil then
         return "#showtooltip"
     else
-        return "#showtooltip \n/castsequence reset=" .. resetType .. " " .. "item:" .. item
+        return "#showtooltip \n/castsequence reset=" .. resetType .. " " .. item
     end
 end
 
