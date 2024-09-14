@@ -43,6 +43,7 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"InspectFrame",
 	"BagsBar",
 	"TotemFrame",
 	"EssencePlayerFrame",
