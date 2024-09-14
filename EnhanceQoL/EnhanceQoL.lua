@@ -71,14 +71,43 @@ local function CheckItemGems(element, itemLink, emptySocketsCount, key, pdElemen
         end
     end
 end
-local function onInspect()
+
+local function GetUnitFromGUID(targetGUID)
+    if IsInGroup() then
+        for i = 1, 4 do
+            local unit = "party" .. i
+            if UnitGUID(unit) == targetGUID then
+                return unit -- Gibt "partyN" zurück
+            end
+        end
+    end
+
+    if IsInRaid() then
+        for i = 1, 40 do
+            local unit = "raid" .. i
+            if UnitGUID(unit) == targetGUID then
+                return unit -- Gibt "raidN" zurück
+            end
+        end
+    end
+
+    return nil
+end
+
+local function onInspect(arg1)
+    if nil == InspectFrame or not InspectFrame:IsShown() then return end
+    local unit
+    if not unit and UnitGUID("target") == arg1 then unit = "target" end
+    if not unit then unit = GetUnitFromGUID(arg1) end
+    if not unit then return end
+
     local pdElement = InspectFrame
     if not doneHook then
         doneHook = true
         InspectFrame:HookScript("OnHide", function(self) inspectDone = {} end)
     end
-    if inspectUnit ~= UnitGUID("target") then
-        inspectUnit = UnitGUID("player")
+    if inspectUnit ~= UnitGUID(unit) then
+        inspectUnit = UnitGUID(unit)
         inspectDone = {}
     end
     if not addon.db["showIlvlOnCharframe"] and pdElement.ilvl then pdElement.ilvl:SetText("") end
@@ -108,17 +137,10 @@ local function onInspect()
     local ilvlSum = 0
     for key, element in pairs(itemSlotsInspectList) do
         if nil == inspectDone[key] then
-            -- if element.gems then
-            --     for i = 1, #element.gems do
-            --         element.gems[i]:UnregisterAllEvents()
-            --         element.gems[i]:SetScript("OnUpdate", nil)
-            --         element.gems[i]:Hide()
-            --     end
-            -- end
             if element.ilvl then element.ilvl:SetFormattedText("") end
             if element.ilvlBackground then element.ilvlBackground:Hide() end
             if element.enchant then element.enchant:SetText("") end
-            local itemLink = GetInventoryItemLink("target", key)
+            local itemLink = GetInventoryItemLink(unit, key)
             if itemLink then
                 local eItem = Item:CreateFromItemLink(itemLink)
                 if eItem and not eItem:IsItemEmpty() then
@@ -170,17 +192,6 @@ local function onInspect()
                                     element.gems[i]:Show()
                                 end
                                 CheckItemGems(element, itemLink, emptySocketsCount, key, pdElement)
-
-                                -- local gemName, gemLink = C_Item.GetItemGem(itemLink, i)
-
-                                -- if gemName then
-                                --     local icon = GetItemIcon(gemLink)
-                                --     element.gems[i].icon:SetTexture(icon)
-                                --     emptySocketsCount = emptySocketsCount - 1
-                                -- else
-                                --     element.gems[i].icon:SetTexture(
-                                --         "Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic") -- Setze die erhaltene Textur
-                                -- end
                             else
                                 if element.gems then
                                     for i = 1, #element.gems do
@@ -454,21 +465,21 @@ local function addCharacterFrame(tab)
     cbShowIlvlCharframe:SetScript("OnClick", function(self)
         addon.db["showIlvlOnCharframe"] = self:GetChecked()
         setCharFrame()
-        if InspectFrame and InspectFrame:IsShown() then onInspect() end
+        -- if InspectFrame and InspectFrame:IsShown() then onInspect() end
     end)
     local cbShowGemsCharframe = addon.functions.createCheckbox("showGemsOnCharframe", fCharacter,
         L["showGemsOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)) - 10)
     cbShowGemsCharframe:SetScript("OnClick", function(self)
         addon.db["showGemsOnCharframe"] = self:GetChecked()
         setCharFrame()
-        if InspectFrame and InspectFrame:IsShown() then onInspect() end
+        -- if InspectFrame and InspectFrame:IsShown() then onInspect() end
     end)
     local cbShowEnchantCharframe = addon.functions.createCheckbox("showEnchantOnCharframe", fCharacter,
         L["showEnchantOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowGemsCharframe)) - 10)
     cbShowEnchantCharframe:SetScript("OnClick", function(self)
         addon.db["showEnchantOnCharframe"] = self:GetChecked()
         setCharFrame()
-        if InspectFrame and InspectFrame:IsShown() then onInspect() end
+        -- if InspectFrame and InspectFrame:IsShown() then onInspect() end
     end)
 
     for key, value in pairs(addon.variables.itemSlots) do
@@ -963,10 +974,10 @@ local function eventHandler(self, event, arg1, arg2)
             C_PlayerChoice.SendPlayerChoiceResponse(choiceInfo.options[1].buttons[1].id)
             if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
         end
-    elseif event == "INSPECT_READY" and arg1 == UnitGUID("target") then
+    elseif event == "INSPECT_READY" then
         -- Einbauen einer Prüfung, ob ich den Character schon angeschaut habe, löschen der Liste nach InspectFRAME close
         -- Aktuell kommt es vor, dass die Grafik von Sockeln fehlt
-        onInspect()
+        onInspect(arg1)
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
         -- elseif event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
