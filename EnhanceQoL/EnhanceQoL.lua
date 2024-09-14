@@ -47,6 +47,181 @@ function EQOL.PersistSignUpNote()
     end
 end
 
+local function onInspect()
+
+    local pdElement = InspectFrame
+
+    if not addon.db["showIlvlOnCharframe"] and pdElement.ilvl then pdElement.ilvl:SetText("") end
+    if not pdElement.ilvl and addon.db["showIlvlOnCharframe"] then
+        pdElement.ilvlBackground = pdElement:CreateTexture(nil, "BACKGROUND")
+        pdElement.ilvlBackground:SetColorTexture(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 80% Transparenz
+        pdElement.ilvlBackground:SetPoint("TOPRIGHT", pdElement, "TOPRIGHT", -2, -28)
+        pdElement.ilvlBackground:SetSize(20, 16) -- Größe des Hintergrunds (muss ggf. angepasst werden)
+
+        pdElement.ilvl = pdElement:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+        pdElement.ilvl:SetPoint("TOPRIGHT", pdElement.ilvlBackground, "TOPRIGHT", -1, -1) -- Position des Textes im Zentrum des Hintergrunds
+        pdElement.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+
+        pdElement.ilvl:SetFormattedText("")
+        pdElement.ilvl:SetTextColor(1, 1, 1, 1)
+
+        local textWidth = pdElement.ilvl:GetStringWidth()
+        pdElement.ilvlBackground:SetSize(textWidth + 6, pdElement.ilvl:GetStringHeight() + 4) -- Mehr Padding für bessere Lesbarkeit
+    end
+    local itemSlotsInspectList = {[1] = InspectHeadSlot, [2] = InspectNeckSlot, [3] = InspectShoulderSlot,
+                                  [15] = InspectBackSlot, [5] = InspectChestSlot, [9] = InspectWristSlot,
+                                  [10] = InspectHandsSlot, [6] = InspectWaistSlot, [7] = InspectLegsSlot,
+                                  [8] = InspectFeetSlot, [11] = InspectFinger0Slot, [12] = InspectFinger1Slot,
+                                  [13] = InspectTrinket0Slot, [14] = InspectTrinket1Slot, [16] = InspectMainHandSlot,
+                                  [17] = InspectSecondaryHandSlot}
+    local itemCount = 0
+    local ilvlSum = 0
+    for key, element in pairs(itemSlotsInspectList) do
+        if element.gems then
+            for i = 1, #element.gems do
+                element.gems[i]:UnregisterAllEvents()
+                element.gems[i]:SetScript("OnUpdate", nil)
+                element.gems[i]:Hide()
+            end
+        end
+        if element.ilvl then element.ilvl:SetFormattedText("") end
+        if element.ilvlBackground then element.ilvlBackground:Hide() end
+        if element.enchant then element.enchant:SetText("") end
+        local itemLink = GetInventoryItemLink("target", key)
+        if itemLink then
+            local eItem = Item:CreateFromItemLink(itemLink)
+            if eItem and not eItem:IsItemEmpty() then
+                eItem:ContinueOnItemLoad(function()
+                    if addon.db["showGemsOnCharframe"] then
+                        local hasSockets = false
+                        local emptySocketsCount = 0
+                        local itemStats = C_Item.GetItemStats(itemLink)
+                        for statName, statValue in pairs(itemStats) do
+                            if (statName:find("EMPTY_SOCKET") or statName:find("empty_socket")) and
+                                addon.variables.allowedSockets[statName] then
+                                hasSockets = true
+                                emptySocketsCount = emptySocketsCount + statValue
+                            end
+                        end
+
+                        if hasSockets then
+                            element.gems = {}
+                            for i = 1, emptySocketsCount do
+                                element.gems[i] = CreateFrame("Frame", nil, pdElement)
+                                element.gems[i]:SetSize(16, 16) -- Setze die Größe des Icons
+
+                                if addon.variables.itemSlotSide[key] == 0 then
+                                    element.gems[i]:SetPoint("TOPLEFT", element, "TOPRIGHT", 5 + (i - 1) * 16, -1) -- Verschiebe jedes Icon um 20px
+                                elseif addon.variables.itemSlotSide[key] == 1 then
+                                    element.gems[i]:SetPoint("TOPRIGHT", element, "TOPLEFT", -5 - (i - 1) * 16, -1)
+                                else
+                                    element.gems[i]:SetPoint("BOTTOM", element, "TOPLEFT", -1, 5 + (i - 1) * 16)
+                                end
+
+                                element.gems[i]:SetFrameStrata("DIALOG")
+
+                                element.gems[i].icon = element.gems[i]:CreateTexture(nil, "OVERLAY")
+                                element.gems[i].icon:SetAllPoints(element.gems[i])
+                                element.gems[i].icon:SetTexture(
+                                    "Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic") -- Setze die erhaltene Textur
+
+                                element.gems[i]:Show()
+                                local gemName, gemLink = C_Item.GetItemGem(itemLink, i)
+                                print(gemName, gemLink, itemLink)
+                                if gemName then
+                                    local icon = GetItemIcon(gemLink)
+                                    element.gems[i].icon:SetTexture(icon)
+                                    emptySocketsCount = emptySocketsCount - 1
+                                end
+                            end
+                        end
+                    end
+
+                    if addon.db["showIlvlOnCharframe"] then
+                        itemCount = itemCount + 1
+                        if not element.ilvlBackground then
+                            element.ilvlBackground = element:CreateTexture(nil, "BACKGROUND")
+                            element.ilvlBackground:SetColorTexture(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 80% Transparenz
+                            element.ilvlBackground:SetPoint("TOPRIGHT", element, "TOPRIGHT", 1, 1)
+                            element.ilvlBackground:SetSize(30, 16) -- Größe des Hintergrunds (muss ggf. angepasst werden)
+
+                            -- Text für das Item-Level
+                            element.ilvl = element:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+                            element.ilvl:SetPoint("TOPRIGHT", element.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
+                            element.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+                        end
+
+                        local color = eItem:GetItemQualityColor()
+                        local itemLevelText = eItem:GetCurrentItemLevel()
+                        ilvlSum = ilvlSum + itemLevelText
+                        element.ilvl:SetFormattedText(itemLevelText)
+                        element.ilvl:SetTextColor(color.r, color.g, color.b, 1)
+
+                        local textWidth = element.ilvl:GetStringWidth()
+                        element.ilvlBackground:SetSize(textWidth + 6, element.ilvl:GetStringHeight() + 4) -- Mehr Padding für bessere Lesbarkeit
+
+                    end
+                    if addon.db["showEnchantOnCharframe"] then
+                        if not element.enchant then
+                            element.enchant = element:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+                            if addon.variables.itemSlotSide[key] == 0 then
+                                element.enchant:SetPoint("BOTTOMLEFT", element, "BOTTOMRIGHT", 2, 1)
+                            else
+                                element.enchant:SetPoint("BOTTOMRIGHT", element, "BOTTOMLEFT", -2, 1)
+                            end
+                            element.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+                        end
+                        local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
+                        tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+                        tooltip:SetHyperlink(itemLink)
+                        local foundEnchant = false
+                        for i = 1, tooltip:NumLines() do
+                            local line = _G["ScanTooltipTextLeft" .. i]:GetText()
+                            if line then
+                                local enchant = strmatch(line, addon.variables.enchantString)
+                                if enchant then
+                                    local color1, color2 = strmatch(enchant, '(|cn.-:).-(|r)')
+                                    local text = strmatch(gsub(gsub(gsub(line, '%s?|A.-|a', ''), '|cn.-:(.-)|r', '%1'),
+                                        '[&+] ?', ''), addon.variables.enchantString)
+
+                                    foundEnchant = true
+
+                                    local enchantText = text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", "") -- Entferne den Text vor dem Enchant
+                                    enchantText = enchantText:gsub('(%d+)', '%1')
+                                    enchantText = enchantText:gsub('(%a%a%a)%a+', '%1')
+
+                                    -- local shortAbbrev = gsub(enchantText, '(%w%w%w)%w+', '%1')
+                                    local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
+                                    local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
+
+                                    enchantText = enchantText:gsub("%%", "%%%%")
+
+                                    if color1 or color2 then
+                                        element.enchant:SetFormattedText(
+                                            format('%s%s%s', color1 or '', string.utf8sub(enchantText, 1, 20),
+                                                color2 or ''))
+                                    else
+                                        element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
+                                    end
+                                    break
+                                end
+                            end
+                        end
+
+                        if foundEnchant == false then element.enchant:SetText("") end
+                        tooltip:Hide()
+                    else
+                        element.enchant:SetText("")
+                    end
+                end)
+            end
+        end
+    end
+    if addon.db["showIlvlOnCharframe"] and ilvlSum > 0 and itemCount > 0 then
+        pdElement.ilvl:SetText("" .. (math.floor((ilvlSum / itemCount) * 100 + 0.5) / 100))
+    end
+end
+
 local function setIlvlText(element, slot)
     -- Hide all gemslots
     if element then
@@ -70,7 +245,6 @@ local function setIlvlText(element, slot)
         local eItem = Item:CreateFromEquipmentSlot(slot)
         if eItem and not eItem:IsItemEmpty() then
             eItem:ContinueOnItemLoad(function()
-
                 local link = eItem:GetItemLink()
                 local _, itemID, enchantID = string.match(link,
                     "item:(%d+):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*):(%d*)")
@@ -215,18 +389,21 @@ local function addCharacterFrame(tab)
     cbShowIlvlCharframe:SetScript("OnClick", function(self)
         addon.db["showIlvlOnCharframe"] = self:GetChecked()
         setCharFrame()
+        if InspectFrame:IsShown() then onInspect() end
     end)
     local cbShowGemsCharframe = addon.functions.createCheckbox("showGemsOnCharframe", fCharacter,
         L["showGemsOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowIlvlCharframe)) - 10)
     cbShowGemsCharframe:SetScript("OnClick", function(self)
         addon.db["showGemsOnCharframe"] = self:GetChecked()
         setCharFrame()
+        if InspectFrame:IsShown() then onInspect() end
     end)
     local cbShowEnchantCharframe = addon.functions.createCheckbox("showEnchantOnCharframe", fCharacter,
         L["showEnchantOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowGemsCharframe)) - 10)
     cbShowEnchantCharframe:SetScript("OnClick", function(self)
         addon.db["showEnchantOnCharframe"] = self:GetChecked()
         setCharFrame()
+        if InspectFrame:IsShown() then onInspect() end
     end)
 
     for key, value in pairs(addon.variables.itemSlots) do
@@ -720,6 +897,12 @@ local function eventHandler(self, event, arg1, arg2)
             C_PlayerChoice.SendPlayerChoiceResponse(choiceInfo.options[1].buttons[1].id)
             if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
         end
+    elseif event == "INSPECT_READY" and arg1 == UnitGUID("target") then
+        -- Einbauen einer Prüfung, ob ich den Character schon angeschaut habe, löschen der Liste nach InspectFRAME close
+        -- Aktuell kommt es vor, dass die Grafik von Sockeln fehlt
+        -- if not alreadyInspect[UnitGUID("target")] then
+        onInspect()
+        -- end
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
         -- elseif event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
@@ -764,6 +947,8 @@ frameLoad:RegisterEvent("LOOT_READY")
 
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 -- frameLoad:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER") -- for Shoppinglist
+
+frameLoad:RegisterEvent("INSPECT_READY") -- for delves
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)
