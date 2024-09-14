@@ -96,7 +96,7 @@ end
 
 local function onInspect(arg1)
     if nil == InspectFrame or not InspectFrame:IsShown() then return end
-    local unit
+    local unit = nil
     if not unit and UnitGUID("target") == arg1 then unit = "target" end
     if not unit then unit = GetUnitFromGUID(arg1) end
     if not unit then return end
