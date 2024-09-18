@@ -95,11 +95,15 @@ local function GetUnitFromGUID(targetGUID)
 end
 
 local function onInspect(arg1)
-    if nil == InspectFrame or not InspectFrame:IsShown() then return end
+    if nil == InspectFrame then
+        return
+    end
     local unit = nil
     if not unit and UnitGUID("target") == arg1 then unit = "target" end
     if not unit then unit = GetUnitFromGUID(arg1) end
-    if not unit then return end
+    if not unit then
+        return
+    end
 
     local pdElement = InspectFrame
     if not doneHook then
@@ -977,7 +981,7 @@ local function eventHandler(self, event, arg1, arg2)
     elseif event == "INSPECT_READY" then
         -- Einbauen einer Prüfung, ob ich den Character schon angeschaut habe, löschen der Liste nach InspectFRAME close
         -- Aktuell kommt es vor, dass die Grafik von Sockeln fehlt
-        onInspect(arg1)
+        -- onInspect(arg1)
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
         -- elseif event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
@@ -1023,7 +1027,7 @@ frameLoad:RegisterEvent("LOOT_READY")
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 -- frameLoad:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER") -- for Shoppinglist
 
-frameLoad:RegisterEvent("INSPECT_READY") -- for delves
+-- frameLoad:RegisterEvent("INSPECT_READY") -- for delves
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)

@@ -87,7 +87,7 @@ local function checkItem()
                             -- local effectiveILvl = C_Item.GetDetailedItemLevelInfo(containerInfo.hyperlink) -- item level of the item with all upgrades calculated
                             local effectiveILvl = itemLevel -- item level of the item with all upgrades calculated
 
-                            if sellPrice > 0 and addon.Vendor.variables.itemTypeFilter[classID] and
+                            if sellPrice and sellPrice > 0 and addon.Vendor.variables.itemTypeFilter[classID] and
                                 (not addon.Vendor.variables.itemSubTypeFilter[classID] or
                                     (addon.Vendor.variables.itemSubTypeFilter[classID] and
                                         addon.Vendor.variables.itemSubTypeFilter[classID][subclassID])) and
