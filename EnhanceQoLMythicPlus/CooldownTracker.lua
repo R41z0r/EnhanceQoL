@@ -50,6 +50,10 @@ local allowedSpells = { -- Tinker Engineering
 [431418] = {duration = 300, isInvis = false, icon = 5931166}, -- Algari Mana Potion
 [431416] = {duration = 300, isInvis = false, isHealpot = true, icon = 5931169}, -- Algari Healing Potion
 [460074] = {duration = 300, isInvis = false, isHealpot = true, icon = 135264}, -- Grotesque Vial
+-- Off Healing
+[108281] = {duration = 10, isOffhealing = true, icon = 538564}, -- Ancestral Guidance
+[124974] = {duration = 15, isOffhealing = true, icon = 236764}, -- Nature's Vigil
+[15286] = {duration = 12, isOffhealing = true, icon = 136230}, -- Vampiric Emprace
 }
 local activeBars = {}
 local frameAnchor = CreateFrame("StatusBar", nil, UIParent)
@@ -102,6 +106,11 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
         textLeft = textLeft .. " - " .. L["HealingPotion"]
     end
     if potInfo.text then textLeft = textLeft .. " - " .. potInfo.text end
+
+    if potInfo.isOffhealing and addon.db["potionTrackerOffhealing"] == false then return end
+    if potInfo.isOffhealing then
+        C_VoiceChat.SpeakText(1, "Offhaeling Active", Enum.VoiceTtsDestination.LocalPlayback, 01, 100)
+    end
 
     local frame = CreateFrame("StatusBar", nil, UIParent, "BackdropTemplate")
     frame:SetSize(anchorFrame:GetWidth() - addon.db["CooldownTrackerBarHeight"], addon.db["CooldownTrackerBarHeight"]) -- Größe des Balkens

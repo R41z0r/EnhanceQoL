@@ -34,9 +34,24 @@ L["hideBagsBar"] = "가방 바 숨기기"
 
 -- Dungeon
 L["autoChooseDelvePower"] = "옵션이 1개만 있을 때 델브 파워 자동 선택"
+L["lfgSortByRio"] = "신화 던전 지원자를 신화 점수로 정렬"
 
 -- Quest
 L["ignoreTrivialQuests"] = "사소한 퀘스트 무시"
 L["ignoreDailyQuests"] = "일일/주간 퀘스트 무시"
 
 L["autoQuickLoot"] = "빠른 전리품 획득"
+
+L["headerClassInfo"] = "이 설정은 " .. select(1, UnitClass("player")) .. "에게만 적용됩니다."
+
+-- 기원사
+L["evoker_HideEssence"] = "정수바 숨기기"
+
+-- 성기사
+L["paladin_HideHolyPower"] = "신성한 힘 바 숨기기"
+
+-- 도적
+L["rogue_HideComboPoint"] = "연계 점수 바 숨기기"
+
+-- 주술사
+L["shaman_HideTotem"] = "토템 바 숨기기"

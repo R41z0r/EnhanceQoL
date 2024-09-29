@@ -35,9 +35,24 @@ L["hideBagsBar"] = "Taschenleiste ausblenden"
 
 -- Dungeon
 L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen,\nwenn nur 1 Option verfügbar ist"
+L["lfgSortByRio"] = "Sortiere Bewerber für Mythisch+ Dungeons nach Mythisch-Wertung"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Triviale Quests ignorieren"
 L["ignoreDailyQuests"] = "Tägliche/Wöchentliche Quests ignorieren"
 
 L["autoQuickLoot"] = "Gegenstände schnell plündern"
+
+L["headerClassInfo"] = "Diese Einstellungen gelten nur für " .. select(1, UnitClass("player"))
+
+-- Evoker
+L["evoker_HideEssence"] = "Essenzleiste ausblenden"
+
+-- Paladin
+L["paladin_HideHolyPower"] = "Heilige Kraft-Leiste ausblenden"
+
+-- Schurke
+L["rogue_HideComboPoint"] = "Kombopunktleiste ausblenden"
+
+-- Schamane
+L["shaman_HideTotem"] = "Totemleiste ausblenden"

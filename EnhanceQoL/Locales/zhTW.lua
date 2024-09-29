@@ -34,9 +34,24 @@ L["hideBagsBar"] = "隐藏背包栏"
 
 -- Dungeon
 L["autoChooseDelvePower"] = "僅有一個選項時自動選擇探險力量"
+L["lfgSortByRio"] = "按史诗分数排序史诗地下城申请者"
 
 -- Quest
 L["ignoreTrivialQuests"] = "忽略瑣碎任務"
 L["ignoreDailyQuests"] = "忽略每日/每週任務"
 
 L["autoQuickLoot"] = "快速拾取物品"
+
+L["headerClassInfo"] = "这些设置仅适用于 " .. select(1, UnitClass("player"))
+
+-- 唤魔师
+L["evoker_HideEssence"] = "隐藏精华条"
+
+-- 圣骑士
+L["paladin_HideHolyPower"] = "隐藏圣能条"
+
+-- 潜行者
+L["rogue_HideComboPoint"] = "隐藏连击点数条"
+
+-- 萨满
+L["shaman_HideTotem"] = "隐藏图腾条"

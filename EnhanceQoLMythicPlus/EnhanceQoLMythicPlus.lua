@@ -134,9 +134,7 @@ frameLoad:RegisterEvent("LFG_ROLE_CHECK_SHOW")
 local function skipRolecheck()
     local tank, healer, dps = false, false, false
     local role = UnitGroupRolesAssigned("player")
-    if role == "NONE" then
-        role = GetSpecializationRole(GetSpecialization());
-    end
+    if role == "NONE" then role = GetSpecializationRole(GetSpecialization()); end
     if role == "TANK" then
         tank = true;
     elseif role == "DAMAGER" then
@@ -200,17 +198,11 @@ frameLoad:SetScript("OnEvent", eventHandler)
 local frame = addon.functions.createTabFrame(L["Mythic Plus"])
 frame.tabs = {}
 frame:SetScript("OnSizeChanged", function(self, width, height)
-    for i, tab in ipairs(frame.tabs) do
-        tab:SetSize(width - 5, height - 35)
-    end
+    for i, tab in ipairs(frame.tabs) do tab:SetSize(width - 5, height - 35) end
 end)
 function frame:ShowTab(id)
-    for _, tabContent in pairs(self.tabs) do
-        tabContent:Hide()
-    end
-    if self.tabs[id] then
-        self.tabs[id]:Show()
-    end
+    for _, tabContent in pairs(self.tabs) do tabContent:Hide() end
+    if self.tabs[id] then self.tabs[id]:Show() end
 end
 
 local function hideElements(elements, value)
@@ -253,19 +245,10 @@ local cbNoChatOnPullTimer = addon.functions.createCheckbox("noChatOnPullTimer", 
 local cbAutoKeyStart = addon.functions.createCheckbox("autoKeyStart", tabFrameKeystone, L["autoKeyStart"], 10,
     (addon.functions.getHeightOffset(cbNoChatOnPullTimer) - 5))
 
-local labelPullTimerType = addon.functions.createDropdown("PullTimerType", tabFrameKeystone, {{
-    text = L["None"],
-    value = 1
-}, {
-    text = L["Blizzard Pull Timer"],
-    value = 2
-}, {
-    text = L["DBM / BigWigs Pull Timer"],
-    value = 3
-}, {
-    text = L["Both"],
-    value = 4
-}}, 150, L["Pull Timer Type"], 10, addon.functions.getHeightOffset(cbAutoKeyStart) - 10, addon.db["PullTimerType"])
+local labelPullTimerType = addon.functions.createDropdown("PullTimerType", tabFrameKeystone,
+    {{text = L["None"], value = 1}, {text = L["Blizzard Pull Timer"], value = 2},
+     {text = L["DBM / BigWigs Pull Timer"], value = 3}, {text = L["Both"], value = 4}}, 150, L["Pull Timer Type"], 10,
+    addon.functions.getHeightOffset(cbAutoKeyStart) - 10, addon.db["PullTimerType"])
 
 local longSlider = addon.functions.createSlider("pullTimerLongTime", tabFrameKeystone, L["sliderLongTime"], 15,
     (addon.functions.getHeightOffset(labelPullTimerType) - 60), addon.db["pullTimerLongTime"], 1, 60, "s")
@@ -285,9 +268,7 @@ local cbPotionTrackerEnabled = addon.functions.createCheckbox("potionTracker", t
 cbPotionTrackerEnabled:SetScript("OnClick", function(self)
     hideElements(hideListPotion, self:GetChecked())
     addon.db["potionTracker"] = self:GetChecked()
-    if self:GetChecked() == false then
-        addon.MythicPlus.functions.resetCooldownBars()
-    end
+    if self:GetChecked() == false then addon.MythicPlus.functions.resetCooldownBars() end
 end)
 local btnToggleAnchor = addon.functions.createButton(tabFramePotionCooldown, 10,
     (addon.functions.getHeightOffset(cbPotionTrackerEnabled) - 10), 140, 25, L["Toggle Anchor"], function(self)
@@ -311,21 +292,17 @@ table.insert(hideListPotion, cbPotionTrackerUpwards)
 
 local cbPotionTrackerClassColors = addon.functions.createCheckbox("potionTrackerClassColor", tabFramePotionCooldown,
     L["potionTrackerClassColor"], 10, (addon.functions.getHeightOffset(cbPotionTrackerUpwards) - 10))
-cbPotionTrackerClassColors:SetScript("OnClick", function(self)
-    addon.db["potionTrackerClassColor"] = self:GetChecked()
-end)
+cbPotionTrackerClassColors:SetScript("OnClick",
+    function(self) addon.db["potionTrackerClassColor"] = self:GetChecked() end)
 table.insert(hideListPotion, cbPotionTrackerClassColors)
 
 local cbPotionTrackerDisableRaid = addon.functions.createCheckbox("potionTrackerDisableRaid", tabFramePotionCooldown,
     L["potionTrackerDisableRaid"], 10, (addon.functions.getHeightOffset(cbPotionTrackerClassColors) - 10))
+cbPotionTrackerDisableRaid:SetScript("OnClick",
+    function(self) addon.db["potionTrackerDisableRaid"] = self:GetChecked() end)
 cbPotionTrackerDisableRaid:SetScript("OnClick", function(self)
     addon.db["potionTrackerDisableRaid"] = self:GetChecked()
-end)
-cbPotionTrackerDisableRaid:SetScript("OnClick", function(self)
-    addon.db["potionTrackerDisableRaid"] = self:GetChecked()
-    if self:GetChecked() == true and UnitInRaid("player") then
-        addon.MythicPlus.functions.resetCooldownBars()
-    end
+    if self:GetChecked() == true and UnitInRaid("player") then addon.MythicPlus.functions.resetCooldownBars() end
 end)
 
 table.insert(hideListPotion, cbPotionTrackerDisableRaid)
@@ -340,5 +317,9 @@ local cbPotionTrackerShowHealpot = addon.functions.createCheckbox("potionTracker
 
 table.insert(hideListPotion, cbPotionTrackerShowHealpot)
 
-hideElements(hideListPotion, addon.db["potionTracker"])
+local cbPotionTrackerShowOffhealing = addon.functions.createCheckbox("potionTrackerOffhealing", tabFramePotionCooldown,
+    L["potionTrackerOffhealing"], 10, (addon.functions.getHeightOffset(cbPotionTrackerShowHealpot) - 10))
 
+table.insert(hideListPotion, cbPotionTrackerShowOffhealing)
+
+hideElements(hideListPotion, addon.db["potionTracker"])

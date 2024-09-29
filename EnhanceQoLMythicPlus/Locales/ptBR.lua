@@ -50,7 +50,7 @@ L["InvisPotion"] = "Invisibilidade"
 L["potionTrackerShowTooltip"] = "Mostrar tooltip no ícone"
 L["HealingPotion"] = "Cura"
 L["potionTrackerHealingPotions"] = "Rastrear CD de poção de cura"
-
+L["potionTrackerOffhealing"] = "Acompanhar o uso de CD de cura secundária"
 -- Ferramentas LFG
 
 L["DungeonBrowser"] = "Explorador de Masmorras"

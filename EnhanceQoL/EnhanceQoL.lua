@@ -95,15 +95,11 @@ local function GetUnitFromGUID(targetGUID)
 end
 
 local function onInspect(arg1)
-    if nil == InspectFrame then
-        return
-    end
+    if nil == InspectFrame then return end
     local unit = nil
     if not unit and UnitGUID("target") == arg1 then unit = "target" end
     if not unit then unit = GetUnitFromGUID(arg1) end
-    if not unit then
-        return
-    end
+    if not unit then return end
 
     local pdElement = InspectFrame
     if not doneHook then
@@ -424,6 +420,8 @@ local function setCharFrame() for key, value in pairs(addon.variables.itemSlots)
 
 local function addDungeonFrame(tab)
     if nil == addon.db["autoChooseDelvePower"] then addon.db["autoChooseDelvePower"] = true end
+    if nil == addon.db["lfgSortByRio"] then addon.db["lfgSortByRio"] = true end
+
     local fDungeon = addon.functions.createTabFrameMain(L["Dungeon"], tab)
 
     local cbPersistSignUpNote = addon.functions.createCheckbox("persistSignUpNote", fDungeon,
@@ -434,6 +432,9 @@ local function addDungeonFrame(tab)
 
     local cbAutoChooseDelvePower = addon.functions.createCheckbox("autoChooseDelvePower", fDungeon,
         L["autoChooseDelvePower"], 10, (addon.functions.getHeightOffset(cbSkipSignup)))
+
+    local cbSortApplicantsByRio = addon.functions.createCheckbox("lfgSortByRio", fDungeon, L["lfgSortByRio"], 10,
+        (addon.functions.getHeightOffset(cbAutoChooseDelvePower)))
 end
 
 local function addHideOption(type, parent, anchor, className)
@@ -850,6 +851,32 @@ function loadMain()
             frame:Show()
         end
     end)
+
+    local function SortApplicants(applicants)
+        if addon.db["lfgSortByRio"] then
+            local function SortApplicantsCB(applicantID1, applicantID2)
+                local applicantInfo1 = C_LFGList.GetApplicantInfo(applicantID1);
+                local applicantInfo2 = C_LFGList.GetApplicantInfo(applicantID2);
+
+                if (applicantInfo1 == nil) then return false; end
+
+                if (applicantInfo2 == nil) then return true; end
+
+                local _, _, _, _, _, _, _, _, _, _, _, dungeonScore1 =
+                    C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1);
+
+                local _, _, _, _, _, _, _, _, _, _, _, dungeonScore2 =
+                    C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1);
+
+                return dungeonScore1 > dungeonScore2;
+            end
+
+            table.sort(applicants, SortApplicantsCB);
+            LFGListApplicationViewer_UpdateResults(LFGListFrame.ApplicationViewer);
+        end
+    end
+
+    hooksecurefunc("LFGListUtil_SortApplicants", SortApplicants);
 
     -- Frame zu den Interface-Optionen hinzufügen
     -- InterfaceOptions_AddCategory(configFrame)

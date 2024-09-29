@@ -35,9 +35,24 @@ L["hideBagsBar"] = "Nascondi la barra delle borse"
 
 -- Dungeon
 L["autoChooseDelvePower"] = "Seleziona automaticamente il potere di\nimmersione quando c'è solo 1 opzione"
+L["lfgSortByRio"] = "Ordina i candidati dei dungeon mitici per punteggio mitico"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ignora le missioni banali"
 L["ignoreDailyQuests"] = "Ignora missioni giornaliere/settimanali"
 
 L["autoQuickLoot"] = "Saccheggio rapido degli oggetti"
+
+L["headerClassInfo"] = "Queste impostazioni si applicano solo a " .. select(1, UnitClass("player"))
+
+-- Evocatore
+L["evoker_HideEssence"] = "Nascondi barra dell'essenza"
+
+-- Paladino
+L["paladin_HideHolyPower"] = "Nascondi barra della potenza sacra"
+
+-- Ladro
+L["rogue_HideComboPoint"] = "Nascondi barra dei punti combo"
+
+-- Sciamano
+L["shaman_HideTotem"] = "Nascondi barra dei totem"

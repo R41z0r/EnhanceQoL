@@ -50,7 +50,7 @@ L["InvisPotion"] = "Невидимость"
 L["potionTrackerShowTooltip"] = "Показать подсказку на значке"
 L["HealingPotion"] = "Лечение"
 L["potionTrackerHealingPotions"] = "Отслеживать КД зелья здоровья"
-
+L["potionTrackerOffhealing"] = "Отслеживать использование CD второстепенного исцеления"
 -- Инструменты LFG
 
 L["DungeonBrowser"] = "Поиск подземелий"

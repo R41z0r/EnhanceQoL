@@ -50,7 +50,7 @@ L["InvisPotion"] = "투명 물약"
 L["potionTrackerShowTooltip"] = "아이콘에 툴팁 표시"
 L["HealingPotion"] = "치유"
 L["potionTrackerHealingPotions"] = "치유 물약 CD 추적"
-
+L["potionTrackerOffhealing"] = "보조 치유 CD 사용 추적"
 -- LFG 도구
 
 L["DungeonBrowser"] = "던전 브라우저"

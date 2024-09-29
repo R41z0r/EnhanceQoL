@@ -35,9 +35,24 @@ L["hideBagsBar"] = "Ocultar barra de bolsas"
 
 -- Dungeon
 L["autoChooseDelvePower"] = "Seleccionar poder de incursión automáticamente\ncuando solo hay 1 opción"
+L["lfgSortByRio"] = "Ordenar solicitantes de mazmorras míticas por puntuación mítica"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ignorar misiones triviales"
 L["ignoreDailyQuests"] = "Ignorar misiones diarias/semanales"
 
 L["autoQuickLoot"] = "Saqueo rápido de objetos"
+
+L["headerClassInfo"] = "Estas configuraciones solo se aplican a " .. select(1, UnitClass("player"))
+
+-- Devastador
+L["evoker_HideEssence"] = "Ocultar barra de esencias"
+
+-- Paladín
+L["paladin_HideHolyPower"] = "Ocultar barra de poder sagrado"
+
+-- Pícaro
+L["rogue_HideComboPoint"] = "Ocultar barra de puntos de combo"
+
+-- Chamán
+L["shaman_HideTotem"] = "Ocultar barra de tótems"

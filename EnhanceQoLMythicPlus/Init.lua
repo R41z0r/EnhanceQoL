@@ -65,6 +65,9 @@ end
 if nil == addon.db["potionTrackerHealingPotions"] then
     addon.db["potionTrackerHealingPotions"] = false
 end
+if nil == addon.db["potionTrackerOffhealing"] then
+    addon.db["potionTrackerOffhealing"] = false
+end
 
 -- Dungeon Browser
 if nil == addon.db["groupfinderAppText"] then

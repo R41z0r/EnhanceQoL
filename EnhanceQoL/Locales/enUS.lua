@@ -32,6 +32,7 @@ L["hideBagsBar"] = "Hide Bagsbar"
 
 -- Dungeon
 L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option"
+L["lfgSortByRio"] = "Sort Mythic Dungeon Applicants by Mythic Score"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ignore trivial quests"

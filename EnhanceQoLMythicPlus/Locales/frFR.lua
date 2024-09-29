@@ -50,7 +50,7 @@ L["InvisPotion"] = "Invisibilité"
 L["potionTrackerShowTooltip"] = "Afficher l'infobulle sur l'icône"
 L["HealingPotion"] = "Soins"
 L["potionTrackerHealingPotions"] = "Suivre le CD de la potion de soins"
-
+L["potionTrackerOffhealing"] = "Suivi de l'utilisation des CD de soins secondaires"
 -- Outils de recherche de groupe
 
 L["DungeonBrowser"] = "Explorateur de donjons"

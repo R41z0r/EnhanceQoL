@@ -38,9 +38,24 @@ L["hideBagsBar"] = "Скрыть панель сумок"
 -- Dungeon
 L["autoChooseDelvePower"] =
     "Автоматически выбирать силу при исследовании,\nесли есть только один вариант"
+L["lfgSortByRio"] = "Сортировать кандидатов в мифик-подземелье по мифик-рейтингу"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Игнорировать тривиальные задания"
 L["ignoreDailyQuests"] = "Игнорировать ежедневные/еженедельные задания"
 
 L["autoQuickLoot"] = "Быстрое получение предметов"
+
+L["headerClassInfo"] = "Эти настройки применяются только к " .. select(1, UnitClass("player"))
+
+-- Пробудитель
+L["evoker_HideEssence"] = "Скрыть панель эссенции"
+
+-- Паладин
+L["paladin_HideHolyPower"] = "Скрыть панель священной силы"
+
+-- Разбойник
+L["rogue_HideComboPoint"] = "Скрыть панель очков серии"
+
+-- Шаман
+L["shaman_HideTotem"] = "Скрыть панель тотемов"

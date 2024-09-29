@@ -50,7 +50,7 @@ L["InvisPotion"] = "隐形"
 L["potionTrackerShowTooltip"] = "在图标上显示提示"
 L["HealingPotion"] = "治疗"
 L["potionTrackerHealingPotions"] = "追踪治疗药水CD"
-
+L["potionTrackerOffhealing"] = "追踪次要治疗CD的使用"
 -- LFG 工具
 
 L["DungeonBrowser"] = "地城瀏覽器"

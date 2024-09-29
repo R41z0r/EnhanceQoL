@@ -35,9 +35,24 @@ L["hideBagsBar"] = "Masquer la barre des sacs"
 
 -- Dungeon
 L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée\nlorsqu'il n'y a qu'une seule option"
+L["lfgSortByRio"] = "Trier les candidats aux donjons mythiques par score mythique"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ignorer les quêtes triviales"
 L["ignoreDailyQuests"] = "Ignorer les quêtes journalières/hebdomadaires"
 
 L["autoQuickLoot"] = "Butin rapide des objets"
+
+L["headerClassInfo"] = "Ces paramètres s'appliquent uniquement à " .. select(1, UnitClass("player"))
+
+-- Évocateur
+L["evoker_HideEssence"] = "Masquer la barre d'essence"
+
+-- Paladin
+L["paladin_HideHolyPower"] = "Masquer la barre de puissance sacrée"
+
+-- Voleur
+L["rogue_HideComboPoint"] = "Masquer la barre de points de combo"
+
+-- Chaman
+L["shaman_HideTotem"] = "Masquer la barre de totems"

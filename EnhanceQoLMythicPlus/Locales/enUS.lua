@@ -47,7 +47,7 @@ L["InvisPotion"] = "Invis"
 L["potionTrackerShowTooltip"] = "Show tooltip on icon"
 L["HealingPotion"] = "Heal"
 L["potionTrackerHealingPotions"] = "Track health pot CD"
-
+L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
 -- LFG Tools
 
 L["DungeonBrowser"] = "Dungeonbrowser"

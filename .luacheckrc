@@ -43,6 +43,7 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"LFGListApplicationViewer_UpdateResults",
 	"InspectHeadSlot", 
 	"InspectNeckSlot", 
 	"InspectShoulderSlot", 
