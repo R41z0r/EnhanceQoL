@@ -48,8 +48,14 @@ L["autoQuickLoot"] = "Быстрое получение предметов"
 
 L["headerClassInfo"] = "Эти настройки применяются только к " .. select(1, UnitClass("player"))
 
+-- Рыцарь смерти
+L["deathknight_HideRuneFrame"] = "Скрыть панель рун"
+
 -- Пробудитель
 L["evoker_HideEssence"] = "Скрыть панель эссенции"
+
+-- Монах
+L["monk_HideHarmonyBar"] = "Скрыть панель гармонии"
 
 -- Паладин
 L["paladin_HideHolyPower"] = "Скрыть панель священной силы"
@@ -59,3 +65,6 @@ L["rogue_HideComboPoint"] = "Скрыть панель очков серии"
 
 -- Шаман
 L["shaman_HideTotem"] = "Скрыть панель тотемов"
+
+-- Чернокнижник
+L["warlock_HideSoulShardBar"] = "Скрыть панель осколков душ"

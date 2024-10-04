@@ -45,8 +45,14 @@ L["autoQuickLoot"] = "Butin rapide des objets"
 
 L["headerClassInfo"] = "Ces paramètres s'appliquent uniquement à " .. select(1, UnitClass("player"))
 
+-- Chevalier de la mort
+L["deathknight_HideRuneFrame"] = "Masquer la barre des runes"
+
 -- Évocateur
 L["evoker_HideEssence"] = "Masquer la barre d'essence"
+
+-- Moine
+L["monk_HideHarmonyBar"] = "Masquer la barre d'harmonie"
 
 -- Paladin
 L["paladin_HideHolyPower"] = "Masquer la barre de puissance sacrée"
@@ -56,3 +62,6 @@ L["rogue_HideComboPoint"] = "Masquer la barre de points de combo"
 
 -- Chaman
 L["shaman_HideTotem"] = "Masquer la barre de totems"
+
+-- Démoniste
+L["warlock_HideSoulShardBar"] = "Masquer la barre de fragments d'âme"

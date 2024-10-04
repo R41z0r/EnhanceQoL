@@ -45,8 +45,14 @@ L["autoQuickLoot"] = "Saqueo rápido de objetos"
 
 L["headerClassInfo"] = "Estas configuraciones solo se aplican a " .. select(1, UnitClass("player"))
 
+-- Caballero de la Muerte
+L["deathknight_HideRuneFrame"] = "Ocultar barra de runas"
+
 -- Devastador
 L["evoker_HideEssence"] = "Ocultar barra de esencias"
+
+-- Monje
+L["monk_HideHarmonyBar"] = "Ocultar barra de armonía"
 
 -- Paladín
 L["paladin_HideHolyPower"] = "Ocultar barra de poder sagrado"
@@ -56,3 +62,6 @@ L["rogue_HideComboPoint"] = "Ocultar barra de puntos de combo"
 
 -- Chamán
 L["shaman_HideTotem"] = "Ocultar barra de tótems"
+
+-- Brujo
+L["warlock_HideSoulShardBar"] = "Ocultar barra de fragmentos de alma"

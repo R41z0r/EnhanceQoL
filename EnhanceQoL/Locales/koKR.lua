@@ -44,8 +44,14 @@ L["autoQuickLoot"] = "빠른 전리품 획득"
 
 L["headerClassInfo"] = "이 설정은 " .. select(1, UnitClass("player")) .. "에게만 적용됩니다."
 
+-- 죽음의 기사
+L["deathknight_HideRuneFrame"] = "룬 프레임 숨기기"
+
 -- 기원사
-L["evoker_HideEssence"] = "정수바 숨기기"
+L["evoker_HideEssence"] = "정수 바 숨기기"
+
+-- 수도사
+L["monk_HideHarmonyBar"] = "조화 바 숨기기"
 
 -- 성기사
 L["paladin_HideHolyPower"] = "신성한 힘 바 숨기기"
@@ -55,3 +61,6 @@ L["rogue_HideComboPoint"] = "연계 점수 바 숨기기"
 
 -- 주술사
 L["shaman_HideTotem"] = "토템 바 숨기기"
+
+-- 흑마법사
+L["warlock_HideSoulShardBar"] = "영혼의 조각 바 숨기기"

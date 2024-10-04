@@ -459,6 +459,28 @@ local function addHideOption(type, parent, anchor, className)
     end
 end
 
+local function addTotemHideToggle(dbValue, language, frame, anchor)
+    local cbHideTotemFrame = addon.functions.createCheckbox(dbValue, frame, L[language], 10,
+        (addon.functions.getHeightOffset(anchor)) - 10)
+    cbHideTotemFrame:SetScript("OnClick", function(self)
+        addon.db[dbValue] = self:GetChecked()
+        if self:GetChecked() then
+            TotemFrame:Hide()
+        else
+            TotemFrame:Show()
+        end
+    end)
+    TotemFrame:HookScript("OnShow", function(self)
+        if addon.db[dbValue] then
+            TotemFrame:Hide()
+        else
+            TotemFrame:Show()
+        end
+    end)
+    if addon.db[dbValue] then TotemFrame:Hide() end
+    return cbHideTotemFrame
+end
+
 local function addCharacterFrame(tab)
     if nil == addon.db["showIlvlOnCharframe"] then addon.db["showIlvlOnCharframe"] = false end
     if nil == addon.db["showGemsOnCharframe"] then addon.db["showGemsOnCharframe"] = false end
@@ -532,14 +554,35 @@ local function addCharacterFrame(tab)
 
     PaperDollFrame:HookScript("OnShow", function(self) setCharFrame() end)
 
-    -- @debug@
     local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0, (addon.functions
         .getHeightOffset(cbShowEnchantCharframe)) - 20, "TOP", "TOP")
 
     local classname = select(2, UnitClass("player"))
 
     -- Classspecific stuff
-    if classname == "EVOKER" then
+    if classname == "DEATHKNIGHT" then
+        local cbHideDKRuneFrame = addon.functions.createCheckbox("deathknight_HideRuneFrame", fCharacter,
+            L["deathknight_HideRuneFrame"], 10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
+        cbHideDKRuneFrame:SetScript("OnClick", function(self)
+            addon.db["deathknight_HideRuneFrame"] = self:GetChecked()
+            if self:GetChecked() then
+                RuneFrame:Hide()
+            else
+                RuneFrame:Show()
+            end
+        end)
+        RuneFrame:HookScript("OnShow", function(self)
+            if addon.db["deathknight_HideRuneFrame"] then
+                RuneFrame:Hide()
+            else
+                RuneFrame:Show()
+            end
+        end)
+        if addon.db["deathknight_HideRuneFrame"] then RuneFrame:Hide() end
+        addTotemHideToggle("deathknight_HideTotemBar", "shaman_HideTotem", fCharacter, cbHideDKRuneFrame)
+    elseif classname == "DRUID" then
+        addTotemHideToggle("druid_HideTotemBar", "shaman_HideTotem", fCharacter, labelClassSpecific)
+    elseif classname == "EVOKER" then
         local cbHideEssenceFrame = addon.functions.createCheckbox("evoker_HideEssence", fCharacter,
             L["evoker_HideEssence"], 10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
         cbHideEssenceFrame:SetScript("OnClick", function(self)
@@ -554,24 +597,33 @@ local function addCharacterFrame(tab)
             if addon.db["evoker_HideEssence"] then EssencePlayerFrame:Hide() end
         end)
         if addon.db["evoker_HideEssence"] then EssencePlayerFrame:Hide() end -- Initialset
-    elseif classname == "SHAMAN" then
-        local cbHideTotemFrame = addon.functions.createCheckbox("shaman_HideTotem", fCharacter, L["shaman_HideTotem"],
-            10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
-        cbHideTotemFrame:SetScript("OnClick", function(self)
-            addon.db["shaman_HideTotem"] = self:GetChecked()
+    elseif classname == "MAGE" then
+        addTotemHideToggle("mage_HideTotemBar", "shaman_HideTotem", fCharacter, labelClassSpecific)
+    elseif classname == "MONK" then
+        local cbHideMonkHarmonyBar = addon.functions.createCheckbox("monk_HideHarmonyBar", fCharacter,
+            L["monk_HideHarmonyBar"], 10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
+        cbHideMonkHarmonyBar:SetScript("OnClick", function(self)
+            addon.db["monk_HideHarmonyBar"] = self:GetChecked()
             if self:GetChecked() then
-                TotemFrame:Hide()
+                MonkHarmonyBarFrame:Hide()
             else
-                TotemFrame:Show()
+                MonkHarmonyBarFrame:Show()
             end
         end)
-        TotemFrame:HookScript("OnShow", function(self)
-            if addon.db["shaman_HideTotem"] then
-                TotemFrame:Hide()
+        MonkHarmonyBarFrame:HookScript("OnShow", function(self)
+            if addon.db["monk_HideHarmonyBar"] then
+                MonkHarmonyBarFrame:Hide()
             else
-                TotemFrame:Show()
+                MonkHarmonyBarFrame:Show()
             end
         end)
+        addTotemHideToggle("monk_HideTotemBar", "shaman_HideTotem", fCharacter, cbHideMonkHarmonyBar)
+        if addon.db["monk_HideHarmonyBar"] then MonkHarmonyBarFrame:Hide() end
+    elseif classname == "PRIEST" then
+        addTotemHideToggle("priest_HideTotemBar", "shaman_HideTotem", fCharacter, labelClassSpecific)
+    elseif classname == "SHAMAN" then
+        local cbHideTotemFrame = addTotemHideToggle("shaman_HideTotem", "shaman_HideTotem", fCharacter,
+            labelClassSpecific)
     elseif classname == "ROGUE" then
         local cbHideRogueCPFrame = addon.functions.createCheckbox("rogue_HideComboPoint", fCharacter,
             L["rogue_HideComboPoint"], 10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
@@ -609,11 +661,31 @@ local function addCharacterFrame(tab)
                 PaladinPowerBarFrame:Show()
             end
         end)
+        addTotemHideToggle("paladin_HideTotemBar", "shaman_HideTotem", fCharacter, cbHidePaladinHolyFrame)
         if addon.db["paladin_HideHolyPower"] then PaladinPowerBarFrame:Hide() end
+    elseif classname == "WARLOCK" then
+        local cbHideWarlockSoulShardBar = addon.functions.createCheckbox("warlock_HideSoulShardBar", fCharacter,
+            L["warlock_HideSoulShardBar"], 10, (addon.functions.getHeightOffset(labelClassSpecific)) - 10)
+        cbHideWarlockSoulShardBar:SetScript("OnClick", function(self)
+            addon.db["warlock_HideSoulShardBar"] = self:GetChecked()
+            if self:GetChecked() then
+                WarlockPowerFrame:Hide()
+            else
+                WarlockPowerFrame:Show()
+            end
+        end)
+        WarlockPowerFrame:HookScript("OnShow", function(self)
+            if addon.db["warlock_HideSoulShardBar"] then
+                WarlockPowerFrame:Hide()
+            else
+                WarlockPowerFrame:Show()
+            end
+        end)
+        addTotemHideToggle("warlock_HideTotemBar", "shaman_HideTotem", fCharacter, cbHideWarlockSoulShardBar)
+        if addon.db["warlock_HideSoulShardBar"] then WarlockPowerFrame:Hide() end
     else
         labelClassSpecific:Hide()
     end
-    -- @end-debug@
 end
 
 -- @dubug@

@@ -45,8 +45,14 @@ L["autoQuickLoot"] = "Saccheggio rapido degli oggetti"
 
 L["headerClassInfo"] = "Queste impostazioni si applicano solo a " .. select(1, UnitClass("player"))
 
+-- Cavaliere della Morte
+L["deathknight_HideRuneFrame"] = "Nascondi barra delle rune"
+
 -- Evocatore
 L["evoker_HideEssence"] = "Nascondi barra dell'essenza"
+
+-- Monaco
+L["monk_HideHarmonyBar"] = "Nascondi barra dell'armonia"
 
 -- Paladino
 L["paladin_HideHolyPower"] = "Nascondi barra della potenza sacra"
@@ -56,3 +62,6 @@ L["rogue_HideComboPoint"] = "Nascondi barra dei punti combo"
 
 -- Sciamano
 L["shaman_HideTotem"] = "Nascondi barra dei totem"
+
+-- Stregone
+L["warlock_HideSoulShardBar"] = "Nascondi barra dei frammenti d'anima"

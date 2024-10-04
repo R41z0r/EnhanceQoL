@@ -44,8 +44,14 @@ L["autoQuickLoot"] = "快速拾取物品"
 
 L["headerClassInfo"] = "这些设置仅适用于 " .. select(1, UnitClass("player"))
 
+-- 死亡骑士
+L["deathknight_HideRuneFrame"] = "隐藏符文框架"
+
 -- 唤魔师
 L["evoker_HideEssence"] = "隐藏精华条"
+
+-- 武僧
+L["monk_HideHarmonyBar"] = "隐藏真气条"
 
 -- 圣骑士
 L["paladin_HideHolyPower"] = "隐藏圣能条"
@@ -55,3 +61,6 @@ L["rogue_HideComboPoint"] = "隐藏连击点数条"
 
 -- 萨满
 L["shaman_HideTotem"] = "隐藏图腾条"
+
+-- 术士
+L["warlock_HideSoulShardBar"] = "隐藏灵魂碎片条"

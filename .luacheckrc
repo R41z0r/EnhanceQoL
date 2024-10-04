@@ -43,6 +43,9 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"MonkHarmonyBarFrame",
+	"WarlockPowerFrame",
+	"RuneFrame",
 	"LFGListApplicationViewer_UpdateResults",
 	"InspectHeadSlot", 
 	"InspectNeckSlot", 

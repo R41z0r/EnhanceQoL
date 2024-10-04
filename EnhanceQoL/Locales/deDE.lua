@@ -45,8 +45,14 @@ L["autoQuickLoot"] = "Gegenstände schnell plündern"
 
 L["headerClassInfo"] = "Diese Einstellungen gelten nur für " .. select(1, UnitClass("player"))
 
--- Evoker
+-- Todesritter
+L["deathknight_HideRuneFrame"] = "Runenleiste ausblenden"
+
+-- Rufer
 L["evoker_HideEssence"] = "Essenzleiste ausblenden"
+
+-- Mönch
+L["monk_HideHarmonyBar"] = "Harmonie-Leiste ausblenden"
 
 -- Paladin
 L["paladin_HideHolyPower"] = "Heilige Kraft-Leiste ausblenden"
@@ -56,3 +62,6 @@ L["rogue_HideComboPoint"] = "Kombopunktleiste ausblenden"
 
 -- Schamane
 L["shaman_HideTotem"] = "Totemleiste ausblenden"
+
+-- Hexenmeister
+L["warlock_HideSoulShardBar"] = "Splitterleiste ausblenden"

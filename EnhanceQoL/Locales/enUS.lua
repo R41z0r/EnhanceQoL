@@ -42,8 +42,14 @@ L["autoQuickLoot"] = "Quick loot items"
 
 L["headerClassInfo"] = "These settings only apply to " .. select(1, UnitClass("player"))
 
+-- Deathknight
+L["deathknight_HideRuneFrame"] = "Hide Runeframe"
+
 -- Evoker
 L["evoker_HideEssence"] = "Hide Essencebar"
+
+-- Monk
+L["monk_HideHarmonyBar"] = "Hide Harmonybar"
 
 -- Paladin
 L["paladin_HideHolyPower"] = "Hide Holypowerbar"
@@ -53,3 +59,6 @@ L["rogue_HideComboPoint"] = "Hide Combopointbar"
 
 -- Shaman
 L["shaman_HideTotem"] = "Hide Totembar"
+
+-- Warlock
+L["warlock_HideSoulShardBar"] = "Hide Soulshard Bar"
