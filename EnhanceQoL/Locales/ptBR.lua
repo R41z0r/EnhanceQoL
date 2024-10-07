@@ -20,6 +20,7 @@ L["ignoreTalkingHead"] = "Ocultar automaticamente o quadro Talking Head"
 L["showIlvlOnCharframe"] = "Exibir nível do item no quadro de equipamentos do personagem"
 L["showGemsOnCharframe"] = "Exibir slots de gemas no quadro de equipamentos do personagem"
 L["showEnchantOnCharframe"] = "Exibir encantamentos no quadro de equipamentos do personagem"
+L["showCatalystChargesOnCharframe"] = "Mostrar cargas do catalisador no quadro de equipamento do personagem"
 
 L["deleteItemFillDialog"] = "Adicionar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" ao \"Popup de confirmação de exclusão\""

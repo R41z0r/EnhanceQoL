@@ -485,6 +485,7 @@ local function addCharacterFrame(tab)
     if nil == addon.db["showIlvlOnCharframe"] then addon.db["showIlvlOnCharframe"] = false end
     if nil == addon.db["showGemsOnCharframe"] then addon.db["showGemsOnCharframe"] = false end
     if nil == addon.db["showEnchantOnCharframe"] then addon.db["showEnchantOnCharframe"] = false end
+    if nil == addon.db["showCatalystChargesOnCharframe"] then addon.db["showCatalystChargesOnCharframe"] = false end
     local fCharacter = addon.functions.createTabFrameMain(L["Character"], tab)
 
     local cbShowIlvlCharframe = addon.functions.createCheckbox("showIlvlOnCharframe", fCharacter,
@@ -508,6 +509,39 @@ local function addCharacterFrame(tab)
         setCharFrame()
         -- if InspectFrame and InspectFrame:IsShown() then onInspect() end
     end)
+
+    -- Add Cataclyst charges in char frame
+    local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
+    local iconID = cataclystInfo.iconFileID
+
+    addon.general.iconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
+    addon.general.iconFrame:SetSize(32, 32)
+    addon.general.iconFrame:SetPoint("BOTTOMLEFT", PaperDollSidebarTab3, "BOTTOMRIGHT", 4, 0)
+
+    addon.general.iconFrame.icon = addon.general.iconFrame:CreateTexture(nil, "OVERLAY")
+    addon.general.iconFrame.icon:SetSize(32, 32)
+    addon.general.iconFrame.icon:SetPoint("CENTER", addon.general.iconFrame, "CENTER")
+    addon.general.iconFrame.icon:SetTexture(iconID)
+
+    addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+    addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
+    addon.general.iconFrame.count:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+    addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
+    addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
+
+    local cbshowCatalystChargesOnCharframe = addon.functions.createCheckbox("showCatalystChargesOnCharframe",
+        fCharacter, L["showCatalystChargesOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowEnchantCharframe)) -
+            10)
+    cbshowCatalystChargesOnCharframe:SetScript("OnClick", function(self)
+        addon.db["showCatalystChargesOnCharframe"] = self:GetChecked()
+        if self:GetChecked() then
+            addon.general.iconFrame:Show()
+        else
+            addon.general.iconFrame:Hide()
+        end
+    end)
+
+    if addon.db["showCatalystChargesOnCharframe"] == false then addon.general.iconFrame:Hide() end
 
     for key, value in pairs(addon.variables.itemSlots) do
         -- Hintergrund für das Item-Level
@@ -555,7 +589,7 @@ local function addCharacterFrame(tab)
     PaperDollFrame:HookScript("OnShow", function(self) setCharFrame() end)
 
     local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0, (addon.functions
-        .getHeightOffset(cbShowEnchantCharframe)) - 20, "TOP", "TOP")
+        .getHeightOffset(cbshowCatalystChargesOnCharframe)) - 20, "TOP", "TOP")
 
     local classname = select(2, UnitClass("player"))
 
@@ -1067,7 +1101,6 @@ local function eventHandler(self, event, arg1, arg2)
                 SelectAvailableQuest(i)
             end
         end
-
         for i = 1, GetNumActiveQuests() do if select(2, GetActiveTitle(1)) then SelectActiveQuest(1) end end
     elseif event == "PLAYER_CHOICE_UPDATE" and select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
         -- We are in a delve and have a choice for buff - autopick it
@@ -1077,30 +1110,19 @@ local function eventHandler(self, event, arg1, arg2)
             C_PlayerChoice.SendPlayerChoiceResponse(choiceInfo.options[1].buttons[1].id)
             if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
         end
+        -- @debug@
     elseif event == "INSPECT_READY" then
         -- Einbauen einer Prüfung, ob ich den Character schon angeschaut habe, löschen der Liste nach InspectFRAME close
         -- Aktuell kommt es vor, dass die Grafik von Sockeln fehlt
-        -- onInspect(arg1)
+        onInspect(arg1)
+        -- elseif event == "CURRENCY_DISPLAY_UPDATE" and arg1 == addon.variables.catalystID then
+        -- @end-debug@
+    elseif event == "CURRENCY_DISPLAY_UPDATE" and arg1 == 2815 then
+        local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
+        addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
+        print("Test")
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
-        -- elseif event == "CRAFTINGORDERS_SHOW_CUSTOMER" then
-        --     local btn = addon.functions.createButton(ProfessionsCustomerOrdersFrame.Form.ReagentContainer, 0, 0, 100, 20,
-        --         "Add", function()
-        --             local frame = ProfessionsCustomerOrdersFrame.Form.ReagentContainer.Reagents
-        --             for i, j in ipairs(frame:GetLayoutChildren()) do
-        --                 if j.reagentSlotSchematic then
-        --                     local rss = j.reagentSlotSchematic
-        --                     if rss.required then
-        --                         local name = C_Item.GetItemInfo(rss.reagents[1].itemID)
-        --                         print(rss.reagents[1].itemID, name, rss.quantityRequired)
-        --                     end
-        --                 end
-        --             end
-        --         end)
-        --     btn:ClearAllPoints()
-        --     btn:SetPoint("TOPRIGHT", ProfessionsCustomerOrdersFrame.Form.ReagentContainer, "TOPRIGHT", -5, -5)
-        -- elseif event == "MAIL_INBOX_UPDATE" and not IsShiftKeyDown() then
-        --     if OpenAllMail then OpenAllMail:Click() end
     end
 end
 
@@ -1120,13 +1142,13 @@ frameLoad:RegisterEvent("QUEST_COMPLETE")
 frameLoad:RegisterEvent("QUEST_PROGRESS")
 frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
 frameLoad:RegisterEvent("LOOT_READY")
-
--- frameLoad:RegisterEvent("MAIL_INBOX_UPDATE")
+frameLoad:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
 
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
--- frameLoad:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER") -- for Shoppinglist
 
--- frameLoad:RegisterEvent("INSPECT_READY") -- for delves
+-- @debug@
+frameLoad:RegisterEvent("INSPECT_READY")
+-- @end-debug@
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)

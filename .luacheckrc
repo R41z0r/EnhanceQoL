@@ -43,6 +43,7 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"PaperDollSidebarTab3",
 	"MonkHarmonyBarFrame",
 	"WarlockPowerFrame",
 	"RuneFrame",

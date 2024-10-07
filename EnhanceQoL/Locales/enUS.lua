@@ -18,6 +18,7 @@ L["ignoreTalkingHead"] = "Automatically hide Talking Head Frame"
 L["showIlvlOnCharframe"] = "Display item level on Character Equipment Frame"
 L["showGemsOnCharframe"] = "Display gem slots on Character Equipment Frame"
 L["showEnchantOnCharframe"] = "Display enchants on Character Equipment Frame"
+L["showCatalystChargesOnCharframe"] = "Display Catalyst charges on Character Equipment Frame"
 
 L["deleteItemFillDialog"] = "Add \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" to the \"Delete confirmation Popup\""
 L["autoChooseQuest"] = "Automatically accept and complete Quests"

@@ -20,6 +20,7 @@ L["ignoreTalkingHead"] = "自動隱藏Talking Head框體"
 L["showIlvlOnCharframe"] = "在角色裝備框架上顯示物品等級"
 L["showGemsOnCharframe"] = "在角色裝備框架上顯示寶石插槽"
 L["showEnchantOnCharframe"] = "在角色裝備框架上顯示附魔"
+L["showCatalystChargesOnCharframe"] = "在角色裝備介面顯示催化劑次數"
 
 L["deleteItemFillDialog"] = "將 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 添加到\"刪除確認彈出窗口\""
 L["autoChooseQuest"] = "自動接受並完成任務"

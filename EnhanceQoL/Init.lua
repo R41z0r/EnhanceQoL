@@ -9,6 +9,8 @@ addon.general.variables = {}
 addon.general.variables.numOfTabs = 0
 addon.L = {} -- Language
 
+addon.variables.catalystID = 2813 -- Change to get the actual cataclyst charges in char frame
+
 addon.variables.enchantString = ENCHANTED_TOOLTIP_LINE:gsub('%%s', '(.+)')
 
 addon.variables.itemSlots = {

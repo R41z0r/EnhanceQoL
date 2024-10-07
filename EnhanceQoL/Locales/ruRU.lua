@@ -22,6 +22,8 @@ L["showIlvlOnCharframe"] =
 L["showGemsOnCharframe"] =
     "Отображать гнезда для камней на экране экипировки персонажа"
 L["showEnchantOnCharframe"] = "Отображать чары на экране экипировки персонажа"
+L["showCatalystChargesOnCharframe"] =
+    "Отображать заряды катализатора на экране экипировки персонажа"
 
 L["deleteItemFillDialog"] = "Добавить \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" в \"Окно подтверждения удаления\""
@@ -38,7 +40,8 @@ L["hideBagsBar"] = "Скрыть панель сумок"
 -- Dungeon
 L["autoChooseDelvePower"] =
     "Автоматически выбирать силу при исследовании,\nесли есть только один вариант"
-L["lfgSortByRio"] = "Сортировать кандидатов в мифик-подземелье по мифик-рейтингу"
+L["lfgSortByRio"] =
+    "Сортировать кандидатов в мифик-подземелье по мифик-рейтингу"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Игнорировать тривиальные задания"
@@ -46,7 +49,8 @@ L["ignoreDailyQuests"] = "Игнорировать ежедневные/ежен
 
 L["autoQuickLoot"] = "Быстрое получение предметов"
 
-L["headerClassInfo"] = "Эти настройки применяются только к " .. select(1, UnitClass("player"))
+L["headerClassInfo"] = "Эти настройки применяются только к " ..
+                           select(1, UnitClass("player"))
 
 -- Рыцарь смерти
 L["deathknight_HideRuneFrame"] = "Скрыть панель рун"

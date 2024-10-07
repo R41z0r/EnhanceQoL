@@ -20,6 +20,7 @@ L["ignoreTalkingHead"] = "Masquer automatiquement le cadre Talking Head"
 L["showIlvlOnCharframe"] = "Afficher le niveau d'objet sur l'équipement du personnage"
 L["showGemsOnCharframe"] = "Afficher les emplacements de gemmes sur l'équipement du personnage"
 L["showEnchantOnCharframe"] = "Afficher les enchantements sur l'équipement du personnage"
+L["showCatalystChargesOnCharframe"] = "Afficher les charges du Catalyseur dans le cadre de l'équipement du personnage"
 
 L["deleteItemFillDialog"] = "Ajouter \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" au \"Popup de confirmation de suppression\""
