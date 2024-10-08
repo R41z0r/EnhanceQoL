@@ -1120,7 +1120,6 @@ local function eventHandler(self, event, arg1, arg2)
     elseif event == "CURRENCY_DISPLAY_UPDATE" and arg1 == 2815 then
         local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
         addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
-        print("Test")
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
     end
