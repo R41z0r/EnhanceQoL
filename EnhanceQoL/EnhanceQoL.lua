@@ -416,7 +416,13 @@ local function setIlvlText(element, slot)
     end
 end
 
-local function setCharFrame() for key, value in pairs(addon.variables.itemSlots) do setIlvlText(value, key) end end
+local function setCharFrame()
+    if addon.db["showCatalystChargesOnCharframe"] then
+        local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
+        addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
+    end
+    for key, value in pairs(addon.variables.itemSlots) do setIlvlText(value, key) end
+end
 
 local function addDungeonFrame(tab)
     if nil == addon.db["autoChooseDelvePower"] then addon.db["autoChooseDelvePower"] = true end
