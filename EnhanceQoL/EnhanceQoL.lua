@@ -96,18 +96,18 @@ end
 
 local function onInspect(arg1)
     if nil == InspectFrame then return end
-    local unit = nil
-    if not unit and UnitGUID("target") == arg1 then unit = "target" end
-    if not unit then unit = GetUnitFromGUID(arg1) end
-    if not unit then return end
+    local unit = InspectFrame.unit
+    if nil == unit then return end
+
+    if UnitGUID(InspectFrame.unit) ~= arg1 then return end
 
     local pdElement = InspectFrame
     if not doneHook then
         doneHook = true
         InspectFrame:HookScript("OnHide", function(self) inspectDone = {} end)
     end
-    if inspectUnit ~= UnitGUID(unit) then
-        inspectUnit = UnitGUID(unit)
+    if inspectUnit ~= InspectFrame.unit then
+        inspectUnit = InspectFrame.unit
         inspectDone = {}
     end
     if not addon.db["showIlvlOnCharframe"] and pdElement.ilvl then pdElement.ilvl:SetText("") end
@@ -594,8 +594,57 @@ local function addCharacterFrame(tab)
 
     PaperDollFrame:HookScript("OnShow", function(self) setCharFrame() end)
 
-    local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0, (addon.functions
-        .getHeightOffset(cbshowCatalystChargesOnCharframe)) - 20, "TOP", "TOP")
+    local update = function(frame)
+
+        for _, itemButton in frame:EnumerateValidItems() do
+            if addon.db["showIlvlOnBagItems"] then
+                local eItem = Item:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
+                if eItem and not eItem:IsItemEmpty() then
+                    eItem:ContinueOnItemLoad(function()
+                        if not itemButton.ItemLevelText then
+                            itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+                            itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+                            itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
+
+                            itemButton.ItemLevelText:SetShadowOffset(2, -2)
+                            itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+                        end
+                        local link = eItem:GetItemLink()
+                        local invSlot = select(4, GetItemInfoInstant(link))
+                        if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+
+                        local color = eItem:GetItemQualityColor()
+                        local itemLevelText = eItem:GetCurrentItemLevel()
+
+                        itemButton.ItemLevelText:SetFormattedText(itemLevelText)
+                        itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+
+                        itemButton.ItemLevelText:Show()
+                    end)
+                elseif itemButton.ItemLevelText then
+                    itemButton.ItemLevelText:Hide()
+                end
+            elseif itemButton.ItemLevelText then
+                itemButton.ItemLevelText:Hide()
+            end
+        end
+    end
+
+    local cbShowIlvlOnBags = addon.functions.createCheckbox("showIlvlOnBagItems", fCharacter, L["showIlvlOnBagItems"],
+        10, (addon.functions.getHeightOffset(cbshowCatalystChargesOnCharframe)) - 10)
+    cbShowIlvlOnBags:SetScript("OnClick", function(self)
+        addon.db["showIlvlOnBagItems"] = self:GetChecked()
+        for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+            if frame:IsShown() then update(frame) end
+        end
+        if ContainerFrameCombinedBags:IsShown() then update(ContainerFrameCombinedBags) end
+    end)
+
+    hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", update)
+    for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do hooksecurefunc(frame, "UpdateItems", update) end
+
+    local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0,
+        (addon.functions.getHeightOffset(cbShowIlvlOnBags)) - 20, "TOP", "TOP")
 
     local classname = select(2, UnitClass("player"))
 

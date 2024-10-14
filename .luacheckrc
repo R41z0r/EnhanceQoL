@@ -43,6 +43,8 @@ globals = {
 	"SOUNDKIT",
 	
 	-- EnhanceQoL
+	"ContainerFrameContainer",
+	"ContainerFrameCombinedBags",
 	"COMMUNITY_MEMBER_ROLE_NAME_LEADER",
 	"PaperDollSidebarTab3",
 	"MonkHarmonyBarFrame",

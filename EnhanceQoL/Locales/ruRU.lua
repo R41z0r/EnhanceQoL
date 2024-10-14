@@ -24,6 +24,8 @@ L["showGemsOnCharframe"] =
 L["showEnchantOnCharframe"] = "Отображать чары на экране экипировки персонажа"
 L["showCatalystChargesOnCharframe"] =
     "Отображать заряды катализатора на экране экипировки персонажа"
+L["showIlvlOnBagItems"] =
+    "Отображать уровень предмета на экипировке во всех сумках"
 
 L["deleteItemFillDialog"] = "Добавить \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" в \"Окно подтверждения удаления\""

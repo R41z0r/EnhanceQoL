@@ -21,6 +21,7 @@ L["showIlvlOnCharframe"] = "在角色装备框架上显示物品等级"
 L["showGemsOnCharframe"] = "在角色装备框架上显示宝石插槽"
 L["showEnchantOnCharframe"] = "在角色装备框架上显示附魔"
 L["showCatalystChargesOnCharframe"] = "在角色装备界面显示催化剂次数"
+L["showIlvlOnBagItems"] = "在所有背包的装备上显示物品等级"
 
 L["deleteItemFillDialog"] = "将 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 添加到“删除确认弹窗”"
 L["autoChooseQuest"] = "自动接受并完成任务"

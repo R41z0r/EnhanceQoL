@@ -21,6 +21,7 @@ L["showIlvlOnCharframe"] = "Exibir nível do item no quadro de equipamentos do p
 L["showGemsOnCharframe"] = "Exibir slots de gemas no quadro de equipamentos do personagem"
 L["showEnchantOnCharframe"] = "Exibir encantamentos no quadro de equipamentos do personagem"
 L["showCatalystChargesOnCharframe"] = "Mostrar cargas do catalisador no quadro de equipamento do personagem"
+L["showIlvlOnBagItems"] = "Exibir o nível de item no equipamento em todas as bolsas"
 
 L["deleteItemFillDialog"] = "Adicionar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" ao \"Popup de confirmação de exclusão\""

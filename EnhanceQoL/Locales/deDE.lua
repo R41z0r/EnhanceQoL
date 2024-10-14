@@ -21,6 +21,7 @@ L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anz
 L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"
 L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster anzeigen"
 L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstungsfenster anzeigen"
+L["showIlvlOnBagItems"] = "Zeige das Itemlevel auf Ausrüstung in allen Taschen"
 
 L["deleteItemFillDialog"] = "Füge \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" zum \"Löschbestätigungs-Popup\" hinzu"
