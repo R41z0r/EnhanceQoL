@@ -53,3 +53,12 @@ L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
 L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = "Hide the group finder text \"Your group is currently forming\""
 L["groupfinderSkipRolecheck"] = "Skip Role Check and use current role"
+
+-- Misc Frame
+L["Misc"] = "Misc."
+L["autoMarkTankInDungeon"] = "Automatically mark the " .. TANK .. " in dungeons"
+L["autoMarkTankInDungeonMarker"] = "Tank marker"
+L["Disabled"] = "Disabled"
+L["autoMarkTankExplanation"] = "It will mark the " .. TANK ..
+                                   " when he has no mark\nand only changes the mark, when you are either\n" ..
+                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " or " .. TANK

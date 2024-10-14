@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "esMX" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "esMX" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
@@ -56,3 +54,12 @@ L["potionTrackerOffhealing"] = "Rastrear uso de CD de sanación secundaria"
 L["DungeonBrowser"] = "Explorador de mazmorras"
 L["groupfinderAppText"] = "Ocultar el texto del buscador de grupos \"Tu grupo se está formando actualmente\""
 L["groupfinderSkipRolecheck"] = "Omitir la verificación de rol\ny usar el rol actual"
+
+-- Misc Frame
+L["Misc"] = "Misceláneo"
+L["autoMarkTankInDungeon"] = "Marcar automáticamente al " .. TANK .. " en mazmorras"
+L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
+L["Disabled"] = "Desactivado"
+L["autoMarkTankExplanation"] = "El " .. TANK ..
+                                   " será marcado cuando\nno tenga una marca y solo cambiará la marca\nsi eres " ..
+                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK

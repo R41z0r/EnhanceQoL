@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "ptBR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "ptBR" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -34,12 +32,13 @@ L["DBM / BigWigs Pull Timer"] = "Cronômetro de pull do DBM / BigWigs"
 L["Both"] = "Blizzard e DBM / BigWigs"
 L["Pull Timer Type"] = "Tipo de cronômetro de pull"
 
---Potion Tracker
+-- Potion Tracker
 L["Drag me to position Cooldownbars"] = "Arraste-me"
 L["Potion Tracker"] = "Rastreador de Poções"
 L["Toggle Anchor"] = "Alternar Âncora"
 L["Save Anchor"] = "Salvar Âncora"
-L["potionTrackerHeadline"] = "Isso permite rastrear o CD das\npoções de combate dos membros do seu grupo como uma barra móvel"
+L["potionTrackerHeadline"] =
+    "Isso permite rastrear o CD das\npoções de combate dos membros do seu grupo como uma barra móvel"
 L["potionTracker"] = "Ativar rastreador de tempo de recarga de poções"
 L["potionTrackerUpwardsBar"] = "Crescer para cima"
 L["potionTrackerClassColor"] = "Usar cores de classe para as barras"
@@ -56,3 +55,12 @@ L["potionTrackerOffhealing"] = "Acompanhar o uso de CD de cura secundária"
 L["DungeonBrowser"] = "Explorador de Masmorras"
 L["groupfinderAppText"] = "Ocultar o texto do buscador de grupos \"Seu grupo está se formando atualmente\""
 L["groupfinderSkipRolecheck"] = "Pular verificação de função\ne usar a função atual"
+
+-- Misc Frame
+L["Misc"] = "Diversos"
+L["autoMarkTankInDungeon"] = "Marcar automaticamente o " .. TANK .. " em masmorras"
+L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
+L["Disabled"] = "Desativado"
+L["autoMarkTankExplanation"] = "O " .. TANK ..
+                                   " será marcado quando\nnão tiver uma marca e só mudará a marca\nse você for " ..
+                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK

@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "itIT" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "itIT" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -34,12 +32,13 @@ L["DBM / BigWigs Pull Timer"] = "Timer di pull DBM / BigWigs"
 L["Both"] = "Blizzard e DBM / BigWigs"
 L["Pull Timer Type"] = "Tipo di timer di pull"
 
---Potion Tracker
+-- Potion Tracker
 L["Drag me to position Cooldownbars"] = "Trascinami"
 L["Potion Tracker"] = "Tracciatore di pozioni"
 L["Toggle Anchor"] = "Attiva/disattiva ancora"
 L["Save Anchor"] = "Salva ancora"
-L["potionTrackerHeadline"] = "Questo ti permette di tracciare il CD delle\npozioni di combattimento dei membri del tuo gruppo come barra mobile"
+L["potionTrackerHeadline"] =
+    "Questo ti permette di tracciare il CD delle\npozioni di combattimento dei membri del tuo gruppo come barra mobile"
 L["potionTracker"] = "Abilita tracciatore di ricarica delle pozioni"
 L["potionTrackerUpwardsBar"] = "Crescita verso l'alto"
 L["potionTrackerClassColor"] = "Usa i colori della classe per le barre"
@@ -56,3 +55,12 @@ L["potionTrackerOffhealing"] = "Traccia l'uso di CD di cura secondaria"
 L["DungeonBrowser"] = "Esploratore di dungeon"
 L["groupfinderAppText"] = "Nascondi il testo del cercatore di gruppi \"Il tuo gruppo si sta formando attualmente\""
 L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo\ne utilizza il ruolo attuale"
+
+-- Misc Frame
+L["Misc"] = "Varie"
+L["autoMarkTankInDungeon"] = "Marca automaticamente il " .. TANK .. " nei dungeon"
+L["autoMarkTankInDungeonMarker"] = "Segnalatore del tank"
+L["Disabled"] = "Disabilitato"
+L["autoMarkTankExplanation"] = "Il " .. TANK ..
+                                   " verrà marcato quando\nnon ha un segno e cambierà il segno solo\nse sei " ..
+                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK

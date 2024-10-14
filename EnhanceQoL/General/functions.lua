@@ -124,7 +124,7 @@ function addon.functions.createDropdown(id, frame, items, width, text, x, y, ini
     dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -16, -10) -- Position relativ zum Label
 
     -- Initialisiere das Dropdown-Menü
-    UIDropDownMenu_SetWidth(dropdown, 180)
+    UIDropDownMenu_SetWidth(dropdown, width)
     UIDropDownMenu_SetText(dropdown, addon.L["Select an option"])
     dropdown:SetFrameStrata("DIALOG")
 
@@ -145,12 +145,11 @@ function addon.functions.createDropdown(id, frame, items, width, text, x, y, ini
             UIDropDownMenu_AddButton(info, level)
         end
     end
-
     UIDropDownMenu_SetSelectedID(dropdown, initial)
     UIDropDownMenu_SetText(dropdown, items[initial].text)
     -- Initialisiere das Dropdown-Menü
     UIDropDownMenu_Initialize(dropdown, Initialize)
-    return label
+    return label, dropdown
 end
 
 function addon.functions.createButton(parent, x, y, width, height, text, script)

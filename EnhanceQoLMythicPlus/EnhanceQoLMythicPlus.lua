@@ -130,6 +130,9 @@ frameLoad:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
 frameLoad:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED")
 frameLoad:RegisterEvent("READY_CHECK_FINISHED")
 frameLoad:RegisterEvent("LFG_ROLE_CHECK_SHOW")
+frameLoad:RegisterEvent("RAID_TARGET_UPDATE")
+frameLoad:RegisterEvent("PLAYER_ROLES_ASSIGNED")
+frameLoad:RegisterEvent("READY_CHECK")
 
 local function skipRolecheck()
     local tank, healer, dps = false, false, false
@@ -175,6 +178,37 @@ local function toggleGroupApplication(value)
     end
 end
 
+local function setActTank()
+    if UnitGroupRolesAssigned("player") == "TANK" then
+        addon.MythicPlus.actTank = "player"
+        return
+    end
+    for i = 1, 4 do
+        local unit = "party" .. i
+        if UnitGroupRolesAssigned(unit) == "TANK" then
+            addon.MythicPlus.actTank = unit
+            return
+        end
+    end
+    addon.MythicPlus.actTank = "player"
+end
+
+local function checkRaidMarker()
+    if nil == addon.MythicPlus.actTank then setActTank() end
+    if nil ~= addon.MythicPlus.actTank then
+        if UnitInParty(addon.MythicPlus.actTank) then
+            local rIndex = GetRaidTargetIndex(addon.MythicPlus.actTank)
+            if nil == rIndex then
+                SetRaidTarget(addon.MythicPlus.actTank, addon.db["autoMarkTankInDungeonMarker"])
+            elseif rIndex ~= addon.db["autoMarkTankInDungeonMarker"] and UnitGroupRolesAssigned("player") == "TANK" then
+                SetRaidTarget(addon.MythicPlus.actTank, addon.db["autoMarkTankInDungeonMarker"])
+            elseif rIndex ~= addon.db["autoMarkTankInDungeonMarker"] and UnitIsGroupLeader("player") then
+                SetRaidTarget(addon.MythicPlus.actTank, addon.db["autoMarkTankInDungeonMarker"])
+            end
+        end
+    end
+end
+
 -- Funktion zum Umgang mit Events
 local function eventHandler(self, event, arg1, arg2, arg3, arg4)
     if event == "ADDON_LOADED" and arg1 == addonName then
@@ -187,6 +221,15 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
         toggleGroupApplication(true)
     elseif event == "LFG_ROLE_CHECK_SHOW" and addon.db["groupfinderSkipRolecheck"] and UnitInParty("player") then
         skipRolecheck()
+    elseif event == "RAID_TARGET_UPDATE" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and
+        not UnitInRaid("player") and select(1, IsInInstance()) == true then
+        C_Timer.After(0.5, function() checkRaidMarker() end)
+    elseif event == "PLAYER_ROLES_ASSIGNED" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and
+        not UnitInRaid("player") and select(1, IsInInstance()) == true then
+        checkRaidMarker()
+    elseif event == "READY_CHECK" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and
+        not UnitInRaid("player") and select(1, IsInInstance()) == true then
+        checkRaidMarker()
     end
 end
 
@@ -205,15 +248,15 @@ function frame:ShowTab(id)
     if self.tabs[id] then self.tabs[id]:Show() end
 end
 
-local function hideElements(elements, value)
-    for _, element in pairs(elements) do
-        if value then
-            element:Show()
-        else
-            element:Hide()
-        end
+local function hideElement(element, value)
+    if value then
+        element:Show()
+    else
+        element:Hide()
     end
 end
+
+local function hideElements(elements, value) for _, element in pairs(elements) do hideElement(element, value) end end
 
 local tabFrameDungeonBrowser = addon.MythicPlus.functions.createTabFrame(L["DungeonBrowser"], frame)
 local cbGroupFinderAppText = addon.functions.createCheckbox("groupfinderAppText", tabFrameDungeonBrowser,
@@ -247,7 +290,7 @@ local cbAutoKeyStart = addon.functions.createCheckbox("autoKeyStart", tabFrameKe
 
 local labelPullTimerType = addon.functions.createDropdown("PullTimerType", tabFrameKeystone,
     {{text = L["None"], value = 1}, {text = L["Blizzard Pull Timer"], value = 2},
-     {text = L["DBM / BigWigs Pull Timer"], value = 3}, {text = L["Both"], value = 4}}, 150, L["Pull Timer Type"], 10,
+     {text = L["DBM / BigWigs Pull Timer"], value = 3}, {text = L["Both"], value = 4}}, 180, L["Pull Timer Type"], 10,
     addon.functions.getHeightOffset(cbAutoKeyStart) - 10, addon.db["PullTimerType"])
 
 local longSlider = addon.functions.createSlider("pullTimerLongTime", tabFrameKeystone, L["sliderLongTime"], 15,
@@ -255,6 +298,37 @@ local longSlider = addon.functions.createSlider("pullTimerLongTime", tabFrameKey
 
 local shortSlider = addon.functions.createSlider("pullTimerShortTime", tabFrameKeystone, L["sliderShortTime"], 15,
     (addon.functions.getHeightOffset(longSlider) - 25), addon.db["pullTimerShortTime"], 1, 60, "s")
+
+-- Misc
+local tabFrameMisc = addon.MythicPlus.functions.createTabFrame(L["Misc"], frame)
+
+local cbAutoMarkTank = addon.functions.createCheckbox("autoMarkTankInDungeon", tabFrameMisc, L["autoMarkTankInDungeon"],
+    10, -10)
+
+local lAutoMarkTank, ddAutoMarkTank = addon.functions.createDropdown("autoMarkTankInDungeonMarker", tabFrameMisc,
+    {{text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:20|t", value = 1},
+     {text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:20|t", value = 2},
+     {text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:20|t", value = 3},
+     {text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_4:20|t", value = 4},
+     {text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_5:20|t", value = 5},
+     {text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_6:20|t", value = 6},
+     {text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_7:20|t", value = 7},
+     {text = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:20|t", value = 8}}, 50,
+    L["autoMarkTankInDungeonMarker"], 10, (addon.functions.getHeightOffset(cbAutoMarkTank) - 15),
+    addon.db["autoMarkTankInDungeonMarker"])
+
+cbAutoMarkTank:SetScript("OnClick", function(self)
+    addon.db["autoMarkTankInDungeon"] = self:GetChecked()
+    hideElements({lAutoMarkTank, ddAutoMarkTank}, self:GetChecked())
+    if self:GetChecked() and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
+        setActTank()
+        checkRaidMarker()
+    end
+end)
+
+local labelExplanation = addon.functions.createLabel(tabFrameMisc, string.format(L["autoMarkTankExplanation"]), 0,
+    (addon.functions.getHeightOffset(ddAutoMarkTank) - 65), "TOP", "TOP")
+hideElements({lAutoMarkTank, ddAutoMarkTank}, addon.db["autoMarkTankInDungeon"])
 
 -- Potion Tracker
 local hideListPotion = {}

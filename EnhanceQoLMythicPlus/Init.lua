@@ -6,76 +6,38 @@ else
     error(parentAddonName .. " is not loaded")
 end
 
-if nil == addon.db["autoInsertKeystone"] then
-    addon.db["autoInsertKeystone"] = false
-end
-if nil == addon.db["closeBagsOnKeyInsert"] then
-    addon.db["closeBagsOnKeyInsert"] = false
-end
-if nil == addon.db["noChatOnPullTimer"] then
-    addon.db["noChatOnPullTimer"] = false
-end
-if nil == addon.db["autoKeyStart"] then
-    addon.db["autoKeyStart"] = false
-end
-if nil == addon.db["cancelPullTimerOnClick"] then
-    addon.db["cancelPullTimerOnClick"] = true
-end
-if nil == addon.db["pullTimerShortTime"] then
-    addon.db["pullTimerShortTime"] = 5
-end
-if nil == addon.db["pullTimerLongTime"] then
-    addon.db["pullTimerLongTime"] = 10
-end
-if nil == addon.db["PullTimerType"] or addon.db["PullTimerType"] == 0 then
-    addon.db["PullTimerType"] = 4
-end
-if nil == addon.db["PullTimerType"] or addon.db["PullTimerType"] == 0 then
-    addon.db["PullTimerType"] = 4
-end
+if nil == addon.db["autoInsertKeystone"] then addon.db["autoInsertKeystone"] = false end
+if nil == addon.db["closeBagsOnKeyInsert"] then addon.db["closeBagsOnKeyInsert"] = false end
+if nil == addon.db["noChatOnPullTimer"] then addon.db["noChatOnPullTimer"] = false end
+if nil == addon.db["autoKeyStart"] then addon.db["autoKeyStart"] = false end
+if nil == addon.db["cancelPullTimerOnClick"] then addon.db["cancelPullTimerOnClick"] = true end
+if nil == addon.db["pullTimerShortTime"] then addon.db["pullTimerShortTime"] = 5 end
+if nil == addon.db["pullTimerLongTime"] then addon.db["pullTimerLongTime"] = 10 end
+if nil == addon.db["PullTimerType"] or addon.db["PullTimerType"] == 0 then addon.db["PullTimerType"] = 4 end
+if nil == addon.db["PullTimerType"] or addon.db["PullTimerType"] == 0 then addon.db["PullTimerType"] = 4 end
 
 -- Cooldown Tracker
-if nil == addon.db["CooldownTrackerPoint"] then
-    addon.db["CooldownTrackerPoint"] = "CENTER"
-end
-if nil == addon.db["CooldownTrackerX"] then
-    addon.db["CooldownTrackerX"] = 0
-end
-if nil == addon.db["CooldownTrackerY"] then
-    addon.db["CooldownTrackerY"] = 0
-end
+if nil == addon.db["CooldownTrackerPoint"] then addon.db["CooldownTrackerPoint"] = "CENTER" end
+if nil == addon.db["CooldownTrackerX"] then addon.db["CooldownTrackerX"] = 0 end
+if nil == addon.db["CooldownTrackerY"] then addon.db["CooldownTrackerY"] = 0 end
 
-if nil == addon.db["CooldownTrackerBarHeight"] then
-    addon.db["CooldownTrackerBarHeight"] = 30
-end
+if nil == addon.db["CooldownTrackerBarHeight"] then addon.db["CooldownTrackerBarHeight"] = 30 end
 
-if nil == addon.db["potionTracker"] then
-    addon.db["potionTracker"] = false
-end
+if nil == addon.db["potionTracker"] then addon.db["potionTracker"] = false end
 
-if nil == addon.db["potionTrackerUpwardsBar"] then
-    addon.db["potionTrackerUpwardsBar"] = false
-end
-if nil == addon.db["potionTrackerDisableRaid"] then
-    addon.db["potionTrackerDisableRaid"] = true
-end
-if nil == addon.db["potionTrackerShowTooltip"] then
-    addon.db["potionTrackerShowTooltip"] = true
-end
-if nil == addon.db["potionTrackerHealingPotions"] then
-    addon.db["potionTrackerHealingPotions"] = false
-end
-if nil == addon.db["potionTrackerOffhealing"] then
-    addon.db["potionTrackerOffhealing"] = false
-end
+if nil == addon.db["potionTrackerUpwardsBar"] then addon.db["potionTrackerUpwardsBar"] = false end
+if nil == addon.db["potionTrackerDisableRaid"] then addon.db["potionTrackerDisableRaid"] = true end
+if nil == addon.db["potionTrackerShowTooltip"] then addon.db["potionTrackerShowTooltip"] = true end
+if nil == addon.db["potionTrackerHealingPotions"] then addon.db["potionTrackerHealingPotions"] = false end
+if nil == addon.db["potionTrackerOffhealing"] then addon.db["potionTrackerOffhealing"] = false end
 
 -- Dungeon Browser
-if nil == addon.db["groupfinderAppText"] then
-    addon.db["groupfinderAppText"] = true
-end
-if nil == addon.db["groupfinderSkipRolecheck"] then
-    addon.db["groupfinderSkipRolecheck"] = true
-end
+if nil == addon.db["groupfinderAppText"] then addon.db["groupfinderAppText"] = true end
+if nil == addon.db["groupfinderSkipRolecheck"] then addon.db["groupfinderSkipRolecheck"] = true end
+
+-- Misc
+if nil == addon.db["autoMarkTankInDungeon"] then addon.db["autoMarkTankInDungeon"] = false end
+if nil == addon.db["autoMarkTankInDungeonMarker"] then addon.db["autoMarkTankInDungeonMarker"] = 6 end
 
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus
@@ -90,22 +52,10 @@ addon.MythicPlus.variables.numOfTabs = 0
 addon.MythicPlus.variables.handled = false
 addon.MythicPlus.variables.breakIt = false
 
-addon.MythicPlus.variables.resetCooldownEncounterDifficult = {
-    [3] = true,
-    [4] = true,
-    [5] = true,
-    [6] = true,
-    [7] = true,
-    [9] = true,
-    [14] = true,
-    [15] = true,
-    [16] = true,
-    [17] = true,
-    [18] = true,
-    [33] = true,
-    [151] = true,
-    [208] = true --delves
-}
+addon.MythicPlus.variables.resetCooldownEncounterDifficult =
+    {[3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [9] = true, [14] = true, [15] = true, [16] = true,
+     [17] = true, [18] = true, [33] = true, [151] = true, [208] = true -- delves
+    }
 
 function addon.MythicPlus.functions.addButton(frame, name, text, call)
     local button = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate")
@@ -116,9 +66,7 @@ function addon.MythicPlus.functions.addButton(frame, name, text, call)
     button:SetHighlightFontObject("GameFontHighlightLarge")
     button:RegisterForClicks("RightButtonDown", "LeftButtonDown")
     button:SetScript("OnClick", call)
-    if UnitIsGroupLeader("Player") == false then
-        button:Hide()
-    end
+    if UnitIsGroupLeader("Player") == false then button:Hide() end
     addon.MythicPlus.Buttons[name] = button
     addon.MythicPlus.nrOfButtons = addon.MythicPlus.nrOfButtons + 1
 end

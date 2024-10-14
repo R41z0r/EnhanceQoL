@@ -1,6 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "koKR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "koKR" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
@@ -34,12 +32,13 @@ L["DBM / BigWigs Pull Timer"] = "DBM / BigWigs 풀 타이머"
 L["Both"] = "블리자드 및 DBM / BigWigs"
 L["Pull Timer Type"] = "풀 타이머 유형"
 
---Potion Tracker
+-- Potion Tracker
 L["Drag me to position Cooldownbars"] = "쿨다운바 위치 조정"
 L["Potion Tracker"] = "물약 추적기"
 L["Toggle Anchor"] = "앵커 토글"
 L["Save Anchor"] = "앵커 저장"
-L["potionTrackerHeadline"] = "이 기능은 파티원의 전투 물약의 쿨다운을 추적하는\n이동 가능한 바를 제공합니다."
+L["potionTrackerHeadline"] =
+    "이 기능은 파티원의 전투 물약의 쿨다운을 추적하는\n이동 가능한 바를 제공합니다."
 L["potionTracker"] = "물약 쿨다운 추적기 활성화"
 L["potionTrackerUpwardsBar"] = "위로 성장"
 L["potionTrackerClassColor"] = "바에 직업 색상 사용"
@@ -56,3 +55,12 @@ L["potionTrackerOffhealing"] = "보조 치유 CD 사용 추적"
 L["DungeonBrowser"] = "던전 브라우저"
 L["groupfinderAppText"] = "그룹 찾기 텍스트 \"당신의 그룹이 현재 형성 중입니다\" 숨기기"
 L["groupfinderSkipRolecheck"] = "역할 확인을 건너뛰고 현재 역할 사용"
+
+-- Misc Frame
+L["Misc"] = "기타"
+L["autoMarkTankInDungeon"] = "던전에서 " .. TANK .. " 자동 표시"
+L["autoMarkTankInDungeonMarker"] = "탱커 징표"
+L["Disabled"] = "비활성화됨"
+L["autoMarkTankExplanation"] =
+    "탱커에게 표식이 없을 때\n자동으로 표식을 지정하고\n변경은 당신이\n" ..
+        COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 또는 " .. TANK .. "일 때만 가능합니다."
