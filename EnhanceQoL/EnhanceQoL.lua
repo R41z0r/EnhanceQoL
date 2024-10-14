@@ -594,41 +594,84 @@ local function addCharacterFrame(tab)
 
     PaperDollFrame:HookScript("OnShow", function(self) setCharFrame() end)
 
-    local update = function(frame)
+    local function updateButtonInfo(itemButton, bag, slot)
+        local eItem = Item:CreateFromBagAndSlot(bag, slot)
+        if eItem and not eItem:IsItemEmpty() then
+            eItem:ContinueOnItemLoad(function()
+                if not itemButton.ItemLevelText then
+                    itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+                    itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+                    itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
+
+                    itemButton.ItemLevelText:SetShadowOffset(2, -2)
+                    itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+                end
+                local link = eItem:GetItemLink()
+                local invSlot = select(4, GetItemInfoInstant(link))
+                if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+
+                local color = eItem:GetItemQualityColor()
+                local itemLevelText = eItem:GetCurrentItemLevel()
+
+                itemButton.ItemLevelText:SetFormattedText(itemLevelText)
+                itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+
+                itemButton.ItemLevelText:Show()
+            end)
+        elseif itemButton.ItemLevelText then
+            itemButton.ItemLevelText:Hide()
+        end
+    end
+
+    local updateBags = function(frame)
 
         for _, itemButton in frame:EnumerateValidItems() do
             if addon.db["showIlvlOnBagItems"] then
-                local eItem = Item:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
-                if eItem and not eItem:IsItemEmpty() then
-                    eItem:ContinueOnItemLoad(function()
-                        if not itemButton.ItemLevelText then
-                            itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-                            itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-                            itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
-
-                            itemButton.ItemLevelText:SetShadowOffset(2, -2)
-                            itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
-                        end
-                        local link = eItem:GetItemLink()
-                        local invSlot = select(4, GetItemInfoInstant(link))
-                        if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
-
-                        local color = eItem:GetItemQualityColor()
-                        local itemLevelText = eItem:GetCurrentItemLevel()
-
-                        itemButton.ItemLevelText:SetFormattedText(itemLevelText)
-                        itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
-
-                        itemButton.ItemLevelText:Show()
-                    end)
-                elseif itemButton.ItemLevelText then
-                    itemButton.ItemLevelText:Hide()
-                end
+                updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID())
             elseif itemButton.ItemLevelText then
                 itemButton.ItemLevelText:Hide()
             end
         end
     end
+
+    -- @debug@
+    -- local lastButtons = {} -- needed as of 11.0.0, see below for why
+    -- local updateBank = function(frame)
+    --     -- table.wipe(lastButtons)
+    --     for itemButton in frame:EnumerateValidItems() do
+    --         if addon.db["showIlvlOnBagItems"] then
+    --             updateButtonInfo(itemButton, itemButton:GetBankTabID(), itemButton:GetContainerSlotID())
+    --             -- table.insert(lastButtons, itemButton)
+    --         elseif itemButton.ItemLevelText then
+    --             itemButton.ItemLevelText:Hide()
+    --         end
+    --     end
+    -- end
+
+    -- -- hooksecurefunc("BankFrameItemButton_Update", function(button)
+    -- --     if not button.isBag then
+    -- --         updateButtonInfo(button, button:GetParent():GetID())
+    -- --     end
+    -- -- end)
+
+    -- if _G.AccountBankPanel then
+    --     hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", updateBank)
+    --     hooksecurefunc(AccountBankPanel, "RefreshAllItemsForSelectedTab", updateBank)
+    --     -- hooksecurefunc(AccountBankPanel, "SetItemDisplayEnabled", function(_, state)
+    --     --     -- Papering over a Blizzard bug: when you open the "buy" tab, they
+    --     --     -- call this which releases the itembuttons from the pool... but
+    --     --     -- doesn't *hide* them, so they're all still there with the buy panel
+    --     --     -- sitting one layer above them.
+    --     --     -- I sadly need to remember the buttons, because once it released them
+    --     --     -- they're no longer available via EnumerateValidItems.
+    --     --     if state == false then
+    --     --         for _, itemButton in ipairs(lastButtons) do
+    --     --             if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+    --     --         end
+    --     --     end
+    --     -- end)
+    -- end
+    -- @end-debug@
 
     local cbShowIlvlOnBags = addon.functions.createCheckbox("showIlvlOnBagItems", fCharacter, L["showIlvlOnBagItems"],
         10, (addon.functions.getHeightOffset(cbshowCatalystChargesOnCharframe)) - 10)
@@ -640,8 +683,10 @@ local function addCharacterFrame(tab)
         if ContainerFrameCombinedBags:IsShown() then update(ContainerFrameCombinedBags) end
     end)
 
-    hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", update)
-    for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do hooksecurefunc(frame, "UpdateItems", update) end
+    hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", updateBags)
+    for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+        hooksecurefunc(frame, "UpdateItems", updateBags)
+    end
 
     local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0,
         (addon.functions.getHeightOffset(cbShowIlvlOnBags)) - 20, "TOP", "TOP")
