@@ -678,9 +678,9 @@ local function addCharacterFrame(tab)
     cbShowIlvlOnBags:SetScript("OnClick", function(self)
         addon.db["showIlvlOnBagItems"] = self:GetChecked()
         for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
-            if frame:IsShown() then update(frame) end
+            if frame:IsShown() then updateBags(frame) end
         end
-        if ContainerFrameCombinedBags:IsShown() then update(ContainerFrameCombinedBags) end
+        if ContainerFrameCombinedBags:IsShown() then updateBags(ContainerFrameCombinedBags) end
     end)
 
     hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", updateBags)
