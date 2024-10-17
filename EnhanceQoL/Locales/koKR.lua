@@ -43,6 +43,7 @@ L["ignoreTrivialQuests"] = "사소한 퀘스트 무시"
 L["ignoreDailyQuests"] = "일일/주간 퀘스트 무시"
 
 L["autoQuickLoot"] = "빠른 전리품 획득"
+L["openCharframeOnUpgrade"] = "상인에게서 아이템을 강화할 때 캐릭터 창 열기"
 
 L["headerClassInfo"] = "이 설정은 " .. select(1, UnitClass("player")) .. "에게만 적용됩니다."
 

@@ -50,6 +50,8 @@ L["ignoreTrivialQuests"] = "Игнорировать тривиальные за
 L["ignoreDailyQuests"] = "Игнорировать ежедневные/еженедельные задания"
 
 L["autoQuickLoot"] = "Быстрое получение предметов"
+L["openCharframeOnUpgrade"] =
+    "Открыть окно персонажа при улучшении предметов у торговца"
 
 L["headerClassInfo"] = "Эти настройки применяются только к " ..
                            select(1, UnitClass("player"))

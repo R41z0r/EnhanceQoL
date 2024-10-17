@@ -884,8 +884,11 @@ local function addMiscFrame(tab)
     _G.CompactRaidFrameManager:SetScript("OnShow", function(self)
         addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self)
     end)
+
+    local cbOpenCharFrameOnUpgrade = addon.functions.createCheckbox("openCharframeOnUpgrade", fMisc,
+        L["openCharframeOnUpgrade"], 10, (addon.functions.getHeightOffset(cbHideRaidTools)))
     local cbQuickLoot = addon.functions.createCheckbox("autoQuickLoot", fMisc, L["autoQuickLoot"], 10,
-        (addon.functions.getHeightOffset(cbHideRaidTools)))
+        (addon.functions.getHeightOffset(cbOpenCharFrameOnUpgrade)))
 end
 
 local function addQuestFrame(tab)
@@ -1217,6 +1220,8 @@ local function eventHandler(self, event, arg1, arg2)
         onInspect(arg1)
         -- elseif event == "CURRENCY_DISPLAY_UPDATE" and arg1 == addon.variables.catalystID then
         -- @end-debug@
+    elseif event == "PLAYER_INTERACTION_MANAGER_FRAME_SHOW" and arg1 == 53 and addon.db["openCharframeOnUpgrade"] then
+        if CharacterFrame:IsShown() == false then ToggleCharacter("PaperDollFrame") end
     elseif event == "CURRENCY_DISPLAY_UPDATE" and arg1 == 2815 then
         local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
         addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
@@ -1242,6 +1247,7 @@ frameLoad:RegisterEvent("QUEST_PROGRESS")
 frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
 frameLoad:RegisterEvent("LOOT_READY")
 frameLoad:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+frameLoad:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 

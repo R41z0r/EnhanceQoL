@@ -45,6 +45,8 @@ L["ignoreTrivialQuests"] = "Ignora le missioni banali"
 L["ignoreDailyQuests"] = "Ignora missioni giornaliere/settimanali"
 
 L["autoQuickLoot"] = "Saccheggio rapido degli oggetti"
+L["openCharframeOnUpgrade"] =
+    "Apri il riquadro del personaggio durante il potenziamento degli oggetti presso il mercante"
 
 L["headerClassInfo"] = "Queste impostazioni si applicano solo a " .. select(1, UnitClass("player"))
 

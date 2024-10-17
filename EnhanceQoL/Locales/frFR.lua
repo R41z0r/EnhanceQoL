@@ -44,6 +44,7 @@ L["ignoreTrivialQuests"] = "Ignorer les quêtes triviales"
 L["ignoreDailyQuests"] = "Ignorer les quêtes journalières/hebdomadaires"
 
 L["autoQuickLoot"] = "Butin rapide des objets"
+L["openCharframeOnUpgrade"] = "Ouvrir le cadre de personnage lors de l'amélioration d'objet chez le marchand"
 
 L["headerClassInfo"] = "Ces paramètres s'appliquent uniquement à " .. select(1, UnitClass("player"))
 

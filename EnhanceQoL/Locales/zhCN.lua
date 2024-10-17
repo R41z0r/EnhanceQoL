@@ -43,6 +43,7 @@ L["ignoreTrivialQuests"] = "忽略琐碎任务"
 L["ignoreDailyQuests"] = "忽略每日/每周任务"
 
 L["autoQuickLoot"] = "快速拾取物品"
+L["openCharframeOnUpgrade"] = "在商人处升级物品时打开角色窗口"
 
 L["headerClassInfo"] = "这些设置仅适用于 " .. select(1, UnitClass("player"))
 

@@ -41,6 +41,7 @@ L["ignoreTrivialQuests"] = "Ignore trivial quests"
 L["ignoreDailyQuests"] = "Ignore daily/weekly quests"
 
 L["autoQuickLoot"] = "Quick loot items"
+L["openCharframeOnUpgrade"] = "Open the character frame when upgrading items at the vendor"
 
 L["headerClassInfo"] = "These settings only apply to " .. select(1, UnitClass("player"))
 

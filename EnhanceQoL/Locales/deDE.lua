@@ -1,5 +1,4 @@
 if (GAME_LOCALE or GetLocale()) ~= "deDE" then return end
-
 local addonName, addon = ...
 
 local L = addon.L
@@ -44,6 +43,7 @@ L["ignoreTrivialQuests"] = "Triviale Quests ignorieren"
 L["ignoreDailyQuests"] = "Tägliche/Wöchentliche Quests ignorieren"
 
 L["autoQuickLoot"] = "Gegenstände schnell plündern"
+L["openCharframeOnUpgrade"] = "Charakterfenster beim Aufwerten von Gegenständen beim Händler öffnen"
 
 L["headerClassInfo"] = "Diese Einstellungen gelten nur für " .. select(1, UnitClass("player"))
 
