@@ -23,6 +23,7 @@ L["showEnchantOnCharframe"] = "Mostra gli incantamenti nel\npannello dell'equipa
 L["showCatalystChargesOnCharframe"] =
     "Mostra le cariche del Catalizzatore nel riquadro dell'equipaggiamento del personaggio"
 L["showIlvlOnBagItems"] = "Mostra il livello dell'oggetto sull'equipaggiamento in tutte le borse"
+L["showDurabilityOnCharframe"] = "Mostra la durabilità sulla finestra dell'equipaggiamento del personaggio"
 
 L["deleteItemFillDialog"] = "Aggiungi \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" al \"Popup di conferma eliminazione\""

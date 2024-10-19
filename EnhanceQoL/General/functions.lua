@@ -6,9 +6,7 @@ function addon.functions.createCheckbox(name, parent, label, x, y)
     local checkbox = CreateFrame("CheckButton", name, parent, "ChatConfigCheckButtonTemplate")
     checkbox:SetPoint("TOPLEFT", x, y)
     checkbox:SetChecked(addon.db["" .. name])
-    checkbox:SetScript("OnClick", function(self)
-        addon.db["" .. name] = self:GetChecked()
-    end)
+    checkbox:SetScript("OnClick", function(self) addon.db["" .. name] = self:GetChecked() end)
     getglobal(checkbox:GetName() .. 'Text'):SetText(label)
     table.insert(addon.checkboxes, checkbox)
     return checkbox
@@ -19,9 +17,7 @@ function addon.functions.createSlider(id, parent, label, x, y, initial, min, max
     slider:SetOrientation('HORIZONTAL')
     slider:SetSize(200, 20)
     slider:SetMinMaxValues(min, max)
-    if nil == initial then
-        initial = 50
-    end
+    if nil == initial then initial = 50 end
     slider:SetValue(initial)
     slider:SetValueStep(1)
     slider:SetObeyStepOnDrag(true)
@@ -179,13 +175,9 @@ function addon.functions.formatMoney(copper)
 
     local formatted = ""
 
-    if gold > 0 then
-        formatted = string.format("%d|cffffd700g|r ", gold)
-    end
+    if gold > 0 then formatted = string.format("%d|cffffd700g|r ", gold) end
 
-    if silver > 0 or gold > 0 then
-        formatted = formatted .. string.format("%d|cffc7c7cfs|r ", silver)
-    end
+    if silver > 0 or gold > 0 then formatted = formatted .. string.format("%d|cffc7c7cfs|r ", silver) end
 
     formatted = formatted .. string.format("%d|cffeda55fc|r", bronze)
 

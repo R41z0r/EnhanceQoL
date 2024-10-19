@@ -416,11 +416,64 @@ local function setIlvlText(element, slot)
     end
 end
 
+local function IsIndestructible(link)
+    local itemParts = {strsplit(":", link)}
+    for i = 13, #itemParts do
+        local bonusID = tonumber(itemParts[i])
+        if bonusID and bonusID == 43 then return true; end
+    end
+    return false;
+end
+
+local function calculateDurability()
+    local maxDur = 0 -- combined value of durability
+    local counter = 0 -- general counter for damaged items
+    local critDura = 0 -- counter of items under 50%
+
+    for key, _ in pairs(addon.variables.itemSlots) do
+        local eItem = Item:CreateFromEquipmentSlot(key);
+        if eItem and not eItem:IsItemEmpty() then
+            eItem:ContinueOnItemLoad(function()
+                local link = eItem:GetItemLink();
+                if link then
+                    if IsIndestructible(link) == false then
+                        local current, maximum = GetInventoryItemDurability(key)
+                        if nil ~= current then
+                            local fDur = tonumber(string.format("%." .. 0 .. "f", current * 100 / maximum))
+                            counter = counter + 1
+                            maxDur = maxDur + fDur
+                            if fDur < 50 then critDura = critDura + 1 end
+                        end
+                    end
+                end
+            end)
+        end
+    end
+
+    -- When we only have full durable items so fake the numbers to show 100%
+    if maxDur == 0 and counter == 0 then
+        maxDur = 100
+        counter = 1
+    end
+
+    addon.variables.durabilityCount = tonumber(string.format("%." .. 0 .. "f", maxDur / counter)) .. "%"
+    addon.general.durabilityIconFrame.count:SetText(addon.variables.durabilityCount)
+
+    if tonumber(string.format("%." .. 0 .. "f", maxDur / counter)) > 80 then
+        addon.general.durabilityIconFrame.count:SetTextColor(1, 1, 1)
+    elseif tonumber(string.format("%." .. 0 .. "f", maxDur / counter)) > 50 then
+        addon.general.durabilityIconFrame.count:SetTextColor(1, 1, 0)
+    else
+        addon.general.durabilityIconFrame.count:SetTextColor(1, 0, 0)
+    end
+end
+
 local function setCharFrame()
     if addon.db["showCatalystChargesOnCharframe"] then
         local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
         addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
     end
+    if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
     for key, value in pairs(addon.variables.itemSlots) do setIlvlText(value, key) end
 end
 
@@ -549,6 +602,35 @@ local function addCharacterFrame(tab)
 
     if addon.db["showCatalystChargesOnCharframe"] == false then addon.general.iconFrame:Hide() end
 
+    -- add durability icon on charframe
+
+    addon.general.durabilityIconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
+    addon.general.durabilityIconFrame:SetSize(32, 32)
+    addon.general.durabilityIconFrame:SetPoint("TOPLEFT", CharacterFramePortrait, "RIGHT", 4, 0)
+
+    addon.general.durabilityIconFrame.icon = addon.general.durabilityIconFrame:CreateTexture(nil, "OVERLAY")
+    addon.general.durabilityIconFrame.icon:SetSize(32, 32)
+    addon.general.durabilityIconFrame.icon:SetPoint("CENTER", addon.general.durabilityIconFrame, "CENTER")
+    addon.general.durabilityIconFrame.icon:SetTexture(addon.variables.durabilityIcon)
+
+    addon.general.durabilityIconFrame.count = addon.general.durabilityIconFrame:CreateFontString(nil, "OVERLAY",
+        "GameFontHighlightLarge")
+    addon.general.durabilityIconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.durabilityIconFrame, "BOTTOMRIGHT", 1,
+        2)
+    addon.general.durabilityIconFrame.count:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+    local cbShowDurabilityOnCharframe = addon.functions.createCheckbox("showDurabilityOnCharframe", fCharacter,
+        L["showDurabilityOnCharframe"], 10, (addon.functions.getHeightOffset(cbshowCatalystChargesOnCharframe)) - 10)
+    cbShowDurabilityOnCharframe:SetScript("OnClick", function(self)
+        addon.db["showDurabilityOnCharframe"] = self:GetChecked()
+        calculateDurability()
+        if self:GetChecked() then
+            addon.general.durabilityIconFrame:Show()
+        else
+            addon.general.durabilityIconFrame:Hide()
+        end
+    end)
+    if addon.db["showDurabilityOnCharframe"] == false then addon.general.durabilityIconFrame:Hide() end
+
     for key, value in pairs(addon.variables.itemSlots) do
         -- Hintergrund für das Item-Level
         value.ilvlBackground = value:CreateTexture(nil, "BACKGROUND")
@@ -674,7 +756,7 @@ local function addCharacterFrame(tab)
     -- @end-debug@
 
     local cbShowIlvlOnBags = addon.functions.createCheckbox("showIlvlOnBagItems", fCharacter, L["showIlvlOnBagItems"],
-        10, (addon.functions.getHeightOffset(cbshowCatalystChargesOnCharframe)) - 10)
+        10, (addon.functions.getHeightOffset(cbShowDurabilityOnCharframe)) - 10)
     cbShowIlvlOnBags:SetScript("OnClick", function(self)
         addon.db["showIlvlOnBagItems"] = self:GetChecked()
         for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
@@ -1134,8 +1216,11 @@ local function eventHandler(self, event, arg1, arg2)
             MerchantSellAllJunkButton:Click()
             if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end
         end
-    elseif event == "PLAYER_EQUIPMENT_CHANGED" and addon.variables.itemSlots[arg1] and PaperDollFrame:IsShown() then
-        setIlvlText(addon.variables.itemSlots[arg1], arg1)
+    elseif event == "PLAYER_EQUIPMENT_CHANGED" then
+        if addon.variables.itemSlots[arg1] and PaperDollFrame:IsShown() then
+            setIlvlText(addon.variables.itemSlots[arg1], arg1)
+        end
+        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
     elseif event == "SOCKET_INFO_ACCEPT" and PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then
         C_Timer.After(0.5, function() setCharFrame() end)
     elseif event == "ENCHANT_SPELL_COMPLETED" and PaperDollFrame:IsShown() and addon.db["showEnchantOnCharframe"] then
@@ -1227,6 +1312,16 @@ local function eventHandler(self, event, arg1, arg2)
         addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
         if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
+    elseif event == "PLAYER_DEAD" then
+        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+    elseif event == "PLAYER_MONEY" then
+        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+    elseif event == "GUILDBANK_UPDATE_MONEY" then
+        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+    elseif event == "PLAYER_REGEN_ENABLED" then
+        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+    elseif event == "PLAYER_UNGHOST" then
+        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
     end
 end
 
@@ -1254,6 +1349,13 @@ frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 -- @debug@
 frameLoad:RegisterEvent("INSPECT_READY")
 -- @end-debug@
+
+-- for durability we need some events
+frameLoad:RegisterEvent("PLAYER_DEAD")
+frameLoad:RegisterEvent("PLAYER_MONEY")
+frameLoad:RegisterEvent("GUILDBANK_UPDATE_MONEY")
+frameLoad:RegisterEvent("PLAYER_REGEN_ENABLED")
+frameLoad:RegisterEvent("PLAYER_UNGHOST") -- if player resurrect at spirit healer
 
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)

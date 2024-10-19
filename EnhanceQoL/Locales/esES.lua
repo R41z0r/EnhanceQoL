@@ -22,6 +22,7 @@ L["showGemsOnCharframe"] = "Mostrar ranuras de gemas en el marco de equipo del p
 L["showEnchantOnCharframe"] = "Mostrar encantamientos en el marco de equipo del personaje"
 L["showCatalystChargesOnCharframe"] = "Mostrar cargas del catalizador en el marco del equipo del personaje"
 L["showIlvlOnBagItems"] = "Mostrar el nivel de objeto en el equipo en todas las bolsas"
+L["showDurabilityOnCharframe"] = "Mostrar durabilidad en el marco de equipo del personaje"
 
 L["deleteItemFillDialog"] = "Agregar \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
                                 "\" al \"Popup de confirmación de eliminación\""
