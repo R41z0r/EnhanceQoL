@@ -2176,6 +2176,7 @@ globals = {
 	"GetInventoryItemCooldown",
 	"GetInventoryItemCount",
 	"GetInventoryItemDurability",
+	"CharacterFramePortrait",
 	"GetInventoryItemEquippedUnusable",
 	"GetInventoryItemID",
 	"GetInventoryItemLink",
