@@ -133,6 +133,7 @@ frameLoad:RegisterEvent("LFG_ROLE_CHECK_SHOW")
 frameLoad:RegisterEvent("RAID_TARGET_UPDATE")
 frameLoad:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 frameLoad:RegisterEvent("READY_CHECK")
+frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 local function skipRolecheck()
     local tank, healer, dps = false, false, false
@@ -190,7 +191,7 @@ local function setActTank()
             return
         end
     end
-    addon.MythicPlus.actTank = "player"
+    addon.MythicPlus.actTank = nil
 end
 
 local function checkRaidMarker()
@@ -226,9 +227,15 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
         C_Timer.After(0.5, function() checkRaidMarker() end)
     elseif event == "PLAYER_ROLES_ASSIGNED" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and
         not UnitInRaid("player") and select(1, IsInInstance()) == true then
+        setActTank()
+        checkRaidMarker()
+    elseif event == "GROUP_ROSTER_UPDATE" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and
+        not UnitInRaid("player") and select(1, IsInInstance()) == true then
+        setActTank()
         checkRaidMarker()
     elseif event == "READY_CHECK" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and
         not UnitInRaid("player") and select(1, IsInInstance()) == true then
+        setActTank()
         checkRaidMarker()
     end
 end

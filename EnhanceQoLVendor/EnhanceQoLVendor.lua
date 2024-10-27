@@ -84,8 +84,8 @@ local function checkItem()
                                 table.insert(itemsToSell, {bag = bag, slot = slot})
                             end
                         elseif addon.Vendor.variables.itemQualityFilter[containerInfo.quality] then
-                            -- local effectiveILvl = C_Item.GetDetailedItemLevelInfo(containerInfo.hyperlink) -- item level of the item with all upgrades calculated
-                            local effectiveILvl = itemLevel -- item level of the item with all upgrades calculated
+                            local effectiveILvl = C_Item.GetDetailedItemLevelInfo(link) -- item level of the item with all upgrades calculated
+                            -- local effectiveILvl = itemLevel -- item level of the item with all upgrades calculated
 
                             if sellPrice and sellPrice > 0 and addon.Vendor.variables.itemTypeFilter[classID] and
                                 (not addon.Vendor.variables.itemSubTypeFilter[classID] or
