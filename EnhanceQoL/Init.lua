@@ -24,7 +24,7 @@ addon.variables.itemSlots = {[1] = CharacterHeadSlot, [2] = CharacterNeckSlot, [
 
 addon.variables.itemSlotSide = { -- 0 = Text to right side, 1 = Text to left side
 [1] = 0, [2] = 0, [3] = 0, [15] = 0, [5] = 0, [9] = 0, [10] = 1, [6] = 1, [7] = 1, [8] = 1, [11] = 1, [12] = 1,
-[13] = 1, [14] = 1, [16] = 1, [17] = 0}
+[13] = 1, [14] = 1, [16] = 1, [17] = 2}
 
 addon.variables.allowedSockets = {["EMPTY_SOCKET_BLUE"] = true, ["EMPTY_SOCKET_COGWHEEL"] = true,
                                   ["EMPTY_SOCKET_CYPHER"] = true, ["EMPTY_SOCKET_DOMINATION"] = true,

@@ -101,7 +101,7 @@ local function onInspect(arg1)
 
     if UnitGUID(InspectFrame.unit) ~= arg1 then return end
 
-    local pdElement = InspectFrame
+    local pdElement = InspectPaperDollFrame
     if not doneHook then
         doneHook = true
         InspectFrame:HookScript("OnHide", function(self) inspectDone = {} end)
@@ -240,6 +240,8 @@ local function onInspect(arg1)
                                 element.enchant = element:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
                                 if addon.variables.itemSlotSide[key] == 0 then
                                     element.enchant:SetPoint("BOTTOMLEFT", element, "BOTTOMRIGHT", 2, 1)
+                                elseif addon.variables.itemSlotSide[key] == 2 then
+                                    element.enchant:SetPoint("TOPLEFT", element, "TOPRIGHT", 2, -1)
                                 else
                                     element.enchant:SetPoint("BOTTOMRIGHT", element, "BOTTOMLEFT", -2, 1)
                                 end
@@ -645,6 +647,8 @@ local function addCharacterFrame(tab)
 
         value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
         if addon.variables.itemSlotSide[key] == 0 then
+            value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, 1)
+        elseif addon.variables.itemSlotSide[key] == 2 then
             value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, 1)
         else
             value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
