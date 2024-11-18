@@ -2191,6 +2191,7 @@ globals = {
 	"GetItemCreationContext",
 	"GetItemFamily",
 	"GetItemGem",
+	"InspectPaperDollFrame",
 	"GetItemIcon",
 	"GetItemInfo",
 	"GetItemInfoInstant",
