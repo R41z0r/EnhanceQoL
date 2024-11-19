@@ -24,7 +24,7 @@ L["showCatalystChargesOnCharframe"] = "Afficher les charges du Catalyseur dans l
 L["showIlvlOnBagItems"] = "Afficher le niveau d'objet sur l'équipement dans tous les sacs"
 L["showDurabilityOnCharframe"] = "Afficher la durabilité sur la fenêtre d'équipement du personnage"
 
-L["deleteItemFillDialog"] = "Ajouter \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
+L["deleteItemFillDialog"] = "Ajouter \"" .. DELETE_ITEM_CONFIRM_STRING ..
                                 "\" au \"Popup de confirmation de suppression\""
 L["autoChooseQuest"] = "Accepter et compléter les quêtes automatiquement"
 

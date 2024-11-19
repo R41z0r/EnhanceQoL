@@ -1315,7 +1315,7 @@ local function eventHandler(self, event, arg1, arg2)
         local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
         addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
     elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
-        if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(COMMUNITIES_DELETE_CONFIRM_STRING) end
+        if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(DELETE_ITEM_CONFIRM_STRING) end
     elseif event == "PLAYER_DEAD" then
         if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
     elseif event == "PLAYER_MONEY" then

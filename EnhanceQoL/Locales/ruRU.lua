@@ -29,7 +29,7 @@ L["showIlvlOnBagItems"] =
 L["showDurabilityOnCharframe"] =
     "Отображать прочность на окне экипировки персонажа"
 
-L["deleteItemFillDialog"] = "Добавить \"" .. COMMUNITIES_DELETE_CONFIRM_STRING ..
+L["deleteItemFillDialog"] = "Добавить \"" .. DELETE_ITEM_CONFIRM_STRING ..
                                 "\" в \"Окно подтверждения удаления\""
 L["autoChooseQuest"] = "Автоматически принимать и завершать задания"
 

@@ -81,7 +81,7 @@ globals = {
 	"UIDropDownMenu_GetSelectedID",
 	"ITEM_UPGRADE_TOOLTIP_FORMAT_STRING",
 	"StaticPopup1EditBox",
-	"COMMUNITIES_DELETE_CONFIRM_STRING",
+	"DELETE_ITEM_CONFIRM_STRING",
 	"PaperDollFrame",
 	"utf8sub",
 	"string.utf8sub",

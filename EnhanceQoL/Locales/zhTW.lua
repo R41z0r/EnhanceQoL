@@ -24,7 +24,7 @@ L["showCatalystChargesOnCharframe"] = "在角色裝備介面顯示催化劑次�
 L["showIlvlOnBagItems"] = "在所有背包的裝備上顯示物品等級"
 L["showDurabilityOnCharframe"] = "在角色裝備框架上顯示耐久度"
 
-L["deleteItemFillDialog"] = "將 \"" .. COMMUNITIES_DELETE_CONFIRM_STRING .. "\" 添加到\"刪除確認彈出窗口\""
+L["deleteItemFillDialog"] = "將 \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" 添加到\"刪除確認彈出窗口\""
 L["autoChooseQuest"] = "自動接受並完成任務"
 
 L["General"] = "通用"
