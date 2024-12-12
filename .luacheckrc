@@ -84,6 +84,7 @@ globals = {
 	"DELETE_ITEM_CONFIRM_STRING",
 	"PaperDollFrame",
 	"utf8sub",
+	"OrderHallCommandBar",
 	"string.utf8sub",
 	"CharacterHeadSlot",
 	"CharacterNeckSlot",
