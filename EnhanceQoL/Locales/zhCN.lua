@@ -23,6 +23,7 @@ L["showEnchantOnCharframe"] = "在角色装备框架上显示附魔"
 L["showCatalystChargesOnCharframe"] = "在角色装备界面显示催化剂次数"
 L["showIlvlOnBagItems"] = "在所有背包的装备上显示物品等级"
 L["showDurabilityOnCharframe"] = "在角色装备框架上显示耐久度"
+L["hideOrderHallBar"] = "隱藏職業大廳指揮欄"
 
 L["deleteItemFillDialog"] = "将 \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" 添加到“删除确认弹窗”"
 L["autoChooseQuest"] = "自动接受并完成任务"

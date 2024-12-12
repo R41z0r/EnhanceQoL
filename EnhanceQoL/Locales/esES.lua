@@ -23,6 +23,7 @@ L["showEnchantOnCharframe"] = "Mostrar encantamientos en el marco de equipo del 
 L["showCatalystChargesOnCharframe"] = "Mostrar cargas del catalizador en el marco del equipo del personaje"
 L["showIlvlOnBagItems"] = "Mostrar el nivel de objeto en el equipo en todas las bolsas"
 L["showDurabilityOnCharframe"] = "Mostrar durabilidad en el marco de equipo del personaje"
+L["hideOrderHallBar"] = "Ocultar barra de comandos de la sede"
 
 L["deleteItemFillDialog"] = "Agregar \"" .. DELETE_ITEM_CONFIRM_STRING ..
                                 "\" al \"Popup de confirmación de eliminación\""

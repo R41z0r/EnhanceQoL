@@ -23,6 +23,7 @@ L["showEnchantOnCharframe"] = "캐릭터 장비 창에 마법 부여 표시"
 L["showCatalystChargesOnCharframe"] = "캐릭터 장비 창에 촉매 충전 표시"
 L["showIlvlOnBagItems"] = "모든 가방의 장비에 아이템 레벨 표시"
 L["showDurabilityOnCharframe"] = "캐릭터 장비 프레임에 내구도를 표시합니다"
+L["hideOrderHallBar"] = "사령부 명령 바 숨기기"
 
 L["deleteItemFillDialog"] = "\"삭제 확인 팝업\"에 \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" 추가"
 L["autoChooseQuest"] = "퀘스트 자동 수락 및 완료"

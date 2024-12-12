@@ -774,8 +774,33 @@ local function addCharacterFrame(tab)
         hooksecurefunc(frame, "UpdateItems", updateBags)
     end
 
-    local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0,
-        (addon.functions.getHeightOffset(cbShowIlvlOnBags)) - 20, "TOP", "TOP")
+    -- Order Hall Bar
+    local cbHideOrderHallFrame = addon.functions.createCheckbox("hideOrderHallBar", fCharacter, L["hideOrderHallBar"],
+        10, (addon.functions.getHeightOffset(cbShowIlvlOnBags)) - 10)
+    cbHideOrderHallFrame:SetScript("OnClick", function(self)
+        addon.db["hideOrderHallBar"] = self:GetChecked()
+        if OrderHallCommandBar then
+            if self:GetChecked() then
+                OrderHallCommandBar:Hide()
+            else
+                OrderHallCommandBar:Show()
+            end
+        end
+    end)
+
+    if OrderHallCommandBar then
+        OrderHallCommandBar:HookScript("OnShow", function(self)
+            if addon.db["hideOrderHallBar"] then
+                self:Hide()
+            else
+                self:Show()
+            end
+        end)
+        if addon.db["hideOrderHallBar"] then OrderHallCommandBar:Hide() end
+    end
+
+    local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0, (addon.functions
+        .getHeightOffset(cbHideOrderHallFrame)) - 20, "TOP", "TOP")
 
     local classname = select(2, UnitClass("player"))
 
@@ -799,6 +824,7 @@ local function addCharacterFrame(tab)
             end
         end)
         if addon.db["deathknight_HideRuneFrame"] then RuneFrame:Hide() end
+
         addTotemHideToggle("deathknight_HideTotemBar", "shaman_HideTotem", fCharacter, cbHideDKRuneFrame)
     elseif classname == "DRUID" then
         addTotemHideToggle("druid_HideTotemBar", "shaman_HideTotem", fCharacter, labelClassSpecific)
@@ -1204,6 +1230,20 @@ local function eventHandler(self, event, arg1, arg2)
 
         loadMain()
         EQOL.PersistSignUpNote()
+    elseif event == "ZONE_CHANGED_NEW_AREA" and addon.variables.hookedOrderHall == false then
+        -- Order Hall Check
+        local ohcb = OrderHallCommandBar
+        if ohcb then
+            ohcb:HookScript("OnShow", function(self)
+                if addon.db["hideOrderHallBar"] then
+                    self:Hide()
+                else
+                    self:Show()
+                end
+            end)
+            addon.variables.hookedOrderHall = true
+            if addon.db["hideOrderHallBar"] then OrderHallCommandBar:Hide() end
+        end
     elseif event == "MERCHANT_SHOW" then
         if addon.db["autoRepair"] then
             if CanMerchantRepair() then
@@ -1359,6 +1399,7 @@ frameLoad:RegisterEvent("PLAYER_DEAD")
 frameLoad:RegisterEvent("PLAYER_MONEY")
 frameLoad:RegisterEvent("GUILDBANK_UPDATE_MONEY")
 frameLoad:RegisterEvent("PLAYER_REGEN_ENABLED")
+frameLoad:RegisterEvent("ZONE_CHANGED_NEW_AREA") -- Last event before showing the UI - Needed for OrderHallCommandBar LazyLoad
 frameLoad:RegisterEvent("PLAYER_UNGHOST") -- if player resurrect at spirit healer
 
 -- Setze den Event-Handler

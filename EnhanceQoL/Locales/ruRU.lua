@@ -28,6 +28,7 @@ L["showIlvlOnBagItems"] =
     "Отображать уровень предмета на экипировке во всех сумках"
 L["showDurabilityOnCharframe"] =
     "Отображать прочность на окне экипировки персонажа"
+L["hideOrderHallBar"] = "Скрыть панель команд оплота"
 
 L["deleteItemFillDialog"] = "Добавить \"" .. DELETE_ITEM_CONFIRM_STRING ..
                                 "\" в \"Окно подтверждения удаления\""

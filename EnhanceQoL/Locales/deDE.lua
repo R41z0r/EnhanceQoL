@@ -22,6 +22,7 @@ L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster an
 L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstungsfenster anzeigen"
 L["showIlvlOnBagItems"] = "Zeige das Itemlevel auf Ausrüstung in allen Taschen"
 L["showDurabilityOnCharframe"] = "Zeige Haltbarkeit auf dem Charakterausrüstungsfenster"
+L["hideOrderHallBar"] = "Ordenshallen-Kommandoleiste ausblenden"
 
 L["deleteItemFillDialog"] = "Füge \"" .. DELETE_ITEM_CONFIRM_STRING ..
                                 "\" zum \"Löschbestätigungs-Popup\" hinzu"
