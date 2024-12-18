@@ -24,6 +24,7 @@ L["showCatalystChargesOnCharframe"] = "Afficher les charges du Catalyseur dans l
 L["showIlvlOnBagItems"] = "Afficher le niveau d'objet sur l'équipement dans tous les sacs"
 L["showDurabilityOnCharframe"] = "Afficher la durabilité sur la fenêtre d'équipement du personnage"
 L["hideOrderHallBar"] = "Masquer la barre de commande de domaine"
+L["showInfoOnInspectFrame"] = "Afficher des informations supplémentaires dans la fenêtre\nd'inspection (Expérimental)"
 
 L["deleteItemFillDialog"] = "Ajouter \"" .. DELETE_ITEM_CONFIRM_STRING ..
                                 "\" au \"Popup de confirmation de suppression\""

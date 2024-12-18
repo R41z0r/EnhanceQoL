@@ -24,6 +24,7 @@ L["showCatalystChargesOnCharframe"] = "Mostrar cargas do catalisador no quadro d
 L["showIlvlOnBagItems"] = "Exibir o nível de item no equipamento em todas as bolsas"
 L["showDurabilityOnCharframe"] = "Exibir durabilidade no quadro de equipamento do personagem"
 L["hideOrderHallBar"] = "Ocultar barra de comando do Salão da Ordem"
+L["showInfoOnInspectFrame"] = "Mostrar informações adicionais na janela de inspeção (Experimental)"
 
 L["deleteItemFillDialog"] = "Adicionar \"" .. DELETE_ITEM_CONFIRM_STRING ..
                                 "\" ao \"Popup de confirmação de exclusão\""

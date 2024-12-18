@@ -94,6 +94,29 @@ local function GetUnitFromGUID(targetGUID)
     return nil
 end
 
+local function removeInspectElements()
+    if InspectPaperDollFrame.ilvl then InspectPaperDollFrame.ilvl:SetText("") end
+    local itemSlotsInspectList = {[1] = InspectHeadSlot, [2] = InspectNeckSlot, [3] = InspectShoulderSlot,
+                                  [15] = InspectBackSlot, [5] = InspectChestSlot, [9] = InspectWristSlot,
+                                  [10] = InspectHandsSlot, [6] = InspectWaistSlot, [7] = InspectLegsSlot,
+                                  [8] = InspectFeetSlot, [11] = InspectFinger0Slot, [12] = InspectFinger1Slot,
+                                  [13] = InspectTrinket0Slot, [14] = InspectTrinket1Slot, [16] = InspectMainHandSlot,
+                                  [17] = InspectSecondaryHandSlot}
+    for key, element in pairs(itemSlotsInspectList) do
+        if element.ilvl then element.ilvl:SetFormattedText("") end
+        if element.ilvlBackground then element.ilvlBackground:Hide() end
+        if element.enchant then element.enchant:SetText("") end
+        if element.gems and #element.gems > 0 then
+            for i = 1, #element.gems do
+                element.gems[i]:UnregisterAllEvents()
+                element.gems[i]:SetScript("OnUpdate", nil)
+                element.gems[i]:Hide()
+            end
+        end
+    end
+
+end
+
 local function onInspect(arg1)
     if nil == InspectFrame then return end
     local unit = InspectFrame.unit
@@ -104,7 +127,10 @@ local function onInspect(arg1)
     local pdElement = InspectPaperDollFrame
     if not doneHook then
         doneHook = true
-        InspectFrame:HookScript("OnHide", function(self) inspectDone = {} end)
+        InspectFrame:HookScript("OnHide", function(self)
+            inspectDone = {}
+            removeInspectElements()
+        end)
     end
     if inspectUnit ~= InspectFrame.unit then
         inspectUnit = InspectFrame.unit
@@ -588,6 +614,7 @@ end
 
 local function addCharacterFrame(tab)
     if nil == addon.db["showIlvlOnCharframe"] then addon.db["showIlvlOnCharframe"] = false end
+    if nil == addon.db["showInfoOnInspectFrame"] then addon.db["showInfoOnInspectFrame"] = false end
     if nil == addon.db["showGemsOnCharframe"] then addon.db["showGemsOnCharframe"] = false end
     if nil == addon.db["showEnchantOnCharframe"] then addon.db["showEnchantOnCharframe"] = false end
     if nil == addon.db["showCatalystChargesOnCharframe"] then addon.db["showCatalystChargesOnCharframe"] = false end
@@ -615,6 +642,13 @@ local function addCharacterFrame(tab)
         -- if InspectFrame and InspectFrame:IsShown() then onInspect() end
     end)
 
+    local cbShowInfoOnInspectFrame = addon.functions.createCheckbox("showInfoOnInspectFrame", fCharacter,
+        L["showInfoOnInspectFrame"], 10, (addon.functions.getHeightOffset(cbShowEnchantCharframe)) - 10)
+    cbShowEnchantCharframe:SetScript("OnClick", function(self)
+        addon.db["showInfoOnInspectFrame"] = self:GetChecked()
+        removeInspectElements()
+    end)
+
     -- Add Cataclyst charges in char frame
     local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
     local iconID = cataclystInfo.iconFileID
@@ -635,8 +669,8 @@ local function addCharacterFrame(tab)
     addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
 
     local cbshowCatalystChargesOnCharframe = addon.functions.createCheckbox("showCatalystChargesOnCharframe",
-        fCharacter, L["showCatalystChargesOnCharframe"], 10, (addon.functions.getHeightOffset(cbShowEnchantCharframe)) -
-            10)
+        fCharacter, L["showCatalystChargesOnCharframe"], 10,
+        (addon.functions.getHeightOffset(cbShowInfoOnInspectFrame)) - 10)
     cbshowCatalystChargesOnCharframe:SetScript("OnClick", function(self)
         addon.db["showCatalystChargesOnCharframe"] = self:GetChecked()
         if self:GetChecked() then
@@ -1497,7 +1531,7 @@ local function eventHandler(self, event, arg1, arg2)
             if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
         end
         -- @debug@
-    elseif event == "INSPECT_READY" then
+    elseif event == "INSPECT_READY" and addon.db["showInfoOnInspectFrame"] then
         -- Einbauen einer Prüfung, ob ich den Character schon angeschaut habe, löschen der Liste nach InspectFRAME close
         -- Aktuell kommt es vor, dass die Grafik von Sockeln fehlt
         onInspect(arg1)
@@ -1544,9 +1578,7 @@ frameLoad:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 
 frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
 
--- @debug@
 frameLoad:RegisterEvent("INSPECT_READY")
--- @end-debug@
 
 -- for durability we need some events
 frameLoad:RegisterEvent("PLAYER_DEAD")

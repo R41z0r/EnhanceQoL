@@ -25,6 +25,7 @@ L["showCatalystChargesOnCharframe"] =
 L["showIlvlOnBagItems"] = "Mostra il livello dell'oggetto sull'equipaggiamento in tutte le borse"
 L["showDurabilityOnCharframe"] = "Mostra la durabilità sulla finestra dell'equipaggiamento del personaggio"
 L["hideOrderHallBar"] = "Nascondi barra dei comandi della Enclave"
+L["showInfoOnInspectFrame"] = "Mostra informazioni aggiuntive nella finestra di ispezione (Sperimentale)"
 
 L["deleteItemFillDialog"] = "Aggiungi \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" al \"Popup di conferma eliminazione\""
 L["autoChooseQuest"] = "Accetta e completa le missioni automaticamente"

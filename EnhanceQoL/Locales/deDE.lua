@@ -23,6 +23,7 @@ L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstu
 L["showIlvlOnBagItems"] = "Zeige das Itemlevel auf Ausrüstung in allen Taschen"
 L["showDurabilityOnCharframe"] = "Zeige Haltbarkeit auf dem Charakterausrüstungsfenster"
 L["hideOrderHallBar"] = "Ordenshallen-Kommandoleiste ausblenden"
+L["showInfoOnInspectFrame"] = "Zeige zusätzliche Informationen im\nBetrachten-Fenster an (Experimentell)"
 
 L["deleteItemFillDialog"] = "Füge \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" zum \"Löschbestätigungs-Popup\" hinzu"
 L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
