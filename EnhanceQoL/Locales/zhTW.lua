@@ -70,16 +70,25 @@ L["shaman_HideTotem"] = "隐藏图腾条"
 -- 术士
 L["warlock_HideSoulShardBar"] = "隐藏灵魂碎片条"
 
+L["questAddNPCToExclude"] = "將目標 NPC/打開的對話視窗添加到排除清單"
+
 -- CVar
 L["CVar"] = "CVar"
-L["tReloadInterface"] = "需要重新加載介面"
-L["bReloadInterface"] = "您需要重新加載介面以應用更改"
+L["tReloadInterface"] = "需要重新加載界面"
+L["bReloadInterface"] = "您需要重新加載界面以應用更改"
 
-L["CVarOptions"] = {["ShowClassColorInNameplate"] = {description = "在姓名板上顯示職業顏色", -- 啟用 = 1
-trueValue = "1", falseValue = "0"}, ["chatMouseScroll"] = {description = "啟用聊天鼠標滾動", -- 啟用 = 1
-trueValue = "1", falseValue = "0"},
-                    ["WholeChatWindowClickable"] = {description = "使整個聊天窗口可點擊", -- 啟用 = 1
-trueValue = "1", falseValue = "0"}, ["showTutorials"] = {description = "禁用教程", -- 禁用 = 0
-trueValue = "0", falseValue = "1"}, ["UberTooltips"] = {description = "啟用增強提示", -- 啟用 = 1
-trueValue = "1", falseValue = "0"}, ["ffxDeath"] = {description = "禁用死亡效果", -- 禁用 = 0
-trueValue = "0", falseValue = "1"}}
+L["CVarOptions"] = {
+    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "啟用使用技能時自動下馬"},
+    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "啟用飛行時使用技能時自動下馬"},
+    ["chatMouseScroll"] = {description = "啟用聊天視窗的鼠標滾動", trueValue = "1", falseValue = "0"},
+    ["ffxDeath"] = {description = "禁用死亡效果", trueValue = "0", falseValue = "1"},
+    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "啟用移動時地圖淡出"},
+    ["scriptErrors"] = {description = "在界面上顯示 LUA 錯誤", trueValue = "1", falseValue = "0"},
+    ["ShowClassColorInNameplate"] = {description = "在姓名板上顯示職業顏色", trueValue = "1", falseValue = "0"},
+    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "顯示目標的施法條"},
+    ["showTutorials"] = {description = "禁用教程", trueValue = "0", falseValue = "1"},
+    ["UberTooltips"] = {description = "啟用增強提示", trueValue = "1", falseValue = "0"},
+    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "顯示玩家的公會名稱"},
+    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "顯示玩家的頭銜"},
+    ["WholeChatWindowClickable"] = {description = "使整個聊天視窗可點擊", trueValue = "1", falseValue = "0"},
+}

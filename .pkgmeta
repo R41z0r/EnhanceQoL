@@ -1,9 +1,9 @@
 package-as: EnhanceQoL
 
 externals:
-  EnhanceQoL/libs/LibDBIcon-1.0:
-    url: https://repos.wowace.com/wow/libdbicon-1-0/trunk
-    tag: latest
+  # EnhanceQoL/libs/LibDBIcon-1.0:
+  #   url: https://repos.wowace.com/wow/libdbicon-1-0/trunk
+  #   tag: latest
   EnhanceQoL/libs/LibDataBroker-1.1:
     url: https://github.com/tekkub/libdatabroker-1-1
     tag: latest

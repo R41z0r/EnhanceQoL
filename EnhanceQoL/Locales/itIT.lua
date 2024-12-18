@@ -21,7 +21,7 @@ L["showIlvlOnCharframe"] = "Mostra il livello dell'oggetto nel\npannello dell'eq
 L["showGemsOnCharframe"] = "Mostra le gemme nel pannello\ndell'equipaggiamento del personaggio"
 L["showEnchantOnCharframe"] = "Mostra gli incantamenti nel\npannello dell'equipaggiamento del personaggio"
 L["showCatalystChargesOnCharframe"] =
-    "Mostra le cariche del Catalizzatore nel riquadro dell'equipaggiamento del personaggio"
+    "Mostra le cariche del Catalizzatore nel riquadro\ndell'equipaggiamento del personaggio"
 L["showIlvlOnBagItems"] = "Mostra il livello dell'oggetto sull'equipaggiamento in tutte le borse"
 L["showDurabilityOnCharframe"] = "Mostra la durabilità sulla finestra dell'equipaggiamento del personaggio"
 L["hideOrderHallBar"] = "Nascondi barra dei comandi della Enclave"
@@ -47,7 +47,7 @@ L["ignoreDailyQuests"] = "Ignora missioni giornaliere/settimanali"
 
 L["autoQuickLoot"] = "Saccheggio rapido degli oggetti"
 L["openCharframeOnUpgrade"] =
-    "Apri il riquadro del personaggio durante il potenziamento degli oggetti presso il mercante"
+    "Apri il riquadro del personaggio durante il potenziamento\ndegli oggetti presso il mercante"
 
 L["headerClassInfo"] = "Queste impostazioni si applicano solo a " .. select(1, UnitClass("player"))
 
@@ -72,19 +72,25 @@ L["shaman_HideTotem"] = "Nascondi barra dei totem"
 -- Stregone
 L["warlock_HideSoulShardBar"] = "Nascondi barra dei frammenti d'anima"
 
+L["questAddNPCToExclude"] = "Aggiungi il PNG selezionato/finestra di dialogo aperta\nall'elenco di esclusione"
+
 -- CVar
 L["CVar"] = "CVar"
 L["tReloadInterface"] = "Ricaricamento interfaccia richiesto"
 L["bReloadInterface"] = "Devi ricaricare la tua interfaccia per applicare le modifiche"
 
-L["CVarOptions"] =
-    {["ShowClassColorInNameplate"] = {description = "Mostra i colori delle classi sulle targhette", -- Attivato = 1
-    trueValue = "1", falseValue = "0"},
-     ["chatMouseScroll"] = {description = "Abilita lo scorrimento del mouse nella chat", -- Attivato = 1
-    trueValue = "1", falseValue = "0"},
-     ["WholeChatWindowClickable"] = {description = "Rendi cliccabile l'intera finestra della chat", -- Attivato = 1
-    trueValue = "1", falseValue = "0"}, ["showTutorials"] = {description = "Disattiva i tutorial", -- Disattivato = 0
-    trueValue = "0", falseValue = "1"}, ["UberTooltips"] = {description = "Abilita tooltip avanzati", -- Attivato = 1
-    trueValue = "1", falseValue = "0"},
-     ["ffxDeath"] = {description = "Disattiva gli effetti di morte", -- Disattivato = 0
-    trueValue = "0", falseValue = "1"}}
+L["CVarOptions"] = {
+    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Abilita lo smontaggio automatico durante l'uso delle abilità"},
+    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Abilita lo smontaggio automatico durante il volo"},
+    ["chatMouseScroll"] = {description = "Abilita lo scorrimento del mouse nella chat", trueValue = "1", falseValue = "0"},
+    ["ffxDeath"] = {description = "Disabilita gli effetti di morte", trueValue = "0", falseValue = "1"},
+    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Abilita lo sbiadimento della mappa durante il movimento"},
+    ["scriptErrors"] = {description = "Mostra errori LUA nell'interfaccia", trueValue = "1", falseValue = "0"},
+    ["ShowClassColorInNameplate"] = {description = "Mostra i colori delle classi sulle targhette", trueValue = "1", falseValue = "0"},
+    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Mostra la barra degli incantesimi del bersaglio"},
+    ["showTutorials"] = {description = "Disattiva i tutorial", trueValue = "0", falseValue = "1"},
+    ["UberTooltips"] = {description = "Abilita tooltip avanzati", trueValue = "1", falseValue = "0"},
+    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Mostra la gilda sui giocatori"},
+    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Mostra il titolo sui giocatori"},
+    ["WholeChatWindowClickable"] = {description = "Rendi cliccabile l'intera finestra di chat", trueValue = "1", falseValue = "0"},
+}

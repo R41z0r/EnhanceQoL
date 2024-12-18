@@ -67,20 +67,26 @@ L["shaman_HideTotem"] = "Hide Totembar"
 -- Warlock
 L["warlock_HideSoulShardBar"] = "Hide Soulshard Bar"
 
+L["questAddNPCToExclude"] = "Add targetted NPC/opened Gossipwindow to exclude"
+
 -- CVar
 L["CVar"] = "CVar"
 L["tReloadInterface"] = "Interface Reload Required"
 L["bReloadInterface"] = "You need to reload your interface to apply changes"
 
-L["CVarOptions"] = {["ShowClassColorInNameplate"] = {description = "Show class colors on nameplates", -- Aktiviert = 1
-trueValue = "1", falseValue = "0"},
-                    ["chatMouseScroll"] = {description = "Enable mouse scroll in chat", -- Aktiviert = 1
-trueValue = "1", falseValue = "0"},
-                    ["WholeChatWindowClickable"] = {description = "Make the entire chat window clickable", -- Aktiviert = 1
-                                                    trueValue = "1", falseValue = "0"},
-
-                    ["showTutorials"] = {description = "Disable tutorials", -- Deaktiviert = 0
-trueValue = "0", falseValue = "1"}, ["UberTooltips"] = {description = "Enable enhanced tooltips", -- Aktiviert = 1
-trueValue = "1", falseValue = "0"}, ["ffxDeath"] = {description = "Disable death effects", -- Deaktiviert = 0
-trueValue = "0", falseValue = "1"}}
+L["CVarOptions"] = {
+    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities"},
+    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities while flying"},
+    ["chatMouseScroll"] = {description = "Enable mouse scroll in chat", trueValue = "1", falseValue = "0"},
+    ["ffxDeath"] = {description = "Disable death effects", trueValue = "0", falseValue = "1"},
+    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Enable Map Fade while moving"},
+    ["scriptErrors"] = {description = "Show LUA-Error on UI", trueValue = "1", falseValue = "0"},
+    ["ShowClassColorInNameplate"] = {description = "Show class colors on nameplates", trueValue = "1", falseValue = "0"},
+    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Show the Castbar of your Target"},
+    ["showTutorials"] = {description = "Disable tutorials", trueValue = "0", falseValue = "1"},
+    ["UberTooltips"] = {description = "Enable enhanced tooltips", trueValue = "1", falseValue = "0"},
+    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Show the Guild on Players"},
+    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Show the Title on Players"},
+    ["WholeChatWindowClickable"] = {description = "Make the entire chat window clickable", trueValue = "1", falseValue = "0"},
+}
 

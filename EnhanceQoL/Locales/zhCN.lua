@@ -70,16 +70,25 @@ L["shaman_HideTotem"] = "隐藏图腾条"
 -- 术士
 L["warlock_HideSoulShardBar"] = "隐藏灵魂碎片条"
 
+L["questAddNPCToExclude"] = "将目标 NPC/打开的对话窗口添加到排除列表"
+
 -- CVar
 L["CVar"] = "CVar"
 L["tReloadInterface"] = "需要重新加载界面"
 L["bReloadInterface"] = "您需要重新加载界面以应用更改"
 
-L["CVarOptions"] = {["ShowClassColorInNameplate"] = {description = "在姓名板上显示职业颜色", -- 启用 = 1
-trueValue = "1", falseValue = "0"}, ["chatMouseScroll"] = {description = "启用聊天鼠标滚动", -- 启用 = 1
-trueValue = "1", falseValue = "0"},
-                    ["WholeChatWindowClickable"] = {description = "使整个聊天窗口可点击", -- 启用 = 1
-trueValue = "1", falseValue = "0"}, ["showTutorials"] = {description = "禁用教程", -- 禁用 = 0
-trueValue = "0", falseValue = "1"}, ["UberTooltips"] = {description = "启用增强提示", -- 启用 = 1
-trueValue = "1", falseValue = "0"}, ["ffxDeath"] = {description = "禁用死亡效果", -- 禁用 = 0
-trueValue = "0", falseValue = "1"}}
+L["CVarOptions"] = {
+    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "启用使用技能时自动下马"},
+    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "启用飞行时使用技能时自动下马"},
+    ["chatMouseScroll"] = {description = "启用聊天鼠标滚动", trueValue = "1", falseValue = "0"},
+    ["ffxDeath"] = {description = "禁用死亡效果", trueValue = "0", falseValue = "1"},
+    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "启用移动时地图淡出"},
+    ["scriptErrors"] = {description = "在界面上显示 LUA 错误", trueValue = "1", falseValue = "0"},
+    ["ShowClassColorInNameplate"] = {description = "在姓名板上显示职业颜色", trueValue = "1", falseValue = "0"},
+    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "显示目标的施法条"},
+    ["showTutorials"] = {description = "禁用教程", trueValue = "0", falseValue = "1"},
+    ["UberTooltips"] = {description = "启用增强提示", trueValue = "1", falseValue = "0"},
+    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "显示玩家的公会名称"},
+    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "显示玩家的头衔"},
+    ["WholeChatWindowClickable"] = {description = "使整个聊天窗口可点击", trueValue = "1", falseValue = "0"},
+}

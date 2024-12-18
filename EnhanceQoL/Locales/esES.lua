@@ -71,21 +71,25 @@ L["shaman_HideTotem"] = "Ocultar barra de tótems"
 -- Brujo
 L["warlock_HideSoulShardBar"] = "Ocultar barra de fragmentos de alma"
 
+L["questAddNPCToExclude"] = "Añadir el PNJ objetivo/ventana de diálogo abierta a la lista de exclusión"
+
 -- CVar
 L["CVar"] = "CVar"
 L["tReloadInterface"] = "Recarga de interfaz requerida"
 L["bReloadInterface"] = "Debes recargar tu interfaz para aplicar los cambios"
 
-L["CVarOptions"] =
-    {["ShowClassColorInNameplate"] = {description = "Mostrar colores de clase en las placas de nombre", -- Activado = 1
-    trueValue = "1", falseValue = "0"},
-     ["chatMouseScroll"] = {description = "Habilitar el desplazamiento del ratón en el chat", -- Activado = 1
-    trueValue = "1", falseValue = "0"},
-     ["WholeChatWindowClickable"] = {description = "Hacer que toda la ventana del chat sea clicable", -- Activado = 1
-    trueValue = "1", falseValue = "0"},
-     ["showTutorials"] = {description = "Desactivar los tutoriales", -- Desactivado = 0
-    trueValue = "0", falseValue = "1"},
-     ["UberTooltips"] = {description = "Habilitar tooltips mejorados", -- Activado = 1
-    trueValue = "1", falseValue = "0"},
-     ["ffxDeath"] = {description = "Desactivar los efectos de muerte", -- Desactivado = 0
-    trueValue = "0", falseValue = "1"}}
+L["CVarOptions"] = {
+    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Habilitar desmontaje automático al usar habilidades"},
+    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Habilitar desmontaje automático al volar"},
+    ["chatMouseScroll"] = {description = "Habilitar desplazamiento del ratón en el chat", trueValue = "1", falseValue = "0"},
+    ["ffxDeath"] = {description = "Desactivar efectos de muerte", trueValue = "0", falseValue = "1"},
+    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Habilitar desvanecimiento del mapa al moverse"},
+    ["scriptErrors"] = {description = "Mostrar errores de LUA en la interfaz", trueValue = "1", falseValue = "0"},
+    ["ShowClassColorInNameplate"] = {description = "Mostrar colores de clase en las placas de nombre", trueValue = "1", falseValue = "0"},
+    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Mostrar la barra de lanzamiento de tu objetivo"},
+    ["showTutorials"] = {description = "Desactivar tutoriales", trueValue = "0", falseValue = "1"},
+    ["UberTooltips"] = {description = "Habilitar tooltips avanzados", trueValue = "1", falseValue = "0"},
+    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Mostrar la guilda en los jugadores"},
+    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Mostrar el título en los jugadores"},
+    ["WholeChatWindowClickable"] = {description = "Hacer que toda la ventana de chat sea clicable", trueValue = "1", falseValue = "0"},
+}

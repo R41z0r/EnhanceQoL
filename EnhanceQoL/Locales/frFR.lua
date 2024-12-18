@@ -20,7 +20,7 @@ L["ignoreTalkingHead"] = "Masquer automatiquement le cadre Talking Head"
 L["showIlvlOnCharframe"] = "Afficher le niveau d'objet sur l'équipement du personnage"
 L["showGemsOnCharframe"] = "Afficher les emplacements de gemmes sur l'équipement du personnage"
 L["showEnchantOnCharframe"] = "Afficher les enchantements sur l'équipement du personnage"
-L["showCatalystChargesOnCharframe"] = "Afficher les charges du Catalyseur dans le cadre de l'équipement du personnage"
+L["showCatalystChargesOnCharframe"] = "Afficher les charges du Catalyseur dans le cadre\nde l'équipement du personnage"
 L["showIlvlOnBagItems"] = "Afficher le niveau d'objet sur l'équipement dans tous les sacs"
 L["showDurabilityOnCharframe"] = "Afficher la durabilité sur la fenêtre d'équipement du personnage"
 L["hideOrderHallBar"] = "Masquer la barre de commande de domaine"
@@ -46,7 +46,7 @@ L["ignoreTrivialQuests"] = "Ignorer les quêtes triviales"
 L["ignoreDailyQuests"] = "Ignorer les quêtes journalières/hebdomadaires"
 
 L["autoQuickLoot"] = "Butin rapide des objets"
-L["openCharframeOnUpgrade"] = "Ouvrir le cadre de personnage lors de l'amélioration d'objet chez le marchand"
+L["openCharframeOnUpgrade"] = "Ouvrir le cadre de personnage lors de l'amélioration d'objet\nchez le marchand"
 
 L["headerClassInfo"] = "Ces paramètres s'appliquent uniquement à " .. select(1, UnitClass("player"))
 
@@ -71,21 +71,25 @@ L["shaman_HideTotem"] = "Masquer la barre de totems"
 -- Démoniste
 L["warlock_HideSoulShardBar"] = "Masquer la barre de fragments d'âme"
 
+L["questAddNPCToExclude"] = "Ajouter le PNJ ciblé/fenêtre de dialogue ouverte à la liste d'exclusion"
+
 -- CVar
 L["CVar"] = "CVar"
 L["tReloadInterface"] = "Rechargement de l'interface requis"
 L["bReloadInterface"] = "Vous devez recharger votre interface pour appliquer les modifications"
 
-L["CVarOptions"] =
-    {["ShowClassColorInNameplate"] = {description = "Afficher les couleurs de classe sur les plaques de nom", -- Activé = 1
-                                      trueValue = "1", falseValue = "0"},
-     ["chatMouseScroll"] = {description = "Activer le défilement de la souris dans le chat", -- Activé = 1
-    trueValue = "1", falseValue = "0"},
-     ["WholeChatWindowClickable"] = {description = "Rendre la fenêtre de chat entière cliquable", -- Activé = 1
-    trueValue = "1", falseValue = "0"},
-     ["showTutorials"] = {description = "Désactiver les tutoriels", -- Désactivé = 0
-    trueValue = "0", falseValue = "1"},
-     ["UberTooltips"] = {description = "Activer les infobulles améliorées", -- Activé = 1
-    trueValue = "1", falseValue = "0"},
-     ["ffxDeath"] = {description = "Désactiver les effets de mort", -- Désactivé = 0
-    trueValue = "0", falseValue = "1"}}
+L["CVarOptions"] = {
+    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Activer la descente automatique lors de l'utilisation des capacités"},
+    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Activer la descente automatique en vol"},
+    ["chatMouseScroll"] = {description = "Activer le défilement de la souris dans le chat", trueValue = "1", falseValue = "0"},
+    ["ffxDeath"] = {description = "Désactiver les effets de mort", trueValue = "0", falseValue = "1"},
+    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Activer l'estompage de la carte en déplacement"},
+    ["scriptErrors"] = {description = "Afficher les erreurs LUA sur l'interface", trueValue = "1", falseValue = "0"},
+    ["ShowClassColorInNameplate"] = {description = "Afficher les couleurs des classes sur les barres de noms", trueValue = "1", falseValue = "0"},
+    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Afficher la barre de lancement de votre cible"},
+    ["showTutorials"] = {description = "Désactiver les tutoriels", trueValue = "0", falseValue = "1"},
+    ["UberTooltips"] = {description = "Activer les info-bulles avancées", trueValue = "1", falseValue = "0"},
+    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Afficher la guilde sur les joueurs"},
+    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Afficher le titre sur les joueurs"},
+    ["WholeChatWindowClickable"] = {description = "Rendre toute la fenêtre de chat cliquable", trueValue = "1", falseValue = "0"},
+}

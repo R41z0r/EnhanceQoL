@@ -69,19 +69,25 @@ L["shaman_HideTotem"] = "Totemleiste ausblenden"
 -- Hexenmeister
 L["warlock_HideSoulShardBar"] = "Splitterleiste ausblenden"
 
+L["questAddNPCToExclude"] = "Füge anvisierten NPC/geöffnetes Gossip-Fenster zur Ausschlussliste hinzu"
+
 -- CVar
 L["CVar"] = "CVar"
 L["tReloadInterface"] = "Interface-Neuladen erforderlich"
 L["bReloadInterface"] = "Sie müssen Ihr Interface neu laden, um Änderungen zu übernehmen"
 
-L["CVarOptions"] =
-    {["ShowClassColorInNameplate"] = {description = "Zeige Klassenfarben in Namensplaketten", -- Aktiviert = 1
-    trueValue = "1", falseValue = "0"},
-     ["chatMouseScroll"] = {description = "Aktiviere Maus-Scrollen im Chat", -- Aktiviert = 1
-    trueValue = "1", falseValue = "0"},
-     ["WholeChatWindowClickable"] = {description = "Macht das gesamte Chatfenster anklickbar", -- Aktiviert = 1
-    trueValue = "1", falseValue = "0"}, ["showTutorials"] = {description = "Deaktiviere Tutorials", -- Deaktiviert = 0
-    trueValue = "0", falseValue = "1"},
-     ["UberTooltips"] = {description = "Aktiviere erweiterte Tooltips", -- Aktiviert = 1
-    trueValue = "1", falseValue = "0"}, ["ffxDeath"] = {description = "Deaktiviere Todeseffekte", -- Deaktiviert = 0
-    trueValue = "0", falseValue = "1"}}
+L["CVarOptions"] = {
+    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Automatisches Absteigen bei Fähigkeiten aktivieren"},
+    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Automatisches Absteigen beim Fliegen aktivieren"},
+    ["chatMouseScroll"] = {description = "Maus-Scrollen im Chat aktivieren", trueValue = "1", falseValue = "0"},
+    ["ffxDeath"] = {description = "Todeseffekte deaktivieren", trueValue = "0", falseValue = "1"},
+    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Karten-Ausblenden beim Bewegen aktivieren"},
+    ["scriptErrors"] = {description = "LUA-Fehler im Interface anzeigen", trueValue = "1", falseValue = "0"},
+    ["ShowClassColorInNameplate"] = {description = "Klassenfarben in Namensplaketten anzeigen", trueValue = "1", falseValue = "0"},
+    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Zauberleiste des Ziels anzeigen"},
+    ["showTutorials"] = {description = "Tutorials deaktivieren", trueValue = "0", falseValue = "1"},
+    ["UberTooltips"] = {description = "Erweiterte Tooltips aktivieren", trueValue = "1", falseValue = "0"},
+    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Gilde bei Spielern anzeigen"},
+    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Titel bei Spielern anzeigen"},
+    ["WholeChatWindowClickable"] = {description = "Ganzes Chatfenster anklickbar machen", trueValue = "1", falseValue = "0"},
+}

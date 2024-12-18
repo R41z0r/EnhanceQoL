@@ -156,6 +156,70 @@ function addon.functions.createDropdown(id, frame, items, width, text, x, y, ini
     return label, dropdown
 end
 
+function addon.functions.createDropdownNoInitial(id, frame, items, width, text, x, y)
+
+    table.sort(items, function(a, b) return a.text < b.text end)
+
+    -- Erstelle ein Label
+    local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    label:SetPoint("TOPLEFT", frame, "TOPLEFT", x, y)
+    label:SetText(text)
+
+    -- Erstelle ein Dropdown-Menü
+    local dropdown = CreateFrame("Frame", "MyDropdown", frame, "UIDropDownMenuTemplate")
+    dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -16, -10) -- Position relativ zum Label
+
+    -- Initialisiere das Dropdown-Menü
+    UIDropDownMenu_SetWidth(dropdown, 180)
+    dropdown:SetFrameStrata("DIALOG")
+
+    local function Initialize(self, level)
+        local info = UIDropDownMenu_CreateInfo()
+        for i, item in ipairs(items) do
+            info.text = item.text
+            info.value = item.value
+            info.checked = nil
+            info.func = function(self) UIDropDownMenu_SetSelectedID(dropdown, i) end
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end
+
+    UIDropDownMenu_SetText(dropdown, "")
+    -- Initialisiere das Dropdown-Menü
+    UIDropDownMenu_Initialize(dropdown, Initialize)
+    return dropdown
+end
+
+function addon.functions.getIDFromGUID(unitId)
+    local _, _, _, _, _, npcID = strsplit("-", unitId)
+    npcID = tonumber(npcID)
+    return npcID
+end
+
+function addon.functions.addDropdownItem(dropdown, items, newItem)
+    -- Füge das neue Item zur Items-Tabelle hinzu
+    table.insert(items, newItem)
+
+    table.sort(items, function(a, b)
+        return a.text < b.text
+    end)
+    -- Neuinitialisiere das Dropdown-Menü
+    local function Initialize(self, level)
+        local info = UIDropDownMenu_CreateInfo()
+        for i, item in ipairs(items) do
+            info.text = item.text
+            info.value = item.value
+            info.checked = nil
+            info.func = function(self)
+                UIDropDownMenu_SetSelectedID(dropdown, i)
+            end
+            UIDropDownMenu_AddButton(info, level)
+        end
+    end
+
+    UIDropDownMenu_Initialize(dropdown, Initialize)
+end
+
 function addon.functions.createButton(parent, x, y, width, height, text, script)
     local button = CreateFrame("Button", nil, parent, "GameMenuButtonTemplate")
     button:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)

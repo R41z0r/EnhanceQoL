@@ -1042,6 +1042,81 @@ local function addQuestFrame(tab)
         (addon.functions.getHeightOffset(cbAutoChooseQuest)))
     local cbIgnoreTrivialQuests = addon.functions.createCheckbox("ignoreTrivialQuests", fQuest,
         L["ignoreTrivialQuests"], 10, (addon.functions.getHeightOffset(cbIgnoreDailyQuests)))
+
+    local labelHeadline = addon.functions.createLabel(fQuest, L["questAddNPCToExclude"], 10,
+        addon.functions.getHeightOffset(cbIgnoreTrivialQuests) - 10, "TOP", "TOP")
+
+    local tExclude = {}
+    local dropIncludeList, btnRemoveInclude
+
+    for id, name in pairs(addon.db["ignoredQuestNPC"]) do table.insert(tExclude, {value = id, text = name}) end
+
+    local btnAddInclude = addon.functions.createButton(fQuest, 10, addon.functions.getHeightOffset(labelHeadline) - 7,
+        50, 30, ADD, function()
+            local guid = nil
+            local name = nil
+            local type = nil
+
+            if nil ~= UnitGUID("npc") then
+                guid = UnitGUID("npc")
+                name = UnitName("npc")
+                type = "npc"
+            elseif nil ~= UnitGUID("target") then
+                guid = UnitGUID("target")
+                name = UnitName("target")
+                type = "target"
+            else
+                return
+            end
+
+            if UnitCanAttack(type, "player") or UnitPlayerControlled(type) then return end -- ignore attackable and player types
+
+            local mapID = C_Map.GetBestMapForUnit("player")
+            if mapID then
+                local mapInfo = C_Map.GetMapInfo(mapID)
+                if mapInfo and mapInfo.name then name = name .. " (" .. mapInfo.name .. ")" end
+            end
+
+            guid = addon.functions.getIDFromGUID(guid)
+            if addon.db["ignoredQuestNPC"][guid] then return end -- no duplicates
+
+            print(ADD .. ":", guid, name)
+
+            addon.db["ignoredQuestNPC"][guid] = name
+            addon.functions.addDropdownItem(dropIncludeList, tExclude, {text = name, value = guid})
+        end)
+    btnAddInclude:SetWidth(btnAddInclude:GetFontString():GetStringWidth() + 20)
+
+    dropIncludeList = addon.functions.createDropdownNoInitial("ignoredQuestNPC", fQuest, tExclude, 150,
+        L["ignoredQuestNPC"], 10, addon.functions.getHeightOffset(btnAddInclude) - 10)
+
+    btnRemoveInclude = addon.functions.createButton(fQuest, dropIncludeList:GetWidth(),
+        addon.functions.getHeightOffset(btnAddInclude) - 20, 50, 30, REMOVE, function()
+            local selectedID = UIDropDownMenu_GetSelectedID(dropIncludeList)
+            if selectedID then
+                local selectedItem = tExclude[selectedID]
+                if selectedItem then
+                    addon.db["ignoredQuestNPC"][selectedItem.value] = nil
+                    table.remove(tExclude, selectedID)
+                    local function Initialize(self, level)
+                        local info = UIDropDownMenu_CreateInfo()
+                        for i, item in ipairs(tExclude) do
+                            info.text = item.text
+                            info.value = item.value
+                            info.checked = nil
+                            info.func = function(self)
+                                UIDropDownMenu_SetSelectedID(dropIncludeList, i)
+                            end
+                            UIDropDownMenu_AddButton(info, level)
+                        end
+                    end
+
+                    UIDropDownMenu_Initialize(dropIncludeList, Initialize)
+                    UIDropDownMenu_SetText(dropIncludeList, "")
+                end
+            end
+        end)
+    btnRemoveInclude:SetWidth(btnRemoveInclude:GetFontString():GetStringWidth() + 20)
 end
 
 function loadMain()
@@ -1197,6 +1272,7 @@ function loadMain()
     end, funcOnLeave = function(button) MenuUtil.HideTooltip(button) end})
 
     if nil == addon.db["hideMinimapButton"] then addon.db["hideMinimapButton"] = false end
+    if nil == addon.db["ignoredQuestNPC"] then addon.db["ignoredQuestNPC"] = {} end
 
     function addon.functions.toggleMinimapButton(value)
         if value == false then
@@ -1338,6 +1414,11 @@ local function eventHandler(self, event, arg1, arg2)
             end)
         end
     elseif event == "GOSSIP_SHOW" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
+
+        if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
+            return
+        end
+
         local options = C_GossipInfo.GetOptions()
 
         local aQuests = C_GossipInfo.GetAvailableQuests()
@@ -1370,12 +1451,18 @@ local function eventHandler(self, event, arg1, arg2)
     elseif event == "LOOT_READY" and addon.db["autoQuickLoot"] and not IsShiftKeyDown() then
         for i = 1, GetNumLootItems() do C_Timer.After(0.1, function() LootSlot(i) end) end
     elseif event == "QUEST_DETAIL" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
+        if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
+            return
+        end
+
         local id = GetQuestID()
         addon.variables.acceptQuestID[id] = true
         C_QuestLog.RequestLoadQuestByID(id)
     elseif event == "QUEST_DATA_LOAD_RESULT" and arg1 and addon.variables.acceptQuestID[arg1] and
         addon.db["autoChooseQuest"] then
-
+        if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
+            return
+        end
         if addon.db["ignoreDailyQuests"] and C_QuestLog.IsQuestRepeatableType(arg1) then return end
 
         if addon.db["ignoreTrivialQuests"] and C_QuestLog.IsQuestTrivial(arg1) then return end
@@ -1391,6 +1478,9 @@ local function eventHandler(self, event, arg1, arg2)
             GetQuestReward()
         end
     elseif event == "QUEST_GREETING" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
+        if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
+            return
+        end
         for i = 1, GetNumAvailableQuests() do
             if addon.db["ignoreTrivialQuests"] and IsAvailableQuestTrivial(i) then
             else
