@@ -79,3 +79,23 @@ L["shaman_HideTotem"] = "Скрыть панель тотемов"
 
 -- Чернокнижник
 L["warlock_HideSoulShardBar"] = "Скрыть панель осколков душ"
+
+-- CVar
+L["CVar"] = "CVar"
+L["tReloadInterface"] = "Требуется перезагрузка интерфейса"
+L["bReloadInterface"] =
+    "Вам нужно перезагрузить интерфейс, чтобы применить изменения"
+
+L["CVarOptions"] =
+    {["ShowClassColorInNameplate"] = {description = "Показывать цвета классов на индикаторах", -- Включено = 1
+                                      trueValue = "1", falseValue = "0"},
+     ["chatMouseScroll"] = {description = "Включить прокрутку чата мышью", -- Включено = 1
+                            trueValue = "1", falseValue = "0"},
+     ["WholeChatWindowClickable"] = {description = "Сделать всё окно чата кликабельным", -- Включено = 1
+                                     trueValue = "1", falseValue = "0"},
+     ["showTutorials"] = {description = "Отключить обучающие подсказки", -- Выключено = 0
+                          trueValue = "0", falseValue = "1"},
+     ["UberTooltips"] = {description = "Включить расширенные подсказки", -- Включено = 1
+                         trueValue = "1", falseValue = "0"},
+     ["ffxDeath"] = {description = "Отключить эффекты смерти", -- Выключено = 0
+    trueValue = "0", falseValue = "1"}}

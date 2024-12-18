@@ -33,7 +33,6 @@ L["Misc"] = "Misc."
 L["Quest"] = "Quest"
 
 L["hideBagsBar"] = "Hide Bagsbar"
-
 -- Dungeon
 L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option"
 L["lfgSortByRio"] = "Sort Mythic Dungeon Applicants by Mythic Score"
@@ -67,3 +66,21 @@ L["shaman_HideTotem"] = "Hide Totembar"
 
 -- Warlock
 L["warlock_HideSoulShardBar"] = "Hide Soulshard Bar"
+
+-- CVar
+L["CVar"] = "CVar"
+L["tReloadInterface"] = "Interface Reload Required"
+L["bReloadInterface"] = "You need to reload your interface to apply changes"
+
+L["CVarOptions"] = {["ShowClassColorInNameplate"] = {description = "Show class colors on nameplates", -- Aktiviert = 1
+trueValue = "1", falseValue = "0"},
+                    ["chatMouseScroll"] = {description = "Enable mouse scroll in chat", -- Aktiviert = 1
+trueValue = "1", falseValue = "0"},
+                    ["WholeChatWindowClickable"] = {description = "Make the entire chat window clickable", -- Aktiviert = 1
+                                                    trueValue = "1", falseValue = "0"},
+
+                    ["showTutorials"] = {description = "Disable tutorials", -- Deaktiviert = 0
+trueValue = "0", falseValue = "1"}, ["UberTooltips"] = {description = "Enable enhanced tooltips", -- Aktiviert = 1
+trueValue = "1", falseValue = "0"}, ["ffxDeath"] = {description = "Disable death effects", -- Deaktiviert = 0
+trueValue = "0", falseValue = "1"}}
+

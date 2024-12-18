@@ -69,3 +69,19 @@ L["shaman_HideTotem"] = "토템 바 숨기기"
 
 -- 흑마법사
 L["warlock_HideSoulShardBar"] = "영혼의 조각 바 숨기기"
+
+-- CVar
+L["CVar"] = "CVar"
+L["tReloadInterface"] = "인터페이스 다시 로드 필요"
+L["bReloadInterface"] = "변경 사항을 적용하려면 인터페이스를 다시 로드해야 합니다"
+
+L["CVarOptions"] = {["ShowClassColorInNameplate"] = {description = "이름표에 직업 색상 표시", -- 활성화 = 1
+                                                     trueValue = "1", falseValue = "0"},
+                    ["chatMouseScroll"] = {description = "채팅에서 마우스 스크롤 활성화", -- 활성화 = 1
+trueValue = "1", falseValue = "0"},
+                    ["WholeChatWindowClickable"] = {description = "채팅 창 전체를 클릭 가능하게 설정", -- 활성화 = 1
+                                                    trueValue = "1", falseValue = "0"},
+                    ["showTutorials"] = {description = "튜토리얼 비활성화", -- 비활성화 = 0
+trueValue = "0", falseValue = "1"}, ["UberTooltips"] = {description = "향상된 툴팁 활성화", -- 활성화 = 1
+trueValue = "1", falseValue = "0"}, ["ffxDeath"] = {description = "죽음 효과 비활성화", -- 비활성화 = 0
+trueValue = "0", falseValue = "1"}}

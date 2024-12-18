@@ -26,8 +26,7 @@ L["showIlvlOnBagItems"] = "Mostra il livello dell'oggetto sull'equipaggiamento i
 L["showDurabilityOnCharframe"] = "Mostra la durabilità sulla finestra dell'equipaggiamento del personaggio"
 L["hideOrderHallBar"] = "Nascondi barra dei comandi della Enclave"
 
-L["deleteItemFillDialog"] = "Aggiungi \"" .. DELETE_ITEM_CONFIRM_STRING ..
-                                "\" al \"Popup di conferma eliminazione\""
+L["deleteItemFillDialog"] = "Aggiungi \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" al \"Popup di conferma eliminazione\""
 L["autoChooseQuest"] = "Accetta e completa le missioni automaticamente"
 
 L["General"] = "Generale"
@@ -72,3 +71,20 @@ L["shaman_HideTotem"] = "Nascondi barra dei totem"
 
 -- Stregone
 L["warlock_HideSoulShardBar"] = "Nascondi barra dei frammenti d'anima"
+
+-- CVar
+L["CVar"] = "CVar"
+L["tReloadInterface"] = "Ricaricamento interfaccia richiesto"
+L["bReloadInterface"] = "Devi ricaricare la tua interfaccia per applicare le modifiche"
+
+L["CVarOptions"] =
+    {["ShowClassColorInNameplate"] = {description = "Mostra i colori delle classi sulle targhette", -- Attivato = 1
+    trueValue = "1", falseValue = "0"},
+     ["chatMouseScroll"] = {description = "Abilita lo scorrimento del mouse nella chat", -- Attivato = 1
+    trueValue = "1", falseValue = "0"},
+     ["WholeChatWindowClickable"] = {description = "Rendi cliccabile l'intera finestra della chat", -- Attivato = 1
+    trueValue = "1", falseValue = "0"}, ["showTutorials"] = {description = "Disattiva i tutorial", -- Disattivato = 0
+    trueValue = "0", falseValue = "1"}, ["UberTooltips"] = {description = "Abilita tooltip avanzati", -- Attivato = 1
+    trueValue = "1", falseValue = "0"},
+     ["ffxDeath"] = {description = "Disattiva gli effetti di morte", -- Disattivato = 0
+    trueValue = "0", falseValue = "1"}}

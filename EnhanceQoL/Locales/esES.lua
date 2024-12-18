@@ -70,3 +70,22 @@ L["shaman_HideTotem"] = "Ocultar barra de tótems"
 
 -- Brujo
 L["warlock_HideSoulShardBar"] = "Ocultar barra de fragmentos de alma"
+
+-- CVar
+L["CVar"] = "CVar"
+L["tReloadInterface"] = "Recarga de interfaz requerida"
+L["bReloadInterface"] = "Debes recargar tu interfaz para aplicar los cambios"
+
+L["CVarOptions"] =
+    {["ShowClassColorInNameplate"] = {description = "Mostrar colores de clase en las placas de nombre", -- Activado = 1
+    trueValue = "1", falseValue = "0"},
+     ["chatMouseScroll"] = {description = "Habilitar el desplazamiento del ratón en el chat", -- Activado = 1
+    trueValue = "1", falseValue = "0"},
+     ["WholeChatWindowClickable"] = {description = "Hacer que toda la ventana del chat sea clicable", -- Activado = 1
+    trueValue = "1", falseValue = "0"},
+     ["showTutorials"] = {description = "Desactivar los tutoriales", -- Desactivado = 0
+    trueValue = "0", falseValue = "1"},
+     ["UberTooltips"] = {description = "Habilitar tooltips mejorados", -- Activado = 1
+    trueValue = "1", falseValue = "0"},
+     ["ffxDeath"] = {description = "Desactivar los efectos de muerte", -- Desactivado = 0
+    trueValue = "0", falseValue = "1"}}

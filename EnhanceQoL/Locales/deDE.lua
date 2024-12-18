@@ -24,8 +24,7 @@ L["showIlvlOnBagItems"] = "Zeige das Itemlevel auf Ausrüstung in allen Taschen"
 L["showDurabilityOnCharframe"] = "Zeige Haltbarkeit auf dem Charakterausrüstungsfenster"
 L["hideOrderHallBar"] = "Ordenshallen-Kommandoleiste ausblenden"
 
-L["deleteItemFillDialog"] = "Füge \"" .. DELETE_ITEM_CONFIRM_STRING ..
-                                "\" zum \"Löschbestätigungs-Popup\" hinzu"
+L["deleteItemFillDialog"] = "Füge \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" zum \"Löschbestätigungs-Popup\" hinzu"
 L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
 
 L["General"] = "Allgemein"
@@ -69,3 +68,20 @@ L["shaman_HideTotem"] = "Totemleiste ausblenden"
 
 -- Hexenmeister
 L["warlock_HideSoulShardBar"] = "Splitterleiste ausblenden"
+
+-- CVar
+L["CVar"] = "CVar"
+L["tReloadInterface"] = "Interface-Neuladen erforderlich"
+L["bReloadInterface"] = "Sie müssen Ihr Interface neu laden, um Änderungen zu übernehmen"
+
+L["CVarOptions"] =
+    {["ShowClassColorInNameplate"] = {description = "Zeige Klassenfarben in Namensplaketten", -- Aktiviert = 1
+    trueValue = "1", falseValue = "0"},
+     ["chatMouseScroll"] = {description = "Aktiviere Maus-Scrollen im Chat", -- Aktiviert = 1
+    trueValue = "1", falseValue = "0"},
+     ["WholeChatWindowClickable"] = {description = "Macht das gesamte Chatfenster anklickbar", -- Aktiviert = 1
+    trueValue = "1", falseValue = "0"}, ["showTutorials"] = {description = "Deaktiviere Tutorials", -- Deaktiviert = 0
+    trueValue = "0", falseValue = "1"},
+     ["UberTooltips"] = {description = "Aktiviere erweiterte Tooltips", -- Aktiviert = 1
+    trueValue = "1", falseValue = "0"}, ["ffxDeath"] = {description = "Deaktiviere Todeseffekte", -- Deaktiviert = 0
+    trueValue = "0", falseValue = "1"}}

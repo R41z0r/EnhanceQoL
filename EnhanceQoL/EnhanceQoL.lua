@@ -542,6 +542,50 @@ local function addTotemHideToggle(dbValue, language, frame, anchor)
     return cbHideTotemFrame
 end
 
+local function addCVarFrame(tab)
+    local fCVar = addon.functions.createTabFrameMain(L["CVar"], tab)
+
+    local sortedOptions = {}
+
+    for key, data in pairs(L["CVarOptions"]) do
+        table.insert(sortedOptions, {key = key, description = data.description, trueValue = data.trueValue,
+                                     falseValue = data.falseValue})
+    end
+    table.sort(sortedOptions, function(a, b) return a.description < b.description end)
+
+    local lastElement = nil
+
+    for _, option in ipairs(sortedOptions) do
+        local key = option.key
+        local description = option.description
+        local trueValue = option.trueValue
+        local falseValue = option.falseValue
+
+        if lastElement ~= nil then
+            lastElement = addon.functions.createCheckboxNoDB(key, fCVar, description, 10,
+                (addon.functions.getHeightOffset(lastElement)))
+        else
+            lastElement = addon.functions.createCheckboxNoDB(key, fCVar, description, 10, -10)
+        end
+
+        lastElement:SetScript("OnClick", function(self)
+            addon.variables.requireReload = true
+            if self:GetChecked() then
+                SetCVar(key, trueValue)
+            else
+                SetCVar(key, falseValue)
+            end
+        end)
+
+        if GetCVar(key) == trueValue then
+            lastElement:SetChecked(true)
+        else
+            lastElement:SetChecked(false)
+        end
+    end
+
+end
+
 local function addCharacterFrame(tab)
     if nil == addon.db["showIlvlOnCharframe"] then addon.db["showIlvlOnCharframe"] = false end
     if nil == addon.db["showGemsOnCharframe"] then addon.db["showGemsOnCharframe"] = false end
@@ -934,22 +978,6 @@ local function addCharacterFrame(tab)
     end
 end
 
--- @dubug@
--- /dump PlayerFrame.PlayerFrameContainer.PlayerPortrait:Hide()
--- /dump PlayerFrame.PlayerFrameContainer.PlayerPortraitMask:Hide()
--- /dump PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerPortraitCornerIcon:Hide()
--- /dump PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerRestLoop:Hide()
--- /dump PlayerFrame.PlayerFrameContainer.FrameTexture:Hide()
--- /dump PlayerFrame.PlayerFrameContainer.FrameTexture:Show()
-
--- PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerPortraitCornerIcon:HookScript("OnShow", function(self)
---     self:Hide()
--- end)
--- PlayerFrame.PlayerFrameContainer.PlayerPortrait:Hide()
--- PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerPortraitCornerIcon:Hide()
--- PlayerFrame.PlayerFrameContainer.PlayerPortraitMask:Hide()
--- PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PlayerRestLoop:Hide()
--- @end-dubug@
 local function addMiscFrame(tab)
     if nil == addon.db["deleteItemFillDialog"] then addon.db["deleteItemFillDialog"] = false end
     if nil == addon.db["hideRaidTools"] then addon.db["hideRaidTools"] = false end
@@ -1020,12 +1048,47 @@ function loadMain()
 
     -- Erstelle das Hauptframe
     local frame = CreateFrame("Frame", "EnhanceQoLMainFrame", UIParent, "BasicFrameTemplateWithInset")
+    frame:Hide() -- Das Frame wird initial versteckt
     frame:SetSize(500, 550)
 
     frame:SetPoint("CENTER", UIParent, "CENTER")
     frame:SetMovable(true)
     frame:EnableMouse(true)
     frame:RegisterForDrag("LeftButton")
+    frame:SetScript("OnHide", function()
+
+        if addon.variables.requireReload == false then return end
+
+        local reloadFrame = CreateFrame("Frame", "ReloadUIPopup", UIParent, "BasicFrameTemplateWithInset")
+        reloadFrame:SetSize(500, 120) -- Breite und Höhe
+        reloadFrame:SetPoint("TOP", UIParent, "TOP", 0, -200) -- Zentriert auf dem Bildschirm
+
+        reloadFrame.title = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+        reloadFrame.title:SetPoint("TOP", reloadFrame, "TOP", 0, -6)
+        reloadFrame.title:SetText(L["tReloadInterface"])
+
+        reloadFrame.infoText = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        reloadFrame.infoText:SetPoint("CENTER", reloadFrame, "CENTER", 0, 10)
+        reloadFrame.infoText:SetText(L["bReloadInterface"])
+
+        local reloadButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
+        reloadButton:SetSize(120, 30)
+        reloadButton:SetPoint("BOTTOMLEFT", reloadFrame, "BOTTOMLEFT", 10, 10)
+        reloadButton:SetText(RELOADUI)
+        reloadButton:SetScript("OnClick", function() ReloadUI() end)
+
+        local cancelButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
+        cancelButton:SetSize(120, 30)
+        cancelButton:SetPoint("BOTTOMRIGHT", reloadFrame, "BOTTOMRIGHT", -10, 10)
+        cancelButton:SetText(CANCEL)
+        cancelButton:SetScript("OnClick", function()
+            reloadFrame:Hide()
+            addon.variables.requireReload = false -- disable the prompt on cancel
+        end)
+
+        reloadFrame:Show()
+    end)
+
     frame:SetScript("OnDragStart", frame.StartMoving)
     frame:SetScript("OnDragStop", function(self)
         self:StopMovingOrSizing()
@@ -1036,7 +1099,6 @@ function loadMain()
         EnhanceQoLDB.y = yOfs
     end)
     if UISpecialFrames then table.insert(UISpecialFrames, frame:GetName()) end
-    frame:Hide() -- Das Frame wird initial versteckt
     frame.tabs = {}
 
     frame:SetScript("OnSizeChanged", function(self, width, height)
@@ -1073,6 +1135,8 @@ function loadMain()
 
     -- character
     addCharacterFrame(fTab)
+    -- cvar
+    addCVarFrame(fTab)
     -- dungeon
     addDungeonFrame(fTab)
     -- Misc

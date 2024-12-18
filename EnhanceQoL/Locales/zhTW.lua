@@ -69,3 +69,17 @@ L["shaman_HideTotem"] = "隐藏图腾条"
 
 -- 术士
 L["warlock_HideSoulShardBar"] = "隐藏灵魂碎片条"
+
+-- CVar
+L["CVar"] = "CVar"
+L["tReloadInterface"] = "需要重新加載介面"
+L["bReloadInterface"] = "您需要重新加載介面以應用更改"
+
+L["CVarOptions"] = {["ShowClassColorInNameplate"] = {description = "在姓名板上顯示職業顏色", -- 啟用 = 1
+trueValue = "1", falseValue = "0"}, ["chatMouseScroll"] = {description = "啟用聊天鼠標滾動", -- 啟用 = 1
+trueValue = "1", falseValue = "0"},
+                    ["WholeChatWindowClickable"] = {description = "使整個聊天窗口可點擊", -- 啟用 = 1
+trueValue = "1", falseValue = "0"}, ["showTutorials"] = {description = "禁用教程", -- 禁用 = 0
+trueValue = "0", falseValue = "1"}, ["UberTooltips"] = {description = "啟用增強提示", -- 啟用 = 1
+trueValue = "1", falseValue = "0"}, ["ffxDeath"] = {description = "禁用死亡效果", -- 禁用 = 0
+trueValue = "0", falseValue = "1"}}

@@ -12,6 +12,14 @@ function addon.functions.createCheckbox(name, parent, label, x, y)
     return checkbox
 end
 
+function addon.functions.createCheckboxNoDB(name, parent, label, x, y)
+    local checkbox = CreateFrame("CheckButton", name, parent, "ChatConfigCheckButtonTemplate")
+    checkbox:SetPoint("TOPLEFT", x, y)
+    checkbox:SetScript("OnClick", function(self) addon.db["" .. name] = self:GetChecked() end)
+    getglobal(checkbox:GetName() .. 'Text'):SetText(label)
+    return checkbox
+end
+
 function addon.functions.createSlider(id, parent, label, x, y, initial, min, max, addText)
     local slider = CreateFrame("Slider", id, parent, "OptionsSliderTemplate")
     slider:SetOrientation('HORIZONTAL')
