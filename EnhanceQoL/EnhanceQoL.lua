@@ -1069,6 +1069,8 @@ local function addQuestFrame(tab)
     if nil == addon.db["autoChooseQuest"] then addon.db["autoChooseQuest"] = false end
     if nil == addon.db["ignoreTrivialQuests"] then addon.db["ignoreTrivialQuests"] = true end
     if nil == addon.db["ignoreDailyQuests"] then addon.db["ignoreDailyQuests"] = true end
+    if nil == addon.db["ignoredQuestNPC"] then addon.db["ignoredQuestNPC"] = {} end
+
     local fQuest = addon.functions.createTabFrameMain(L["Quest"], tab)
 
     local cbAutoChooseQuest = addon.functions.createCheckbox("autoChooseQuest", fQuest, L["autoChooseQuest"], 10, -10)
@@ -1306,7 +1308,6 @@ function loadMain()
     end, funcOnLeave = function(button) MenuUtil.HideTooltip(button) end})
 
     if nil == addon.db["hideMinimapButton"] then addon.db["hideMinimapButton"] = false end
-    if nil == addon.db["ignoredQuestNPC"] then addon.db["ignoredQuestNPC"] = {} end
 
     function addon.functions.toggleMinimapButton(value)
         if value == false then
