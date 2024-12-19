@@ -94,7 +94,11 @@ local function GetUnitFromGUID(targetGUID)
     return nil
 end
 
+local itemCount = 0
+local ilvlSum = 0
 local function removeInspectElements()
+    itemCount = 0
+    ilvlSum = 0
     if InspectPaperDollFrame.ilvl then InspectPaperDollFrame.ilvl:SetText("") end
     local itemSlotsInspectList = {[1] = InspectHeadSlot, [2] = InspectNeckSlot, [3] = InspectShoulderSlot,
                                   [15] = InspectBackSlot, [5] = InspectChestSlot, [9] = InspectWristSlot,
@@ -106,6 +110,7 @@ local function removeInspectElements()
         if element.ilvl then element.ilvl:SetFormattedText("") end
         if element.ilvlBackground then element.ilvlBackground:Hide() end
         if element.enchant then element.enchant:SetText("") end
+        if element.borderGradient then element.borderGradient:Hide() end
         if element.gems and #element.gems > 0 then
             for i = 1, #element.gems do
                 element.gems[i]:UnregisterAllEvents()
@@ -159,8 +164,7 @@ local function onInspect(arg1)
                                   [8] = InspectFeetSlot, [11] = InspectFinger0Slot, [12] = InspectFinger1Slot,
                                   [13] = InspectTrinket0Slot, [14] = InspectTrinket1Slot, [16] = InspectMainHandSlot,
                                   [17] = InspectSecondaryHandSlot}
-    local itemCount = 0
-    local ilvlSum = 0
+
     for key, element in pairs(itemSlotsInspectList) do
         if nil == inspectDone[key] then
             if element.ilvl then element.ilvl:SetFormattedText("") end
@@ -271,6 +275,15 @@ local function onInspect(arg1)
                                 else
                                     element.enchant:SetPoint("BOTTOMRIGHT", element, "BOTTOMLEFT", -2, 1)
                                 end
+                                if addon.variables.shouldEnchanted[key] then
+                                    element.borderGradient = element:CreateTexture(nil, "ARTWORK")
+                                    element.borderGradient:SetPoint("TOPLEFT", element, "TOPLEFT", -2, 2)
+                                    element.borderGradient:SetPoint("BOTTOMRIGHT", element, "BOTTOMRIGHT", 2, -2)
+                                    element.borderGradient:SetColorTexture(1, 0, 0, 0.6) -- Grundfarbe Rot
+                                    element.borderGradient:SetGradient("VERTICAL", CreateColor(1, 0, 0, 1),
+                                        CreateColor(1, 0.3, 0.3, 0.5))
+                                    element.borderGradient:Hide()
+                                end
                                 element.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
                             end
                             local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
@@ -311,9 +324,26 @@ local function onInspect(arg1)
                                 end
                             end
 
-                            if foundEnchant == false then element.enchant:SetText("") end
+                            if foundEnchant == false then
+                                element.enchant:SetText("")
+                                if element.borderGradient and UnitLevel(inspectUnit) == addon.Tooltip.variables.maxLevel then
+                                    if key == 17 then
+                                        local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
+                                        if addon.variables.allowedEnchantTypesForOffhand[itemEquipLoc] then
+                                            element.borderGradient:Show()
+                                            element.enchant:SetFormattedText(
+                                                ("|cff%02x%02x%02x"):format(255, 0, 0) .. L["MissingEnchant"] .. "|r")
+                                        end
+                                    else
+                                        element.borderGradient:Show()
+                                        element.enchant:SetFormattedText(
+                                            ("|cff%02x%02x%02x"):format(255, 0, 0) .. L["MissingEnchant"] .. "|r")
+                                    end
+                                end
+                            end
                             tooltip:Hide()
                         else
+                            if element.borderGradient then element.borderGradient:Hide() end
                             element.enchant:SetText("")
                         end
                     end)
@@ -338,6 +368,7 @@ local function setIlvlText(element, slot)
             end
         end
 
+        if element.borderGradient then element.borderGradient:Hide() end
         if addon.db["showGemsOnCharframe"] == false and addon.db["showIlvlOnCharframe"] == false and
             addon.db["showEnchantOnCharframe"] == false then
             element.ilvl:SetFormattedText("")
@@ -430,7 +461,23 @@ local function setIlvlText(element, slot)
                         end
                     end
 
-                    if foundEnchant == false then element.enchant:SetText("") end
+                    if foundEnchant == false then
+                        element.enchant:SetText("")
+                        if element.borderGradient and UnitLevel("player") == addon.Tooltip.variables.maxLevel then
+                            if slot == 17 then
+                                local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(link)
+                                if addon.variables.allowedEnchantTypesForOffhand[itemEquipLoc] then
+                                    element.borderGradient:Show()
+                                    element.enchant:SetFormattedText(
+                                        ("|cff%02x%02x%02x"):format(255, 0, 0) .. L["MissingEnchant"] .. "|r")
+                                end
+                            else
+                                element.borderGradient:Show()
+                                element.enchant:SetFormattedText(
+                                    ("|cff%02x%02x%02x"):format(255, 0, 0) .. L["MissingEnchant"] .. "|r")
+                            end
+                        end
+                    end
                     tooltip:Hide()
                 else
                     element.enchant:SetText("")
@@ -440,6 +487,7 @@ local function setIlvlText(element, slot)
             element.ilvl:SetFormattedText("")
             element.ilvlBackground:Hide()
             element.enchant:SetText("")
+            if element.borderGradient then element.borderGradient:Hide() end
         end
     end
 end
@@ -718,6 +766,15 @@ local function addCharacterFrame(tab)
         value.ilvlBackground:SetPoint("TOPRIGHT", value, "TOPRIGHT", 1, 1)
         value.ilvlBackground:SetSize(30, 16) -- Größe des Hintergrunds (muss ggf. angepasst werden)
 
+        -- Roter Rahmen mit Farbverlauf
+        if addon.variables.shouldEnchanted[key] then
+            value.borderGradient = value:CreateTexture(nil, "ARTWORK")
+            value.borderGradient:SetPoint("TOPLEFT", value, "TOPLEFT", -2, 2)
+            value.borderGradient:SetPoint("BOTTOMRIGHT", value, "BOTTOMRIGHT", 2, -2)
+            value.borderGradient:SetColorTexture(1, 0, 0, 0.6) -- Grundfarbe Rot
+            value.borderGradient:SetGradient("VERTICAL", CreateColor(1, 0, 0, 1), CreateColor(1, 0.3, 0.3, 0.5))
+            value.borderGradient:Hide()
+        end
         -- Text für das Item-Level
         value.ilvl = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
         value.ilvl:SetPoint("TOPRIGHT", value.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds

@@ -23,6 +23,7 @@ L["showIlvlOnBagItems"] = "Display ilvl on equipment in all bags"
 L["showDurabilityOnCharframe"] = "Display Durability on Character Equipment Frame"
 L["hideOrderHallBar"] = "Hide Order Hall Command Bar"
 L["showInfoOnInspectFrame"] = "Show additional information on the Inspect Frame (Experimental)"
+L["MissingEnchant"] = "Enchant"
 
 L["deleteItemFillDialog"] = "Add \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" to the \"Delete confirmation Popup\""
 L["autoChooseQuest"] = "Automatically accept and complete Quests"

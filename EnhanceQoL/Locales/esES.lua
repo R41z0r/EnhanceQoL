@@ -25,6 +25,7 @@ L["showIlvlOnBagItems"] = "Mostrar el nivel de objeto en el equipo en todas las 
 L["showDurabilityOnCharframe"] = "Mostrar durabilidad en el marco de equipo del personaje"
 L["hideOrderHallBar"] = "Ocultar barra de comandos de la sede"
 L["showInfoOnInspectFrame"] = "Mostrar información adicional en el marco de inspección (Experimental)"
+L["MissingEnchant"] = "Encantamiento"
 
 L["deleteItemFillDialog"] = "Agregar \"" .. DELETE_ITEM_CONFIRM_STRING ..
                                 "\" al \"Popup de confirmación de eliminación\""
