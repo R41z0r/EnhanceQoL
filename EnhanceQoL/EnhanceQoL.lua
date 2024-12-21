@@ -1,6 +1,6 @@
 local addonName, addon = ...
 local L = addon.L
--- Bibliotheken laden
+
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LibStub("LibDBIcon-1.0")
 
@@ -15,6 +15,11 @@ hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
         if panel.selectedResult ~= s.resultID then LFGListSearchPanel_SelectResult(panel, s.resultID) end
         LFGListSearchPanel_SignUp(panel)
     end
+end)
+
+ExpansionLandingPageMinimapButton:HookScript("OnShow", function(self)
+    local id = addon.variables.landingPageReverse[self.title]
+    if addon.db["hiddenLandingPages"][id] then self:Hide() end
 end)
 
 LFGListApplicationDialog:HookScript("OnShow", function(self)
@@ -1075,6 +1080,7 @@ local function addMiscFrame(tab)
     if nil == addon.db["autoRepair"] then addon.db["autoRepair"] = false end
     if nil == addon.db["sellAllJunk"] then addon.db["sellAllJunk"] = false end
     if nil == addon.db["ignoreTalkingHead"] then addon.db["ignoreTalkingHead"] = true end
+    if nil == addon.db["hiddenLandingPages"] then addon.db["hiddenLandingPages"] = {} end
 
     local fMisc = addon.functions.createTabFrameMain(L["Misc"], tab)
 
@@ -1120,6 +1126,30 @@ local function addMiscFrame(tab)
         L["openCharframeOnUpgrade"], 10, (addon.functions.getHeightOffset(cbHideRaidTools)))
     local cbQuickLoot = addon.functions.createCheckbox("autoQuickLoot", fMisc, L["autoQuickLoot"], 10,
         (addon.functions.getHeightOffset(cbOpenCharFrameOnUpgrade)))
+
+    local labelHeadline = addon.functions.createLabel(fMisc, L["landingPageHide"], 10,
+        addon.functions.getHeightOffset(cbQuickLoot) - 20, "TOP", "TOP")
+
+    local lastCheckbox = labelHeadline
+
+    local sortedKeys = {}
+    for id in pairs(addon.variables.landingPageType) do table.insert(sortedKeys, id) end
+    table.sort(sortedKeys)
+
+    for _, id in ipairs(sortedKeys) do
+        local page = addon.variables.landingPageType[id]
+
+        -- Erstelle die Checkbox
+        local cbLandingPage = addon.functions.createCheckbox("landingPageType_" .. id, fMisc, page.checkbox, 10,
+            (addon.functions.getHeightOffset(lastCheckbox)))
+        cbLandingPage:SetScript("OnClick", function(self)
+            addon.db["hiddenLandingPages"][id] = self:GetChecked()
+            addon.functions.toggleLandingPageButton(page.title, self:GetChecked())
+        end)
+        if addon.db["hiddenLandingPages"][id] then cbLandingPage:SetChecked(true) end
+
+        lastCheckbox = cbLandingPage
+    end
 end
 
 local function addQuestFrame(tab)
@@ -1149,23 +1179,26 @@ local function addQuestFrame(tab)
             local guid = nil
             local name = nil
             local type = nil
+            local unitType = nil
 
             if nil ~= UnitGUID("npc") then
-                guid = UnitGUID("npc")
-                name = UnitName("npc")
                 type = "npc"
             elseif nil ~= UnitGUID("target") then
-                guid = UnitGUID("target")
-                name = UnitName("target")
                 type = "target"
             else
                 return
             end
 
-            if UnitCanAttack(type, "player") or UnitPlayerControlled(type) then return end -- ignore attackable and player types
+            guid = UnitGUID(type)
+            name = UnitName(type)
+            unitType = strsplit("-", guid)
+
+            if UnitCanAttack(type, "player") or (UnitPlayerControlled(type) and not unitType == "Vehicle") then
+                return
+            end -- ignore attackable and player types
 
             local mapID = C_Map.GetBestMapForUnit("player")
-            if mapID then
+            if mapID and not unitType == "Vehicle" then
                 local mapInfo = C_Map.GetMapInfo(mapID)
                 if mapInfo and mapInfo.name then name = name .. " (" .. mapInfo.name .. ")" end
             end

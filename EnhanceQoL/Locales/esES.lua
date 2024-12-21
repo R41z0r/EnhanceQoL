@@ -16,6 +16,7 @@ L["repairCost"] = "Objetos reparados por "
 L["autoRepair"] = "Reparar automáticamente todos los objetos"
 L["sellAllJunk"] = "Vender automáticamente todos los objetos basura"
 L["ignoreTalkingHead"] = "Ocultar automáticamente el marco de Talking Head"
+L["landingPageHide"] = "Activa esta opción para ocultar el\nbotón de la página de expansión en el minimapa."
 
 L["showIlvlOnCharframe"] = "Mostrar el nivel de objeto en el marco de equipo del personaje"
 L["showGemsOnCharframe"] = "Mostrar ranuras de gemas en el marco de equipo del personaje"

@@ -16,6 +16,8 @@ L["repairCost"] = "Отремонтировано предметов на сум
 L["autoRepair"] = "Автоматически ремонтировать все предметы"
 L["sellAllJunk"] = "Автоматически продавать весь мусор"
 L["ignoreTalkingHead"] = "Автоматически скрывать Talking Head Frame"
+L["landingPageHide"] =
+    "Включите эту опцию, чтобы скрыть\nкнопку страницы дополнения на миникарте."
 
 L["showIlvlOnCharframe"] =
     "Отображать уровень предмета на экране экипировки персонажа"
@@ -29,7 +31,8 @@ L["showIlvlOnBagItems"] =
 L["showDurabilityOnCharframe"] =
     "Отображать прочность на окне экипировки персонажа"
 L["hideOrderHallBar"] = "Скрыть панель команд оплота"
-L["showInfoOnInspectFrame"] = "Показывать дополнительную информацию в окне осмотра (Экспериментально)"
+L["showInfoOnInspectFrame"] =
+    "Показывать дополнительную информацию в окне осмотра (Экспериментально)"
 L["MissingEnchant"] = "Чары"
 
 L["deleteItemFillDialog"] = "Добавить \"" .. DELETE_ITEM_CONFIRM_STRING ..
@@ -82,25 +85,37 @@ L["shaman_HideTotem"] = "Скрыть панель тотемов"
 -- Чернокнижник
 L["warlock_HideSoulShardBar"] = "Скрыть панель осколков душ"
 
-L["questAddNPCToExclude"] = "Добавить выбранного NPC/открытое окно общения в список исключений"
+L["questAddNPCToExclude"] =
+    "Добавить выбранного NPC/открытое окно общения в список исключений"
 
 -- CVar
 L["CVar"] = "CVar"
 L["tReloadInterface"] = "Требуется перезагрузка интерфейса"
-L["bReloadInterface"] = "Вам нужно перезагрузить интерфейс, чтобы применить изменения"
+L["bReloadInterface"] =
+    "Вам нужно перезагрузить интерфейс, чтобы применить изменения"
 
-L["CVarOptions"] = {
-    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Включить автоматическое спешивание при использовании способностей"},
-    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Включить автоматическое спешивание в полете"},
-    ["chatMouseScroll"] = {description = "Включить прокрутку чата мышью", trueValue = "1", falseValue = "0"},
-    ["ffxDeath"] = {description = "Отключить эффекты смерти", trueValue = "0", falseValue = "1"},
-    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Включить затухание карты при движении"},
-    ["scriptErrors"] = {description = "Показывать ошибки LUA в интерфейсе", trueValue = "1", falseValue = "0"},
-    ["ShowClassColorInNameplate"] = {description = "Показывать цвета классов на индикаторах", trueValue = "1", falseValue = "0"},
-    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Показывать панель заклинаний цели"},
-    ["showTutorials"] = {description = "Отключить обучение", trueValue = "0", falseValue = "1"},
-    ["UberTooltips"] = {description = "Включить расширенные подсказки", trueValue = "1", falseValue = "0"},
-    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Показывать гильдию игроков"},
-    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Показывать титул игроков"},
-    ["WholeChatWindowClickable"] = {description = "Сделать весь чат кликабельным", trueValue = "1", falseValue = "0"},
-}
+L["CVarOptions"] = {["autoDismount"] = {trueValue = "1", falseValue = "0",
+                                        description = "Включить автоматическое спешивание при использовании способностей"},
+                    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0",
+                                              description = "Включить автоматическое спешивание в полете"},
+                    ["chatMouseScroll"] = {description = "Включить прокрутку чата мышью",
+                                           trueValue = "1", falseValue = "0"},
+                    ["ffxDeath"] = {description = "Отключить эффекты смерти", trueValue = "0",
+                                    falseValue = "1"}, ["mapFade"] = {trueValue = "1", falseValue = "0",
+                                                                      description = "Включить затухание карты при движении"},
+                    ["scriptErrors"] = {description = "Показывать ошибки LUA в интерфейсе",
+                                        trueValue = "1", falseValue = "0"},
+                    ["ShowClassColorInNameplate"] = {description = "Показывать цвета классов на индикаторах",
+                                                     trueValue = "1", falseValue = "0"},
+                    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0",
+                                             description = "Показывать панель заклинаний цели"},
+                    ["showTutorials"] = {description = "Отключить обучение", trueValue = "0",
+                                         falseValue = "1"},
+                    ["UberTooltips"] = {description = "Включить расширенные подсказки",
+                                        trueValue = "1", falseValue = "0"},
+                    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0",
+                                               description = "Показывать гильдию игроков"},
+                    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0",
+                                                  description = "Показывать титул игроков"},
+                    ["WholeChatWindowClickable"] = {description = "Сделать весь чат кликабельным",
+                                                    trueValue = "1", falseValue = "0"}}

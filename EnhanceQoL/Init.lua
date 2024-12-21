@@ -23,22 +23,17 @@ addon.variables.itemSlots = {[1] = CharacterHeadSlot, [2] = CharacterNeckSlot, [
                              [8] = CharacterFeetSlot, [11] = CharacterFinger0Slot, [12] = CharacterFinger1Slot,
                              [13] = CharacterTrinket0Slot, [14] = CharacterTrinket1Slot, [16] = CharacterMainHandSlot,
                              [17] = CharacterSecondaryHandSlot}
-addon.variables.shouldEnchanted = {
-    [15] = true,
-    [5] = true,
-    [9] = true,
-    [7] = true,
-    [8] = true,
-    [11] = true,
-    [12] = true,
-    [16] = true,
-    [17] = true,
-}
+addon.variables.shouldEnchanted = {[15] = true, [5] = true, [9] = true, [7] = true, [8] = true, [11] = true,
+                                   [12] = true, [16] = true, [17] = true}
 
-addon.variables.allowedEnchantTypesForOffhand = {
-    ["INVTYPE_WEAPON"] = true,
-    ["INVTYPE_WEAPONOFFHAND"] = true,
-}
+addon.variables.landingPageType = {[10] = {title = GARRISON_LANDING_PAGE_TITLE, checkbox = GARRISON_LOCATION_TOOLTIP},
+                                   [20] = {title = GARRISON_TYPE_9_0_LANDING_PAGE_TITLE, checkbox = EXPANSION_NAME8},
+                                   [30] = {title = DRAGONFLIGHT_LANDING_PAGE_TITLE, checkbox = EXPANSION_NAME9},
+                                   [40] = {title = WAR_WITHIN_LANDING_PAGE_TITLE, checkbox = EXPANSION_NAME10}}
+addon.variables.landingPageReverse = {} -- Used for onShow Method of LandingPage
+for id, data in pairs(addon.variables.landingPageType) do addon.variables.landingPageReverse[data.title] = id end
+
+addon.variables.allowedEnchantTypesForOffhand = {["INVTYPE_WEAPON"] = true, ["INVTYPE_WEAPONOFFHAND"] = true}
 
 addon.variables.itemSlotSide = { -- 0 = Text to right side, 1 = Text to left side
 [1] = 0, [2] = 0, [3] = 0, [15] = 0, [5] = 0, [9] = 0, [10] = 1, [6] = 1, [7] = 1, [8] = 1, [11] = 1, [12] = 1,
@@ -51,7 +46,8 @@ addon.variables.allowedSockets = {["EMPTY_SOCKET_BLUE"] = true, ["EMPTY_SOCKET_C
                                   ["EMPTY_SOCKET_PRISMATIC"] = true, ["EMPTY_SOCKET_PUNCHCARDBLUE"] = true,
                                   ["EMPTY_SOCKET_PUNCHCARDRED"] = true, ["EMPTY_SOCKET_PUNCHCARDYELLOW"] = true,
                                   ["EMPTY_SOCKET_RED"] = true, ["EMPTY_SOCKET_TINKER"] = true,
-                                  ["EMPTY_SOCKET_YELLOW"] = true}
+                                  ["EMPTY_SOCKET_YELLOW"] = true, ["EMPTY_SOCKET_SINGINGSEA"] = true,
+                                  ["EMPTY_SOCKET_SINGINGTHUNDER"] = true, ["EMPTY_SOCKET_SINGINGWIND"] = true}
 
 addon.variables.allowBagIlvlClassID = {[2] = true, [4] = true}
 addon.variables.denyBagIlvlClassSubClassID = {[4] = {[5] = true}}

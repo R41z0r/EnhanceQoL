@@ -15,6 +15,7 @@ L["repairCost"] = "Gegenstände repariert für "
 L["autoRepair"] = "Alle Gegenstände automatisch reparieren"
 L["sellAllJunk"] = "Alle Plundergegenstände automatisch verkaufen"
 L["ignoreTalkingHead"] = "Automatisch das Talking Head Fenster ausblenden"
+L["landingPageHide"] = "Aktivieren Sie diese Option, um den\nErweiterungs-Button auf der Minimap auszublenden."
 
 L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anzeigen"
 L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"

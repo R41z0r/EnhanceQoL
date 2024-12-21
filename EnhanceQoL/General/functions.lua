@@ -255,3 +255,17 @@ function addon.functions.formatMoney(copper)
 
     return formatted
 end
+
+function addon.functions.toggleLandingPageButton(title, state)
+    local button = _G["ExpansionLandingPageMinimapButton"] -- Hole den Button
+    if not button then return end
+
+    -- Prüfen, ob der Button zu der gewünschten ID passt
+    if button.title == title then
+        if state then
+            button:Hide()
+        else
+            button:Show()
+        end
+    end
+end

@@ -16,6 +16,7 @@ L["repairCost"] = "修理物品花费 "
 L["autoRepair"] = "自动修理所有物品"
 L["sellAllJunk"] = "自动出售所有垃圾物品"
 L["ignoreTalkingHead"] = "自动隐藏Talking Head框体"
+L["landingPageHide"] = "启用此选项以隐藏小地图上的扩展按钮。"
 
 L["showIlvlOnCharframe"] = "在角色装备框架上显示物品等级"
 L["showGemsOnCharframe"] = "在角色装备框架上显示宝石插槽"
