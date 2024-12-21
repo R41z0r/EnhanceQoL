@@ -1794,6 +1794,7 @@ globals = {
 	"ExpandGuildTradeSkillHeader",
 	"ExpandQuestHeader",
 	"ExpandWarGameHeader",
+	"ExpansionLandingPageMinimapButton",
 	"FactionToggleAtWar",
 	"FillLocalizedClassList",
 	"FindSpellBookSlotBySpellID",
