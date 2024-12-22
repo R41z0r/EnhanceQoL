@@ -17,11 +17,6 @@ hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
     end
 end)
 
-ExpansionLandingPageMinimapButton:HookScript("OnShow", function(self)
-    local id = addon.variables.landingPageReverse[self.title]
-    if addon.db["hiddenLandingPages"][id] then self:Hide() end
-end)
-
 LFGListApplicationDialog:HookScript("OnShow", function(self)
     if not EnhanceQoLDB.skipSignUpDialog then return end
 
@@ -102,6 +97,7 @@ end
 local itemCount = 0
 local ilvlSum = 0
 local function removeInspectElements()
+    if nil == InspectPaperDollFrame then return end
     itemCount = 0
     ilvlSum = 0
     if InspectPaperDollFrame.ilvl then InspectPaperDollFrame.ilvl:SetText("") end
@@ -571,8 +567,8 @@ local function setCharFrame()
 end
 
 local function addDungeonFrame(tab)
-    if nil == addon.db["autoChooseDelvePower"] then addon.db["autoChooseDelvePower"] = true end
-    if nil == addon.db["lfgSortByRio"] then addon.db["lfgSortByRio"] = true end
+    addon.functions.InitDBValue("autoChooseDelvePower", true)
+    addon.functions.InitDBValue("lfgSortByRio", true)
 
     local fDungeon = addon.functions.createTabFrameMain(L["Dungeon"], tab)
 
@@ -678,11 +674,12 @@ local function addCVarFrame(tab)
 end
 
 local function addCharacterFrame(tab)
-    if nil == addon.db["showIlvlOnCharframe"] then addon.db["showIlvlOnCharframe"] = false end
-    if nil == addon.db["showInfoOnInspectFrame"] then addon.db["showInfoOnInspectFrame"] = false end
-    if nil == addon.db["showGemsOnCharframe"] then addon.db["showGemsOnCharframe"] = false end
-    if nil == addon.db["showEnchantOnCharframe"] then addon.db["showEnchantOnCharframe"] = false end
-    if nil == addon.db["showCatalystChargesOnCharframe"] then addon.db["showCatalystChargesOnCharframe"] = false end
+    addon.functions.InitDBValue("showIlvlOnCharframe", false)
+    addon.functions.InitDBValue("showInfoOnInspectFrame", false)
+    addon.functions.InitDBValue("showGemsOnCharframe", false)
+    addon.functions.InitDBValue("showEnchantOnCharframe", false)
+    addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
+
     local fCharacter = addon.functions.createTabFrameMain(L["Character"], tab)
 
     local cbShowIlvlCharframe = addon.functions.createCheckbox("showIlvlOnCharframe", fCharacter,
@@ -1087,12 +1084,13 @@ local function addCharacterFrame(tab)
 end
 
 local function addMiscFrame(tab)
-    if nil == addon.db["deleteItemFillDialog"] then addon.db["deleteItemFillDialog"] = false end
-    if nil == addon.db["hideRaidTools"] then addon.db["hideRaidTools"] = false end
-    if nil == addon.db["autoRepair"] then addon.db["autoRepair"] = false end
-    if nil == addon.db["sellAllJunk"] then addon.db["sellAllJunk"] = false end
-    if nil == addon.db["ignoreTalkingHead"] then addon.db["ignoreTalkingHead"] = true end
-    if nil == addon.db["hiddenLandingPages"] then addon.db["hiddenLandingPages"] = {} end
+    addon.functions.InitDBValue("deleteItemFillDialog", false)
+    addon.functions.InitDBValue("hideRaidTools", false)
+    addon.functions.InitDBValue("autoRepair", false)
+    addon.functions.InitDBValue("sellAllJunk", false)
+    addon.functions.InitDBValue("ignoreTalkingHead", true)
+    addon.functions.InitDBValue("hiddenLandingPages", {})
+    addon.functions.InitDBValue("hideMinimapButton", false)
 
     local fMisc = addon.functions.createTabFrameMain(L["Misc"], tab)
 
@@ -1162,13 +1160,18 @@ local function addMiscFrame(tab)
 
         lastCheckbox = cbLandingPage
     end
+
+    ExpansionLandingPageMinimapButton:HookScript("OnShow", function(self)
+        local id = addon.variables.landingPageReverse[self.title]
+        if addon.db["hiddenLandingPages"][id] then self:Hide() end
+    end)
 end
 
 local function addQuestFrame(tab)
-    if nil == addon.db["autoChooseQuest"] then addon.db["autoChooseQuest"] = false end
-    if nil == addon.db["ignoreTrivialQuests"] then addon.db["ignoreTrivialQuests"] = true end
-    if nil == addon.db["ignoreDailyQuests"] then addon.db["ignoreDailyQuests"] = true end
-    if nil == addon.db["ignoredQuestNPC"] then addon.db["ignoredQuestNPC"] = {} end
+    addon.functions.InitDBValue("autoChooseQuest", false)
+    addon.functions.InitDBValue("ignoreTrivialQuests", true)
+    addon.functions.InitDBValue("ignoreDailyQuests", true)
+    addon.functions.InitDBValue("ignoredQuestNPC", {})
 
     local fQuest = addon.functions.createTabFrameMain(L["Quest"], tab)
 
@@ -1409,8 +1412,6 @@ function loadMain()
         MenuUtil.ShowTooltip(button, function(tooltip) tooltip:SetText(L["Left-Click to show options"]) end)
     end, funcOnLeave = function(button) MenuUtil.HideTooltip(button) end})
 
-    if nil == addon.db["hideMinimapButton"] then addon.db["hideMinimapButton"] = false end
-
     function addon.functions.toggleMinimapButton(value)
         if value == false then
             LDBIcon:Show(addonName)
@@ -1499,59 +1500,34 @@ local frameLoad = CreateFrame("Frame")
 
 local gossipClicked = {}
 
--- Funktion zum Umgang mit Events
-local function eventHandler(self, event, arg1, arg2)
-    if event == "ADDON_LOADED" and arg1 == addonName then
-        -- Dein Code zur Initialisierung der Datenbank
+local eventHandlers = {["ADDON_LOADED"] = function(arg1)
+    if arg1 == addonName then
+        print(arg1)
         if not EnhanceQoLDB then EnhanceQoLDB = {} end
 
         loadMain()
         EQOL.PersistSignUpNote()
-    elseif event == "ZONE_CHANGED_NEW_AREA" and addon.variables.hookedOrderHall == false then
-        -- Order Hall Check
-        local ohcb = OrderHallCommandBar
-        if ohcb then
-            ohcb:HookScript("OnShow", function(self)
-                if addon.db["hideOrderHallBar"] then
-                    self:Hide()
-                else
-                    self:Show()
-                end
-            end)
-            addon.variables.hookedOrderHall = true
-            if addon.db["hideOrderHallBar"] then OrderHallCommandBar:Hide() end
-        end
-    elseif event == "MERCHANT_SHOW" then
-        if addon.db["autoRepair"] then
-            if CanMerchantRepair() then
-                local repairAllCost = GetRepairAllCost()
-                if repairAllCost and repairAllCost > 0 then
-                    RepairAllItems()
-                    PlaySound(SOUNDKIT.ITEM_REPAIR)
-                    print(L["repairCost"] .. addon.functions.formatMoney(repairAllCost))
-                end
-            end
-        end
-
-        if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then
-            MerchantSellAllJunkButton:Click()
-            if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end
-        end
-    elseif event == "PLAYER_EQUIPMENT_CHANGED" then
-        if addon.variables.itemSlots[arg1] and PaperDollFrame:IsShown() then
-            setIlvlText(addon.variables.itemSlots[arg1], arg1)
-        end
-        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
-    elseif event == "SOCKET_INFO_ACCEPT" and PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then
-        C_Timer.After(0.5, function() setCharFrame() end)
-    elseif event == "ENCHANT_SPELL_COMPLETED" and PaperDollFrame:IsShown() and addon.db["showEnchantOnCharframe"] then
-        if arg1 == true and arg2 and arg2.equipmentSlotIndex then
-            C_Timer.After(1, function()
-                setIlvlText(addon.variables.itemSlots[arg2.equipmentSlotIndex], arg2.equipmentSlotIndex)
-            end)
-        end
-    elseif event == "GOSSIP_SHOW" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
-
+    end
+end, ["CURRENCY_DISPLAY_UPDATE"] = function(arg1)
+    if arg1 == 2815 then
+        local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
+        addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
+    end
+end, ["ENCHANT_SPELL_COMPLETED"] = function(arg1, arg2)
+    if PaperDollFrame:IsShown() and addon.db["showEnchantOnCharframe"] and arg1 == true and arg2 and
+        arg2.equipmentSlotIndex then
+        C_Timer.After(1, function()
+            setIlvlText(addon.variables.itemSlots[arg2.equipmentSlotIndex], arg2.equipmentSlotIndex)
+        end)
+    end
+end, ["DELETE_ITEM_CONFIRM"] = function()
+    if addon.db["deleteItemFillDialog"] and StaticPopup1:IsShown() then
+        StaticPopup1EditBox:SetText(DELETE_ITEM_CONFIRM_STRING)
+    end
+end, ["GOSSIP_CLOSED"] = function()
+    gossipClicked = {} -- clear all already clicked gossips
+end, ["GOSSIP_SHOW"] = function()
+    if addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
             return
         end
@@ -1582,21 +1558,63 @@ local function eventHandler(self, event, arg1, arg2)
                 C_GossipInfo.SelectOption(options[1].gossipOptionID)
             end
         end
-
-    elseif event == "GOSSIP_CLOSED" then
-        gossipClicked = {} -- clear all already clicked gossips
-    elseif event == "LOOT_READY" and addon.db["autoQuickLoot"] and not IsShiftKeyDown() then
+    end
+end, ["GUILDBANK_UPDATE_MONEY"] = function()
+    if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+end, ["LOOT_READY"] = function()
+    if addon.db["autoQuickLoot"] and not IsShiftKeyDown() then
         for i = 1, GetNumLootItems() do C_Timer.After(0.1, function() LootSlot(i) end) end
-    elseif event == "QUEST_DETAIL" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
-        if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
-            return
+    end
+end, ["INSPECT_READY"] = function(arg1) if addon.db["showInfoOnInspectFrame"] then onInspect(arg1) end end,
+                       ["MERCHANT_SHOW"] = function()
+    if addon.db["autoRepair"] then
+        if CanMerchantRepair() then
+            local repairAllCost = GetRepairAllCost()
+            if repairAllCost and repairAllCost > 0 then
+                RepairAllItems()
+                PlaySound(SOUNDKIT.ITEM_REPAIR)
+                print(L["repairCost"] .. addon.functions.formatMoney(repairAllCost))
+            end
         end
+    end
 
-        local id = GetQuestID()
-        addon.variables.acceptQuestID[id] = true
-        C_QuestLog.RequestLoadQuestByID(id)
-    elseif event == "QUEST_DATA_LOAD_RESULT" and arg1 and addon.variables.acceptQuestID[arg1] and
-        addon.db["autoChooseQuest"] then
+    if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then
+        MerchantSellAllJunkButton:Click()
+        if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end
+    end
+end, ["PLAYER_CHOICE_UPDATE"] = function()
+    if select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
+        local choiceInfo = C_PlayerChoice.GetCurrentPlayerChoiceInfo()
+        if choiceInfo and choiceInfo.options and #choiceInfo.options == 1 then
+            C_PlayerChoice.SendPlayerChoiceResponse(choiceInfo.options[1].buttons[1].id)
+            if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
+        end
+    end
+end, ["PLAYER_DEAD"] = function() if addon.db["showDurabilityOnCharframe"] then calculateDurability() end end,
+                       ["PLAYER_EQUIPMENT_CHANGED"] = function(arg1)
+    if addon.variables.itemSlots[arg1] and PaperDollFrame:IsShown() then
+        setIlvlText(addon.variables.itemSlots[arg1], arg1)
+    end
+    if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+end, ["PLAYER_INTERACTION_MANAGER_FRAME_SHOW"] = function(arg1)
+    if arg1 == 53 and addon.db["openCharframeOnUpgrade"] then
+        if CharacterFrame:IsShown() == false then ToggleCharacter("PaperDollFrame") end
+    end
+end, ["PLAYER_MONEY"] = function() if addon.db["showDurabilityOnCharframe"] then calculateDurability() end end,
+                       ["PLAYER_REGEN_ENABLED"] = function()
+    if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+end, ["PLAYER_UNGHOST"] = function() if addon.db["showDurabilityOnCharframe"] then calculateDurability() end end,
+                       ["QUEST_COMPLETE"] = function()
+    if addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
+        local numQuestRewards = GetNumQuestChoices()
+        if numQuestRewards > 0 then
+
+        else
+            GetQuestReward()
+        end
+    end
+end, ["QUEST_DATA_LOAD_RESULT"] = function(arg1)
+    if arg1 and addon.variables.acceptQuestID[arg1] and addon.db["autoChooseQuest"] then
         if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
             return
         end
@@ -1605,16 +1623,19 @@ local function eventHandler(self, event, arg1, arg2)
         if addon.db["ignoreTrivialQuests"] and C_QuestLog.IsQuestTrivial(arg1) then return end
         AcceptQuest()
         if QuestFrame:IsShown() then QuestFrame:Hide() end -- Sometimes the frame is still stuck - hide it forcefully than
-    elseif event == "QUEST_PROGRESS" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
-        if IsQuestCompletable() then CompleteQuest() end
-    elseif event == "QUEST_COMPLETE" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
-        local numQuestRewards = GetNumQuestChoices()
-        if numQuestRewards > 0 then
-
-        else
-            GetQuestReward()
+    end
+end, ["QUEST_DETAIL"] = function()
+    if addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
+        if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
+            return
         end
-    elseif event == "QUEST_GREETING" and addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
+
+        local id = GetQuestID()
+        addon.variables.acceptQuestID[id] = true
+        C_QuestLog.RequestLoadQuestByID(id)
+    end
+end, ["QUEST_GREETING"] = function()
+    if addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
         if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then
             return
         end
@@ -1625,71 +1646,33 @@ local function eventHandler(self, event, arg1, arg2)
             end
         end
         for i = 1, GetNumActiveQuests() do if select(2, GetActiveTitle(1)) then SelectActiveQuest(1) end end
-    elseif event == "PLAYER_CHOICE_UPDATE" and select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
-        -- We are in a delve and have a choice for buff - autopick it
-        local choiceInfo = C_PlayerChoice.GetCurrentPlayerChoiceInfo()
-
-        if choiceInfo and choiceInfo.options and #choiceInfo.options == 1 then
-            C_PlayerChoice.SendPlayerChoiceResponse(choiceInfo.options[1].buttons[1].id)
-            if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
-        end
-        -- @debug@
-    elseif event == "INSPECT_READY" and addon.db["showInfoOnInspectFrame"] then
-        -- Einbauen einer Prüfung, ob ich den Character schon angeschaut habe, löschen der Liste nach InspectFRAME close
-        -- Aktuell kommt es vor, dass die Grafik von Sockeln fehlt
-        onInspect(arg1)
-        -- elseif event == "CURRENCY_DISPLAY_UPDATE" and arg1 == addon.variables.catalystID then
-        -- @end-debug@
-    elseif event == "PLAYER_INTERACTION_MANAGER_FRAME_SHOW" and arg1 == 53 and addon.db["openCharframeOnUpgrade"] then
-        if CharacterFrame:IsShown() == false then ToggleCharacter("PaperDollFrame") end
-    elseif event == "CURRENCY_DISPLAY_UPDATE" and arg1 == 2815 then
-        local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
-        addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
-    elseif event == "DELETE_ITEM_CONFIRM" and addon.db["deleteItemFillDialog"] then
-        if StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(DELETE_ITEM_CONFIRM_STRING) end
-    elseif event == "PLAYER_DEAD" then
-        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
-    elseif event == "PLAYER_MONEY" then
-        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
-    elseif event == "GUILDBANK_UPDATE_MONEY" then
-        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
-    elseif event == "PLAYER_REGEN_ENABLED" then
-        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
-    elseif event == "PLAYER_UNGHOST" then
-        if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
     end
-end
+end, ["QUEST_PROGRESS"] = function()
+    if addon.db["autoChooseQuest"] and not IsShiftKeyDown() and IsQuestCompletable() then CompleteQuest() end
+end, ["SOCKET_INFO_ACCEPT"] = function()
+    if PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then
+        C_Timer.After(0.5, function() setCharFrame() end)
+    end
+end, ["ZONE_CHANGED_NEW_AREA"] = function()
+    if addon.variables.hookedOrderHall == false then
+        local ohcb = OrderHallCommandBar
+        if ohcb then
+            ohcb:HookScript("OnShow", function(self)
+                if addon.db["hideOrderHallBar"] then
+                    self:Hide()
+                else
+                    self:Show()
+                end
+            end)
+            addon.variables.hookedOrderHall = true
+            if addon.db["hideOrderHallBar"] then OrderHallCommandBar:Hide() end
+        end
+    end
+end}
 
--- Registriere das Event
-frameLoad:RegisterEvent("ADDON_LOADED")
-frameLoad:RegisterEvent("MERCHANT_SHOW")
-frameLoad:RegisterEvent("PLAYER_EQUIPMENT_CHANGED")
-frameLoad:RegisterEvent("SOCKET_INFO_ACCEPT")
-frameLoad:RegisterEvent("ENCHANT_SPELL_COMPLETED")
-frameLoad:RegisterEvent("DELETE_ITEM_CONFIRM")
-frameLoad:RegisterEvent("GOSSIP_SHOW")
-frameLoad:RegisterEvent("GOSSIP_CLOSED")
+local function registerEvents(frame) for event in pairs(eventHandlers) do frame:RegisterEvent(event) end end
 
-frameLoad:RegisterEvent("QUEST_DETAIL")
-frameLoad:RegisterEvent("QUEST_GREETING")
-frameLoad:RegisterEvent("QUEST_COMPLETE")
-frameLoad:RegisterEvent("QUEST_PROGRESS")
-frameLoad:RegisterEvent("QUEST_DATA_LOAD_RESULT")
-frameLoad:RegisterEvent("LOOT_READY")
-frameLoad:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
-frameLoad:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
+local function eventHandler(self, event, ...) if eventHandlers[event] then eventHandlers[event](...) end end
 
-frameLoad:RegisterEvent("PLAYER_CHOICE_UPDATE") -- for delves
-
-frameLoad:RegisterEvent("INSPECT_READY")
-
--- for durability we need some events
-frameLoad:RegisterEvent("PLAYER_DEAD")
-frameLoad:RegisterEvent("PLAYER_MONEY")
-frameLoad:RegisterEvent("GUILDBANK_UPDATE_MONEY")
-frameLoad:RegisterEvent("PLAYER_REGEN_ENABLED")
-frameLoad:RegisterEvent("ZONE_CHANGED_NEW_AREA") -- Last event before showing the UI - Needed for OrderHallCommandBar LazyLoad
-frameLoad:RegisterEvent("PLAYER_UNGHOST") -- if player resurrect at spirit healer
-
--- Setze den Event-Handler
+registerEvents(frameLoad)
 frameLoad:SetScript("OnEvent", eventHandler)

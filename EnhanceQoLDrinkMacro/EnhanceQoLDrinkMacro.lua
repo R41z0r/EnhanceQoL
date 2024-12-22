@@ -55,9 +55,10 @@ if addon.db["minManaFoodValue"] then
 else
     addon.db["minManaFoodValue"] = initialValue
 end
-if nil == addon.db["preferMageFood"] then addon.db["preferMageFood"] = true end
-if nil == addon.db["ignoreBuffFood"] then addon.db["ignoreBuffFood"] = true end
-if nil == addon.db["ignoreGemsEarthen"] then addon.db["ignoreGemsEarthen"] = true end
+
+addon.functions.InitDBValue("preferMageFood", true)
+addon.functions.InitDBValue("ignoreBuffFood", true)
+addon.functions.InitDBValue("ignoreGemsEarthen", true)
 
 -- Extend the option menu
 local frame = addon.functions.createTabFrame(L["Drink Macro"])

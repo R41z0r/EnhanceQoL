@@ -40,84 +40,54 @@ end
 addon.Vendor.variables.itemQualityFilter = {} -- Filter for Enable/Disable Qualities
 addon.Vendor.variables.itemBindTypeQualityFilter = {} -- Filter for BindType in Quality
 addon.Vendor.variables.tabNames = { -- Used to create autosell tabs
-    [1] = "Common",
-    [2] = "Uncommon",
-    [3] = "Rare",
-    [4] = "Epic"
-}
+[1] = "Common", [2] = "Uncommon", [3] = "Rare", [4] = "Epic"}
 
 -- Includelist
-if nil == addon.db["vendorIncludeSellList"] then
-    addon.db["vendorIncludeSellList"] = {}
-end
+addon.functions.InitDBValue("vendorIncludeSellList", {})
 
 -- Excludelist
-
-if nil == addon.db["vendorExcludeSellList"] then
-    addon.db["vendorExcludeSellList"] = {}
-end
+addon.functions.InitDBValue("vendorExcludeSellList", {})
 
 addon.Vendor.variables.tabKeyNames = {}
-for key in pairs(addon.Vendor.variables.tabNames) do
-    table.insert(addon.Vendor.variables.tabKeyNames, key)
-end
+for key in pairs(addon.Vendor.variables.tabNames) do table.insert(addon.Vendor.variables.tabKeyNames, key) end
 table.sort(addon.Vendor.variables.tabKeyNames)
 
 for key, value in pairs(addon.Vendor.variables.tabNames) do
-    if nil == addon.db["vendor" .. value .. "Enable"] then
-        addon.db["vendor" .. value .. "Enable"] = false
-    end
-    if nil == addon.db["vendor" .. value .. "MinIlvlDif"] then
-        addon.db["vendor" .. value .. "MinIlvlDif"] = 200
-    end
+    addon.functions.InitDBValue("vendor" .. value .. "Enable", false)
+    addon.functions.InitDBValue("vendor" .. value .. "MinIlvlDif", 200)
+    addon.functions.InitDBValue("vendor" .. value .. "IgnoreWarbound", true)
+    addon.functions.InitDBValue("vendor" .. value .. "IgnoreBoE", true)
 
-    if nil == addon.db["vendor" .. value .. "IgnoreWarbound"] then
-        addon.db["vendor" .. value .. "IgnoreWarbound"] = true
-    end
-    if nil == addon.db["vendor" .. value .. "IgnoreBoE"] then
-        addon.db["vendor" .. value .. "IgnoreBoE"] = true
-    end
-    if key ~= 1 then
-        if nil == addon.db["vendor" .. value .. "IgnoreUpgradable"] then
-            addon.db["vendor" .. value .. "IgnoreUpgradable"] = false
-        end
-    end
+    if key ~= 1 then addon.functions.InitDBValue("vendor" .. value .. "IgnoreUpgradable", false) end
 
     addon.Vendor.variables.itemQualityFilter[key] = addon.db["vendor" .. value .. "Enable"]
-    addon.Vendor.variables.itemBindTypeQualityFilter[key] = {
-        [0] = true, -- None
-        [1] = true, -- Bind on Pickup
-        [2] = not addon.db["vendor" .. value .. "IgnoreBoE"], -- Bind on Equip
-        [3] = true, -- Bind on Use
-        [4] = false, -- Quest item
-        [5] = false, -- Unused 1
-        [6] = false, -- Unused 2
-        [7] = true, -- Bind to Account
-        [8] = not addon.db["vendor" .. value .. "IgnoreWarbound"], -- Bind to Warband
-        [9] = not addon.db["vendor" .. value .. "IgnoreWarbound"] -- Bind to Warband
+    addon.Vendor.variables.itemBindTypeQualityFilter[key] = {[0] = true, -- None
+    [1] = true, -- Bind on Pickup
+    [2] = not addon.db["vendor" .. value .. "IgnoreBoE"], -- Bind on Equip
+    [3] = true, -- Bind on Use
+    [4] = false, -- Quest item
+    [5] = false, -- Unused 1
+    [6] = false, -- Unused 2
+    [7] = true, -- Bind to Account
+    [8] = not addon.db["vendor" .. value .. "IgnoreWarbound"], -- Bind to Warband
+    [9] = not addon.db["vendor" .. value .. "IgnoreWarbound"] -- Bind to Warband
     }
 end
 
-addon.Vendor.variables.itemTypeFilter = {
-    [2] = true, -- Weapon
-    [3] = true, -- Gems
-    [4] = true -- Armor
+addon.Vendor.variables.itemTypeFilter = {[2] = true, -- Weapon
+[3] = true, -- Gems
+[4] = true -- Armor
 }
 
 -- List to filter specific gems only
-addon.Vendor.variables.itemSubTypeFilter = {
-    [3] = {
-        [11] = true -- Artifact Relic
-    }
-}
+addon.Vendor.variables.itemSubTypeFilter = {[3] = {[11] = true -- Artifact Relic
+}}
 
 addon.Vendor.variables.upgradePattern = ITEM_UPGRADE_TOOLTIP_FORMAT_STRING:gsub("%%s", "%%a+"):gsub("%%d", "%%d+")
 
 function addon.Vendor.functions.createDropdown(id, frame, items, width, text, x, y)
 
-    table.sort(items, function(a, b)
-        return a.text < b.text
-    end)
+    table.sort(items, function(a, b) return a.text < b.text end)
 
     -- Erstelle ein Label
     local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -138,9 +108,7 @@ function addon.Vendor.functions.createDropdown(id, frame, items, width, text, x,
             info.text = item.text
             info.value = item.value
             info.checked = nil
-            info.func = function(self)
-                UIDropDownMenu_SetSelectedID(dropdown, i)
-            end
+            info.func = function(self) UIDropDownMenu_SetSelectedID(dropdown, i) end
             UIDropDownMenu_AddButton(info, level)
         end
     end
@@ -155,9 +123,7 @@ function addon.Vendor.functions.addDropdownItem(dropdown, items, newItem)
     -- Füge das neue Item zur Items-Tabelle hinzu
     table.insert(items, newItem)
 
-    table.sort(items, function(a, b)
-        return a.text < b.text
-    end)
+    table.sort(items, function(a, b) return a.text < b.text end)
     -- Neuinitialisiere das Dropdown-Menü
     local function Initialize(self, level)
         local info = UIDropDownMenu_CreateInfo()
@@ -165,9 +131,7 @@ function addon.Vendor.functions.addDropdownItem(dropdown, items, newItem)
             info.text = item.text
             info.value = item.value
             info.checked = nil
-            info.func = function(self)
-                UIDropDownMenu_SetSelectedID(dropdown, i)
-            end
+            info.func = function(self) UIDropDownMenu_SetSelectedID(dropdown, i) end
             UIDropDownMenu_AddButton(info, level)
         end
     end
@@ -184,16 +148,8 @@ function addon.Vendor.functions.createEditBox(parent, x, y, text)
     editBox:SetMaxLetters(100)
     editBox:SetTextInsets(10, 10, 0, 0)
     editBox:SetText(text)
-    editBox:SetScript("OnEditFocusGained", function(self)
-        if self:GetText() == text then
-            self:SetText("")
-        end
-    end)
-    editBox:SetScript("OnEditFocusLost", function(self)
-        if self:GetText() == "" then
-            self:SetText(text)
-        end
-    end)
+    editBox:SetScript("OnEditFocusGained", function(self) if self:GetText() == text then self:SetText("") end end)
+    editBox:SetScript("OnEditFocusLost", function(self) if self:GetText() == "" then self:SetText(text) end end)
     editBox:SetScript("OnReceiveDrag", function(self)
         local infoType, itemID, itemLink = GetCursorInfo()
         if infoType == "item" then
@@ -223,16 +179,8 @@ function addon.Vendor.functions.createEditBox(parent, x, y, text)
         end
     end)
 
-    editBox:SetScript("OnMouseDown", function(self, button)
-        if button == "RightButton" then
-            self:SetText("")
-        end
-    end)
-    editBox:SetScript("OnDragStart", function(self)
-        self:SetFocus()
-    end)
-    editBox:SetScript("OnDragStop", function(self)
-        self:ClearFocus()
-    end)
+    editBox:SetScript("OnMouseDown", function(self, button) if button == "RightButton" then self:SetText("") end end)
+    editBox:SetScript("OnDragStart", function(self) self:SetFocus() end)
+    editBox:SetScript("OnDragStop", function(self) self:ClearFocus() end)
     return editBox
 end

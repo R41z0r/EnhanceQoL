@@ -6,34 +6,34 @@ else
     error(parentAddonName .. " is not loaded")
 end
 
-if nil == addon.db["TooltipUnitHideType"] then addon.db["TooltipUnitHideType"] = 1 end
-if nil == addon.db["TooltipUnitHideInCombat"] then addon.db["TooltipUnitHideInCombat"] = true end
-if nil == addon.db["TooltipUnitHideInDungeon"] then addon.db["TooltipUnitHideInDungeon"] = false end
-
-if nil == addon.db["TooltipShowMythicScore"] then addon.db["TooltipShowMythicScore"] = false end
-
-if nil == addon.db["TooltipShowClassColor"] then addon.db["TooltipShowClassColor"] = false end
-if nil == addon.db["TooltipShowNPCID"] then addon.db["TooltipShowNPCID"] = true end
+addon.functions.InitDBValue("TooltipUnitHideType", 1)
+addon.functions.InitDBValue("TooltipUnitHideInCombat", true)
+addon.functions.InitDBValue("TooltipUnitHideInDungeon", false)
+addon.functions.InitDBValue("TooltipShowMythicScore", false)
+addon.functions.InitDBValue("TooltipShowClassColor", false)
+addon.functions.InitDBValue("TooltipShowNPCID", true)
 
 -- Spell
-if nil == addon.db["TooltipSpellHideType"] then addon.db["TooltipSpellHideType"] = 1 end
-if nil == addon.db["TooltipSpellHideInCombat"] then addon.db["TooltipSpellHideInCombat"] = false end
-if nil == addon.db["TooltipSpellHideInDungeon"] then addon.db["TooltipSpellHideInDungeon"] = false end
-if nil == addon.db["TooltipShowSpellID"] then addon.db["TooltipShowSpellID"] = true end
+addon.functions.InitDBValue("TooltipSpellHideType", 1)
+addon.functions.InitDBValue("TooltipSpellHideInCombat", false)
+addon.functions.InitDBValue("TooltipSpellHideInDungeon", false)
+addon.functions.InitDBValue("TooltipShowSpellID", true)
 
-if nil == addon.db["TooltipItemHideType"] then addon.db["TooltipItemHideType"] = 1 end
-if nil == addon.db["TooltipItemHideInCombat"] then addon.db["TooltipItemHideInCombat"] = false end
-if nil == addon.db["TooltipItemHideInDungeon"] then addon.db["TooltipItemHideInDungeon"] = false end
-if nil == addon.db["TooltipShowItemID"] then addon.db["TooltipShowItemID"] = true end
+-- Item
+addon.functions.InitDBValue("TooltipItemHideType", 1)
+addon.functions.InitDBValue("TooltipItemHideInCombat", false)
+addon.functions.InitDBValue("TooltipItemHideInDungeon", false)
+addon.functions.InitDBValue("TooltipShowItemID", true)
 
 -- Buff
-if nil == addon.db["TooltipBuffHideType"] then addon.db["TooltipBuffHideType"] = 1 end
-if nil == addon.db["TooltipBuffHideInCombat"] then addon.db["TooltipBuffHideInCombat"] = false end
-if nil == addon.db["TooltipBuffHideInDungeon"] then addon.db["TooltipBuffHideInDungeon"] = false end
+addon.functions.InitDBValue("TooltipBuffHideType", 1)
+addon.functions.InitDBValue("TooltipBuffHideInCombat", false)
+addon.functions.InitDBValue("TooltipBuffHideInDungeon", false)
+
 -- Debuff
-if nil == addon.db["TooltipDebuffHideType"] then addon.db["TooltipDebuffHideType"] = 1 end
-if nil == addon.db["TooltipDebuffHideInCombat"] then addon.db["TooltipDebuffHideInCombat"] = false end
-if nil == addon.db["TooltipDebuffHideInDungeon"] then addon.db["TooltipDebuffHideInDungeon"] = false end
+addon.functions.InitDBValue("TooltipDebuffHideType", 1)
+addon.functions.InitDBValue("TooltipDebuffHideInCombat", false)
+addon.functions.InitDBValue("TooltipDebuffHideInDungeon", false)
 
 addon.Tooltip = {}
 addon.LTooltip = {} -- Locales for MythicPlus

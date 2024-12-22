@@ -1,6 +1,12 @@
 local addonName, addon = ...
 
 addon.functions = {}
+function addon.functions.InitDBValue(key, defaultValue)
+    if addon.db[key] == nil then
+        addon.db[key] = defaultValue
+    end
+end
+
 -- Checkboxen erstellen
 function addon.functions.createCheckbox(name, parent, label, x, y)
     local checkbox = CreateFrame("CheckButton", name, parent, "ChatConfigCheckButtonTemplate")
