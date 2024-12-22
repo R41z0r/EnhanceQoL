@@ -1587,6 +1587,7 @@ globals = {
 	"ChannelUnmute",
 	"ChannelVoiceOff",
 	"ChannelVoiceOn",
+	"CharacterStatsPane",
 	"CheckInbox",
 	"CheckInteractDistance",
 	"ClearAchievementComparisonUnit",

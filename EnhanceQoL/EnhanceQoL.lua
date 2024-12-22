@@ -120,7 +120,7 @@ local function removeInspectElements()
             end
         end
     end
-
+    collectgarbage("collect")
 end
 
 local function onInspect(arg1)
@@ -1502,7 +1502,6 @@ local gossipClicked = {}
 
 local eventHandlers = {["ADDON_LOADED"] = function(arg1)
     if arg1 == addonName then
-        print(arg1)
         if not EnhanceQoLDB then EnhanceQoLDB = {} end
 
         loadMain()
