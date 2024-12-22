@@ -549,7 +549,19 @@ local function calculateDurability()
     end
 end
 
+local function UpdateItemLevel()
+    local statFrame = CharacterStatsPane.ItemLevelFrame
+    if statFrame and statFrame.Value then
+        local avgItemLevel, equippedItemLevel = GetAverageItemLevel()
+        local customItemLevel = equippedItemLevel
+        statFrame.Value:SetText(string.format("%.2f", customItemLevel))
+    end
+end
+
+hooksecurefunc("PaperDollFrame_SetItemLevel", function(statFrame, unit) UpdateItemLevel() end)
+
 local function setCharFrame()
+    UpdateItemLevel()
     if addon.db["showCatalystChargesOnCharframe"] then
         local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
         addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
