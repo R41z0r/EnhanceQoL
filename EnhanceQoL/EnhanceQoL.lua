@@ -327,7 +327,7 @@ local function onInspect(arg1)
 
                             if foundEnchant == false then
                                 element.enchant:SetText("")
-                                if element.borderGradient and UnitLevel(inspectUnit) == addon.Tooltip.variables.maxLevel then
+                                if element.borderGradient and UnitLevel(inspectUnit) == addon.variables.maxLevel then
                                     if key == 17 then
                                         local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
                                         if addon.variables.allowedEnchantTypesForOffhand[itemEquipLoc] then
@@ -464,7 +464,7 @@ local function setIlvlText(element, slot)
 
                     if foundEnchant == false then
                         element.enchant:SetText("")
-                        if element.borderGradient and UnitLevel("player") == addon.Tooltip.variables.maxLevel then
+                        if element.borderGradient and UnitLevel("player") == addon.variables.maxLevel then
                             if slot == 17 then
                                 local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(link)
                                 if addon.variables.allowedEnchantTypesForOffhand[itemEquipLoc] then
@@ -1558,7 +1558,8 @@ end, ["GOSSIP_SHOW"] = function()
             end
         end
     end
-end, ["GUILDBANK_UPDATE_MONEY"] = function()
+end,
+                       ["GUILDBANK_UPDATE_MONEY"] = function()
     if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
 end, ["LOOT_READY"] = function()
     if addon.db["autoQuickLoot"] and not IsShiftKeyDown() then
@@ -1589,8 +1590,8 @@ end, ["PLAYER_CHOICE_UPDATE"] = function()
             if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
         end
     end
-end, ["PLAYER_DEAD"] = function() if addon.db["showDurabilityOnCharframe"] then calculateDurability() end end,
-                       ["PLAYER_EQUIPMENT_CHANGED"] = function(arg1)
+end, ["PLAYER_DEAD"] = function() if addon.db["showDurabilityOnCharframe"] then calculateDurability() end 
+end, ["PLAYER_EQUIPMENT_CHANGED"] = function(arg1)
     if addon.variables.itemSlots[arg1] and PaperDollFrame:IsShown() then
         setIlvlText(addon.variables.itemSlots[arg1], arg1)
     end
@@ -1671,7 +1672,18 @@ end}
 
 local function registerEvents(frame) for event in pairs(eventHandlers) do frame:RegisterEvent(event) end end
 
-local function eventHandler(self, event, ...) if eventHandlers[event] then eventHandlers[event](...) end end
+local function eventHandler(self, event, ...)
+    if eventHandlers[event] then
+        if addon.Performance and addon.Performance.MeasurePerformance then
+            addon.Performance.MeasurePerformance(addonName, event, eventHandlers[event], ...)
+        else
+            -- Normale Event-Verarbeitung
+            eventHandlers[event](...)
+        end
+        -- if eventHandlers[event] then 
+        -- eventHandlers[event](...) 
+    end
+end
 
 registerEvents(frameLoad)
 frameLoad:SetScript("OnEvent", eventHandler)

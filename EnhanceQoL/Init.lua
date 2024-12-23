@@ -14,6 +14,7 @@ addon.variables.catalystID = 2813 -- Change to get the actual cataclyst charges 
 addon.variables.durabilityIcon = 136241 -- Anvil Symbol
 addon.variables.durabilityCount = 0
 addon.variables.hookedOrderHall = false
+addon.variables.maxLevel = GetMaxLevelForPlayerExpansion()
 
 addon.variables.enchantString = ENCHANTED_TOOLTIP_LINE:gsub('%%s', '(.+)')
 

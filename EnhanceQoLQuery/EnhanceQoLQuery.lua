@@ -108,7 +108,8 @@ local function updateItemInfo(itemLink)
         local formattedKey = name:gsub("%s+", "")
         if type == "Gem" then
             return string.format("{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " .. buffFood ..
-                                     ", isEarthenFood = true, earthenOnly = true }", formattedKey, itemLink:match("item:(%d+)"), minLevel, mana)
+                                     ", isEarthenFood = true, earthenOnly = true }", formattedKey,
+                itemLink:match("item:(%d+)"), minLevel, mana)
         else
             return string.format("{ key = \"%s\", id = %d, requiredLevel = %d, mana = %d, isBuffFood = " .. buffFood ..
                                      " }", formattedKey, itemLink:match("item:(%d+)"), minLevel, mana)
@@ -175,10 +176,110 @@ local function handleItemLink(text)
     end
 end
 
+local isLoggingActive = false -- Status für Hintergrund-Logging
+local performanceFrame = nil
+addon.Performance = {}
+addon.Performance.Data = {}
+addon.Performance.Log = {} -- Enthält alle Logs
+
+local function UpdatePerformanceFrame()
+    if not performanceFrame or not performanceFrame.content then return end
+
+    local content = performanceFrame.content
+    local yOffset = 0
+
+    -- Entferne alte Logzeilen
+    for _, child in ipairs({content:GetChildren()}) do
+        child:Hide()
+    end
+
+    -- Zeige neue Logzeilen
+    for _, log in ipairs(addon.Performance.Log) do
+        local line = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        line:SetPoint("TOPLEFT", content, "TOPLEFT", 5, -yOffset)
+        line:SetPoint("TOPRIGHT", content, "TOPRIGHT", -5, -yOffset)
+        line:SetText(string.format("[%s] %s - %s: %.2f ms", log.timestamp, log.addonName, log.event, log.elapsedTime))
+        yOffset = yOffset + 20
+    end
+
+    -- Passe die Höhe des Inhalts an
+    content:SetHeight(yOffset)
+end
+
+local function ShowPerformanceData()
+    if not performanceFrame then
+        performanceFrame = CreateFrame("Frame", "PerformanceFrame", UIParent, "BasicFrameTemplateWithInset")
+        performanceFrame:SetSize(600, 300)
+        performanceFrame:SetPoint("CENTER")
+        performanceFrame:SetMovable(true)
+        performanceFrame:EnableMouse(true)
+        performanceFrame:RegisterForDrag("LeftButton")
+        performanceFrame:SetScript("OnDragStart", performanceFrame.StartMoving)
+        performanceFrame:SetScript("OnDragStop", performanceFrame.StopMovingOrSizing)
+
+        performanceFrame.title = performanceFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+        performanceFrame.title:SetPoint("TOP", 0, -10)
+        performanceFrame.title:SetText("Performance Log")
+
+        local scrollFrame = CreateFrame("ScrollFrame", nil, performanceFrame, "UIPanelScrollFrameTemplate")
+        scrollFrame:SetSize(560, 220)
+        scrollFrame:SetPoint("TOP", performanceFrame.title, "BOTTOM", 0, -10)
+
+        local content = CreateFrame("Frame", nil, scrollFrame)
+        content:SetSize(540, 1)
+        scrollFrame:SetScrollChild(content)
+
+        performanceFrame.content = content
+
+        local closeButton = CreateFrame("Button", nil, performanceFrame, "UIPanelCloseButton")
+        closeButton:SetPoint("TOPRIGHT", performanceFrame, "TOPRIGHT")
+    end
+
+    -- Initiale Aktualisierung
+    UpdatePerformanceFrame()
+
+    performanceFrame:Show()
+end
+
 local function onAddonLoaded(event, addonName)
     if addonName == "EnhanceQoLQuery" then
+        -- Registriere den Slash-Command für /rq
         SLASH_EnhanceQoLQUERY1 = "/rq"
-        SlashCmdList["EnhanceQoLQUERY"] = function(msg) frame:Show() end
+        SlashCmdList["EnhanceQoLQUERY"] = function(msg)
+            if frame and frame.Show then
+                frame:Show()
+            else
+                print("Frame not found or not initialized.")
+            end
+        end
+
+        -- Registriere den Slash-Command für /perfdump
+        SLASH_PERFDATA1 = "/perfdump"
+        SlashCmdList["PERFDATA"] = function(msg)
+            local command = strlower(msg or "")
+        
+            if command == "start" then
+                if isLoggingActive then
+                    print("Performance logging is already active.")
+                else
+                    isLoggingActive = true
+                    print("Performance logging started.")
+                end
+            elseif command == "stop" then
+                if not isLoggingActive then
+                    print("Performance logging is already stopped.")
+                else
+                    isLoggingActive = false
+                    print("Performance logging stopped.")
+                end
+            elseif command == "" then
+                ShowPerformanceData()
+            else
+                print("Invalid command. Use '/perfdump start', '/perfdump stop', or '/perfdump'.")
+            end
+        end
+
+        print("EnhanceQoLQuery commands registered: /rq, /perfdump")
     end
 end
 
@@ -303,3 +404,37 @@ scanButton:SetScript("OnClick", function()
         print("Auction House is not open.")
     end
 end)
+
+-- Performance Module
+
+function addon.Performance.MeasurePerformance(addonName, event, func, ...)
+    local startTime = debugprofilestop() -- Startzeitpunkt
+    local results = {func(...)} -- Funktion ausführen
+    local elapsedTime = debugprofilestop() - startTime -- Dauer berechnen
+
+    if isLoggingActive then
+        addon.Performance.LogEvent(addonName, event, elapsedTime)
+    end
+
+    return unpack(results)
+end
+
+function addon.Performance.LogEvent(addonName, event, elapsedTime)
+    -- Füge neuen Eintrag hinzu
+    table.insert(addon.Performance.Log, {
+        addonName = addonName,
+        event = event,
+        elapsedTime = elapsedTime,
+        timestamp = date("%H:%M:%S")
+    })
+
+    -- Aktualisiere das Frame, wenn es offen ist
+    if performanceFrame and performanceFrame:IsShown() then
+        UpdatePerformanceFrame()
+    end
+end
+
+function addon.Performance.GetPerformanceData()
+    return addon.Performance.Data
+end
+function addon.Performance.GetPerformanceData() return addon.Performance.Data end

@@ -343,32 +343,70 @@ btnRemoveExclude = addon.functions.createButton(tabFrameExclude, dropExcludeList
     end)
 btnRemoveExclude:SetWidth(btnRemoveExclude:GetFontString():GetStringWidth() + 20)
 
-------Event Handler
-local function eventHandler(self, event, arg1, arg2)
+-- ------Event Handler
+-- local function eventHandler(self, event, arg1, arg2)
 
-    if event == "MERCHANT_SHOW" then
-        if IsShiftKeyDown() then return end
-        checkItem()
-    elseif event == "PLAYER_AVG_ITEM_LEVEL_UPDATE" then
-        local _, avgItemLevelEquipped = GetAverageItemLevel()
-        addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
-        for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-            local value = addon.Vendor.variables.tabNames[key]
-            updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
-        end
-    elseif event == "ITEM_DATA_LOAD_RESULT" and arg2 == false and tabFrame:IsShown() and txtInclude:GetText() ~= "" and
-        txtInclude:GetText() ~= L["Item id or drag item"] then
+--     if event == "MERCHANT_SHOW" then
+--         if IsShiftKeyDown() then return end
+--         checkItem()
+--     elseif event == "PLAYER_AVG_ITEM_LEVEL_UPDATE" then
+--         local _, avgItemLevelEquipped = GetAverageItemLevel()
+--         addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
+--         for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
+--             local value = addon.Vendor.variables.tabNames[key]
+--             updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
+--         end
+--     elseif event == "ITEM_DATA_LOAD_RESULT" and arg2 == false and tabFrame:IsShown() and txtInclude:GetText() ~= "" and
+--         txtInclude:GetText() ~= L["Item id or drag item"] then
+--         StaticPopupDialogs["VendorWrongItemID"] = {text = L["Item id does not exist"], button1 = "OK", timeout = 0,
+--                                                    whileDead = true, hideOnEscape = true, preferredIndex = 3 -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+--         }
+--         StaticPopup_Show("VendorWrongItemID")
+--         txtInclude:SetText(L["Item id or drag item"])
+
+--     end
+-- end
+
+-- frameLoad:RegisterEvent("MERCHANT_SHOW")
+-- frameLoad:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE")
+-- frameLoad:RegisterEvent("ITEM_DATA_LOAD_RESULT")
+
+-- frameLoad:SetScript("OnEvent", eventHandler)
+
+local eventHandlers = {["MERCHANT_SHOW"] = function()
+    if IsShiftKeyDown() then return end
+    checkItem()
+end, ["ITEM_DATA_LOAD_RESULT"] = function(arg1, arg2)
+    if arg2 == false and tabFrame:IsShown() and txtInclude:GetText() ~= "" and txtInclude:GetText() ~=
+        L["Item id or drag item"] then
         StaticPopupDialogs["VendorWrongItemID"] = {text = L["Item id does not exist"], button1 = "OK", timeout = 0,
                                                    whileDead = true, hideOnEscape = true, preferredIndex = 3 -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
         }
         StaticPopup_Show("VendorWrongItemID")
         txtInclude:SetText(L["Item id or drag item"])
+    end
+end, ["PLAYER_AVG_ITEM_LEVEL_UPDATE"] = function()
+    local _, avgItemLevelEquipped = GetAverageItemLevel()
+    addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
+    for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
+        local value = addon.Vendor.variables.tabNames[key]
+        updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
+    end
+end}
+local function registerEvents(frame) for event in pairs(eventHandlers) do frame:RegisterEvent(event) end end
 
+local function eventHandler(self, event, ...)
+    if eventHandlers[event] then
+        if addon.Performance and addon.Performance.MeasurePerformance then
+            addon.Performance.MeasurePerformance(addonName, event, eventHandlers[event], ...)
+        else
+            -- Normale Event-Verarbeitung
+            eventHandlers[event](...)
+        end
+        -- if eventHandlers[event] then 
+        -- eventHandlers[event](...) 
     end
 end
 
-frameLoad:RegisterEvent("MERCHANT_SHOW")
-frameLoad:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE")
-frameLoad:RegisterEvent("ITEM_DATA_LOAD_RESULT")
-
+registerEvents(frameLoad)
 frameLoad:SetScript("OnEvent", eventHandler)

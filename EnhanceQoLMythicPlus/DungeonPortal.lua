@@ -1,0 +1,184 @@
+local parentAddonName = "EnhanceQoL"
+local addonName, addon = ...
+
+if _G[parentAddonName] then
+    addon = _G[parentAddonName]
+else
+    error(parentAddonName .. " is not loaded")
+end
+
+local L = addon.LMythicPlus
+
+-- Addition für Potion Cooldown tracker
+local portalSpells = { -- Dragonflight
+[354464] = {text = "NW"}, [354462] = {text = "MISTS"}, [464256] = {text = "SIEG", isHorde = true},
+[445418] = {text = "SIEG", isAlliance = true}, [445414] = {text = "DAWN"}, [445417] = {text = "COT"},
+[445269] = {text = "SV"}, [445424] = {text = "GB"}, [445416] = {text = "ARAK"}}
+
+local isKnown = {}
+
+local fraction = UnitFractionGroup("player")
+
+local frameAnchor = CreateFrame("Frame", "DungeonTeleportFrame", GroupFinderFrame, "BackdropTemplate")
+frameAnchor:SetSize(250, 170) -- Breite x Höhe
+frameAnchor:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", -- Hintergrund
+edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", -- Rahmen
+edgeSize = 16, insets = {left = 4, right = 4, top = 4, bottom = 4}})
+frameAnchor:SetBackdropColor(0, 0, 0, 0.8) -- Dunkler Hintergrund mit 80% Transparenz
+
+-- Position rechts vom GroupFinderFrame
+frameAnchor:SetPoint("TOPLEFT", GroupFinderFrame, "TOPRIGHT", 5, 0)
+
+-- Überschrift hinzufügen
+local title = frameAnchor:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+title:SetPoint("TOP", 0, -10)
+title:SetText("Dungeon Teleport")
+
+local activeBars = {}
+addon.MythicPlus.portalFrame = frameAnchor
+
+frameAnchor:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+frameAnchor:RegisterEvent("ENCOUNTER_END")
+frameAnchor:RegisterEvent("ADDON_LOADED")
+
+local function checkCooldown()
+    for _, button in pairs(frameAnchor.buttons or {}) do
+
+        if (nil == isKnown[button.spellID] or not isKnown[button.spellID]) and IsSpellKnown(button.spellID) then
+            isKnown[button.spellID] = true
+            button.icon:SetDesaturated(false) -- Normale Farbe wiederherstellen
+            button.icon:SetAlpha(1) -- Volle Sichtbarkeit
+            button:EnableMouse(true) -- Aktiviert Klicks
+        end
+
+        if isKnown[button.spellID] then
+            local cooldownData = C_Spell.GetSpellCooldown(button.spellID)
+            if cooldownData and cooldownData.isEnabled then
+                button.cooldownFrame:SetCooldown(cooldownData.startTime, cooldownData.duration, cooldownData.modRate)
+            else
+                button.cooldownFrame:SetCooldown(0, 0)
+            end
+        end
+    end
+end
+
+local function waitCooldown(arg3)
+    C_Timer.After(0.1, function()
+        local cooldownData = C_Spell.GetSpellCooldown(arg3)
+        if cooldownData.duration > 0 then
+            checkCooldown()
+        else
+            waitCooldown(arg3)
+        end
+    end)
+end
+
+local function eventHandler(self, event, arg1, arg2, arg3, arg4)
+    if event == "ADDON_LOADED" then
+        checkCooldown()
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
+        if portalSpells[arg3] then waitCooldown(arg3) end
+    elseif event == "ENCOUNTER_END" and arg3 == 8 then
+        C_Timer.After(0.1, function() checkCooldown() end)
+    elseif event == "LEARNED_SPELL_IN_TAB" -- and UnitLevel("player") == addon.variables.maxLevel 
+    then
+        C_Timer.After(0.1, function() checkCooldown() end)
+    end
+end
+
+-- Setze den Event-Handler
+frameAnchor:SetScript("OnEvent", eventHandler)
+
+local buttonSize = 35 -- Größe der Buttons (Breite und Höhe)
+local spacing = 20 -- Abstand zwischen den Buttons
+local hSpacing = 35
+
+local function CreatePortalButtonsWithCooldown(frame, spells)
+    local buttons = {}
+    local sortedSpells = {}
+
+    -- Erstelle eine sortierbare Liste aus der spells-Tabelle
+    for spellID, data in pairs(spells) do
+        table.insert(sortedSpells, {spellID = spellID, text = data.text, iconID = data.iconID})
+    end
+
+    -- Sortiere die Liste alphabetisch nach dem `text`-Feld
+    table.sort(sortedSpells, function(a, b) return a.text < b.text end)
+
+    -- Buttons erstellen
+    local index = 1
+    for _, spellData in ipairs(sortedSpells) do
+        local spellID = spellData.spellID
+        local data = spells[spellID]
+
+        local button = CreateFrame("Button", "PortalButton" .. index, frame, "SecureActionButtonTemplate")
+        local spellInfo = C_Spell.GetSpellInfo(spellID)
+
+        button:SetSize(buttonSize, buttonSize)
+        button.spellID = spellID -- SpellID zum Button hinzufügen
+
+        -- Hintergrund und Rahmen
+        local bg = button:CreateTexture(nil, "BACKGROUND")
+        bg:SetAllPoints(button)
+        bg:SetColorTexture(0, 0, 0, 0.8)
+
+        local border = button:CreateTexture(nil, "BORDER")
+        border:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1)
+        border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
+        border:SetColorTexture(1, 1, 1, 1)
+
+        -- Position und Icon
+        local row = math.ceil(index / 4) - 1
+        local col = (index - 1) % 4
+        button:SetPoint("TOPLEFT", frame, "TOPLEFT", 20 + col * (buttonSize + spacing),
+            -40 - row * (buttonSize + hSpacing))
+
+        local icon = button:CreateTexture(nil, "ARTWORK")
+        icon:SetAllPoints(button)
+        icon:SetTexture(spellInfo.iconID or "Interface\\ICONS\\INV_Misc_QuestionMark")
+
+        -- Überprüfen, ob der Zauber bekannt ist
+        if not IsSpellKnown(spellID) then
+            icon:SetDesaturated(true) -- Macht das Icon grau/schwarzweiß
+            icon:SetAlpha(0.5) -- Optional: Reduziert die Sichtbarkeit
+            button:EnableMouse(false) -- Deaktiviert Klicks auf den Button
+        else
+            isKnown[spellID] = true
+            icon:SetDesaturated(false)
+            icon:SetAlpha(1) -- Normale Sichtbarkeit
+            button:EnableMouse(true) -- Aktiviert Klicks
+        end
+
+        -- Text und Tooltip
+        local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        label:SetPoint("TOP", button, "BOTTOM", 0, -2)
+        label:SetText(data.text)
+
+        button:SetScript("OnEnter", function(self)
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetSpellByID(spellID)
+            GameTooltip:Show()
+        end)
+        button:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+        -- Cooldown-Spirale hinzufügen
+        button.cooldownFrame = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")
+        button.cooldownFrame:SetAllPoints(button)
+
+        -- Sichere Aktion (CastSpell) konfigurieren
+        button:SetAttribute("type", "spell")
+        button:SetAttribute("spell", spellID)
+        button:RegisterForClicks("AnyUp", "AnyDown")
+
+        -- Button speichern
+        table.insert(buttons, button)
+        index = index + 1
+
+        if index > 8 then break end
+    end
+
+    frame.buttons = buttons
+    return buttons
+end
+-- Buttons erstellen
+CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)

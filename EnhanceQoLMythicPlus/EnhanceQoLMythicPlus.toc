@@ -12,4 +12,5 @@ Init.lua
 locales.xml
 
 CooldownTracker.lua
+DungeonPortal.lua
 EnhanceQoLMythicPlus.lua
