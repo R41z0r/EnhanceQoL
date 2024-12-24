@@ -62,3 +62,11 @@ L["Disabled"] = "Disabled"
 L["autoMarkTankExplanation"] = "It will mark the " .. TANK ..
                                    " when he has no mark\nand only changes the mark, when you are either\n" ..
                                    COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " or " .. TANK
+
+-- Teleports
+L["Teleports"] = "Teleports"
+
+L["teleportsHeadline"] = "This adds a frame with Dungeon Teleports to your PVEFrame"
+L["teleportEnabled"] = "Enable Teleport Frame"
+L["portalHideMissing"] = "Hide missing Teleports"
+L["portalShowTooltip"] = "Show tooltip on Teleport buttons"

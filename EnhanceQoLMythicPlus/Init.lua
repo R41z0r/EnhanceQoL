@@ -47,6 +47,11 @@ addon.MythicPlus.nrOfButtons = 0
 addon.MythicPlus.variables = {}
 addon.MythicPlus.variables.numOfTabs = 0
 
+-- Teleports
+addon.functions.InitDBValue("teleportFrame", false)
+addon.functions.InitDBValue("portalHideMissing", false)
+addon.functions.InitDBValue("portalShowTooltip", false)
+
 -- PullTimer
 addon.MythicPlus.variables.handled = false
 addon.MythicPlus.variables.breakIt = false

@@ -404,3 +404,30 @@ local cbPotionTrackerShowOffhealing = addon.functions.createCheckbox("potionTrac
 table.insert(hideListPotion, cbPotionTrackerShowOffhealing)
 
 hideElements(hideListPotion, addon.db["potionTracker"])
+
+
+-- Teleports
+local tabFrameTeleports = addon.MythicPlus.functions.createTabFrame(L["Teleports"], frame)
+
+local labelTeleports = addon.functions.createLabel(tabFrameTeleports, L["teleportsHeadline"], 0, -10,
+    "TOP", "TOP")
+
+    local cbTeleportsEnabled = addon.functions.createCheckbox("teleportFrame", tabFrameTeleports,
+    L["teleportEnabled"], 10, (addon.functions.getHeightOffset(labelTeleports) - 10))
+    cbTeleportsEnabled:SetScript("OnClick", function(self)
+    addon.db["teleportFrame"] = self:GetChecked()
+    addon.MythicPlus.functions.toggleFrame()
+end)
+
+local cbTeleportsHideMissing = addon.functions.createCheckbox("portalHideMissing", tabFrameTeleports,
+    L["portalHideMissing"], 10, (addon.functions.getHeightOffset(cbTeleportsEnabled) - 10))
+    cbTeleportsHideMissing:SetScript("OnClick", function(self)
+    addon.db["portalHideMissing"] = self:GetChecked()
+    addon.MythicPlus.functions.toggleFrame()
+end)
+
+local cbTeleportsEnableTooltip = addon.functions.createCheckbox("portalShowTooltip", tabFrameTeleports,
+    L["portalShowTooltip"], 10, (addon.functions.getHeightOffset(cbTeleportsHideMissing) - 10))
+    cbTeleportsHideMissing:SetScript("OnClick", function(self)
+    addon.db["portalShowTooltip"] = self:GetChecked()
+end)
