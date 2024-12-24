@@ -11,35 +11,32 @@ local L = addon.LMythicPlus
 
 -- Addition für Potion Cooldown tracker
 local portalSpells = { -- Dragonflight
-[354464] = {text = "NW"}, [354462] = {text = "MISTS"}, [464256] = {text = "SIEG", isHorde = true},
-[445418] = {text = "SIEG", isAlliance = true}, [445414] = {text = "DAWN"}, [445417] = {text = "COT"},
-[445269] = {text = "SV"}, [445424] = {text = "GB"}, [445416] = {text = "ARAK"}}
+[354464] = {text = "MISTS"}, [354462] = {text = "NW"}, [464256] = {text = "SIEG", faction = FACTION_HORDE},
+[445418] = {text = "SIEG", faction = FACTION_ALLIANCE}, [445414] = {text = "DAWN"}, [445417] = {text = "COT"},
+[445269] = {text = "SV"}, [445424] = {text = "GB"}, [445416] = {text = "ARAK"},
+-- [393256] = {text = "RLP"},
+-- [393273] = {text = "AA"},
+}
 
 local isKnown = {}
+local faction = UnitFactionGroup("player")
+local initialStart = true
 
-local fraction = UnitFractionGroup("player")
-
-local frameAnchor = CreateFrame("Frame", "DungeonTeleportFrame", GroupFinderFrame, "BackdropTemplate")
-frameAnchor:SetSize(250, 170) -- Breite x Höhe
+local frameAnchor = CreateFrame("Frame", "DungeonTeleportFrame", PVEFrame, "BackdropTemplate")
 frameAnchor:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", -- Hintergrund
 edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", -- Rahmen
 edgeSize = 16, insets = {left = 4, right = 4, top = 4, bottom = 4}})
 frameAnchor:SetBackdropColor(0, 0, 0, 0.8) -- Dunkler Hintergrund mit 80% Transparenz
 
--- Position rechts vom GroupFinderFrame
-frameAnchor:SetPoint("TOPLEFT", GroupFinderFrame, "TOPRIGHT", 5, 0)
-
 -- Überschrift hinzufügen
 local title = frameAnchor:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 title:SetPoint("TOP", 0, -10)
-title:SetText("Dungeon Teleport")
+local mSeasonTitle = format(MYTHIC_DUNGEON_SEASON, "", 1)
+title:SetFormattedText(mSeasonTitle:gsub("%(%s", "("))
+frameAnchor:SetSize(title:GetStringWidth() + 20, 170) -- Breite x Höhe
 
 local activeBars = {}
 addon.MythicPlus.portalFrame = frameAnchor
-
-frameAnchor:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
-frameAnchor:RegisterEvent("ENCOUNTER_END")
-frameAnchor:RegisterEvent("ADDON_LOADED")
 
 local function checkCooldown()
     for _, button in pairs(frameAnchor.buttons or {}) do
@@ -73,24 +70,8 @@ local function waitCooldown(arg3)
     end)
 end
 
-local function eventHandler(self, event, arg1, arg2, arg3, arg4)
-    if event == "ADDON_LOADED" then
-        checkCooldown()
-    elseif event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
-        if portalSpells[arg3] then waitCooldown(arg3) end
-    elseif event == "ENCOUNTER_END" and arg3 == 8 then
-        C_Timer.After(0.1, function() checkCooldown() end)
-    elseif event == "LEARNED_SPELL_IN_TAB" -- and UnitLevel("player") == addon.variables.maxLevel 
-    then
-        C_Timer.After(0.1, function() checkCooldown() end)
-    end
-end
-
--- Setze den Event-Handler
-frameAnchor:SetScript("OnEvent", eventHandler)
-
-local buttonSize = 35 -- Größe der Buttons (Breite und Höhe)
-local spacing = 20 -- Abstand zwischen den Buttons
+local buttonSize = 35
+local spacing = 20
 local hSpacing = 35
 
 local function CreatePortalButtonsWithCooldown(frame, spells)
@@ -99,11 +80,29 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 
     -- Erstelle eine sortierbare Liste aus der spells-Tabelle
     for spellID, data in pairs(spells) do
-        table.insert(sortedSpells, {spellID = spellID, text = data.text, iconID = data.iconID})
+        if data.faction and faction == data.faction then
+            table.insert(sortedSpells, {spellID = spellID, text = data.text, iconID = data.iconID})
+        elseif nil == data.faction then
+            table.insert(sortedSpells, {spellID = spellID, text = data.text, iconID = data.iconID})
+        end
     end
 
     -- Sortiere die Liste alphabetisch nach dem `text`-Feld
     table.sort(sortedSpells, function(a, b) return a.text < b.text end)
+
+    -- Dynamische Anzahl der Buttons
+    local totalButtons = #sortedSpells
+    local buttonsPerRow = math.ceil(totalButtons / 2) -- Dynamische Berechnung der Buttons pro Reihe
+    local totalButtonWidth = (buttonSize * buttonsPerRow) + (spacing * (buttonsPerRow - 1))
+    
+    local frameWidth = math.max(totalButtonWidth + 40, title:GetStringWidth() + 20) -- Mindestbreite von 200 für Optik
+    local initialSpacing = (frameWidth - totalButtonWidth) / 2
+
+    -- Dynamische Höhe des Frames
+    local rows = math.ceil(totalButtons / buttonsPerRow)
+    local frameHeight = 40 + rows * (buttonSize + hSpacing)
+    frame:SetSize(frameWidth, frameHeight) -- Setze die dynamische Breite und Höhe
+
 
     -- Buttons erstellen
     local index = 1
@@ -128,9 +127,9 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
         border:SetColorTexture(1, 1, 1, 1)
 
         -- Position und Icon
-        local row = math.ceil(index / 4) - 1
-        local col = (index - 1) % 4
-        button:SetPoint("TOPLEFT", frame, "TOPLEFT", 20 + col * (buttonSize + spacing),
+        local row = math.ceil(index / buttonsPerRow) - 1
+        local col = (index - 1) % buttonsPerRow
+        button:SetPoint("TOPLEFT", frame, "TOPLEFT", initialSpacing + col * (buttonSize + spacing),
             -40 - row * (buttonSize + hSpacing))
 
         local icon = button:CreateTexture(nil, "ARTWORK")
@@ -174,11 +173,40 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
         table.insert(buttons, button)
         index = index + 1
 
-        if index > 8 then break end
+        if index > totalButtons then break end
     end
 
     frame.buttons = buttons
     return buttons
 end
 -- Buttons erstellen
-CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
+
+frameAnchor:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
+frameAnchor:RegisterEvent("ENCOUNTER_END")
+frameAnchor:RegisterEvent("ADDON_LOADED")
+
+local function eventHandler(self, event, arg1, arg2, arg3, arg4)
+    if event == "ADDON_LOADED" and arg1 == addonName then
+        CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
+        if portalSpells[arg3] then waitCooldown(arg3) end
+    elseif event == "ENCOUNTER_END" and arg3 == 8 then
+        C_Timer.After(0.1, function() checkCooldown() end)
+    end
+end
+
+-- Setze den Event-Handler
+frameAnchor:SetScript("OnEvent", eventHandler)
+
+PVEFrame:HookScript("OnShow", function(self)
+    if initialStart then
+        initialStart = false
+        -- Based on RaiderIO Client place the Frame
+        if nil ~= RaiderIO_ProfileTooltip then
+            frameAnchor:SetPoint("TOPLEFT", RaiderIO_ProfileTooltip, "TOPRIGHT", 0, 0)
+        else
+            frameAnchor:SetPoint("TOPLEFT", PVEFrame, "TOPRIGHT", 0, 0)
+        end
+    end
+    checkCooldown()
+end)
