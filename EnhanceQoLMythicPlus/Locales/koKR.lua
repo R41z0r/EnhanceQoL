@@ -64,3 +64,13 @@ L["Disabled"] = "비활성화됨"
 L["autoMarkTankExplanation"] =
     "탱커에게 표식이 없을 때\n자동으로 표식을 지정하고\n변경은 당신이\n" ..
         COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 또는 " .. TANK .. "일 때만 가능합니다."
+
+-- Teleports
+L["Teleports"] = "순간이동"
+L["teleportEnabled"] = "순간이동 창 활성화"
+L["DungeonCompendium"] = "던전 순간이동 모음집"
+L["teleportsEnableCompendium"] = "던전 순간이동 모음집 활성화"
+
+L["teleportsHeadline"] = "던전 순간이동을 포함한 프레임을 PVE 창에 추가합니다"
+L["portalHideMissing"] = "누락된 순간이동 숨기기"
+L["portalShowTooltip"] = "순간이동 버튼에 툴팁 표시"

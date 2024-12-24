@@ -189,9 +189,7 @@ local function UpdatePerformanceFrame()
     local yOffset = 0
 
     -- Entferne alte Logzeilen
-    for _, child in ipairs({content:GetChildren()}) do
-        child:Hide()
-    end
+    for _, child in ipairs({content:GetChildren()}) do child:Hide() end
 
     -- Zeige neue Logzeilen
     for _, log in ipairs(addon.Performance.Log) do
@@ -257,7 +255,7 @@ local function onAddonLoaded(event, addonName)
         SLASH_PERFDATA1 = "/perfdump"
         SlashCmdList["PERFDATA"] = function(msg)
             local command = strlower(msg or "")
-        
+
             if command == "start" then
                 if isLoggingActive then
                     print("Performance logging is already active.")
@@ -412,29 +410,19 @@ function addon.Performance.MeasurePerformance(addonName, event, func, ...)
     local results = {func(...)} -- Funktion ausführen
     local elapsedTime = debugprofilestop() - startTime -- Dauer berechnen
 
-    if isLoggingActive then
-        addon.Performance.LogEvent(addonName, event, elapsedTime)
-    end
+    if isLoggingActive then addon.Performance.LogEvent(addonName, event, elapsedTime) end
 
     return unpack(results)
 end
 
 function addon.Performance.LogEvent(addonName, event, elapsedTime)
     -- Füge neuen Eintrag hinzu
-    table.insert(addon.Performance.Log, {
-        addonName = addonName,
-        event = event,
-        elapsedTime = elapsedTime,
-        timestamp = date("%H:%M:%S")
-    })
+    table.insert(addon.Performance.Log,
+        {addonName = addonName, event = event, elapsedTime = elapsedTime, timestamp = date("%H:%M:%S")})
 
     -- Aktualisiere das Frame, wenn es offen ist
-    if performanceFrame and performanceFrame:IsShown() then
-        UpdatePerformanceFrame()
-    end
+    if performanceFrame and performanceFrame:IsShown() then UpdatePerformanceFrame() end
 end
 
-function addon.Performance.GetPerformanceData()
-    return addon.Performance.Data
-end
+function addon.Performance.GetPerformanceData() return addon.Performance.Data end
 function addon.Performance.GetPerformanceData() return addon.Performance.Data end

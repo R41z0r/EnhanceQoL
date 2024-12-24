@@ -63,3 +63,12 @@ L["Disabled"] = "Deaktiviert"
 L["autoMarkTankExplanation"] = "Der " .. TANK ..
                                    " wird markiert, wenn er\nkeine Markierung hat und die Markierung\nwird nur geändert, wenn du entweder\n" ..
                                    COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " oder " .. TANK .. " bist"
+-- Teleports
+L["Teleports"] = "Teleporte"
+L["teleportEnabled"] = "Teleport-Fenster aktivieren"
+L["DungeonCompendium"] = "Teleport-Kompendium"
+L["teleportsEnableCompendium"] = "Teleport-Kompendium aktivieren"
+
+L["teleportsHeadline"] = "Dies fügt ein Fenster mit Dungeon-Teleporten zu deinem PVE-Fenster hinzu"
+L["portalHideMissing"] = "Fehlende Teleporte ausblenden"
+L["portalShowTooltip"] = "Tooltip auf Teleport-Buttons anzeigen"

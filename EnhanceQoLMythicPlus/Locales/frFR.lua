@@ -63,3 +63,13 @@ L["Disabled"] = "Désactivé"
 L["autoMarkTankExplanation"] = "Le " .. TANK ..
                                    " sera marqué s'il n'a\npas de marque et ne changera la marque\nque si vous êtes soit\n" ..
                                    COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
+
+-- Teleports
+L["Teleports"] = "Téléportations"
+L["teleportEnabled"] = "Activer le cadre de téléportation"
+L["DungeonCompendium"] = "Compendium de Téléportation"
+L["teleportsEnableCompendium"] = "Activer le Compendium de Téléportation"
+
+L["teleportsHeadline"] = "Ajoute un cadre avec les téléportations de donjon à votre fenêtre JcE"
+L["portalHideMissing"] = "Masquer les téléportations manquantes"
+L["portalShowTooltip"] = "Afficher l'infobulle sur les boutons de téléportation"

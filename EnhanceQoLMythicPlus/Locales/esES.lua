@@ -63,3 +63,13 @@ L["Disabled"] = "Desactivado"
 L["autoMarkTankExplanation"] = "El " .. TANK ..
                                    " será marcado cuando\nno tenga una marca y solo cambiará la marca\nsi eres " ..
                                    COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK
+
+-- Teleports
+L["Teleports"] = "Teletransportes"
+L["teleportEnabled"] = "Habilitar marco de teletransporte"
+L["DungeonCompendium"] = "Compendio de Teletransporte"
+L["teleportsEnableCompendium"] = "Habilitar Compendio de Teletransporte"
+
+L["teleportsHeadline"] = "Añade un marco con teletransportes de mazmorras a tu ventana JcE"
+L["portalHideMissing"] = "Ocultar teletransportes faltantes"
+L["portalShowTooltip"] = "Mostrar información emergente en los botones de teletransporte"

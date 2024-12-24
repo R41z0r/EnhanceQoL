@@ -51,6 +51,7 @@ addon.MythicPlus.variables.numOfTabs = 0
 addon.functions.InitDBValue("teleportFrame", false)
 addon.functions.InitDBValue("portalHideMissing", false)
 addon.functions.InitDBValue("portalShowTooltip", false)
+addon.functions.InitDBValue("teleportsEnableCompendium", false)
 
 -- PullTimer
 addon.MythicPlus.variables.handled = false

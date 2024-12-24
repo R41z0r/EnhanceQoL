@@ -65,8 +65,10 @@ L["autoMarkTankExplanation"] = "It will mark the " .. TANK ..
 
 -- Teleports
 L["Teleports"] = "Teleports"
+L["teleportEnabled"] = "Enable Teleport Frame"
+L["DungeonCompendium"] = "Teleport Compendium"
+L["teleportsEnableCompendium"] = "Enable Teleport Compendium"
 
 L["teleportsHeadline"] = "This adds a frame with Dungeon Teleports to your PVEFrame"
-L["teleportEnabled"] = "Enable Teleport Frame"
 L["portalHideMissing"] = "Hide missing Teleports"
 L["portalShowTooltip"] = "Show tooltip on Teleport buttons"

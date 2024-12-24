@@ -64,3 +64,12 @@ L["Disabled"] = "Desativado"
 L["autoMarkTankExplanation"] = "O " .. TANK ..
                                    " será marcado quando\nnão tiver uma marca e só mudará a marca\nse você for " ..
                                    COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
+-- Teleports
+L["Teleports"] = "Teleportes"
+L["teleportEnabled"] = "Habilitar painel de teleporte"
+L["DungeonCompendium"] = "Compêndio de Teleporte"
+L["teleportsEnableCompendium"] = "Habilitar Compêndio de Teleporte"
+
+L["teleportsHeadline"] = "Adiciona um painel com teleportes de masmorras à sua janela JxA"
+L["portalHideMissing"] = "Ocultar teleportes ausentes"
+L["portalShowTooltip"] = "Mostrar dica nos botões de teleporte"

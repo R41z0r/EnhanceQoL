@@ -63,3 +63,13 @@ L["autoMarkTankInDungeonMarker"] = "坦克標記"
 L["Disabled"] = "已停用"
 L["autoMarkTankExplanation"] = "如果坦克沒有標記，它將自動\n標記，並且只有當您是\n" ..
                                    COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 或 " .. TANK .. " 時才會更改標記"
+
+-- Teleports
+L["Teleports"] = "傳送"
+L["teleportEnabled"] = "啟用傳送框架"
+L["DungeonCompendium"] = "地城傳送指南"
+L["teleportsEnableCompendium"] = "啟用地城傳送指南"
+
+L["teleportsHeadline"] = "在PvE視窗中添加一個包含地城傳送的框架"
+L["portalHideMissing"] = "隱藏缺失的傳送"
+L["portalShowTooltip"] = "在傳送按鈕上顯示提示"

@@ -419,8 +419,15 @@ local labelTeleports = addon.functions.createLabel(tabFrameTeleports, L["telepor
     addon.MythicPlus.functions.toggleFrame()
 end)
 
+local cbTeleportsEnableCompendium = addon.functions.createCheckbox("teleportsEnableCompendium", tabFrameTeleports,
+    L["teleportsEnableCompendium"], 10, (addon.functions.getHeightOffset(cbTeleportsEnabled) - 10))
+    cbTeleportsEnableCompendium:SetScript("OnClick", function(self)
+    addon.db["teleportsEnableCompendium"] = self:GetChecked()
+    addon.MythicPlus.functions.toggleFrame()
+end)
+
 local cbTeleportsHideMissing = addon.functions.createCheckbox("portalHideMissing", tabFrameTeleports,
-    L["portalHideMissing"], 10, (addon.functions.getHeightOffset(cbTeleportsEnabled) - 10))
+    L["portalHideMissing"], 10, (addon.functions.getHeightOffset(cbTeleportsEnableCompendium) - 10))
     cbTeleportsHideMissing:SetScript("OnClick", function(self)
     addon.db["portalHideMissing"] = self:GetChecked()
     addon.MythicPlus.functions.toggleFrame()
@@ -428,6 +435,6 @@ end)
 
 local cbTeleportsEnableTooltip = addon.functions.createCheckbox("portalShowTooltip", tabFrameTeleports,
     L["portalShowTooltip"], 10, (addon.functions.getHeightOffset(cbTeleportsHideMissing) - 10))
-    cbTeleportsHideMissing:SetScript("OnClick", function(self)
+    cbTeleportsEnableTooltip:SetScript("OnClick", function(self)
     addon.db["portalShowTooltip"] = self:GetChecked()
 end)

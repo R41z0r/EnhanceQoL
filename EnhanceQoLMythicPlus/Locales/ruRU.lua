@@ -69,3 +69,14 @@ L["Disabled"] = "Отключено"
 L["autoMarkTankExplanation"] = "Будет поставлена метка на " .. TANK ..
                                    ", если\nу него нет метки, и метка изменится только\nв том случае, если вы " ..
                                    COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " или " .. TANK
+
+-- Teleports
+L["Teleports"] = "Телепорты"
+L["teleportEnabled"] = "Включить окно телепортации"
+L["DungeonCompendium"] = "Справочник по телепортам"
+L["teleportsEnableCompendium"] = "Включить справочник по телепортам"
+
+L["teleportsHeadline"] =
+    "Добавляет окно с телепортами в подземелья в ваше PvE-окно"
+L["portalHideMissing"] = "Скрыть отсутствующие телепорты"
+L["portalShowTooltip"] = "Показывать подсказки на кнопках телепортов"

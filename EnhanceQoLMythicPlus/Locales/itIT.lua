@@ -64,3 +64,13 @@ L["Disabled"] = "Disabilitato"
 L["autoMarkTankExplanation"] = "Il " .. TANK ..
                                    " verrà marcato quando\nnon ha un segno e cambierà il segno solo\nse sei " ..
                                    COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK
+
+-- Teleports
+L["Teleports"] = "Teletrasporti"
+L["teleportEnabled"] = "Abilita il pannello dei teletrasporti"
+L["DungeonCompendium"] = "Compendio dei Teletrasporti"
+L["teleportsEnableCompendium"] = "Abilita il Compendio dei Teletrasporti"
+
+L["teleportsHeadline"] = "Aggiunge un pannello con i teletrasporti ai dungeon nella finestra PvE"
+L["portalHideMissing"] = "Nascondi i teletrasporti mancanti"
+L["portalShowTooltip"] = "Mostra il tooltip sui pulsanti di teletrasporto"
