@@ -403,8 +403,6 @@ local function eventHandler(self, event, ...)
             -- Normale Event-Verarbeitung
             eventHandlers[event](...)
         end
-        -- if eventHandlers[event] then 
-        -- eventHandlers[event](...) 
     end
 end
 

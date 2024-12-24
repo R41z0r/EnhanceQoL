@@ -44,6 +44,7 @@ globals = {
 	
 	-- EnhanceQoL
 	"ContainerFrameContainer",
+	"DungeonTeleportFrame",
 	"ContainerFrameCombinedBags",
 	"COMMUNITY_MEMBER_ROLE_NAME_LEADER",
 	"PaperDollSidebarTab3",

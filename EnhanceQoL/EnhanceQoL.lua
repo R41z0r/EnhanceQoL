@@ -1590,8 +1590,8 @@ end, ["PLAYER_CHOICE_UPDATE"] = function()
             if PlayerChoiceFrame:IsShown() then PlayerChoiceFrame:Hide() end
         end
     end
-end, ["PLAYER_DEAD"] = function() if addon.db["showDurabilityOnCharframe"] then calculateDurability() end 
-end, ["PLAYER_EQUIPMENT_CHANGED"] = function(arg1)
+end, ["PLAYER_DEAD"] = function() if addon.db["showDurabilityOnCharframe"] then calculateDurability() end end,
+                       ["PLAYER_EQUIPMENT_CHANGED"] = function(arg1)
     if addon.variables.itemSlots[arg1] and PaperDollFrame:IsShown() then
         setIlvlText(addon.variables.itemSlots[arg1], arg1)
     end
@@ -1680,8 +1680,8 @@ local function eventHandler(self, event, ...)
             -- Normale Event-Verarbeitung
             eventHandlers[event](...)
         end
-        -- if eventHandlers[event] then 
-        -- eventHandlers[event](...) 
+        -- if eventHandlers[event] then
+        -- eventHandlers[event](...)
     end
 end
 
