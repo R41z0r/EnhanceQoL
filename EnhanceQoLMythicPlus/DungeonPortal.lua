@@ -228,16 +228,10 @@ local function CreatePortalCompendium(frame, compendium)
 
     -- Initiale Position
     local currentYOffset = 0 - titleCompendium:GetStringHeight() - 20 -- Startabstand vom oberen Rand
-    local maxWidth = 0
+    local maxWidth = titleCompendium:GetStringWidth() + 20
 
     -- Durchlaufe die Reihenfolge in `compendium`
     for _, section in ipairs(compendium) do
-        -- Überschrift (Headline)
-        local headline = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        headline:SetPoint("TOP", frame, "TOP", 0, currentYOffset)
-        headline:SetText(section.headline)
-        currentYOffset = currentYOffset - headline:GetStringHeight() - 10 -- Abstand für Buttons
-        table.insert(frame.headline, headline)
 
         local sortedSpells = {}
         for spellID, data in pairs(section.spells) do
@@ -249,6 +243,14 @@ local function CreatePortalCompendium(frame, compendium)
         end
         table.sort(sortedSpells, function(a, b) return a.text < b.text end)
 
+        if #sortedSpells > 0 then
+            -- Überschrift (Headline)
+            local headline = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            headline:SetPoint("TOP", frame, "TOP", 0, currentYOffset)
+            headline:SetText(section.headline)
+            currentYOffset = currentYOffset - headline:GetStringHeight() - 10 -- Abstand für Buttons
+            table.insert(frame.headline, headline)
+        end
         -- Buttons generieren
         local buttonsPerRow = math.ceil(#sortedSpells)
         local totalButtonWidth = (buttonSize * buttonsPerRow) + (spacingCompendium * (buttonsPerRow - 1))
@@ -337,7 +339,7 @@ local function CreatePortalCompendium(frame, compendium)
     end
 
     -- Frame-Größe dynamisch anpassen
-    frame:SetSize(maxWidth, math.abs(currentYOffset) + 20)
+    frame:SetSize(maxWidth, max(math.abs(currentYOffset) + 20, titleCompendium:GetStringHeight() + 20))
 end
 
 local function checkCooldown()
