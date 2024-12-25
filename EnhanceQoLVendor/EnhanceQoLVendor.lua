@@ -233,20 +233,24 @@ for id, name in pairs(addon.db["vendorIncludeSellList"]) do table.insert(tInclud
 local txtInclude = addon.Vendor.functions.createEditBox(tabFrame, 20,
     addon.functions.getHeightOffset(labelHeadline) - 10, L["Item id or drag item"])
 
+local function addInclude(id)
+    local eItem = Item:CreateFromItemID(tonumber(id))
+    if eItem and not eItem:IsItemEmpty() then
+        eItem:ContinueOnItemLoad(function()
+            if not addon.db["vendorIncludeSellList"][eItem:GetItemID()] then
+                addon.db["vendorIncludeSellList"][eItem:GetItemID()] = eItem:GetItemName()
+                addon.Vendor.functions.addDropdownItem(dropIncludeList, tInclude,
+                    {text = eItem:GetItemName(), value = eItem:GetItemID()})
+            end
+            txtInclude:SetText(L["Item id or drag item"])
+        end)
+    end
+end
+
 local btnAddInclude = addon.functions.createButton(tabFrame, txtInclude:GetWidth() + 20,
     addon.functions.getHeightOffset(labelHeadline) - 7, 50, 30, L["Add"], function()
         if txtInclude:GetText() ~= "" and txtInclude:GetText() ~= L["Item id or drag item"] then
-            local eItem = Item:CreateFromItemID(tonumber(txtInclude:GetText()))
-            if eItem and not eItem:IsItemEmpty() then
-                eItem:ContinueOnItemLoad(function()
-                    if not addon.db["vendorIncludeSellList"][eItem:GetItemID()] then
-                        addon.db["vendorIncludeSellList"][eItem:GetItemID()] = eItem:GetItemName()
-                        addon.Vendor.functions.addDropdownItem(dropIncludeList, tInclude,
-                            {text = eItem:GetItemName(), value = eItem:GetItemID()})
-                    end
-                    txtInclude:SetText(L["Item id or drag item"])
-                end)
-            end
+            addInclude(txtInclude:GetText())
         end
     end)
 
@@ -295,20 +299,24 @@ for id, name in pairs(addon.db["vendorExcludeSellList"]) do table.insert(tExclud
 local txtExclude = addon.Vendor.functions.createEditBox(tabFrameExclude, 20,
     addon.functions.getHeightOffset(labelHeadlineExclude) - 10, L["Item id or drag item"])
 
+local function addExclude(id)
+    local eItem = Item:CreateFromItemID(tonumber(id))
+    if eItem and not eItem:IsItemEmpty() then
+        eItem:ContinueOnItemLoad(function()
+            if not addon.db["vendorExcludeSellList"][eItem:GetItemID()] then
+                addon.db["vendorExcludeSellList"][eItem:GetItemID()] = eItem:GetItemName()
+                addon.Vendor.functions.addDropdownItem(dropExcludeList, tExclude,
+                    {text = eItem:GetItemName(), value = eItem:GetItemID()})
+            end
+            txtExclude:SetText(L["Item id or drag item"])
+        end)
+    end
+end
+
 local btnAddExclude = addon.functions.createButton(tabFrameExclude, txtExclude:GetWidth() + 20,
     addon.functions.getHeightOffset(labelHeadlineExclude) - 7, 50, 30, L["Add"], function()
         if txtExclude:GetText() ~= "" and txtExclude:GetText() ~= L["Item id or drag item"] then
-            local eItem = Item:CreateFromItemID(tonumber(txtExclude:GetText()))
-            if eItem and not eItem:IsItemEmpty() then
-                eItem:ContinueOnItemLoad(function()
-                    if not addon.db["vendorExcludeSellList"][eItem:GetItemID()] then
-                        addon.db["vendorExcludeSellList"][eItem:GetItemID()] = eItem:GetItemName()
-                        addon.Vendor.functions.addDropdownItem(dropExcludeList, tExclude,
-                            {text = eItem:GetItemName(), value = eItem:GetItemID()})
-                    end
-                    txtExclude:SetText(L["Item id or drag item"])
-                end)
-            end
+            addExclude(txtExclude:GetText())
         end
     end)
 
@@ -343,36 +351,6 @@ btnRemoveExclude = addon.functions.createButton(tabFrameExclude, dropExcludeList
     end)
 btnRemoveExclude:SetWidth(btnRemoveExclude:GetFontString():GetStringWidth() + 20)
 
--- ------Event Handler
--- local function eventHandler(self, event, arg1, arg2)
-
---     if event == "MERCHANT_SHOW" then
---         if IsShiftKeyDown() then return end
---         checkItem()
---     elseif event == "PLAYER_AVG_ITEM_LEVEL_UPDATE" then
---         local _, avgItemLevelEquipped = GetAverageItemLevel()
---         addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
---         for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
---             local value = addon.Vendor.variables.tabNames[key]
---             updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
---         end
---     elseif event == "ITEM_DATA_LOAD_RESULT" and arg2 == false and tabFrame:IsShown() and txtInclude:GetText() ~= "" and
---         txtInclude:GetText() ~= L["Item id or drag item"] then
---         StaticPopupDialogs["VendorWrongItemID"] = {text = L["Item id does not exist"], button1 = "OK", timeout = 0,
---                                                    whileDead = true, hideOnEscape = true, preferredIndex = 3 -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
---         }
---         StaticPopup_Show("VendorWrongItemID")
---         txtInclude:SetText(L["Item id or drag item"])
-
---     end
--- end
-
--- frameLoad:RegisterEvent("MERCHANT_SHOW")
--- frameLoad:RegisterEvent("PLAYER_AVG_ITEM_LEVEL_UPDATE")
--- frameLoad:RegisterEvent("ITEM_DATA_LOAD_RESULT")
-
--- frameLoad:SetScript("OnEvent", eventHandler)
-
 local eventHandlers = {["MERCHANT_SHOW"] = function()
     if IsShiftKeyDown() then return end
     checkItem()
@@ -391,6 +369,33 @@ end, ["PLAYER_AVG_ITEM_LEVEL_UPDATE"] = function()
     for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
         local value = addon.Vendor.variables.tabNames[key]
         updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
+    end
+end, ["ADDON_LOADED"] = function(arg1)
+    if arg1 == addonName then
+        SLASH_EnhanceQoLVendor1 = "/eqolv"
+        SlashCmdList["EnhanceQoLVendor"] = function(msg)
+            local command, argument = strsplit(" ", msg) -- Teilt den Befehl und das Argument
+            local id = tonumber(argument) -- Wandelt das Argument in eine Zahl um
+
+            if command == "i" then
+                if id and id > 0 then
+                    addInclude(id)
+                    print(addonName .. " added item ID " .. id .. " to the include list.")
+                else
+                    print(addonName .. ": Please provide a valid item ID after '/eqol vi'.")
+                end
+            elseif command == "e" then
+                if id and id > 0 then
+                    addExclude(id)
+                    print(addonName .. " added item ID " .. id .. " to the exclude list.")
+                else
+                    print(addonName .. ": Please provide a valid item ID after '/eqol ve'.")
+                end
+            else
+                print(addonName ..
+                          ": Invalid command. Use '/eqolv i' to include an item or '/eqolv e [itemID]' to exclude an item.")
+            end
+        end
     end
 end}
 local function registerEvents(frame) for event in pairs(eventHandlers) do frame:RegisterEvent(event) end end

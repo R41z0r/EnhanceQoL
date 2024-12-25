@@ -60,8 +60,10 @@ local portalCompendium = {[1] = {headline = EXPANSION_NAME10,
 local isKnown = {}
 local faction = UnitFactionGroup("player")
 local initialStart = true
+local parentFrame = PVEFrame
+local doAfterCombat = false
 
-local frameAnchor = CreateFrame("Frame", "DungeonTeleportFrame", PVEFrame, "BackdropTemplate")
+local frameAnchor = CreateFrame("Frame", "DungeonTeleportFrame", parentFrame, "BackdropTemplate")
 frameAnchor:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", -- Hintergrund
 edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", -- Rahmen
 edgeSize = 16, insets = {left = 4, right = 4, top = 4, bottom = 4}})
@@ -378,54 +380,79 @@ local function waitCooldown(arg3)
         end
     end)
 end
+
+function addon.MythicPlus.functions.toggleFrame()
+    if InCombatLockdown() then
+        doAfterCombat = true
+    else
+        if addon.db["teleportFrame"] == true then
+            doAfterCombat = false
+            if not frameAnchor:IsShown() then frameAnchor:Show() end
+            CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
+            if addon.db["teleportsEnableCompendium"] then
+                if not frameAnchorCompendium:IsShown() then frameAnchorCompendium:Show() end
+                CreatePortalCompendium(frameAnchorCompendium, portalCompendium)
+            else
+                frameAnchorCompendium:Hide()
+            end
+            if initialStart then
+                initialStart = false
+                -- Based on RaiderIO Client place the Frame
+                if nil ~= RaiderIO_ProfileTooltip then
+                    C_Timer.After(0.1, function()
+                        local offsetX = RaiderIO_ProfileTooltip:GetSize()
+                        frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+                    end)
+                else
+                    frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
+                end
+            end
+            checkCooldown()
+        else
+            frameAnchor:Hide()
+        end
+    end
+end
+
 -- Buttons erstellen
 
 frameAnchor:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
 frameAnchor:RegisterEvent("ENCOUNTER_END")
 frameAnchor:RegisterEvent("ADDON_LOADED")
 frameAnchor:RegisterEvent("SPELL_DATA_LOAD_RESULT")
+frameAnchor:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 local function eventHandler(self, event, arg1, arg2, arg3, arg4)
     if addon.db["teleportFrame"] then
-        if event == "ADDON_LOADED" and arg1 == addonName then
-            CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
-            CreatePortalCompendium(frameAnchorCompendium, portalCompendium)
-        elseif event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
-            if portalSpells[arg3] then waitCooldown(arg3) end
-        elseif event == "ENCOUNTER_END" and arg3 == 8 then
-            C_Timer.After(0.1, function() checkCooldown() end)
-        elseif event == "SPELL_DATA_LOAD_RESULT" and portalSpells[arg1] then
-            print("Loaded", portalSpells[arg1].text)
-        end
-    end
-end
-
-function addon.MythicPlus.functions.toggleFrame()
-    if addon.db["teleportFrame"] == true then
-        frameAnchor:Show()
-        CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
-        if addon.db["teleportsEnableCompendium"] then
-            frameAnchorCompendium:Show()
-            CreatePortalCompendium(frameAnchorCompendium, portalCompendium)
+        if InCombatLockdown() then
+            doAfterCombat = true
         else
-            frameAnchorCompendium:Hide()
-        end
-        if initialStart then
-            initialStart = false
-            -- Based on RaiderIO Client place the Frame
-            if nil ~= RaiderIO_ProfileTooltip then
-                frameAnchor:SetPoint("TOPLEFT", RaiderIO_ProfileTooltip, "TOPRIGHT", 0, 0)
-            else
-                frameAnchor:SetPoint("TOPLEFT", PVEFrame, "TOPRIGHT", 0, 0)
+            if event == "ADDON_LOADED" and arg1 == addonName then
+                CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
+                CreatePortalCompendium(frameAnchorCompendium, portalCompendium)
+                frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 230, 0)
+                frameAnchor:Show()
+                if addon.db["teleportsEnableCompendium"] then
+                    frameAnchorCompendium:Show()
+                else
+                    frameAnchorCompendium:Hide()
+                end
+            elseif parentFrame:IsShown() then -- Only do stuff, when PVEFrame Open
+                if event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
+                    if portalSpells[arg3] then waitCooldown(arg3) end
+                elseif event == "ENCOUNTER_END" and arg3 == 8 then
+                    C_Timer.After(0.1, function() checkCooldown() end)
+                elseif event == "SPELL_DATA_LOAD_RESULT" and portalSpells[arg1] then
+                    print("Loaded", portalSpells[arg1].text)
+                elseif event == "PLAYER_REGEN_ENABLED" then
+                    if doAfterCombat then addon.MythicPlus.functions.toggleFrame() end
+                end
             end
         end
-        checkCooldown()
-    else
-        frameAnchor:Hide()
     end
 end
 
 -- Setze den Event-Handler
 frameAnchor:SetScript("OnEvent", eventHandler)
 
-PVEFrame:HookScript("OnShow", function(self) addon.MythicPlus.functions.toggleFrame() end)
+parentFrame:HookScript("OnShow", function(self) addon.MythicPlus.functions.toggleFrame() end)
