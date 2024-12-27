@@ -253,8 +253,9 @@ local function CreatePortalCompendium(frame, compendium)
             currentYOffset = currentYOffset - headline:GetStringHeight() - 10 -- Abstand für Buttons
             table.insert(frame.headline, headline)
         end
+
         -- Buttons generieren
-        local buttonsPerRow = math.ceil(#sortedSpells)
+        local buttonsPerRow = math.max(1,math.ceil(#sortedSpells))
         local totalButtonWidth = (buttonSize * buttonsPerRow) + (spacingCompendium * (buttonsPerRow - 1))
         maxWidth = math.max(maxWidth, totalButtonWidth + 20)
 
