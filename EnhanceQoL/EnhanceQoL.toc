@@ -11,6 +11,7 @@
 ## X-Compatible-With: retail
 
 Init.lua
+AutoGossipIDs.lua
 locales.xml
 
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
