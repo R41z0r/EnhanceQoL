@@ -1508,7 +1508,7 @@ local eventHandlers = {["ADDON_LOADED"] = function(arg1)
         EQOL.PersistSignUpNote()
     end
 end, ["CURRENCY_DISPLAY_UPDATE"] = function(arg1)
-    if arg1 == 2815 then
+    if arg1 == addon.variables.catalystID then
         local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
         addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
     end
@@ -1580,7 +1580,8 @@ end, ["INSPECT_READY"] = function(arg1) if addon.db["showInfoOnInspectFrame"] th
 
     if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then
         MerchantSellAllJunkButton:Click()
-        if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end
+        C_Timer.After(0.1,
+            function() if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end end)
     end
 end, ["PLAYER_CHOICE_UPDATE"] = function()
     if select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
