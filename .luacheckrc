@@ -44,6 +44,7 @@ globals = {
 	
 	-- ACE
 	"GameFontDisableSmall",
+	"GameFontNormalSmall",
 	"ColorPickerFrame",
 	"OpacitySliderFrame",
 	"AceGUIEditBoxInsertLink",
