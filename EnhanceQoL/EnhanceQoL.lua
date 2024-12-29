@@ -640,22 +640,13 @@ local function addHideOption(type, parent, anchor, className)
 end
 
 local function addTotemHideToggle(dbValue, data)
-	TotemFrame:HookScript("OnShow", function(self)
-		if addon.db[dbValue] then
-			TotemFrame:Hide()
-		else
-			TotemFrame:Show()
-		end
-	end)
-	if addon.db[dbValue] then TotemFrame:Hide() end
-
 	table.insert(data, {
 		parent = L["headerClassInfo"],
 		var = dbValue,
 		text = L["shaman_HideTotem"],
 		type = "CheckBox",
 		callback = function(self, _, value)
-			addon.db[self.var] = value
+			addon.db[dbValue] = value
 			if value then
 				TotemFrame:Hide()
 			else
@@ -892,15 +883,6 @@ local function addCharacterFrame(container)
 				end
 			end,
 		})
-		RuneFrame:HookScript("OnShow", function(self)
-			if addon.db["deathknight_HideRuneFrame"] then
-				RuneFrame:Hide()
-			else
-				RuneFrame:Show()
-			end
-		end)
-
-		if addon.db["deathknight_HideRuneFrame"] then RuneFrame:Hide() end
 		addTotemHideToggle("deathknight_HideTotemBar", data)
 	elseif classname == "DRUID" then
 		addTotemHideToggle("druid_HideTotemBar", data)
@@ -918,10 +900,6 @@ local function addCharacterFrame(container)
 				end
 			end,
 		})
-		EssencePlayerFrame:HookScript("OnShow", function(self)
-			if addon.db["evoker_HideEssence"] then EssencePlayerFrame:Hide() end
-		end)
-		if addon.db["evoker_HideEssence"] then EssencePlayerFrame:Hide() end -- Initialset
 	elseif classname == "MAGE" then
 		addTotemHideToggle("mage_HideTotemBar", data)
 	elseif classname == "MONK" then
@@ -938,15 +916,7 @@ local function addCharacterFrame(container)
 				end
 			end,
 		})
-		MonkHarmonyBarFrame:HookScript("OnShow", function(self)
-			if addon.db["monk_HideHarmonyBar"] then
-				MonkHarmonyBarFrame:Hide()
-			else
-				MonkHarmonyBarFrame:Show()
-			end
-		end)
 		addTotemHideToggle("monk_HideTotemBar", data)
-		if addon.db["monk_HideHarmonyBar"] then MonkHarmonyBarFrame:Hide() end
 	elseif classname == "PRIEST" then
 		addTotemHideToggle("priest_HideTotemBar", data)
 	elseif classname == "SHAMAN" then
@@ -965,14 +935,6 @@ local function addCharacterFrame(container)
 				end
 			end,
 		})
-		RogueComboPointBarFrame:HookScript("OnShow", function(self)
-			if addon.db["rogue_HideComboPoint"] then
-				RogueComboPointBarFrame:Hide()
-			else
-				RogueComboPointBarFrame:Show()
-			end
-		end)
-		if addon.db["rogue_HideComboPoint"] then RogueComboPointBarFrame:Hide() end
 	elseif classname == "PALADIN" then
 		table.insert(data, {
 			parent = L["headerClassInfo"],
@@ -987,15 +949,7 @@ local function addCharacterFrame(container)
 				end
 			end,
 		})
-		PaladinPowerBarFrame:HookScript("OnShow", function(self)
-			if addon.db["paladin_HideHolyPower"] then
-				PaladinPowerBarFrame:Hide()
-			else
-				PaladinPowerBarFrame:Show()
-			end
-		end)
 		addTotemHideToggle("paladin_HideTotemBar", data)
-		if addon.db["paladin_HideHolyPower"] then PaladinPowerBarFrame:Hide() end
 	elseif classname == "WARLOCK" then
 		table.insert(data, {
 			parent = L["headerClassInfo"],
@@ -1010,15 +964,7 @@ local function addCharacterFrame(container)
 				end
 			end,
 		})
-		WarlockPowerFrame:HookScript("OnShow", function(self)
-			if addon.db["warlock_HideSoulShardBar"] then
-				WarlockPowerFrame:Hide()
-			else
-				WarlockPowerFrame:Show()
-			end
-		end)
 		addTotemHideToggle("warlock_HideTotemBar", data)
-		if addon.db["warlock_HideSoulShardBar"] then WarlockPowerFrame:Hide() end
 	end
 
 	addon.functions.createWrapperData(data, container, L)
@@ -1608,6 +1554,83 @@ local function CreateUI()
 	})
 end
 
+function setAllHooks()
+	if RuneFrame then
+		RuneFrame:HookScript("OnShow", function(self)
+			if addon.db["deathknight_HideRuneFrame"] then
+				RuneFrame:Hide()
+			else
+				RuneFrame:Show()
+			end
+		end)
+
+		if addon.db["deathknight_HideRuneFrame"] then RuneFrame:Hide() end
+	end
+
+	if EssencePlayerFrame then
+		EssencePlayerFrame:HookScript("OnShow", function(self)
+			if addon.db["evoker_HideEssence"] then EssencePlayerFrame:Hide() end
+		end)
+		if addon.db["evoker_HideEssence"] then EssencePlayerFrame:Hide() end -- Initialset
+	end
+
+	if MonkHarmonyBarFrame then
+		MonkHarmonyBarFrame:HookScript("OnShow", function(self)
+			if addon.db["monk_HideHarmonyBar"] then
+				MonkHarmonyBarFrame:Hide()
+			else
+				MonkHarmonyBarFrame:Show()
+			end
+		end)
+		if addon.db["monk_HideHarmonyBar"] then MonkHarmonyBarFrame:Hide() end
+	end
+
+	if RogueComboPointBarFrame then
+		RogueComboPointBarFrame:HookScript("OnShow", function(self)
+			if addon.db["rogue_HideComboPoint"] then
+				RogueComboPointBarFrame:Hide()
+			else
+				RogueComboPointBarFrame:Show()
+			end
+		end)
+		if addon.db["rogue_HideComboPoint"] then RogueComboPointBarFrame:Hide() end
+	end
+
+	if PaladinPowerBarFrame then
+		PaladinPowerBarFrame:HookScript("OnShow", function(self)
+			if addon.db["paladin_HideHolyPower"] then
+				PaladinPowerBarFrame:Hide()
+			else
+				PaladinPowerBarFrame:Show()
+			end
+		end)
+		if addon.db["paladin_HideHolyPower"] then PaladinPowerBarFrame:Hide() end
+	end
+
+	if TotemFrame then
+		local classname = string.lower(select(2, UnitClass("player")))
+		TotemFrame:HookScript("OnShow", function(self)
+			if addon.db[classname .. "_HideTotemBar"] then
+				TotemFrame:Hide()
+			else
+				TotemFrame:Show()
+			end
+		end)
+		if addon.db[classname .. "_HideTotemBar"] then TotemFrame:Hide() end
+	end
+
+	if WarlockPowerFrame then
+		WarlockPowerFrame:HookScript("OnShow", function(self)
+			if addon.db["warlock_HideSoulShardBar"] then
+				WarlockPowerFrame:Hide()
+			else
+				WarlockPowerFrame:Show()
+			end
+		end)
+		if addon.db["warlock_HideSoulShardBar"] then WarlockPowerFrame:Hide() end
+	end
+end
+
 function loadMain()
 	CreateUI()
 
@@ -1689,6 +1712,8 @@ function loadMain()
 	addon.checkboxes = {}
 	addon.db = EnhanceQoLDB
 	addon.variables.acceptQuestID = {}
+
+	setAllHooks()
 
 	local fTab = addon.functions.createTabFrame(L["General"])
 	fTab.tabs = {} -- Add the tabs to switch
