@@ -1,9 +1,9 @@
 local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LTooltip
 
@@ -22,9 +22,9 @@ L["Spell"] = "Spell"
 L["Item"] = "Item"
 L["Buff"] = "Buff"
 L["Debuff"] = "Debuff"
-
+L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
 -- Buff
-L["TooltipBuffHideType"] = "Hide tooltip on buffs"
+L["TooltipBuffHideType"] = "Hide tooltip on " .. L["Buff_Debuff"]
 L["TooltipBuffHideInCombat"] = "Only hide it in combat"
 L["TooltipBuffHideInDungeon"] = "Only hide it in dungeons"
 

@@ -3,9 +3,9 @@ if (GAME_LOCALE or GetLocale()) ~= "koKR" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LTooltip
 
@@ -24,9 +24,10 @@ L["Spell"] = "주문"
 L["Item"] = "아이템"
 L["Buff"] = "버프"
 L["Debuff"] = "디버프"
+L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
 
 -- Buff
-L["TooltipBuffHideType"] = "버프 툴팁 숨기기"
+L["TooltipBuffHideType"] = L["Buff_Debuff"] .. "툴팁 숨기기"
 L["TooltipBuffHideInCombat"] = "전투 중에만 숨기기"
 L["TooltipBuffHideInDungeon"] = "던전에서만 숨기기"
 

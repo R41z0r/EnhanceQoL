@@ -301,6 +301,64 @@ function addon.functions.toggleLandingPageButton(title, state)
 	end
 end
 
+function addon.functions.prepareListForDropdown(tList)
+	local order = {}
+	local sortedList = {}
+	-- Tabelle in eine Liste umwandeln
+	for key, value in pairs(tList) do
+		table.insert(sortedList, { key = key, value = value })
+	end
+	-- Sortieren nach `value`
+	table.sort(sortedList, function(a, b) return a.value < b.value end)
+	-- Zurückkonvertieren für SetList
+	local dropdownList = {}
+	for _, item in ipairs(sortedList) do
+		dropdownList[item.key] = item.value
+		table.insert(order, item.key)
+	end
+	return dropdownList, order
+end
+
+function addon.functions.createContainer(type, layout)
+	local element = AceGUI:Create(type)
+	element:SetFullWidth(true)
+	if layout then element:SetLayout(layout) end
+	return element
+end
+
+function addon.functions.createCheckboxAce(text, value, callBack)
+	local checkbox = AceGUI:Create("CheckBox")
+
+	checkbox:SetLabel(text)
+	checkbox:SetValue(value)
+	checkbox:SetCallback("OnValueChanged", callBack)
+	checkbox:SetFullWidth(true)
+
+	return checkbox
+end
+
+function addon.functions.createButtonAce(text, width, callBack)
+	local button = AceGUI:Create("Button")
+	button:SetText(text)
+	button:SetWidth(width or 100)
+	if callBack then button:SetCallback("OnClick", callBack) end
+	return button
+end
+
+function addon.functions.createDropdownAce(text, list, order, callBack)
+	local dropdown = AceGUI:Create("Dropdown")
+	dropdown:SetLabel(text or "")
+
+	if order then
+		dropdown:SetList(list, order)
+	else
+		dropdown:SetList(list)
+	end
+	dropdown:SetFullWidth(true)
+	if callBack then dropdown:SetCallback("OnValueChanged", callBack) end
+	return dropdown
+end
+
 function addon.functions.createWrapperData(data, container, L)
 	local sortedParents = {}
 	for _, checkbox in ipairs(data) do
@@ -314,9 +372,7 @@ function addon.functions.createWrapperData(data, container, L)
 	end
 	table.sort(sortedParentKeys)
 
-	local wrapper = AceGUI:Create("SimpleGroup")
-	wrapper:SetFullWidth(true)
-	wrapper:SetLayout("Flow")
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 	container:AddChild(wrapper)
 
 	-- Füge Inline-Gruppen und Checkboxen hinzu
@@ -341,10 +397,8 @@ function addon.functions.createWrapperData(data, container, L)
 		end)
 
 		-- Erstelle die Inline-Gruppe
-		local group = AceGUI:Create("InlineGroup")
+		local group = addon.functions.createContainer("InlineGroup", "List")
 		group:SetTitle(parent) -- Titel basierend auf `parent`
-		group:SetFullWidth(true)
-		group:SetLayout("List")
 		wrapper:AddChild(group)
 
 		-- Füge Checkboxen in die Inline-Gruppe ein
@@ -383,12 +437,50 @@ function addon.functions.createWrapperData(data, container, L)
 			elseif checkboxData.type == "Dropdown" then
 				local dropdown = AceGUI:Create("Dropdown")
 				dropdown:SetLabel(checkboxData.text or "")
-				dropdown:SetList(checkboxData.list)
+
+				if checkboxData.order then
+					dropdown:SetList(checkboxData.list, checkboxData.order)
+				else
+					dropdown:SetList(checkboxData.list)
+				end
 				dropdown:SetFullWidth(true)
 				if checkboxData.callback then dropdown:SetCallback("OnValueChanged", checkboxData.callback) end
 				group:AddChild(dropdown)
 			end
 			if checkboxData.gv then addon.elements[checkboxData.gv] = checkbox end
 		end
+	end
+end
+
+function addon.functions.addToTree(parentValue, newElement)
+	-- Durchlaufe die Baumstruktur, um den Parent-Knoten zu finden
+	local function addToTree(tree)
+		for _, node in ipairs(tree) do
+			if node.value == parentValue then
+				node.children = node.children or {}
+				table.insert(node.children, newElement)
+				return true
+			elseif node.children then
+				if addToTree(node.children) then return true end
+			end
+		end
+		return false
+	end
+
+	-- Prüfen, ob parentValue `nil` ist (neuer Parent wird benötigt)
+	if not parentValue then
+		-- Füge einen neuen Parent-Knoten hinzu
+		table.insert(addon.treeGroupData, newElement)
+		addon.treeGroup:SetTree(addon.treeGroupData) -- Aktualisiere die TreeGroup mit der neuen Struktur
+		print("Added new parent node:", newElement.value)
+		return
+	end
+
+	-- Versuche, das Element als Child eines bestehenden Parent-Knotens hinzuzufügen
+	if addToTree(addon.treeGroupData) then
+		addon.treeGroup:SetTree(addon.treeGroupData) -- Aktualisiere die TreeGroup mit der neuen Struktur
+		print("Added child to parent node:", parentValue)
+	else
+		print("Parent node not found:", parentValue)
 	end
 end

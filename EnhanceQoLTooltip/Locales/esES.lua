@@ -23,9 +23,10 @@ L["Spell"] = "Hechizo"
 L["Item"] = "Objeto"
 L["Buff"] = "Beneficio"
 L["Debuff"] = "Perjuicio"
+L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
 
 -- Buff
-L["TooltipBuffHideType"] = "Ocultar tooltip en beneficios"
+L["TooltipBuffHideType"] = "Ocultar tooltip en " .. L["Buff_Debuff"]
 L["TooltipBuffHideInCombat"] = "Ocultar solo en combate"
 L["TooltipBuffHideInDungeon"] = "Ocultar solo en mazmorras"
 

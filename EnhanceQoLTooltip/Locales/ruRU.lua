@@ -24,9 +24,10 @@ L["Spell"] = "Заклинание"
 L["Item"] = "Предмет"
 L["Buff"] = "Бафф"
 L["Debuff"] = "Дебафф"
+L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
 
 -- Buff
-L["TooltipBuffHideType"] = "Скрыть подсказку на баффы"
+L["TooltipBuffHideType"] = "Скрыть подсказку на " .. L["Buff_Debuff"]
 L["TooltipBuffHideInCombat"] = "Скрывать только в бою"
 L["TooltipBuffHideInDungeon"] = "Скрывать только в подземельях"
 

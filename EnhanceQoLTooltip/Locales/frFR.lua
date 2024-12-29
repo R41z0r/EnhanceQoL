@@ -2,9 +2,9 @@ if (GAME_LOCALE or GetLocale()) ~= "frFR" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LTooltip
 
@@ -23,9 +23,10 @@ L["Spell"] = "Sort"
 L["Item"] = "Objet"
 L["Buff"] = "Buff"
 L["Debuff"] = "Debuff"
+L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
 
 -- Buff
-L["TooltipBuffHideType"] = "Masquer l'infobulle sur les buffs"
+L["TooltipBuffHideType"] = "Masquer l'infobulle sur les " .. L["Buff_Debuff"]
 L["TooltipBuffHideInCombat"] = "Masquer uniquement en combat"
 L["TooltipBuffHideInDungeon"] = "Masquer uniquement en donjons"
 
