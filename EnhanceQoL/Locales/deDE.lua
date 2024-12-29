@@ -15,7 +15,7 @@ L["repairCost"] = "Gegenstände repariert für "
 L["autoRepair"] = "Alle Gegenstände automatisch reparieren"
 L["sellAllJunk"] = "Alle Plundergegenstände automatisch verkaufen"
 L["ignoreTalkingHead"] = "Automatisch das Talking Head Fenster ausblenden"
-L["landingPageHide"] = "Aktivieren Sie diese Option, um den\nErweiterungs-Button auf der Minimap auszublenden."
+L["landingPageHide"] = "Aktivieren Sie diese Option, um den Erweiterungs-Button auf der Minimap auszublenden."
 
 L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anzeigen"
 L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"
@@ -24,7 +24,7 @@ L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstu
 L["showIlvlOnBagItems"] = "Zeige das Itemlevel auf Ausrüstung in allen Taschen"
 L["showDurabilityOnCharframe"] = "Zeige Haltbarkeit auf dem Charakterausrüstungsfenster"
 L["hideOrderHallBar"] = "Ordenshallen-Kommandoleiste ausblenden"
-L["showInfoOnInspectFrame"] = "Zeige zusätzliche Informationen im\nBetrachten-Fenster an (Experimentell)"
+L["showInfoOnInspectFrame"] = "Zeige zusätzliche Informationen im Betrachten-Fenster an (Experimentell)"
 L["MissingEnchant"] = "Verzauberung"
 
 L["deleteItemFillDialog"] = "Füge \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" zum \"Löschbestätigungs-Popup\" hinzu"
@@ -39,7 +39,7 @@ L["Quest"] = "Quest"
 L["hideBagsBar"] = "Taschenleiste ausblenden"
 
 -- Dungeon
-L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen,\nwenn nur 1 Option verfügbar ist"
+L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen, wenn nur 1 Option verfügbar ist"
 L["lfgSortByRio"] = "Sortiere Bewerber für Mythisch+ Dungeons nach Mythisch-Wertung"
 
 -- Quest

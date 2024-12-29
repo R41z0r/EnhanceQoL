@@ -725,6 +725,8 @@ local function addCharacterFrame(container)
 			callback = function(self, _, value)
 				addon.db["showCatalystChargesOnCharframe"] = value
 				if value then
+					local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
+					addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
 					addon.general.iconFrame:Show()
 				else
 					addon.general.iconFrame:Hide()
@@ -1252,21 +1254,21 @@ local function CreateUI()
 
 		reloadFrame:Show()
 	end)
-	addon.treeGroupData = {
-		{
-			value = "general",
-			text = L["General"],
-			children = {
-				{ value = "character", text = L["Character"] },
-				{ value = "cvar", text = "CVar" },
-				{ value = "dungeon", text = L["Dungeon"] },
-				{ value = "misc", text = L["Misc"] },
-				{ value = "quest", text = L["Quest"] },
-			},
-		},
-	}
+	addon.treeGroupData = {}
+
 	-- Create the TreeGroup
 	addon.treeGroup = AceGUI:Create("TreeGroup")
+	addon.functions.addToTree(nil, {
+		value = "general",
+		text = L["General"],
+		children = {
+			{ value = "character", text = L["Character"] },
+			{ value = "cvar", text = "CVar" },
+			{ value = "dungeon", text = L["Dungeon"] },
+			{ value = "misc", text = L["Misc"] },
+			{ value = "quest", text = L["Quest"] },
+		},
+	})
 	addon.treeGroup:SetLayout("Fill")
 	addon.treeGroup:SetTree(addon.treeGroupData)
 	addon.treeGroup:SetCallback("OnGroupSelected", function(container, _, group)
@@ -1580,12 +1582,7 @@ local eventHandlers = {
 			else
 				if options and #options > 0 then
 					if #options > 1 then
-						for _, gossipInfo in pairs(options) do
-							if gossipInfo.gossipOptionID and addon.variables.autoGossip[gossipInfo.gossipOptionID] then
-								C_GossipInfo.SelectOption(gossipInfo.gossipOptionID)
-								return -- stop processing afterwards
-							end
-						end
+						return
 					elseif #options == 1 and options[1] and not gossipClicked[options[1].gossipOptionID] then
 						gossipClicked[options[1].gossipOptionID] = true
 						C_GossipInfo.SelectOption(options[1].gossipOptionID)

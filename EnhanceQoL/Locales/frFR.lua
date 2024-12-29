@@ -16,16 +16,16 @@ L["repairCost"] = "Objets réparés pour "
 L["autoRepair"] = "Réparer automatiquement tous les objets"
 L["sellAllJunk"] = "Vendre automatiquement tous les objets inutiles"
 L["ignoreTalkingHead"] = "Masquer automatiquement le cadre Talking Head"
-L["landingPageHide"] = "Activez cette option pour masquer le\nbouton de la page d'expansion sur la mini-carte."
+L["landingPageHide"] = "Activez cette option pour masquer le bouton de la page d'expansion sur la mini-carte."
 
 L["showIlvlOnCharframe"] = "Afficher le niveau d'objet sur l'équipement du personnage"
 L["showGemsOnCharframe"] = "Afficher les emplacements de gemmes sur l'équipement du personnage"
 L["showEnchantOnCharframe"] = "Afficher les enchantements sur l'équipement du personnage"
-L["showCatalystChargesOnCharframe"] = "Afficher les charges du Catalyseur dans le cadre\nde l'équipement du personnage"
+L["showCatalystChargesOnCharframe"] = "Afficher les charges du Catalyseur dans le cadre de l'équipement du personnage"
 L["showIlvlOnBagItems"] = "Afficher le niveau d'objet sur l'équipement dans tous les sacs"
 L["showDurabilityOnCharframe"] = "Afficher la durabilité sur la fenêtre d'équipement du personnage"
 L["hideOrderHallBar"] = "Masquer la barre de commande de domaine"
-L["showInfoOnInspectFrame"] = "Afficher des informations supplémentaires dans la fenêtre\nd'inspection (Expérimental)"
+L["showInfoOnInspectFrame"] = "Afficher des informations supplémentaires dans la fenêtre d'inspection (Expérimental)"
 L["MissingEnchant"] = "Enchantement"
 
 L["deleteItemFillDialog"] = "Ajouter \"" .. DELETE_ITEM_CONFIRM_STRING ..
@@ -41,7 +41,7 @@ L["Quest"] = "Quête"
 L["hideBagsBar"] = "Masquer la barre des sacs"
 
 -- Dungeon
-L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée\nlorsqu'il n'y a qu'une seule option"
+L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée lorsqu'il n'y a qu'une seule option"
 L["lfgSortByRio"] = "Trier les candidats aux donjons mythiques par score mythique"
 
 -- Quest
@@ -49,7 +49,7 @@ L["ignoreTrivialQuests"] = "Ignorer les quêtes triviales"
 L["ignoreDailyQuests"] = "Ignorer les quêtes journalières/hebdomadaires"
 
 L["autoQuickLoot"] = "Butin rapide des objets"
-L["openCharframeOnUpgrade"] = "Ouvrir le cadre de personnage lors de l'amélioration d'objet\nchez le marchand"
+L["openCharframeOnUpgrade"] = "Ouvrir le cadre de personnage lors de l'amélioration d'objet chez le marchand"
 
 L["headerClassInfo"] = "Ces paramètres s'appliquent uniquement à " .. select(1, UnitClass("player"))
 

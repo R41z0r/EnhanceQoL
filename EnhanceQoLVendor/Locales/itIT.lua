@@ -14,7 +14,7 @@ L["Vendor"] = "Venditore"
 L["MerchantWindowClosed"] = "La finestra del mercante è chiusa. Interruzione delle vendite"
 
 -- Generale
-L["vendorMinIlvlDif"] = "Livello oggetto minimo sotto la mia\nmedia per contrassegnarlo per la vendita automatica"
+L["vendorMinIlvlDif"] = "Livello oggetto minimo sotto la mia media per contrassegnarlo per la vendita automatica"
 L["vendorIgnoreBoE"] = "Ignora oggetti che si vincolano quando equipaggiati"
 L["vendorIgnoreWarbound"] = "Ignora oggetti vincolati da guerra"
 L["vendorIgnoreUpgradable"] = "Ignora gli oggetti aggiornabili"
@@ -28,8 +28,8 @@ L["Add"] = "Aggiungi"
 L["Remove"] = "Rimuovi"
 L["Item id or drag item"] = "ID articolo o trascina l'articolo"
 L["Item id does not exist"] = "L'ID dell'articolo non esiste"
-L["vendorAddItemToInclude"] = "Aggiungi articoli a questo elenco per includerli nella vendita.\nIMPORTANTE: Questo ignora tutti gli altri controlli per questo articolo"
-L["vendorAddItemToExclude"] = "Aggiungi articoli a questo elenco per escluderli dalla vendita.\nIMPORTANTE: L'esclusione prevale sempre, a meno che non si tratti di spazzatura"
+L["vendorAddItemToInclude"] = "Aggiungi articoli a questo elenco per includerli nella vendita. IMPORTANTE: Questo ignora tutti gli altri controlli per questo articolo"
+L["vendorAddItemToExclude"] = "Aggiungi articoli a questo elenco per escluderli dalla vendita. IMPORTANTE: L'esclusione prevale sempre, a meno che non si tratti di spazzatura"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
     local value = addon.Vendor.variables.tabNames[key]

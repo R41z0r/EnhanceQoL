@@ -12,18 +12,18 @@ L["Keystone"] = "Clé de voûte"
 L["Automatically insert keystone"] = "Insérer automatiquement la clé de voûte"
 L["Mythic Plus"] = "Mythique+"
 L[addonName] = "Mythique+"
-L["Close all bags on keystone insert"] = "Fermer tous les sacs,\nlorsque la clé de voûte est insérée"
+L["Close all bags on keystone insert"] = "Fermer tous les sacs, lorsque la clé de voûte est insérée"
 L["ReadyCheck"] = "Ready Check"
-L["ReadyCheckWaiting"] = "Vérification\nde préparation..."
+L["ReadyCheckWaiting"] = "Vérification de préparation..."
 L["PullTimer"] = "Pull Timer"
 L["Pull"] = "Pull"
 L["Cancel"] = "Annuler"
 L["Cancel Pull Timer on click"] = "Annuler le minuteur de pull au clic"
-L["noChatOnPullTimer"] = "Pas de messages dans le\nchat pour le minuteur de pull"
+L["noChatOnPullTimer"] = "Pas de messages dans le chat pour le minuteur de pull"
 L["sliderShortTime"] = "Minuteur de pull clic droit"
 L["sliderLongTime"] = "Minuteur de pull"
 L["Stating"] = "Démarrage..."
-L["autoKeyStart"] = "Démarrer automatiquement la clé de voûte\naprès expiration du minuteur de pull"
+L["autoKeyStart"] = "Démarrer automatiquement la clé de voûte après expiration du minuteur de pull"
 
 L["None"] = "Aucun minuteur de pull"
 L["Blizzard Pull Timer"] = "Minuteur de pull Blizzard"
@@ -36,7 +36,7 @@ L["Drag me to position Cooldownbars"] = "Faites glisser"
 L["Potion Tracker"] = "Suivi des potions"
 L["Toggle Anchor"] = "Basculer l'ancre"
 L["Save Anchor"] = "Enregistrer l'ancre"
-L["potionTrackerHeadline"] = "Cela vous permet de suivre le CD des\npotions de combat des membres de votre groupe sous forme de barre déplaçable"
+L["potionTrackerHeadline"] = "Cela vous permet de suivre le CD des potions de combat des membres de votre groupe sous forme de barre déplaçable"
 L["potionTracker"] = "Activer le suivi des CD des potions"
 L["potionTrackerUpwardsBar"] = "Se développer vers le haut"
 L["potionTrackerClassColor"] = "Utiliser les couleurs de classe pour les barres"
@@ -52,14 +52,14 @@ L["potionTrackerOffhealing"] = "Suivi de l'utilisation des CD de soins secondair
 
 L["DungeonBrowser"] = "Explorateur de donjons"
 L["groupfinderAppText"] = 'Masquer le texte du recherche de groupe "Votre groupe est actuellement en formation"'
-L["groupfinderSkipRolecheck"] = "Ignorer la vérification de rôle\net utiliser le rôle actuel"
+L["groupfinderSkipRolecheck"] = "Ignorer la vérification de rôle et utiliser le rôle actuel"
 
 -- Misc Frame
 L["Misc"] = "Divers"
 L["autoMarkTankInDungeon"] = "Marquer automatiquement le " .. TANK .. " dans les donjons"
 L["autoMarkTankInDungeonMarker"] = "Marqueur de tank"
 L["Disabled"] = "Désactivé"
-L["autoMarkTankExplanation"] = "Le " .. TANK .. " sera marqué s'il n'a pas de marque et ne changera la marque\nque si vous êtes soit " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
+L["autoMarkTankExplanation"] = "Le " .. TANK .. " sera marqué s'il n'a pas de marque et ne changera la marque que si vous êtes soit " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
 
 -- Teleports
 L["Teleports"] = "Téléportations"

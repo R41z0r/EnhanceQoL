@@ -320,11 +320,13 @@ addon.functions.addToTree(nil, {
 		{ value = "include", text = L["Include"] },
 		{ value = "exclude", text = L["Exclude"] },
 	},
-})
+}, true)
 
 function addon.Vendor.functions.treeCallback(container, group)
 	lastEbox = nil
 	container:ReleaseChildren() -- Entfernt vorherige Inhalte
+	local _, avgItemLevelEquipped = GetAverageItemLevel()
+	addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
 	-- Prüfen, welche Gruppe ausgewählt wurde
 	if group == "vendor\001common" then
 		addVendorFrame(container, 1)

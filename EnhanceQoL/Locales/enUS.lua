@@ -26,7 +26,7 @@ L["hideOrderHallBar"] = "Hide Order Hall Command Bar"
 L["showInfoOnInspectFrame"] = "Show additional information on the Inspect Frame (Experimental)"
 L["MissingEnchant"] = "Enchant"
 
-L["deleteItemFillDialog"] = "Add \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" to the \"Delete confirmation Popup\""
+L["deleteItemFillDialog"] = 'Add "' .. DELETE_ITEM_CONFIRM_STRING .. '" to the "Delete confirmation Popup"'
 L["autoChooseQuest"] = "Automatically accept and complete Quests"
 
 L["General"] = "General"
@@ -78,18 +78,17 @@ L["tReloadInterface"] = "Interface Reload Required"
 L["bReloadInterface"] = "You need to reload your interface to apply changes"
 
 L["CVarOptions"] = {
-    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities"},
-    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities while flying"},
-    ["chatMouseScroll"] = {description = "Enable mouse scroll in chat", trueValue = "1", falseValue = "0"},
-    ["ffxDeath"] = {description = "Disable death effects", trueValue = "0", falseValue = "1"},
-    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Enable Map Fade while moving"},
-    ["scriptErrors"] = {description = "Show LUA-Error on UI", trueValue = "1", falseValue = "0"},
-    ["ShowClassColorInNameplate"] = {description = "Show class colors on nameplates", trueValue = "1", falseValue = "0"},
-    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Show the Castbar of your Target"},
-    ["showTutorials"] = {description = "Disable tutorials", trueValue = "0", falseValue = "1"},
-    ["UberTooltips"] = {description = "Enable enhanced tooltips", trueValue = "1", falseValue = "0"},
-    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Show the Guild on Players"},
-    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Show the Title on Players"},
-    ["WholeChatWindowClickable"] = {description = "Make the entire chat window clickable", trueValue = "1", falseValue = "0"},
+	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities" },
+	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities while flying" },
+	["chatMouseScroll"] = { description = "Enable mouse scroll in chat", trueValue = "1", falseValue = "0" },
+	["ffxDeath"] = { description = "Disable death effects", trueValue = "0", falseValue = "1" },
+	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Enable Map Fade while moving" },
+	["scriptErrors"] = { description = "Show LUA-Error on UI", trueValue = "1", falseValue = "0" },
+	["ShowClassColorInNameplate"] = { description = "Show class colors on nameplates", trueValue = "1", falseValue = "0" },
+	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Show the Castbar of your Target" },
+	["showTutorials"] = { description = "Disable tutorials", trueValue = "0", falseValue = "1" },
+	["UberTooltips"] = { description = "Enable enhanced tooltips", trueValue = "1", falseValue = "0" },
+	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Show the Guild on Players" },
+	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Show the Title on Players" },
+	["WholeChatWindowClickable"] = { description = "Make the entire chat window clickable", trueValue = "1", falseValue = "0" },
 }
-

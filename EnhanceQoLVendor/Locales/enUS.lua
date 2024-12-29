@@ -25,8 +25,8 @@ L["Add"] = "Add"
 L["Remove"] = "Remove"
 L["Item id or drag item"] = "Item id or drag item"
 L["Item id does not exist"] = "Item id does not exist"
-L["vendorAddItemToInclude"] = "Add items to this list to include for sale.\nIMPORTANT: This ignores all other checks for this item"
-L["vendorAddItemToExclude"] = "Add items to this list to exclude for sale.\nIMPORTANT: Exclude wins all the time, unless it's junk"
+L["vendorAddItemToInclude"] = "Add items to this list to include for sale. IMPORTANT: This ignores all other checks for this item"
+L["vendorAddItemToExclude"] = "Add items to this list to exclude for sale. IMPORTANT: Exclude wins all the time, unless it's junk"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 	local value = addon.Vendor.variables.tabNames[key]

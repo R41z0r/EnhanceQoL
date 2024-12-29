@@ -28,8 +28,8 @@ L["Add"] = "추가"
 L["Remove"] = "제거"
 L["Item id or drag item"] = "아이템 ID 또는 아이템을 끌어다 놓으세요"
 L["Item id does not exist"] = "아이템 ID가 존재하지 않습니다"
-L["vendorAddItemToInclude"] = "판매에 포함시키기 위해 이 목록에 아이템을 추가하세요.\n중요: 이 항목에 대한 다른 모든 검사를 무시합니다"
-L["vendorAddItemToExclude"] = "판매에서 제외할 항목을 이 목록에 추가하십시오.\n중요: 제외는 항상 우선하며, 잡동사니인 경우를 제외하고"
+L["vendorAddItemToInclude"] = "판매에 포함시키기 위해 이 목록에 아이템을 추가하세요. 중요: 이 항목에 대한 다른 모든 검사를 무시합니다"
+L["vendorAddItemToExclude"] = "판매에서 제외할 항목을 이 목록에 추가하십시오. 중요: 제외는 항상 우선하며, 잡동사니인 경우를 제외하고"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 	local value = addon.Vendor.variables.tabNames[key]

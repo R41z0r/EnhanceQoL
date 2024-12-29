@@ -16,7 +16,7 @@ L["repairCost"] = "Objetos reparados por "
 L["autoRepair"] = "Reparar automáticamente todos los objetos"
 L["sellAllJunk"] = "Vender automáticamente todos los objetos basura"
 L["ignoreTalkingHead"] = "Ocultar automáticamente el marco de Talking Head"
-L["landingPageHide"] = "Activa esta opción para ocultar el\nbotón de la página de expansión en el minimapa."
+L["landingPageHide"] = "Activa esta opción para ocultar el  botón de la página de expansión en el minimapa."
 
 L["showIlvlOnCharframe"] = "Mostrar el nivel de objeto en el marco de equipo del personaje"
 L["showGemsOnCharframe"] = "Mostrar ranuras de gemas en el marco de equipo del personaje"
@@ -41,7 +41,7 @@ L["Quest"] = "Misión"
 L["hideBagsBar"] = "Ocultar barra de bolsas"
 
 -- Dungeon
-L["autoChooseDelvePower"] = "Seleccionar poder de incursión automáticamente\ncuando solo hay 1 opción"
+L["autoChooseDelvePower"] = "Seleccionar poder de incursión automáticamente  cuando solo hay 1 opción"
 L["lfgSortByRio"] = "Ordenar solicitantes de mazmorras míticas por puntuación mítica"
 
 -- Quest

@@ -24,7 +24,7 @@ L["noChatOnPullTimer"] = "Nessun messaggio di chat sul timer di pull"
 L["sliderShortTime"] = "Timer di pull clic destro"
 L["sliderLongTime"] = "Timer di pull"
 L["Stating"] = "Inizio..."
-L["autoKeyStart"] = "Avvia automaticamente la chiave\ndopo il timer di pull"
+L["autoKeyStart"] = "Avvia automaticamente la chiave dopo il timer di pull"
 
 L["None"] = "Nessun timer di pull"
 L["Blizzard Pull Timer"] = "Timer di pull Blizzard"
@@ -37,7 +37,7 @@ L["Drag me to position Cooldownbars"] = "Trascinami"
 L["Potion Tracker"] = "Tracciatore di pozioni"
 L["Toggle Anchor"] = "Attiva/disattiva ancora"
 L["Save Anchor"] = "Salva ancora"
-L["potionTrackerHeadline"] = "Questo ti permette di tracciare il CD delle\npozioni di combattimento dei membri del tuo gruppo come barra mobile"
+L["potionTrackerHeadline"] = "Questo ti permette di tracciare il CD delle pozioni di combattimento dei membri del tuo gruppo come barra mobile"
 L["potionTracker"] = "Abilita tracciatore di ricarica delle pozioni"
 L["potionTrackerUpwardsBar"] = "Crescita verso l'alto"
 L["potionTrackerClassColor"] = "Usa i colori della classe per le barre"
@@ -53,7 +53,7 @@ L["potionTrackerOffhealing"] = "Traccia l'uso di CD di cura secondaria"
 
 L["DungeonBrowser"] = "Esploratore di dungeon"
 L["groupfinderAppText"] = 'Nascondi il testo del cercatore di gruppi "Il tuo gruppo si sta formando attualmente"'
-L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo\ne utilizza il ruolo attuale"
+L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo e utilizza il ruolo attuale"
 
 -- Misc Frame
 L["Misc"] = "Varie"

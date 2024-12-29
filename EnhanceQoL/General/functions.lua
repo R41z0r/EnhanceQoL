@@ -244,13 +244,23 @@ function addon.functions.createWrapperData(data, container, L)
 	end
 end
 
-function addon.functions.addToTree(parentValue, newElement)
+function addon.functions.addToTree(parentValue, newElement, noSort)
+	-- Sortiere die Knoten alphabetisch nach `text`, rekursiv für alle Kinder
+	local function sortChildrenRecursively(children)
+		if noSort then return end
+		table.sort(children, function(a, b) return string.lower(a.text) < string.lower(b.text) end)
+		for _, child in ipairs(children) do
+			if child.children then sortChildrenRecursively(child.children) end
+		end
+	end
+
 	-- Durchlaufe die Baumstruktur, um den Parent-Knoten zu finden
 	local function addToTree(tree)
 		for _, node in ipairs(tree) do
 			if node.value == parentValue then
 				node.children = node.children or {}
 				table.insert(node.children, newElement)
+				sortChildrenRecursively(node.children) -- Sortiere die Kinder nach dem Hinzufügen
 				return true
 			elseif node.children then
 				if addToTree(node.children) then return true end
@@ -263,6 +273,7 @@ function addon.functions.addToTree(parentValue, newElement)
 	if not parentValue then
 		-- Füge einen neuen Parent-Knoten hinzu
 		table.insert(addon.treeGroupData, newElement)
+		sortChildrenRecursively(addon.treeGroupData) -- Sortiere die oberste Ebene
 		addon.treeGroup:SetTree(addon.treeGroupData) -- Aktualisiere die TreeGroup mit der neuen Struktur
 		addon.treeGroup:RefreshTree()
 		return
@@ -270,6 +281,7 @@ function addon.functions.addToTree(parentValue, newElement)
 
 	-- Versuche, das Element als Child eines bestehenden Parent-Knotens hinzuzufügen
 	if addToTree(addon.treeGroupData) then
+		sortChildrenRecursively(addon.treeGroupData) -- Sortiere alle Ebenen nach Änderungen
 		addon.treeGroup:SetTree(addon.treeGroupData) -- Aktualisiere die TreeGroup mit der neuen Struktur
 	end
 	addon.treeGroup:RefreshTree()

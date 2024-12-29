@@ -10,7 +10,7 @@ end
 local L = addon.LDrinkMacro
 
 L["Prefer mage food"] = "Préférer la nourriture de mage"
-L["Minimum mana restore for food"] = "Restauration minimale\nde mana pour la nourriture"
+L["Minimum mana restore for food"] = "Restauration minimale de mana pour la nourriture"
 L["Ignore bufffood"] = "Ignorer la nourriture \"Bien nourri\""
 L["Drink Macro"] = "Macro de boisson"
 L[addonName] = "Macro de boisson"
