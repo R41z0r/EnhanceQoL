@@ -42,7 +42,15 @@ globals = {
 	"_G.CompactRaidFrameManager",
 	"SOUNDKIT",
 	
+	-- ACE
+	"GameFontDisableSmall",
+	"ColorPickerFrame",
+	"OpacitySliderFrame",
+	"AceGUIEditBoxInsertLink",
+	"AceGUIMultiLineEditBoxInsertLink",
+	
 	-- EnhanceQoL
+	"DELVES_LABEL",
 	"ContainerFrameContainer",
 	"DungeonTeleportFrame",
 	"ContainerFrameCombinedBags",

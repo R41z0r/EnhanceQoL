@@ -8,6 +8,7 @@ else
 end
 
 local L = addon.LVendor
+local lastEbox = nil
 
 local frameLoad = CreateFrame("Frame")
 
@@ -110,7 +111,7 @@ local eventHandlers = {
 		checkItem()
 	end,
 	["ITEM_DATA_LOAD_RESULT"] = function(arg1, arg2)
-		if arg2 == false and tabFrame:IsShown() and txtInclude:GetText() ~= "" and txtInclude:GetText() ~= L["Item id or drag item"] then
+		if arg2 == false and addon.aceFrame:IsShown() and lastEbox then
 			StaticPopupDialogs["VendorWrongItemID"] = {
 				text = L["Item id does not exist"],
 				button1 = "OK",
@@ -120,7 +121,7 @@ local eventHandlers = {
 				preferredIndex = 3, -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
 			}
 			StaticPopup_Show("VendorWrongItemID")
-			txtInclude:SetText(L["Item id or drag item"])
+			lastEbox:SetText("")
 		end
 	end,
 	["PLAYER_AVG_ITEM_LEVEL_UPDATE"] = function()
@@ -283,6 +284,7 @@ local function addInExcludeFrame(container, type)
 		if dText ~= "" and dText ~= L["Item id or drag item"] then addInclude(dText) end
 	end, nil)
 	groupCore:AddChild(eBox)
+	lastEbox = eBox
 
 	local list, order = addon.functions.prepareListForDropdown(addon.db[dbValue])
 
@@ -321,6 +323,7 @@ addon.functions.addToTree(nil, {
 })
 
 function addon.Vendor.functions.treeCallback(container, group)
+	lastEbox = nil
 	container:ReleaseChildren() -- Entfernt vorherige Inhalte
 	-- Prüfen, welche Gruppe ausgewählt wurde
 	if group == "vendor\001common" then

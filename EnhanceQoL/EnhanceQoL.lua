@@ -941,7 +941,6 @@ local function addMiscFrame(container, d)
 end
 
 local function addQuestFrame(container, d)
-	local tExclude = {}
 	local list, order = addon.functions.prepareListForDropdown(addon.db["ignoredQuestNPC"])
 
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
@@ -1027,7 +1026,6 @@ local function addQuestFrame(container, d)
 		print(ADD .. ":", guid, name)
 
 		addon.db["ignoredQuestNPC"][guid] = name
-		tExclude[guid] = name
 		local list, order = addon.functions.prepareListForDropdown(addon.db["ignoredQuestNPC"])
 
 		dropIncludeList:SetList(list, order)
@@ -1341,7 +1339,7 @@ local function CreateUI()
 	})
 end
 
-function setAllHooks()
+local function setAllHooks()
 	if RuneFrame then
 		RuneFrame:HookScript("OnShow", function(self)
 			if addon.db["deathknight_HideRuneFrame"] then
@@ -1510,10 +1508,10 @@ function loadMain()
 	configButton:SetPoint("TOPLEFT", 10, -10)
 	configButton:SetText("Config")
 	configButton:SetScript("OnClick", function()
-		if frame:IsShown() then
-			frame:Hide()
+		if addon.aceFrame:IsShown() then
+			addon.aceFrame:Hide()
 		else
-			frame:Show()
+			addon.aceFrame:Show()
 		end
 	end)
 

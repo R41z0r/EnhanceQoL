@@ -3,12 +3,9 @@ _G[addonName] = addon
 addon.saveVariables = {} -- Cross-Module variables for DB Save
 addon.gossip = {}
 addon.gossip.variables = {}
-addon.gossip.variables.numOfTabs = 0
 addon.variables = {}
-addon.variables.numOfTabs = 0
 addon.general = {}
 addon.general.variables = {}
-addon.general.variables.numOfTabs = 0
 addon.L = {} -- Language
 addon.elements = {}
 
