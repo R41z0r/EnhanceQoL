@@ -170,34 +170,6 @@ local function checkAura(tooltip)
 	tooltip:Hide()
 end
 
-local function checkDebuff(tooltip)
-	if addon.db["TooltipDebuffHideType"] == 1 then return end -- only hide when ON
-	if addon.db["TooltipDebuffHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
-	if addon.db["TooltipDebuffHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
-	tooltip:Hide()
-end
-
--- hooksecurefunc(GameTooltip, "Show", function(self)
---     -- Überprüfe, ob wir uns in einem Dungeon befinden (falls konfiguriert)
---     local tooltip = GameTooltip
---     local name, link = tooltip:GetItem()
---     if nil ~= link then -- it's an item - handle the item request
---         checkItem(self)
---         return true
---     end
---     local spellName, spellId = tooltip:GetSpell()
---     if nil ~= spellName then
---         checkSpell(self)
---         return true
---     end
-
---     local unitName, unitId = tooltip:GetUnit()
---     if nil ~= unitName then
---         checkUnit(self)
---         return true
---     end
--- end)
-
 if TooltipDataProcessor then
 	TooltipDataProcessor.AddTooltipPostCall(TooltipDataProcessor.AllTypes, function(tooltip, data)
 		if not data or not data.type then return end
@@ -228,90 +200,6 @@ if TooltipDataProcessor then
 	end)
 end
 
--- Extend the option menu
-local frame = addon.functions.createTabFrame(L["Tooltip"])
-frame.tabs = {}
-frame:SetScript("OnSizeChanged", function(self, width, height)
-	for i, tab in ipairs(frame.tabs) do
-		tab:SetSize(width - 5, height - 35)
-	end
-end)
-function frame:ShowTab(id)
-	for _, tabContent in pairs(self.tabs) do
-		tabContent:Hide()
-	end
-	if self.tabs[id] then self.tabs[id]:Show() end
-end
-
-local tabFrameBuff = addon.Tooltip.functions.createTabFrame(L["Buff"], frame)
-local tabFrameDebuff = addon.Tooltip.functions.createTabFrame(L["Debuff"], frame)
-local tabFrameItem = addon.Tooltip.functions.createTabFrame(L["Item"], frame)
-local tabFrameSpell = addon.Tooltip.functions.createTabFrame(L["Spell"], frame) -- contains macro and spell later
-local tabFrameUnit = addon.Tooltip.functions.createTabFrame(L["Unit"], frame)
-
--- Buffs
-
-local labelBuffHideType = addon.functions.createDropdown("TooltipBuffHideType", tabFrameBuff, { { text = L["TooltipOFF"], value = 1 }, { text = L["TooltipON"], value = 2 } }, 150, L["TooltipBuffHideType"], 10, -10, addon.db["TooltipBuffHideType"])
-
-local cbTooltipBuffHideCombat = addon.functions.createCheckbox("TooltipBuffHideInCombat", tabFrameBuff, L["TooltipBuffHideInCombat"], 10, (addon.functions.getHeightOffset(labelBuffHideType) - 50))
-
-local cbTooltipBuffHideDungeon = addon.functions.createCheckbox("TooltipBuffHideInDungeon", tabFrameBuff, L["TooltipBuffHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipBuffHideCombat) - 5))
-
--- Debuffs
-
-local labelDebuffHideType =
-	addon.functions.createDropdown("TooltipDebuffHideType", tabFrameDebuff, { { text = L["TooltipOFF"], value = 1 }, { text = L["TooltipON"], value = 2 } }, 150, L["TooltipDebuffHideType"], 10, -10, addon.db["TooltipDebuffHideType"])
-
-local cbTooltipDebuffHideCombat = addon.functions.createCheckbox("TooltipDebuffHideInCombat", tabFrameDebuff, L["TooltipDebuffHideInCombat"], 10, (addon.functions.getHeightOffset(labelDebuffHideType) - 50))
-
-local cbTooltipDebuffHideDungeon = addon.functions.createCheckbox("TooltipDebuffHideInDungeon", tabFrameDebuff, L["TooltipDebuffHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipDebuffHideCombat) - 5))
-
--- Unit
-local labelPullTimerType = addon.functions.createDropdown(
-	"TooltipUnitHideType",
-	tabFrameUnit,
-	{ { text = L["None"], value = 1 }, { text = L["Enemies"], value = 2 }, { text = L["Friendly"], value = 3 }, { text = L["Both"], value = 4 } },
-	150,
-	L["TooltipUnitHideType"],
-	10,
-	-10,
-	addon.db["TooltipUnitHideType"]
-)
-
-local cbTooltipHideCombat = addon.functions.createCheckbox("TooltipUnitHideInCombat", tabFrameUnit, L["TooltipUnitHideInCombat"], 10, (addon.functions.getHeightOffset(labelPullTimerType) - 50))
-
-local cbTooltipHideDungeon = addon.functions.createCheckbox("TooltipUnitHideInDungeon", tabFrameUnit, L["TooltipUnitHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipHideCombat) - 5))
-
-local cbTooltipShowMythicScore = addon.functions.createCheckbox("TooltipShowMythicScore", tabFrameUnit, L["TooltipShowMythicScore"], 10, (addon.functions.getHeightOffset(cbTooltipHideDungeon) - 5))
-
-local cbTooltipShowClassColor = addon.functions.createCheckbox("TooltipShowClassColor", tabFrameUnit, L["TooltipShowClassColor"], 10, (addon.functions.getHeightOffset(cbTooltipShowMythicScore) - 5))
-
-local cbTooltipShowNPCID = addon.functions.createCheckbox("TooltipShowNPCID", tabFrameUnit, L["TooltipShowNPCID"], 10, (addon.functions.getHeightOffset(cbTooltipShowClassColor) - 5))
-
--- Spells
-
-local labelSpellHideType =
-	addon.functions.createDropdown("TooltipSpellHideType", tabFrameSpell, { { text = L["TooltipOFF"], value = 1 }, { text = L["TooltipON"], value = 2 } }, 150, L["TooltipSpellHideType"], 10, -10, addon.db["TooltipSpellHideType"])
-
-local cbTooltipSpellHideCombat = addon.functions.createCheckbox("TooltipSpellHideInCombat", tabFrameSpell, L["TooltipSpellHideInCombat"], 10, (addon.functions.getHeightOffset(labelSpellHideType) - 50))
-
-local cbTooltipSpellHideDungeon = addon.functions.createCheckbox("TooltipSpellHideInDungeon", tabFrameSpell, L["TooltipSpellHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipSpellHideCombat) - 5))
-
-local cbTooltipSpellShowID = addon.functions.createCheckbox("TooltipShowSpellID", tabFrameSpell, L["TooltipShowSpellID"], 10, (addon.functions.getHeightOffset(cbTooltipSpellHideDungeon) - 5))
-
--- Items
-local labelItemHideType = addon.functions.createDropdown("TooltipItemHideType", tabFrameItem, { { text = L["TooltipOFF"], value = 1 }, { text = L["TooltipON"], value = 2 } }, 150, L["TooltipItemHideType"], 10, -10, addon.db["TooltipItemHideType"])
-
-local cbTooltipItemHideCombat = addon.functions.createCheckbox("TooltipItemHideInCombat", tabFrameItem, L["TooltipItemHideInCombat"], 10, (addon.functions.getHeightOffset(labelItemHideType) - 50))
-
-local cbTooltipItemHideDungeon = addon.functions.createCheckbox("TooltipItemHideInDungeon", tabFrameItem, L["TooltipItemHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipItemHideCombat) - 5))
-
-local cbTooltipItemShowID = addon.functions.createCheckbox("TooltipShowItemID", tabFrameItem, L["TooltipShowItemID"], 10, (addon.functions.getHeightOffset(cbTooltipItemHideDungeon) - 5))
-
-local cbTooltipShowItemCount = addon.functions.createCheckbox("TooltipShowItemCount", tabFrameItem, L["TooltipShowItemCount"], 10, (addon.functions.getHeightOffset(cbTooltipItemShowID) - 5))
-
-local cbTooltipShowSeperateItemCount = addon.functions.createCheckbox("TooltipShowSeperateItemCount", tabFrameItem, L["TooltipShowSeperateItemCount"], 10, (addon.functions.getHeightOffset(cbTooltipShowItemCount) - 5))
-
 addon.functions.addToTree(nil, {
 	value = "tooltip",
 	text = L["Tooltip"],
@@ -337,18 +225,105 @@ local function addBuffDebuffFrame(container)
 	dropTooltipBuffHideType:SetWidth(150)
 	groupCore:AddChild(dropTooltipBuffHideType)
 
-	local cbTooltipBuffHideCombat = addon.functions.createCheckboxAce(L["TooltipBuffHideInCombat"], addon.db["TooltipBuffHideInCombat"], function(self, _, value) addon.db["TooltipBuffHideInCombat"] = value end)
-	groupCore:AddChild(cbTooltipBuffHideCombat)
-	local cbTooltipBuffHideDungeon = addon.functions.createCheckboxAce(L["TooltipBuffHideInDungeon"], addon.db["TooltipBuffHideInDungeon"], function(self, _, value) addon.db["TooltipBuffHideInDungeon"] = value end)
-	groupCore:AddChild(cbTooltipBuffHideDungeon)
+	local data = {
+		{ text = L["TooltipBuffHideInCombat"], var = "TooltipBuffHideInCombat" },
+		{ text = L["TooltipBuffHideInDungeon"], var = "TooltipBuffHideInDungeon" },
+	}
 
-	--Kann entfernt werden
-	local labelBuffHideType =
-		addon.functions.createDropdown("TooltipBuffHideType", tabFrameBuff, { { text = L["TooltipOFF"], value = 1 }, { text = L["TooltipON"], value = 2 } }, 150, L["TooltipBuffHideType"], 10, -10, addon.db["TooltipBuffHideType"])
+	table.sort(data, function(a, b) return a.text < b.text end)
 
-	local cbTooltipBuffHideCombat = addon.functions.createCheckbox("TooltipBuffHideInCombat", tabFrameBuff, L["TooltipBuffHideInCombat"], 10, (addon.functions.getHeightOffset(labelBuffHideType) - 50))
+	for _, cbData in ipairs(data) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value) addon.db[cbData.var] = value end)
+		groupCore:AddChild(cbElement)
+	end
+end
 
-	local cbTooltipBuffHideDungeon = addon.functions.createCheckbox("TooltipBuffHideInDungeon", tabFrameBuff, L["TooltipBuffHideInDungeon"], 10, (addon.functions.getHeightOffset(cbTooltipBuffHideCombat) - 5))
+local function addItemFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+	local list, order = addon.functions.prepareListForDropdown({ [1] = L["TooltipOFF"], [2] = L["TooltipON"] })
+
+	local dropTooltipItemHideType = addon.functions.createDropdownAce(L["TooltipItemHideType"], list, order, function(self, _, value) addon.db["TooltipItemHideType"] = self:GetValue() end)
+	dropTooltipItemHideType:SetValue(addon.db["TooltipItemHideType"])
+	dropTooltipItemHideType:SetFullWidth(false)
+	dropTooltipItemHideType:SetWidth(150)
+	groupCore:AddChild(dropTooltipItemHideType)
+
+	local data = {
+		{ text = L["TooltipItemHideInCombat"], var = "TooltipItemHideInCombat" },
+		{ text = L["TooltipItemHideInDungeon"], var = "TooltipItemHideInDungeon" },
+		{ text = L["TooltipShowItemID"], var = "TooltipShowItemID" },
+		{ text = L["TooltipShowItemCount"], var = "TooltipShowItemCount" },
+		{ text = L["TooltipShowSeperateItemCount"], var = "TooltipShowSeperateItemCount" },
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value) addon.db[cbData.var] = value end)
+		groupCore:AddChild(cbElement)
+	end
+end
+
+local function addSpellFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+	local list, order = addon.functions.prepareListForDropdown({ [1] = L["TooltipOFF"], [2] = L["TooltipON"] })
+
+	local dropTooltipSpellHideType = addon.functions.createDropdownAce(L["TooltipSpellHideType"], list, order, function(self, _, value) addon.db["TooltipSpellHideType"] = self:GetValue() end)
+	dropTooltipSpellHideType:SetValue(addon.db["TooltipSpellHideType"])
+	dropTooltipSpellHideType:SetFullWidth(false)
+	dropTooltipSpellHideType:SetWidth(150)
+	groupCore:AddChild(dropTooltipSpellHideType)
+
+	local data = {
+		{ text = L["TooltipSpellHideInCombat"], var = "TooltipSpellHideInCombat" },
+		{ text = L["TooltipSpellHideInDungeon"], var = "TooltipSpellHideInDungeon" },
+		{ text = L["TooltipShowSpellID"], var = "TooltipShowSpellID" },
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value) addon.db[cbData.var] = value end)
+		groupCore:AddChild(cbElement)
+	end
+end
+
+local function addUnitFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+	local list, order = addon.functions.prepareListForDropdown({ [1] = L["None"], [2] = L["Enemies"], [3] = L["Friendly"], [4] = L["Both"] })
+
+	local dropTooltipUnitHideType = addon.functions.createDropdownAce(L["TooltipUnitHideType"], list, order, function(self, _, value) addon.db["TooltipUnitHideType"] = self:GetValue() end)
+	dropTooltipUnitHideType:SetValue(addon.db["TooltipUnitHideType"])
+	dropTooltipUnitHideType:SetFullWidth(false)
+	dropTooltipUnitHideType:SetWidth(150)
+	groupCore:AddChild(dropTooltipUnitHideType)
+
+	local data = {
+		{ text = L["TooltipUnitHideInCombat"], var = "TooltipUnitHideInCombat" },
+		{ text = L["TooltipUnitHideInDungeon"], var = "TooltipUnitHideInDungeon" },
+		{ text = L["TooltipShowMythicScore"], var = "TooltipShowMythicScore" },
+		{ text = L["TooltipShowClassColor"], var = "TooltipShowClassColor" },
+		{ text = L["TooltipShowNPCID"], var = "TooltipShowNPCID" },
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value) addon.db[cbData.var] = value end)
+		groupCore:AddChild(cbElement)
+	end
 end
 
 function addon.Tooltip.functions.treeCallback(container, group)
@@ -356,9 +331,15 @@ function addon.Tooltip.functions.treeCallback(container, group)
 	-- Prüfen, welche Gruppe ausgewählt wurde
 	if group == "tooltip\001buff_debuff" then
 		addBuffDebuffFrame(container)
+	elseif group == "tooltip\001item" then
+		addItemFrame(container)
+	elseif group == "tooltip\001spell" then
+		addSpellFrame(container)
+	elseif group == "tooltip\001unit" then
+		addUnitFrame(container)
 	else
-		local label = AceGUI:Create("Label")
-		label:SetText("No content defined for this section.")
-		container:AddChild(label)
+		-- local label = AceGUI:Create("Label")
+		-- label:SetText("No content defined for this section.")
+		-- container:AddChild(label)
 	end
 end

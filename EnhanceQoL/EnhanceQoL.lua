@@ -572,9 +572,6 @@ local function setCharFrame()
 end
 
 local function addDungeonFrame(container, d)
-	addon.functions.InitDBValue("autoChooseDelvePower", true)
-	addon.functions.InitDBValue("lfgSortByRio", true)
-
 	if d then
 		local data = {
 			{
@@ -723,56 +720,6 @@ local function addCVarFrame(container, d)
 end
 
 local function addCharacterFrame(container)
-	addon.functions.InitDBValue("showIlvlOnCharframe", false)
-	addon.functions.InitDBValue("showInfoOnInspectFrame", false)
-	addon.functions.InitDBValue("showGemsOnCharframe", false)
-	addon.functions.InitDBValue("showEnchantOnCharframe", false)
-	addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
-
-	local function updateButtonInfo(itemButton, bag, slot)
-		local eItem = Item:CreateFromBagAndSlot(bag, slot)
-		if eItem and not eItem:IsItemEmpty() then
-			eItem:ContinueOnItemLoad(function()
-				if not itemButton.ItemLevelText then
-					itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-					itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-					itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
-
-					itemButton.ItemLevelText:SetShadowOffset(2, -2)
-					itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
-				end
-				local link = eItem:GetItemLink()
-				local invSlot = select(4, GetItemInfoInstant(link))
-				if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
-
-				local color = eItem:GetItemQualityColor()
-				local itemLevelText = eItem:GetCurrentItemLevel()
-
-				itemButton.ItemLevelText:SetFormattedText(itemLevelText)
-				itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
-
-				itemButton.ItemLevelText:Show()
-			end)
-		elseif itemButton.ItemLevelText then
-			itemButton.ItemLevelText:Hide()
-		end
-	end
-
-	local updateBags = function(frame)
-		for _, itemButton in frame:EnumerateValidItems() do
-			if addon.db["showIlvlOnBagItems"] then
-				updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID())
-			elseif itemButton.ItemLevelText then
-				itemButton.ItemLevelText:Hide()
-			end
-		end
-	end
-
-	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", updateBags)
-	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
-		hooksecurefunc(frame, "UpdateItems", updateBags)
-	end
-
 	local data = {
 		{
 			parent = "Info",
@@ -968,122 +915,9 @@ local function addCharacterFrame(container)
 	end
 
 	addon.functions.createWrapperData(data, container, L)
-
-	-- Add Cataclyst charges in char frame
-	local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
-	local iconID = cataclystInfo.iconFileID
-
-	addon.general.iconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
-	addon.general.iconFrame:SetSize(32, 32)
-	addon.general.iconFrame:SetPoint("BOTTOMLEFT", PaperDollSidebarTab3, "BOTTOMRIGHT", 4, 0)
-
-	addon.general.iconFrame.icon = addon.general.iconFrame:CreateTexture(nil, "OVERLAY")
-	addon.general.iconFrame.icon:SetSize(32, 32)
-	addon.general.iconFrame.icon:SetPoint("CENTER", addon.general.iconFrame, "CENTER")
-	addon.general.iconFrame.icon:SetTexture(iconID)
-
-	addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-	addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
-	addon.general.iconFrame.count:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
-	addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
-	addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
-
-	if addon.db["showCatalystChargesOnCharframe"] == false then addon.general.iconFrame:Hide() end
-
-	-- add durability icon on charframe
-
-	addon.general.durabilityIconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
-	addon.general.durabilityIconFrame:SetSize(32, 32)
-	addon.general.durabilityIconFrame:SetPoint("TOPLEFT", CharacterFramePortrait, "RIGHT", 4, 0)
-
-	addon.general.durabilityIconFrame.icon = addon.general.durabilityIconFrame:CreateTexture(nil, "OVERLAY")
-	addon.general.durabilityIconFrame.icon:SetSize(32, 32)
-	addon.general.durabilityIconFrame.icon:SetPoint("CENTER", addon.general.durabilityIconFrame, "CENTER")
-	addon.general.durabilityIconFrame.icon:SetTexture(addon.variables.durabilityIcon)
-
-	addon.general.durabilityIconFrame.count = addon.general.durabilityIconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-	addon.general.durabilityIconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.durabilityIconFrame, "BOTTOMRIGHT", 1, 2)
-	addon.general.durabilityIconFrame.count:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
-
-	if addon.db["showDurabilityOnCharframe"] == false then addon.general.durabilityIconFrame:Hide() end
-
-	for key, value in pairs(addon.variables.itemSlots) do
-		-- Hintergrund für das Item-Level
-		value.ilvlBackground = value:CreateTexture(nil, "BACKGROUND")
-		value.ilvlBackground:SetColorTexture(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 80% Transparenz
-		value.ilvlBackground:SetPoint("TOPRIGHT", value, "TOPRIGHT", 1, 1)
-		value.ilvlBackground:SetSize(30, 16) -- Größe des Hintergrunds (muss ggf. angepasst werden)
-
-		-- Roter Rahmen mit Farbverlauf
-		if addon.variables.shouldEnchanted[key] then
-			value.borderGradient = value:CreateTexture(nil, "ARTWORK")
-			value.borderGradient:SetPoint("TOPLEFT", value, "TOPLEFT", -2, 2)
-			value.borderGradient:SetPoint("BOTTOMRIGHT", value, "BOTTOMRIGHT", 2, -2)
-			value.borderGradient:SetColorTexture(1, 0, 0, 0.6) -- Grundfarbe Rot
-			value.borderGradient:SetGradient("VERTICAL", CreateColor(1, 0, 0, 1), CreateColor(1, 0.3, 0.3, 0.5))
-			value.borderGradient:Hide()
-		end
-		-- Text für das Item-Level
-		value.ilvl = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-		value.ilvl:SetPoint("TOPRIGHT", value.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
-		value.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
-
-		value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-		if addon.variables.itemSlotSide[key] == 0 then
-			value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, 1)
-		elseif addon.variables.itemSlotSide[key] == 2 then
-			value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, 1)
-		else
-			value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
-		end
-		value.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
-
-		value.gems = {}
-		for i = 1, 3 do
-			value.gems[i] = CreateFrame("Frame", nil, PaperDollFrame)
-			value.gems[i]:SetSize(16, 16) -- Setze die Größe des Icons
-
-			if addon.variables.itemSlotSide[key] == 0 then
-				value.gems[i]:SetPoint("TOPLEFT", value, "TOPRIGHT", 5 + (i - 1) * 16, -1) -- Verschiebe jedes Icon um 20px
-			elseif addon.variables.itemSlotSide[key] == 1 then
-				value.gems[i]:SetPoint("TOPRIGHT", value, "TOPLEFT", -5 - (i - 1) * 16, -1)
-			else
-				value.gems[i]:SetPoint("BOTTOM", value, "TOPLEFT", -1, 5 + (i - 1) * 16)
-			end
-
-			value.gems[i]:SetFrameStrata("DIALOG")
-
-			value.gems[i].icon = value.gems[i]:CreateTexture(nil, "OVERLAY")
-			value.gems[i].icon:SetAllPoints(value.gems[i])
-			value.gems[i].icon:SetTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic") -- Setze die erhaltene Textur
-
-			value.gems[i]:Hide()
-		end
-	end
-
-	PaperDollFrame:HookScript("OnShow", function(self) setCharFrame() end)
-
-	if OrderHallCommandBar then
-		OrderHallCommandBar:HookScript("OnShow", function(self)
-			if addon.db["hideOrderHallBar"] then
-				self:Hide()
-			else
-				self:Show()
-			end
-		end)
-		if addon.db["hideOrderHallBar"] then OrderHallCommandBar:Hide() end
-	end
 end
 
 local function addMiscFrame(container, d)
-	addon.functions.InitDBValue("deleteItemFillDialog", false)
-	addon.functions.InitDBValue("hideRaidTools", false)
-	addon.functions.InitDBValue("autoRepair", false)
-	addon.functions.InitDBValue("sellAllJunk", false)
-	addon.functions.InitDBValue("ignoreTalkingHead", true)
-	addon.functions.InitDBValue("hiddenLandingPages", {})
-	addon.functions.InitDBValue("hideMinimapButton", false)
-
 	if d then
 		local data = {
 			{
@@ -1230,21 +1064,9 @@ local function addMiscFrame(container, d)
 			lastCheckbox = cbLandingPage
 		end
 	end
-	hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
-		if addon.db["ignoreTalkingHead"] then self:Hide() end
-	end)
-	_G.CompactRaidFrameManager:SetScript("OnShow", function(self) addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self) end)
-	ExpansionLandingPageMinimapButton:HookScript("OnShow", function(self)
-		local id = addon.variables.landingPageReverse[self.title]
-		if addon.db["hiddenLandingPages"][id] then self:Hide() end
-	end)
 end
 
 local function addQuestFrame(container, d)
-	addon.functions.InitDBValue("autoChooseQuest", false)
-	addon.functions.InitDBValue("ignoreTrivialQuests", true)
-	addon.functions.InitDBValue("ignoreDailyQuests", true)
-	addon.functions.InitDBValue("ignoredQuestNPC", {})
 	local tExclude = {}
 	local list, order = addon.functions.prepareListForDropdown(addon.db["ignoredQuestNPC"])
 
@@ -1430,9 +1252,198 @@ local function addQuestFrame(container, d)
 	end
 end
 
+local function initDungeon()
+	addon.functions.InitDBValue("autoChooseDelvePower", true)
+	addon.functions.InitDBValue("lfgSortByRio", true)
+end
+
+local function initQuest()
+	addon.functions.InitDBValue("autoChooseQuest", false)
+	addon.functions.InitDBValue("ignoreTrivialQuests", true)
+	addon.functions.InitDBValue("ignoreDailyQuests", true)
+	addon.functions.InitDBValue("ignoredQuestNPC", {})
+end
+
+local function initMisc()
+	addon.functions.InitDBValue("deleteItemFillDialog", false)
+	addon.functions.InitDBValue("hideRaidTools", false)
+	addon.functions.InitDBValue("autoRepair", false)
+	addon.functions.InitDBValue("sellAllJunk", false)
+	addon.functions.InitDBValue("ignoreTalkingHead", true)
+	addon.functions.InitDBValue("hiddenLandingPages", {})
+	addon.functions.InitDBValue("hideMinimapButton", false)
+
+	hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
+		if addon.db["ignoreTalkingHead"] then self:Hide() end
+	end)
+	_G.CompactRaidFrameManager:SetScript("OnShow", function(self) addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self) end)
+	ExpansionLandingPageMinimapButton:HookScript("OnShow", function(self)
+		local id = addon.variables.landingPageReverse[self.title]
+		if addon.db["hiddenLandingPages"][id] then self:Hide() end
+	end)
+end
+
+local function initCharacter()
+	addon.functions.InitDBValue("showIlvlOnCharframe", false)
+	addon.functions.InitDBValue("showInfoOnInspectFrame", false)
+	addon.functions.InitDBValue("showGemsOnCharframe", false)
+	addon.functions.InitDBValue("showEnchantOnCharframe", false)
+	addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
+
+	local function updateButtonInfo(itemButton, bag, slot)
+		local eItem = Item:CreateFromBagAndSlot(bag, slot)
+		if eItem and not eItem:IsItemEmpty() then
+			eItem:ContinueOnItemLoad(function()
+				if not itemButton.ItemLevelText then
+					itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+					itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+					itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
+
+					itemButton.ItemLevelText:SetShadowOffset(2, -2)
+					itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+				end
+				local link = eItem:GetItemLink()
+				local invSlot = select(4, GetItemInfoInstant(link))
+				if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+
+				local color = eItem:GetItemQualityColor()
+				local itemLevelText = eItem:GetCurrentItemLevel()
+
+				itemButton.ItemLevelText:SetFormattedText(itemLevelText)
+				itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+
+				itemButton.ItemLevelText:Show()
+			end)
+		elseif itemButton.ItemLevelText then
+			itemButton.ItemLevelText:Hide()
+		end
+	end
+
+	local updateBags = function(frame)
+		for _, itemButton in frame:EnumerateValidItems() do
+			if addon.db["showIlvlOnBagItems"] then
+				updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID())
+			elseif itemButton.ItemLevelText then
+				itemButton.ItemLevelText:Hide()
+			end
+		end
+	end
+
+	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", updateBags)
+	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+		hooksecurefunc(frame, "UpdateItems", updateBags)
+	end
+
+	-- Add Cataclyst charges in char frame
+	local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
+	local iconID = cataclystInfo.iconFileID
+
+	addon.general.iconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
+	addon.general.iconFrame:SetSize(32, 32)
+	addon.general.iconFrame:SetPoint("BOTTOMLEFT", PaperDollSidebarTab3, "BOTTOMRIGHT", 4, 0)
+
+	addon.general.iconFrame.icon = addon.general.iconFrame:CreateTexture(nil, "OVERLAY")
+	addon.general.iconFrame.icon:SetSize(32, 32)
+	addon.general.iconFrame.icon:SetPoint("CENTER", addon.general.iconFrame, "CENTER")
+	addon.general.iconFrame.icon:SetTexture(iconID)
+
+	addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+	addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
+	addon.general.iconFrame.count:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+	addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
+	addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
+
+	if addon.db["showCatalystChargesOnCharframe"] == false then addon.general.iconFrame:Hide() end
+
+	-- add durability icon on charframe
+
+	addon.general.durabilityIconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
+	addon.general.durabilityIconFrame:SetSize(32, 32)
+	addon.general.durabilityIconFrame:SetPoint("TOPLEFT", CharacterFramePortrait, "RIGHT", 4, 0)
+
+	addon.general.durabilityIconFrame.icon = addon.general.durabilityIconFrame:CreateTexture(nil, "OVERLAY")
+	addon.general.durabilityIconFrame.icon:SetSize(32, 32)
+	addon.general.durabilityIconFrame.icon:SetPoint("CENTER", addon.general.durabilityIconFrame, "CENTER")
+	addon.general.durabilityIconFrame.icon:SetTexture(addon.variables.durabilityIcon)
+
+	addon.general.durabilityIconFrame.count = addon.general.durabilityIconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+	addon.general.durabilityIconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.durabilityIconFrame, "BOTTOMRIGHT", 1, 2)
+	addon.general.durabilityIconFrame.count:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+
+	if addon.db["showDurabilityOnCharframe"] == false then addon.general.durabilityIconFrame:Hide() end
+
+	for key, value in pairs(addon.variables.itemSlots) do
+		-- Hintergrund für das Item-Level
+		value.ilvlBackground = value:CreateTexture(nil, "BACKGROUND")
+		value.ilvlBackground:SetColorTexture(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 80% Transparenz
+		value.ilvlBackground:SetPoint("TOPRIGHT", value, "TOPRIGHT", 1, 1)
+		value.ilvlBackground:SetSize(30, 16) -- Größe des Hintergrunds (muss ggf. angepasst werden)
+
+		-- Roter Rahmen mit Farbverlauf
+		if addon.variables.shouldEnchanted[key] then
+			value.borderGradient = value:CreateTexture(nil, "ARTWORK")
+			value.borderGradient:SetPoint("TOPLEFT", value, "TOPLEFT", -2, 2)
+			value.borderGradient:SetPoint("BOTTOMRIGHT", value, "BOTTOMRIGHT", 2, -2)
+			value.borderGradient:SetColorTexture(1, 0, 0, 0.6) -- Grundfarbe Rot
+			value.borderGradient:SetGradient("VERTICAL", CreateColor(1, 0, 0, 1), CreateColor(1, 0.3, 0.3, 0.5))
+			value.borderGradient:Hide()
+		end
+		-- Text für das Item-Level
+		value.ilvl = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+		value.ilvl:SetPoint("TOPRIGHT", value.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
+		value.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+
+		value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+		if addon.variables.itemSlotSide[key] == 0 then
+			value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, 1)
+		elseif addon.variables.itemSlotSide[key] == 2 then
+			value.enchant:SetPoint("BOTTOMLEFT", value, "BOTTOMRIGHT", 2, 1)
+		else
+			value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
+		end
+		value.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+
+		value.gems = {}
+		for i = 1, 3 do
+			value.gems[i] = CreateFrame("Frame", nil, PaperDollFrame)
+			value.gems[i]:SetSize(16, 16) -- Setze die Größe des Icons
+
+			if addon.variables.itemSlotSide[key] == 0 then
+				value.gems[i]:SetPoint("TOPLEFT", value, "TOPRIGHT", 5 + (i - 1) * 16, -1) -- Verschiebe jedes Icon um 20px
+			elseif addon.variables.itemSlotSide[key] == 1 then
+				value.gems[i]:SetPoint("TOPRIGHT", value, "TOPLEFT", -5 - (i - 1) * 16, -1)
+			else
+				value.gems[i]:SetPoint("BOTTOM", value, "TOPLEFT", -1, 5 + (i - 1) * 16)
+			end
+
+			value.gems[i]:SetFrameStrata("DIALOG")
+
+			value.gems[i].icon = value.gems[i]:CreateTexture(nil, "OVERLAY")
+			value.gems[i].icon:SetAllPoints(value.gems[i])
+			value.gems[i].icon:SetTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic") -- Setze die erhaltene Textur
+
+			value.gems[i]:Hide()
+		end
+	end
+
+	PaperDollFrame:HookScript("OnShow", function(self) setCharFrame() end)
+
+	if OrderHallCommandBar then
+		OrderHallCommandBar:HookScript("OnShow", function(self)
+			if addon.db["hideOrderHallBar"] then
+				self:Hide()
+			else
+				self:Show()
+			end
+		end)
+		if addon.db["hideOrderHallBar"] then OrderHallCommandBar:Hide() end
+	end
+end
+
 local function CreateUI()
 	-- Create the main frame
 	local frame = AceGUI:Create("Frame")
+	addon.aceFrame = frame.frame
 	frame:SetTitle("EnhanceQoL")
 	frame:SetStatusText("Configuration")
 	frame:SetWidth(800)
@@ -1502,6 +1513,8 @@ local function CreateUI()
 			addCharacterFrame(container) -- Ruft die Funktion zum Hinzufügen der Character-Optionen auf
 		elseif string.match(group, "^tooltip") then
 			addon.Tooltip.functions.treeCallback(container, group)
+		elseif string.match(group, "^vendor") then
+			addon.Vendor.functions.treeCallback(container, group)
 		else
 			local label = AceGUI:Create("Label")
 			label:SetText("No content defined for this section.")
@@ -1629,6 +1642,35 @@ function setAllHooks()
 		end)
 		if addon.db["warlock_HideSoulShardBar"] then WarlockPowerFrame:Hide() end
 	end
+
+	local function SortApplicants(applicants)
+		if addon.db["lfgSortByRio"] then
+			local function SortApplicantsCB(applicantID1, applicantID2)
+				local applicantInfo1 = C_LFGList.GetApplicantInfo(applicantID1)
+				local applicantInfo2 = C_LFGList.GetApplicantInfo(applicantID2)
+
+				if applicantInfo1 == nil then return false end
+
+				if applicantInfo2 == nil then return true end
+
+				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore1 = C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1)
+
+				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore2 = C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1)
+
+				return dungeonScore1 > dungeonScore2
+			end
+
+			table.sort(applicants, SortApplicantsCB)
+			LFGListApplicationViewer_UpdateResults(LFGListFrame.ApplicationViewer)
+		end
+	end
+
+	hooksecurefunc("LFGListUtil_SortApplicants", SortApplicants)
+
+	initCharacter()
+	initMisc()
+	initQuest()
+	initDungeon()
 end
 
 function loadMain()
@@ -1803,30 +1845,6 @@ function loadMain()
 			frame:Show()
 		end
 	end)
-
-	local function SortApplicants(applicants)
-		if addon.db["lfgSortByRio"] then
-			local function SortApplicantsCB(applicantID1, applicantID2)
-				local applicantInfo1 = C_LFGList.GetApplicantInfo(applicantID1)
-				local applicantInfo2 = C_LFGList.GetApplicantInfo(applicantID2)
-
-				if applicantInfo1 == nil then return false end
-
-				if applicantInfo2 == nil then return true end
-
-				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore1 = C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1)
-
-				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore2 = C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1)
-
-				return dungeonScore1 > dungeonScore2
-			end
-
-			table.sort(applicants, SortApplicantsCB)
-			LFGListApplicationViewer_UpdateResults(LFGListFrame.ApplicationViewer)
-		end
-	end
-
-	hooksecurefunc("LFGListUtil_SortApplicants", SortApplicants)
 
 	-- Frame zu den Interface-Optionen hinzufügen
 	-- InterfaceOptions_AddCategory(configFrame)

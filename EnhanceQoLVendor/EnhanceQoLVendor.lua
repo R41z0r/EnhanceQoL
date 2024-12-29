@@ -2,414 +2,338 @@ local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 
 local L = addon.LVendor
+local AceGUI = addon.AceGUI
 
 local frameLoad = CreateFrame("Frame")
 
 local function updateLegend(value, value2)
-    if not addon.frame:IsShown() then return end
-    local text = {}
-    if addon.db["vendor" .. value .. "IgnoreWarbound"] then table.insert(text, L["vendorIgnoreWarbound"]) end
-    if addon.db["vendor" .. value .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
-    if addon.db["vendor" .. value .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
+	if not addon.frame:IsShown() then return end
+	local text = {}
+	if addon.db["vendor" .. value .. "IgnoreWarbound"] then table.insert(text, L["vendorIgnoreWarbound"]) end
+	if addon.db["vendor" .. value .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
+	if addon.db["vendor" .. value .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
 
-    addon.Vendor.variables["labelExplained" .. value .. "line"]:SetText(string.format(
-        L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - value2),
-        table.concat(text, '\n')))
-end
-
--- Extend the option menu
-local frame = addon.functions.createTabFrame(L["Vendor"])
-frame.tabs = {}
-frame:SetScript("OnSizeChanged", function(self, width, height)
-    for i, tab in ipairs(frame.tabs) do tab:SetSize(width - 5, height - 35) end
-end)
-function frame:ShowTab(id)
-    local _, avgItemLevelEquipped = GetAverageItemLevel()
-    addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
-    for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-        local value = addon.Vendor.variables.tabNames[key]
-        updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
-    end
-    for _, tabContent in pairs(self.tabs) do tabContent:Hide() end
-    if self.tabs[id] then self.tabs[id]:Show() end
+	addon.Vendor.variables["labelExplained" .. value .. "line"]:SetText(string.format(L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - value2), table.concat(text, "\n")))
 end
 
 local function sellItems(items)
-    local function sellNextItem()
-        if not MerchantFrame:IsShown() then
-            print(L["MerchantWindowClosed"])
-            return
-        end
-        if #items == 0 then
-            -- print("Finished selling items.")
-            return
-        end
+	local function sellNextItem()
+		if not MerchantFrame:IsShown() then
+			print(L["MerchantWindowClosed"])
+			return
+		end
+		if #items == 0 then
+			-- print("Finished selling items.")
+			return
+		end
 
-        local item = table.remove(items, 1)
-        C_Container.UseContainerItem(item.bag, item.slot)
-        C_Timer.After(0.1, sellNextItem) -- 100ms Pause zwischen den Verkäufen
-    end
+		local item = table.remove(items, 1)
+		C_Container.UseContainerItem(item.bag, item.slot)
+		C_Timer.After(0.1, sellNextItem) -- 100ms Pause zwischen den Verkäufen
+	end
 
-    sellNextItem()
+	sellNextItem()
 end
 
 local function checkItem()
-    local _, avgItemLevelEquipped = GetAverageItemLevel()
-    local itemsToSell = {}
-    for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
-        for slot = 1, C_Container.GetContainerNumSlots(bag) do
-            containerInfo = C_Container.GetContainerItemInfo(bag, slot)
-            if containerInfo then
-                -- check if cosmetic
-                local eItem = Item:CreateFromBagAndSlot(bag, slot)
-                if eItem and not eItem:IsItemEmpty() then
-                    eItem:ContinueOnItemLoad(function()
-                        local link = eItem:GetItemLink()
-                        local itemName, itemLink, _, itemLevel, _, _, _, _, _, _, sellPrice, classID, subclassID,
-                            bindType, expansionID = C_Item.GetItemInfo(link)
+	local _, avgItemLevelEquipped = GetAverageItemLevel()
+	local itemsToSell = {}
+	for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
+		for slot = 1, C_Container.GetContainerNumSlots(bag) do
+			containerInfo = C_Container.GetContainerItemInfo(bag, slot)
+			if containerInfo then
+				-- check if cosmetic
+				local eItem = Item:CreateFromBagAndSlot(bag, slot)
+				if eItem and not eItem:IsItemEmpty() then
+					eItem:ContinueOnItemLoad(function()
+						local link = eItem:GetItemLink()
+						local itemName, itemLink, _, itemLevel, _, _, _, _, _, _, sellPrice, classID, subclassID, bindType, expansionID = C_Item.GetItemInfo(link)
 
-                        if classID == 4 and subclassID == 5 and
-                            not C_TransmogCollection.PlayerHasTransmog(containerInfo.itemID) then
-                            -- Transmog not used don't sell
-                        elseif addon.db["vendorExcludeSellList"][containerInfo.itemID] then -- ignore everything and exclude in sell
-                            -- do nothing
-                        elseif addon.db["vendorIncludeSellList"][containerInfo.itemID] then -- ignore everything and include in sell
-                            if sellPrice > 0 then
-                                table.insert(itemsToSell, {bag = bag, slot = slot})
-                            end
-                        elseif addon.Vendor.variables.itemQualityFilter[containerInfo.quality] then
-                            local effectiveILvl = C_Item.GetDetailedItemLevelInfo(link) -- item level of the item with all upgrades calculated
-                            -- local effectiveILvl = itemLevel -- item level of the item with all upgrades calculated
+						if classID == 4 and subclassID == 5 and not C_TransmogCollection.PlayerHasTransmog(containerInfo.itemID) then
+							-- Transmog not used don't sell
+						elseif addon.db["vendorExcludeSellList"][containerInfo.itemID] then -- ignore everything and exclude in sell
+							-- do nothing
+						elseif addon.db["vendorIncludeSellList"][containerInfo.itemID] then -- ignore everything and include in sell
+							if sellPrice > 0 then table.insert(itemsToSell, { bag = bag, slot = slot }) end
+						elseif addon.Vendor.variables.itemQualityFilter[containerInfo.quality] then
+							local effectiveILvl = C_Item.GetDetailedItemLevelInfo(link) -- item level of the item with all upgrades calculated
+							-- local effectiveILvl = itemLevel -- item level of the item with all upgrades calculated
 
-                            if sellPrice and sellPrice > 0 and addon.Vendor.variables.itemTypeFilter[classID] and
-                                (not addon.Vendor.variables.itemSubTypeFilter[classID] or
-                                    (addon.Vendor.variables.itemSubTypeFilter[classID] and
-                                        addon.Vendor.variables.itemSubTypeFilter[classID][subclassID])) and
-                                addon.Vendor.variables.itemBindTypeQualityFilter[containerInfo.quality][bindType] then -- Check if classID is allowed for AutoSell
+							if
+								sellPrice
+								and sellPrice > 0
+								and addon.Vendor.variables.itemTypeFilter[classID]
+								and (not addon.Vendor.variables.itemSubTypeFilter[classID] or (addon.Vendor.variables.itemSubTypeFilter[classID] and addon.Vendor.variables.itemSubTypeFilter[classID][subclassID]))
+								and addon.Vendor.variables.itemBindTypeQualityFilter[containerInfo.quality][bindType]
+							then -- Check if classID is allowed for AutoSell
+								local canUpgrade = false
+								if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "IgnoreUpgradable"] then
+									local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
+									tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+									tooltip:SetHyperlink(link)
+									for i = 1, tooltip:NumLines() do
+										local line = _G["ScanTooltipTextLeft" .. i]:GetText()
+										if line then
+											local upgrade = strmatch(line, addon.Vendor.variables.upgradePattern)
+											if upgrade then
+												local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
+												if not (r > 0.5 and g > 0.5 and b > 0.5) then -- gray upgrade text = old item upgradable --> not = ignore gray
+													canUpgrade = true
+												end
+												break
+											end
+										end
+									end
+								end
 
-                                local canUpgrade = false
-                                if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] ..
-                                    "IgnoreUpgradable"] then
-                                    local tooltip =
-                                        CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
-                                    tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-                                    tooltip:SetHyperlink(link)
-                                    for i = 1, tooltip:NumLines() do
-                                        local line = _G["ScanTooltipTextLeft" .. i]:GetText()
-                                        if line then
-                                            local upgrade = strmatch(line, addon.Vendor.variables.upgradePattern)
-                                            if upgrade then
-                                                local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
-                                                if not (r > 0.5 and g > 0.5 and b > 0.5) then -- gray upgrade text = old item upgradable --> not = ignore gray
-                                                    canUpgrade = true
-                                                end
-                                                break
-                                            end
-                                        end
-                                    end
-                                end
-
-                                if not canUpgrade then
-                                    if effectiveILvl <=
-                                        (avgItemLevelEquipped -
-                                            addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] ..
-                                                "MinIlvlDif"]) then
-                                        table.insert(itemsToSell, {bag = bag, slot = slot})
-                                    end
-                                end
-                            end
-                        end
-                    end)
-                end
-            end
-
-        end
-    end
-    if #itemsToSell > 0 then C_Timer.After(0.1, function() sellItems(itemsToSell) end) end
+								if not canUpgrade then
+									if effectiveILvl <= (avgItemLevelEquipped - addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]) then table.insert(itemsToSell, { bag = bag, slot = slot }) end
+								end
+							end
+						end
+					end)
+				end
+			end
+		end
+	end
+	if #itemsToSell > 0 then C_Timer.After(0.1, function() sellItems(itemsToSell) end) end
 end
 
-local function hideElements(elements, value)
-    for _, element in pairs(elements) do
-        if value then
-            element:Show()
-        else
-            element:Hide()
-        end
-    end
+local eventHandlers = {
+	["MERCHANT_SHOW"] = function()
+		if IsShiftKeyDown() then return end
+		checkItem()
+	end,
+	["ITEM_DATA_LOAD_RESULT"] = function(arg1, arg2)
+		if arg2 == false and tabFrame:IsShown() and txtInclude:GetText() ~= "" and txtInclude:GetText() ~= L["Item id or drag item"] then
+			StaticPopupDialogs["VendorWrongItemID"] = {
+				text = L["Item id does not exist"],
+				button1 = "OK",
+				timeout = 0,
+				whileDead = true,
+				hideOnEscape = true,
+				preferredIndex = 3, -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+			}
+			StaticPopup_Show("VendorWrongItemID")
+			txtInclude:SetText(L["Item id or drag item"])
+		end
+	end,
+	["PLAYER_AVG_ITEM_LEVEL_UPDATE"] = function()
+		local _, avgItemLevelEquipped = GetAverageItemLevel()
+		addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
+		for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
+			local value = addon.Vendor.variables.tabNames[key]
+			updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
+		end
+	end,
+}
+local function registerEvents(frame)
+	for event in pairs(eventHandlers) do
+		frame:RegisterEvent(event)
+	end
 end
-
-local hideList = {}
-
-for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-    local value = addon.Vendor.variables.tabNames[key]
-    hideList[value] = {}
-
-    local tabFrame = addon.Vendor.functions.createTabFrame(ITEM_QUALITY_COLORS[key].hex ..
-                                                               _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r", frame)
-
-    local labelHeadline = addon.functions.createLabel(tabFrame, L["labelItemQuality" .. value .. "line"], 0, -10, "TOP",
-        "TOP")
-
-    local vendorEnable = addon.functions.createCheckbox("vendor" .. value .. "Enable", tabFrame,
-        L["vendor" .. value .. "Enable"], 10, (addon.functions.getHeightOffset(labelHeadline) - 15))
-
-    vendorEnable:SetScript("OnClick", function(self)
-        addon.db["vendor" .. value .. "Enable"] = self:GetChecked()
-        hideElements(hideList[value], self:GetChecked())
-        addon.Vendor.variables.itemQualityFilter[key] = self:GetChecked()
-    end)
-
-    local vendorIlvl = addon.functions.createSlider("vendor" .. value .. "MinIlvlDif", tabFrame, L["vendorMinIlvlDif"],
-        15, (addon.functions.getHeightOffset(vendorEnable) - 30), addon.db["vendor" .. value .. "MinIlvlDif"], 1, 600,
-        "")
-    vendorIlvl:SetScript("OnValueChanged", function(self, value2)
-        value2 = math.floor(value2)
-        _G[self:GetName() .. 'Text']:SetText(L["vendorMinIlvlDif"] .. ': ' .. value2)
-        addon.db["vendor" .. value .. "MinIlvlDif"] = value2
-        updateLegend(value, value2)
-    end)
-
-    local vendorIgnoreBoE = addon.functions.createCheckbox("vendor" .. value .. "IgnoreBoE", tabFrame,
-        L["vendorIgnoreBoE"], 10, (addon.functions.getHeightOffset(vendorIlvl) - 25))
-    vendorIgnoreBoE:SetScript("OnClick", function(self)
-        addon.db["vendor" .. value .. "IgnoreBoE"] = self:GetChecked()
-        addon.Vendor.variables.itemBindTypeQualityFilter[key][2] = not self:GetChecked()
-        updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
-    end)
-
-    local vendorIgnoreWarbound = addon.functions.createCheckbox("vendor" .. value .. "IgnoreWarbound", tabFrame,
-        L["vendorIgnoreWarbound"], 10, (addon.functions.getHeightOffset(vendorIgnoreBoE) - 5))
-    vendorIgnoreWarbound:SetScript("OnClick", function(self)
-        addon.db["vendor" .. value .. "IgnoreWarbound"] = self:GetChecked()
-        addon.Vendor.variables.itemBindTypeQualityFilter[key][8] = not self:GetChecked()
-        addon.Vendor.variables.itemBindTypeQualityFilter[key][9] = not self:GetChecked()
-        updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
-    end)
-
-    local vendorIgnoreUpgradable
-    if key ~= 1 then
-        vendorIgnoreUpgradable = addon.functions.createCheckbox("vendor" .. value .. "IgnoreUpgradable", tabFrame,
-            L["vendorIgnoreUpgradable"], 10, (addon.functions.getHeightOffset(vendorIgnoreWarbound) - 5))
-        vendorIgnoreUpgradable:SetScript("OnClick", function(self)
-            addon.db["vendor" .. value .. "IgnoreUpgradable"] = self:GetChecked()
-            updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
-        end)
-    end
-    local text = {}
-    if addon.db["vendor" .. value .. "IgnoreWarbound"] then table.insert(text, L["vendorIgnoreWarbound"]) end
-    if addon.db["vendor" .. value .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
-    if addon.db["vendor" .. value .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
-
-    local labelExplanation = addon.functions.createLabel(tabFrame,
-        string.format(L["labelExplained" .. value .. "line"],
-            (addon.Vendor.variables.avgItemLevelEquipped - addon.db["vendor" .. value .. "MinIlvlDif"]),
-            table.concat(text, ' and ')), 0, 20, "BOTTOM", "BOTTOM")
-    addon.Vendor.variables["labelExplained" .. value .. "line"] = labelExplanation
-
-    table.insert(hideList[value], vendorIlvl)
-    table.insert(hideList[value], vendorIgnoreBoE)
-    table.insert(hideList[value], vendorIgnoreWarbound)
-    table.insert(hideList[value], labelExplanation)
-    if key ~= 1 then table.insert(hideList[value], vendorIgnoreUpgradable) end
-    hideElements(hideList[value], addon.db["vendor" .. value .. "Enable"])
-end
-
--- Include List
-local tabFrame = addon.Vendor.functions.createTabFrame(L["Include"], frame)
-
-local labelHeadline = addon.functions.createLabel(tabFrame, L["vendorAddItemToInclude"], 0, -10, "TOP", "TOP")
-
-local tInclude = {}
-local dropIncludeList, btnRemoveInclude
-
-for id, name in pairs(addon.db["vendorIncludeSellList"]) do table.insert(tInclude, {value = id, text = name}) end
-
-local txtInclude = addon.Vendor.functions.createEditBox(tabFrame, 20,
-    addon.functions.getHeightOffset(labelHeadline) - 10, L["Item id or drag item"])
-
-local function addInclude(id)
-    local eItem = Item:CreateFromItemID(tonumber(id))
-    if eItem and not eItem:IsItemEmpty() then
-        eItem:ContinueOnItemLoad(function()
-            if not addon.db["vendorIncludeSellList"][eItem:GetItemID()] then
-                addon.db["vendorIncludeSellList"][eItem:GetItemID()] = eItem:GetItemName()
-                addon.Vendor.functions.addDropdownItem(dropIncludeList, tInclude,
-                    {text = eItem:GetItemName(), value = eItem:GetItemID()})
-            end
-            txtInclude:SetText(L["Item id or drag item"])
-        end)
-    end
-end
-
-local btnAddInclude = addon.functions.createButton(tabFrame, txtInclude:GetWidth() + 20,
-    addon.functions.getHeightOffset(labelHeadline) - 7, 50, 30, L["Add"], function()
-        if txtInclude:GetText() ~= "" and txtInclude:GetText() ~= L["Item id or drag item"] then
-            addInclude(txtInclude:GetText())
-        end
-    end)
-
-dropIncludeList = addon.Vendor.functions.createDropdown("IncludeVendorList", tabFrame, tInclude, 150,
-    L["IncludeVendorList"], 10, addon.functions.getHeightOffset(txtInclude) - 30)
-
-btnRemoveInclude = addon.functions.createButton(tabFrame, dropIncludeList:GetWidth(),
-    addon.functions.getHeightOffset(txtInclude) - 47, 50, 30, L["Remove"], function()
-        local selectedID = UIDropDownMenu_GetSelectedID(dropIncludeList)
-        if selectedID then
-            local selectedItem = tInclude[selectedID]
-            if selectedItem then
-                addon.db["vendorIncludeSellList"][selectedItem.value] = nil
-                table.remove(tInclude, selectedID)
-                local function Initialize(self, level)
-                    local info = UIDropDownMenu_CreateInfo()
-                    for i, item in ipairs(tInclude) do
-                        info.text = item.text
-                        info.value = item.value
-                        info.checked = nil
-                        info.func = function(self)
-                            UIDropDownMenu_SetSelectedID(dropIncludeList, i)
-                        end
-                        UIDropDownMenu_AddButton(info, level)
-                    end
-                end
-
-                UIDropDownMenu_Initialize(dropIncludeList, Initialize)
-                UIDropDownMenu_SetText(dropIncludeList, "")
-            end
-        end
-    end)
-btnRemoveInclude:SetWidth(btnRemoveInclude:GetFontString():GetStringWidth() + 20)
-
--- Exclude
-local tabFrameExclude = addon.Vendor.functions.createTabFrame(L["Exclude"], frame)
-
-local labelHeadlineExclude = addon.functions.createLabel(tabFrameExclude, L["vendorAddItemToExclude"], 0, -10, "TOP",
-    "TOP")
-
-local tExclude = {}
-local dropExcludeList, btnRemoveExclude
-
-for id, name in pairs(addon.db["vendorExcludeSellList"]) do table.insert(tExclude, {value = id, text = name}) end
-
-local txtExclude = addon.Vendor.functions.createEditBox(tabFrameExclude, 20,
-    addon.functions.getHeightOffset(labelHeadlineExclude) - 10, L["Item id or drag item"])
-
-local function addExclude(id)
-    local eItem = Item:CreateFromItemID(tonumber(id))
-    if eItem and not eItem:IsItemEmpty() then
-        eItem:ContinueOnItemLoad(function()
-            if not addon.db["vendorExcludeSellList"][eItem:GetItemID()] then
-                addon.db["vendorExcludeSellList"][eItem:GetItemID()] = eItem:GetItemName()
-                addon.Vendor.functions.addDropdownItem(dropExcludeList, tExclude,
-                    {text = eItem:GetItemName(), value = eItem:GetItemID()})
-            end
-            txtExclude:SetText(L["Item id or drag item"])
-        end)
-    end
-end
-
-local btnAddExclude = addon.functions.createButton(tabFrameExclude, txtExclude:GetWidth() + 20,
-    addon.functions.getHeightOffset(labelHeadlineExclude) - 7, 50, 30, L["Add"], function()
-        if txtExclude:GetText() ~= "" and txtExclude:GetText() ~= L["Item id or drag item"] then
-            addExclude(txtExclude:GetText())
-        end
-    end)
-
-dropExcludeList = addon.Vendor.functions.createDropdown("ExcludeVendorList", tabFrameExclude, tExclude, 150,
-    L["ExcludeVendorList"], 10, addon.functions.getHeightOffset(txtExclude) - 30)
-
-btnRemoveExclude = addon.functions.createButton(tabFrameExclude, dropExcludeList:GetWidth(),
-    addon.functions.getHeightOffset(txtExclude) - 47, 50, 30, L["Remove"], function()
-        local selectedID = UIDropDownMenu_GetSelectedID(dropExcludeList)
-        if selectedID then
-            local selectedItem = tExclude[selectedID]
-            if selectedItem then
-                addon.db["vendorExcludeSellList"][selectedItem.value] = nil
-                table.remove(tExclude, selectedID)
-                local function Initialize(self, level)
-                    local info = UIDropDownMenu_CreateInfo()
-                    for i, item in ipairs(tExclude) do
-                        info.text = item.text
-                        info.value = item.value
-                        info.checked = nil
-                        info.func = function(self)
-                            UIDropDownMenu_SetSelectedID(dropExcludeList, i)
-                        end
-                        UIDropDownMenu_AddButton(info, level)
-                    end
-                end
-
-                UIDropDownMenu_Initialize(dropExcludeList, Initialize)
-                UIDropDownMenu_SetText(dropExcludeList, "")
-            end
-        end
-    end)
-btnRemoveExclude:SetWidth(btnRemoveExclude:GetFontString():GetStringWidth() + 20)
-
-local eventHandlers = {["MERCHANT_SHOW"] = function()
-    if IsShiftKeyDown() then return end
-    checkItem()
-end, ["ITEM_DATA_LOAD_RESULT"] = function(arg1, arg2)
-    if arg2 == false and tabFrame:IsShown() and txtInclude:GetText() ~= "" and txtInclude:GetText() ~=
-        L["Item id or drag item"] then
-        StaticPopupDialogs["VendorWrongItemID"] = {text = L["Item id does not exist"], button1 = "OK", timeout = 0,
-                                                   whileDead = true, hideOnEscape = true, preferredIndex = 3 -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
-        }
-        StaticPopup_Show("VendorWrongItemID")
-        txtInclude:SetText(L["Item id or drag item"])
-    end
-end, ["PLAYER_AVG_ITEM_LEVEL_UPDATE"] = function()
-    local _, avgItemLevelEquipped = GetAverageItemLevel()
-    addon.Vendor.variables.avgItemLevelEquipped = avgItemLevelEquipped
-    for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-        local value = addon.Vendor.variables.tabNames[key]
-        updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
-    end
-end, ["ADDON_LOADED"] = function(arg1)
-    if arg1 == addonName then
-        SLASH_EnhanceQoLVendor1 = "/eqolv"
-        SlashCmdList["EnhanceQoLVendor"] = function(msg)
-            local command, argument = strsplit(" ", msg) -- Teilt den Befehl und das Argument
-            local id = tonumber(argument) -- Wandelt das Argument in eine Zahl um
-
-            if command == "i" then
-                if id and id > 0 then
-                    addInclude(id)
-                    print(addonName .. " added item ID " .. id .. " to the include list.")
-                else
-                    print(addonName .. ": Please provide a valid item ID after '/eqol vi'.")
-                end
-            elseif command == "e" then
-                if id and id > 0 then
-                    addExclude(id)
-                    print(addonName .. " added item ID " .. id .. " to the exclude list.")
-                else
-                    print(addonName .. ": Please provide a valid item ID after '/eqol ve'.")
-                end
-            else
-                print(addonName ..
-                          ": Invalid command. Use '/eqolv i' to include an item or '/eqolv e [itemID]' to exclude an item.")
-            end
-        end
-    end
-end}
-local function registerEvents(frame) for event in pairs(eventHandlers) do frame:RegisterEvent(event) end end
 
 local function eventHandler(self, event, ...)
-    if eventHandlers[event] then
-        if addon.Performance and addon.Performance.MeasurePerformance then
-            addon.Performance.MeasurePerformance(addonName, event, eventHandlers[event], ...)
-        else
-            -- Normale Event-Verarbeitung
-            eventHandlers[event](...)
-        end
-    end
+	if eventHandlers[event] then
+		if addon.Performance and addon.Performance.MeasurePerformance then
+			addon.Performance.MeasurePerformance(addonName, event, eventHandlers[event], ...)
+		else
+			-- Normale Event-Verarbeitung
+			eventHandlers[event](...)
+		end
+	end
 end
 
 registerEvents(frameLoad)
 frameLoad:SetScript("OnEvent", eventHandler)
+
+local function addVendorFrame(container, type)
+	local text = {}
+	local value = addon.Vendor.variables.tabNames[type]
+	local labelHeadlineExplain
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local function updateLegend(sValue, sValue2)
+		if not addon.aceFrame:IsShown() then return end
+		local text = {}
+		if addon.db["vendor" .. sValue .. "IgnoreWarbound"] then table.insert(text, L["vendorIgnoreWarbound"]) end
+		if addon.db["vendor" .. sValue .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
+		if addon.db["vendor" .. sValue .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
+
+		labelHeadlineExplain:SetText("|cffffd700" .. string.format(L["labelExplained" .. sValue .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - sValue2), table.concat(text, " and ")) .. "|r")
+		wrapper:DoLayout()
+	end
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["labelItemQuality" .. value .. "line"] .. "|r", nil, nil, 14)
+	groupCore:AddChild(labelHeadline)
+	labelHeadline:SetFullWidth(true)
+
+	local vendorEnable = addon.functions.createCheckboxAce(L["vendor" .. value .. "Enable"], addon.db["vendor" .. value .. "Enable"], function(self, _, checked)
+		addon.db["vendor" .. value .. "Enable"] = checked
+		addon.Vendor.variables.itemQualityFilter[type] = checked
+
+		container:ReleaseChildren()
+		addVendorFrame(container, type)
+	end)
+	groupCore:AddChild(vendorEnable)
+
+	if addon.Vendor.variables.itemQualityFilter[type] then
+		local data = {
+			{ text = L["vendorIgnoreBoE"], var = "vendor" .. value .. "IgnoreBoE" },
+			{ text = L["vendorIgnoreWarbound"], var = "vendor" .. value .. "IgnoreWarbound" },
+		}
+		if type ~= 1 then table.insert(data, { text = L["vendorIgnoreUpgradable"], var = "vendor" .. value .. "IgnoreUpgradable" }) end
+
+		table.sort(data, function(a, b) return a.text < b.text end)
+
+		for _, cbData in ipairs(data) do
+			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, checked)
+				addon.db[cbData.var] = checked
+				addon.Vendor.variables.itemBindTypeQualityFilter[type][2] = not checked
+				updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
+			end)
+			groupCore:AddChild(cbElement)
+		end
+
+		local vendorIlvl = addon.functions.createSliderAce(L["vendorMinIlvlDif"], addon.db["vendor" .. value .. "MinIlvlDif"], 1, 700, 1, function(self, _, value2)
+			value2 = math.floor(value2)
+			addon.db["vendor" .. value .. "MinIlvlDif"] = value2
+			updateLegend(value, value2)
+		end)
+		groupCore:AddChild(vendorIlvl)
+
+		if addon.db["vendor" .. value .. "IgnoreWarbound"] then table.insert(text, L["vendorIgnoreWarbound"]) end
+		if addon.db["vendor" .. value .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
+		if addon.db["vendor" .. value .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
+
+		local groupInfo = addon.functions.createContainer("InlineGroup", "List")
+		groupInfo:SetTitle(INFO)
+		wrapper:AddChild(groupInfo)
+
+		labelHeadlineExplain = addon.functions.createLabelAce(
+			"|cffffd700" .. string.format(L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - addon.db["vendor" .. value .. "MinIlvlDif"]), table.concat(text, " and ")) .. "|r",
+			nil,
+			nil,
+			14
+		)
+		groupInfo:AddChild(labelHeadlineExplain)
+		groupInfo:SetFullWidth(true)
+		labelHeadlineExplain:SetFullWidth(true)
+	end
+end
+
+local function addInExcludeFrame(container, type)
+	local headText
+	local dbValue
+	local eBox
+	local dropIncludeList
+	if type == 0 then
+		headText = L["vendorAddItemToExclude"]
+		dbValue = "vendorExcludeSellList"
+	else
+		headText = L["vendorAddItemToInclude"]
+		dbValue = "vendorIncludeSellList"
+	end
+
+	local function addInclude(input)
+		local id = tonumber(input)
+
+		-- Wenn keine Zahl, versuchen, die Item-ID aus einem Item-Link zu extrahieren
+		if not id then id = string.match(input, "item:(%d+)") end
+		if not id then
+			print("|cffff0000Invalid input! Please provide a valid Item ID or drag an item.|r")
+			eBox:SetText("")
+			return
+		end
+
+		local eItem = Item:CreateFromItemID(tonumber(id))
+		if eItem and not eItem:IsItemEmpty() then
+			eItem:ContinueOnItemLoad(function()
+				if not addon.db[dbValue][eItem:GetItemID()] then
+					addon.db[dbValue][eItem:GetItemID()] = eItem:GetItemName()
+					print(ADD .. ":", eItem:GetItemID(), eItem:GetItemName())
+					local list, order = addon.functions.prepareListForDropdown(addon.db[dbValue])
+					dropIncludeList:SetList(list, order)
+					dropIncludeList:SetValue(nil) -- Setze die Auswahl zurück
+				end
+				eBox:SetText("")
+			end)
+		end
+	end
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. headText .. "|r", nil, nil, 14)
+	groupCore:AddChild(labelHeadline)
+	labelHeadline:SetFullWidth(true)
+
+	eBox = addon.functions.createEditboxAce(L["Item id or drag item"], nil, function(self, _, dText)
+		if dText ~= "" and dText ~= L["Item id or drag item"] then addInclude(dText) end
+	end, nil)
+	groupCore:AddChild(eBox)
+
+	local list, order = addon.functions.prepareListForDropdown(addon.db[dbValue])
+
+	local groupEntries = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupEntries)
+
+	dropIncludeList = addon.functions.createDropdownAce(L["IncludeVendorList"], list, order, nil)
+	local btnRemoveItem = addon.functions.createButtonAce(REMOVE, 100, function(self, _, value)
+		local selectedValue = dropIncludeList:GetValue() -- Hole den aktuellen Wert des Dropdowns
+		if selectedValue then
+			if addon.db[dbValue][selectedValue] then
+				addon.db[dbValue][selectedValue] = nil -- Entferne aus der Datenbank
+				-- Aktualisiere die Dropdown-Liste
+				local list, order = addon.functions.prepareListForDropdown(addon.db[dbValue])
+				dropIncludeList:SetList(list, order)
+				dropIncludeList:SetValue(nil) -- Setze die Auswahl zurück
+			end
+		end
+	end)
+	groupEntries:AddChild(dropIncludeList)
+	groupEntries:AddChild(btnRemoveItem)
+end
+
+addon.functions.addToTree(nil, {
+	value = "vendor",
+	text = L["Vendor"],
+	children = {
+		{ value = "common", text = ITEM_QUALITY_COLORS[1].hex .. _G["ITEM_QUALITY1_DESC"] .. "|r" },
+		{ value = "uncommon", text = ITEM_QUALITY_COLORS[2].hex .. _G["ITEM_QUALITY2_DESC"] .. "|r" },
+		{ value = "rare", text = ITEM_QUALITY_COLORS[3].hex .. _G["ITEM_QUALITY3_DESC"] .. "|r" },
+		{ value = "epic", text = ITEM_QUALITY_COLORS[4].hex .. _G["ITEM_QUALITY4_DESC"] .. "|r" },
+		{ value = "include", text = L["Include"] },
+		{ value = "exclude", text = L["Exclude"] },
+	},
+})
+
+function addon.Vendor.functions.treeCallback(container, group)
+	container:ReleaseChildren() -- Entfernt vorherige Inhalte
+	-- Prüfen, welche Gruppe ausgewählt wurde
+	if group == "vendor\001common" then
+		addVendorFrame(container, 1)
+	elseif group == "vendor\001uncommon" then
+		addVendorFrame(container, 2)
+	elseif group == "vendor\001rare" then
+		addVendorFrame(container, 3)
+	elseif group == "vendor\001epic" then
+		addVendorFrame(container, 4)
+	elseif group == "vendor\001include" then
+		addInExcludeFrame(container, 1)
+	elseif group == "vendor\001exclude" then
+		addInExcludeFrame(container, 0)
+	end
+end

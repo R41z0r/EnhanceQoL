@@ -1,13 +1,11 @@
-if (GAME_LOCALE or GetLocale()) ~= "koKR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "koKR" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LVendor
 
@@ -34,15 +32,11 @@ L["vendorAddItemToInclude"] = "판매에 포함시키기 위해 이 목록에 �
 L["vendorAddItemToExclude"] = "판매에서 제외할 항목을 이 목록에 추가하십시오.\n중요: 제외는 항상 우선하며, 잡동사니인 경우를 제외하고"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-    local value = addon.Vendor.variables.tabNames[key]
-    L["labelItemQuality" .. value .. "line"] =
-        "이 옵션을 사용하면 상인에게 있는 동안 필터 기준에 따라\n" ..
-            ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
-            "|r 품질의 아이템을 자동으로 판매할 수 있습니다."
-    L["vendor" .. value .. "Enable"] =
-        "품질 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
-            "|r 아이템 자동 판매 활성화"
-    L["labelExplained" .. value .. "line"] = "이것은 자동으로 " .. ITEM_QUALITY_COLORS[key].hex ..
-                                                 _G["ITEM_QUALITY" .. key .. "_DESC"] ..
-                                                 "|r\n아이템 레벨이 %s 이하인 아이템을 판매합니다\n%s"
+	local value = addon.Vendor.variables.tabNames[key]
+	L["labelItemQuality" .. value .. "line"] = "이 옵션을 사용하면 상인에게 있는 동안 필터 기준에 따라 "
+		.. ITEM_QUALITY_COLORS[key].hex
+		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
+		.. "|r 품질의 아이템을 자동으로 판매할 수 있습니다."
+	L["vendor" .. value .. "Enable"] = "품질 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 아이템 자동 판매 활성화"
+	L["labelExplained" .. value .. "line"] = "이것은 자동으로 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 아이템 레벨이 %s 이하인 아이템을 판매합니다 %s"
 end

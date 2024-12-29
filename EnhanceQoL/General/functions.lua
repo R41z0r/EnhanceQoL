@@ -337,6 +337,41 @@ function addon.functions.createCheckboxAce(text, value, callBack)
 	return checkbox
 end
 
+function addon.functions.createEditboxAce(label, text, OnEnterPressed, OnTextChanged)
+	local editbox = AceGUI:Create("EditBox")
+
+	editbox:SetLabel(label)
+	if text then editbox:SetText(text) end
+	if OnEnterPressed then editbox:SetCallback("OnEnterPressed", OnEnterPressed) end
+	if OnTextChanged then editbox:SetCallback("OnTextChanged", OnTextChanged) end
+	return editbox
+end
+
+function addon.functions.createSliderAce(text, value, min, max, step, callBack)
+	local slider = AceGUI:Create("Slider")
+
+	slider:SetLabel(text)
+	slider:SetValue(value)
+	slider:SetSliderValues(min, max, step)
+	if callBack then slider:SetCallback("OnValueChanged", callBack) end
+	slider:SetFullWidth(true)
+
+	return slider
+end
+
+function addon.functions.createLabelAce(text, color, font, fontSize)
+	local label = AceGUI:Create("Label")
+
+	label:SetText(text)
+	if color then label:SetColor(color.r, color.g, color.b) end
+	if font then
+		label:SetFont(font, fontSize, "OUTLINE") -- Du kannst hier eine Schriftgröße und OUTLINE anpassen
+	else
+		label:SetFont("Fonts\\FRIZQT__.TTF", fontSize, "OUTLINE") -- Standard-Schriftart von WoW
+	end
+	return label
+end
+
 function addon.functions.createButtonAce(text, width, callBack)
 	local button = AceGUI:Create("Button")
 	button:SetText(text)

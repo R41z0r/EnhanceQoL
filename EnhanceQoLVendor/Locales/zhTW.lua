@@ -1,13 +1,11 @@
-if (GAME_LOCALE or GetLocale()) ~= "zhTW" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "zhTW" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LVendor
 
@@ -34,13 +32,8 @@ L["vendorAddItemToInclude"] = "將物品添加到此列表中以包含在銷售�
 L["vendorAddItemToExclude"] = "將物品添加到此列表中以排除出售。\n重要：排除總是優先，除非它是垃圾"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-    local value = addon.Vendor.variables.tabNames[key]
-    L["labelItemQuality" .. value .. "line"] = "這使您能夠根據商人的過濾條件，自動銷售質量為\n" ..
-                                                   ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
-                                                   "|r 的物品。"
-    L["vendor" .. value .. "Enable"] = "啟用自動銷售 " .. ITEM_QUALITY_COLORS[key].hex ..
-                                           _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 物品"
-    L["labelExplained" .. value .. "line"] = "這意味著它會自動出售 " .. ITEM_QUALITY_COLORS[key].hex ..
-                                                 _G["ITEM_QUALITY" .. key .. "_DESC"] ..
-                                                 "|r\n物品等級為 %s 及以下的物品\n%s"
+	local value = addon.Vendor.variables.tabNames[key]
+	L["labelItemQuality" .. value .. "line"] = "這使您能夠根據商人的過濾條件，自動銷售質量為 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 的物品。"
+	L["vendor" .. value .. "Enable"] = "啟用自動銷售 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 物品"
+	L["labelExplained" .. value .. "line"] = "這意味著它會自動出售 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 物品等級為 %s 及以下的物品 %s"
 end

@@ -1,13 +1,11 @@
-if (GAME_LOCALE or GetLocale()) ~= "ptBR" then
-    return
-end
+if (GAME_LOCALE or GetLocale()) ~= "ptBR" then return end
 
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LVendor
 
@@ -33,13 +31,11 @@ L["vendorAddItemToInclude"] = "Adicione itens a esta lista para incluí-los na v
 L["vendorAddItemToExclude"] = "Adicione itens a esta lista para excluí-los da venda.\nIMPORTANTE: A exclusão sempre prevalece, a menos que seja lixo"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-    local value = addon.Vendor.variables.tabNames[key]
-    L["labelItemQuality" .. value .. "line"] = "Isso permite que você venda automaticamente itens de qualidade\n" ..
-                                                   ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
-                                                   "|r com base em critérios de filtro ao visitar\num comerciante."
-    L["vendor" .. value .. "Enable"] = "Ativar a venda automática para itens de qualidade " ..
-                                           ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r"
-    L["labelExplained" .. value .. "line"] = "Isso significa que ele vende automaticamente " ..
-                                                 ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] ..
-                                                 "|r\nitens com um nível de item de %s ou inferior\n%s"
+	local value = addon.Vendor.variables.tabNames[key]
+	L["labelItemQuality" .. value .. "line"] = "Isso permite que você venda automaticamente itens de qualidade "
+		.. ITEM_QUALITY_COLORS[key].hex
+		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
+		.. "|r com base em critérios de filtro ao visitar um comerciante."
+	L["vendor" .. value .. "Enable"] = "Ativar a venda automática para itens de qualidade " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r"
+	L["labelExplained" .. value .. "line"] = "Isso significa que ele vende automaticamente " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r itens com um nível de item de %s ou inferior %s"
 end
