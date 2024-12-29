@@ -2,201 +2,199 @@ local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 
 local L = addon.LMythicPlus
 
 -- Addition für Potion Cooldown tracker
 local allowedSpells = { -- Tinker Engineering
-[55004] = {duration = 60, isInvis = false, text = L["Tinker"]}, -- Nitro boost - Shares CD with combat potions but only 60s
--- [255974] = 300, --Personal Space Amplifier - Shares CD with combat potions but only 60s --Wurde wohl rausgepatcht
+	[55004] = { duration = 60, isInvis = false, text = L["Tinker"] }, -- Nitro boost - Shares CD with combat potions but only 60s
+	-- [255974] = 300, --Personal Space Amplifier - Shares CD with combat potions but only 60s --Wurde wohl rausgepatcht
 
--- Dragonflight
-[371028] = {duration = 300, isInvis = false}, -- Elemental potion of ultimate power
-[371134] = {duration = 300, isInvis = true}, -- Potion of the Hushed Zephyr
-[371024] = {duration = 300, isInvis = false}, -- Elemental potion of power
-[371622] = {duration = 300, isInvis = false}, -- Residual Neural Channeling Agent
-[372046] = {duration = 300, isInvis = false}, -- Bottled Putrescence
-[371055] = {duration = 300, isInvis = false}, -- Delicate Suspension of Spores
-[371152] = {duration = 300, isInvis = false}, -- Potion of Chilled Clarity
--- [371653] = 120, -- Potion of Frozen Fatality (Feign death out of combat)
-[371033] = {duration = 300, isInvis = false}, -- Potion of chilled focus
-[371167] = {duration = 300, isInvis = false}, -- Potion of Gusts
-[370816] = {duration = 300, isInvis = false}, -- Potion of Shocking disclosure
-[423414] = {duration = 300, isHealpot = true}, -- Potion of Withering Dreams
-[370607] = {duration = 300}, -- Aerated Mana Potion - Count as Combatpotion
-[415569] = {duration = 300, isHealpot = true}, -- Dreamwalker's Healing Potion
-[370511] = {duration = 300, isHealpot = true}, -- Refreshing Healing Potion
--- Battle for Azeroth
-[279153] = {duration = 300, isInvis = false}, -- Battle Potion of Strength
-[279154] = {duration = 300, isInvis = false}, -- Battle Potion of Stamina
-[279151] = {duration = 300, isInvis = false}, -- Battle Potion of Int
-[279152] = {duration = 300, isInvis = false}, -- Battle Potion of Agi
--- The War Within
-[431932] = {duration = 300, isInvis = false, icon = 650640}, -- Tempered Potion
-[431422] = {duration = 300, isInvis = false, icon = 5931168}, -- Slumbering Soul Serum
-[431941] = {duration = 300, isInvis = false}, -- Potion of the Reborn Cheetah
-[431432] = {duration = 300, isInvis = false, icon = 134842}, -- Draugth of Shocking Revelations
-[431925] = {duration = 300, isInvis = false, icon = 236887}, -- Frontline Potion
-[453040] = {duration = 300, isInvis = false}, -- Potion Bomb of Speed
-[453162] = {duration = 300, isInvis = false}, -- Potion Bomb of Recobery
-[453205] = {duration = 300, isInvis = false}, -- Potion Bomb of Power
-[431914] = {duration = 300, isInvis = false}, -- Potion of Unwavering Focus
-[431424] = {duration = 600, isInvis = true}, -- Draught of Silent Footfalls
-[431419] = {duration = 300, isInvis = false, icon = 236873}, -- Cavedweller's Delight Heal/Mana Pot counts as combat, -- Potion of Silent Footfalls
-[431418] = {duration = 300, isInvis = false, icon = 5931166}, -- Algari Mana Potion
-[431416] = {duration = 300, isInvis = false, isHealpot = true, icon = 5931169}, -- Algari Healing Potion
-[460074] = {duration = 300, isInvis = false, isHealpot = true, icon = 135264}, -- Grotesque Vial
--- Off Healing
-[108281] = {duration = 10, isOffhealing = true, icon = 538564}, -- Ancestral Guidance
-[124974] = {duration = 15, isOffhealing = true, icon = 236764}, -- Nature's Vigil
-[15286] = {duration = 12, isOffhealing = true, icon = 136230}, -- Vampiric Emprace
+	-- Dragonflight
+	[371028] = { duration = 300, isInvis = false }, -- Elemental potion of ultimate power
+	[371134] = { duration = 300, isInvis = true }, -- Potion of the Hushed Zephyr
+	[371024] = { duration = 300, isInvis = false }, -- Elemental potion of power
+	[371622] = { duration = 300, isInvis = false }, -- Residual Neural Channeling Agent
+	[372046] = { duration = 300, isInvis = false }, -- Bottled Putrescence
+	[371055] = { duration = 300, isInvis = false }, -- Delicate Suspension of Spores
+	[371152] = { duration = 300, isInvis = false }, -- Potion of Chilled Clarity
+	-- [371653] = 120, -- Potion of Frozen Fatality (Feign death out of combat)
+	[371033] = { duration = 300, isInvis = false }, -- Potion of chilled focus
+	[371167] = { duration = 300, isInvis = false }, -- Potion of Gusts
+	[370816] = { duration = 300, isInvis = false }, -- Potion of Shocking disclosure
+	[423414] = { duration = 300, isHealpot = true }, -- Potion of Withering Dreams
+	[370607] = { duration = 300 }, -- Aerated Mana Potion - Count as Combatpotion
+	[415569] = { duration = 300, isHealpot = true }, -- Dreamwalker's Healing Potion
+	[370511] = { duration = 300, isHealpot = true }, -- Refreshing Healing Potion
+	-- Battle for Azeroth
+	[279153] = { duration = 300, isInvis = false }, -- Battle Potion of Strength
+	[279154] = { duration = 300, isInvis = false }, -- Battle Potion of Stamina
+	[279151] = { duration = 300, isInvis = false }, -- Battle Potion of Int
+	[279152] = { duration = 300, isInvis = false }, -- Battle Potion of Agi
+	-- The War Within
+	[431932] = { duration = 300, isInvis = false, icon = 650640 }, -- Tempered Potion
+	[431422] = { duration = 300, isInvis = false, icon = 5931168 }, -- Slumbering Soul Serum
+	[431941] = { duration = 300, isInvis = false }, -- Potion of the Reborn Cheetah
+	[431432] = { duration = 300, isInvis = false, icon = 134842 }, -- Draugth of Shocking Revelations
+	[431925] = { duration = 300, isInvis = false, icon = 236887 }, -- Frontline Potion
+	[453040] = { duration = 300, isInvis = false }, -- Potion Bomb of Speed
+	[453162] = { duration = 300, isInvis = false }, -- Potion Bomb of Recobery
+	[453205] = { duration = 300, isInvis = false }, -- Potion Bomb of Power
+	[431914] = { duration = 300, isInvis = false }, -- Potion of Unwavering Focus
+	[431424] = { duration = 600, isInvis = true }, -- Draught of Silent Footfalls
+	[431419] = { duration = 300, isInvis = false, icon = 236873 }, -- Cavedweller's Delight Heal/Mana Pot counts as combat, -- Potion of Silent Footfalls
+	[431418] = { duration = 300, isInvis = false, icon = 5931166 }, -- Algari Mana Potion
+	[431416] = { duration = 300, isInvis = false, isHealpot = true, icon = 5931169 }, -- Algari Healing Potion
+	[460074] = { duration = 300, isInvis = false, isHealpot = true, icon = 135264 }, -- Grotesque Vial
+	-- Off Healing
+	[108281] = { duration = 10, isOffhealing = true, icon = 538564 }, -- Ancestral Guidance
+	[124974] = { duration = 15, isOffhealing = true, icon = 236764 }, -- Nature's Vigil
+	[15286] = { duration = 12, isOffhealing = true, icon = 136230 }, -- Vampiric Emprace
 }
 local activeBars = {}
 local frameAnchor = CreateFrame("StatusBar", nil, UIParent)
 addon.MythicPlus.anchorFrame = frameAnchor
 
 function addon.MythicPlus.functions.resetCooldownBars()
-    -- Entferne alle aktiven Cooldown-Balken
-    for i, bar in ipairs(activeBars) do bar:Hide() end
-    activeBars = {}
+	-- Entferne alle aktiven Cooldown-Balken
+	for i, bar in ipairs(activeBars) do
+		bar:Hide()
+	end
+	activeBars = {}
 end
 
 function addon.MythicPlus.functions.updateBars()
-    local yOffset = 0
-    local newActiveBars = {}
+	local yOffset = 0
+	local newActiveBars = {}
 
-    table.sort(activeBars, function(a, b) return a:GetValue() < b:GetValue() end)
+	table.sort(activeBars, function(a, b) return a:GetValue() < b:GetValue() end)
 
-    for _, bar in ipairs(activeBars) do
-        if ((UnitInRaid(bar.unit) and UnitGUID(bar.unit) == bar.guid) or
-            (UnitInParty(bar.unit) and UnitGUID(bar.unit) == bar.guid) or (UnitGUID("player") == bar.guid)) and
-            bar:IsShown() then
-            -- Neupositionierung des Balkens
-            if addon.db["potionTrackerUpwardsBar"] then
-                bar:SetPoint("TOPLEFT", frameAnchor, "TOPLEFT", 0, yOffset)
-            else
-                bar:SetPoint("TOPLEFT", frameAnchor, "TOPLEFT", 0, -yOffset)
-            end
-            yOffset = yOffset + bar:GetHeight() + 1 -- 5px Abstand
-            table.insert(newActiveBars, bar)
-        else
-            -- Entferne den unsichtbaren Balken
-            bar:Hide()
-            bar:SetScript("OnUpdate", nil)
-        end
-    end
+	for _, bar in ipairs(activeBars) do
+		if ((UnitInRaid(bar.unit) and UnitGUID(bar.unit) == bar.guid) or (UnitInParty(bar.unit) and UnitGUID(bar.unit) == bar.guid) or (UnitGUID("player") == bar.guid)) and bar:IsShown() then
+			-- Neupositionierung des Balkens
+			if addon.db["potionTrackerUpwardsBar"] then
+				bar:SetPoint("TOPLEFT", frameAnchor, "TOPLEFT", 0, yOffset)
+			else
+				bar:SetPoint("TOPLEFT", frameAnchor, "TOPLEFT", 0, -yOffset)
+			end
+			yOffset = yOffset + bar:GetHeight() + 1 -- 5px Abstand
+			table.insert(newActiveBars, bar)
+		else
+			-- Entferne den unsichtbaren Balken
+			bar:Hide()
+			bar:SetScript("OnUpdate", nil)
+		end
+	end
 
-    activeBars = newActiveBars
+	activeBars = newActiveBars
 end
 
 local function createCooldownBar(spellID, anchorFrame, playerName, unit)
-    local potInfo = allowedSpells[spellID]
-    local duration = potInfo.duration
+	local potInfo = allowedSpells[spellID]
+	local duration = potInfo.duration
 
-    if string.len(playerName) > 6 then playerName = string.sub(playerName, 1, 6) end
+	if string.len(playerName) > 6 then playerName = string.sub(playerName, 1, 6) end
 
-    local textLeft = playerName
-    if potInfo.isInvis then textLeft = textLeft .. " - " .. L["InvisPotion"] end
-    if potInfo.isHealpot then
-        if addon.db["potionTrackerHealingPotions"] == false then return end
-        textLeft = textLeft .. " - " .. L["HealingPotion"]
-    end
-    if potInfo.text then textLeft = textLeft .. " - " .. potInfo.text end
+	local textLeft = playerName
+	if potInfo.isInvis then textLeft = textLeft .. " - " .. L["InvisPotion"] end
+	if potInfo.isHealpot then
+		if addon.db["potionTrackerHealingPotions"] == false then return end
+		textLeft = textLeft .. " - " .. L["HealingPotion"]
+	end
+	if potInfo.text then textLeft = textLeft .. " - " .. potInfo.text end
 
-    if potInfo.isOffhealing and addon.db["potionTrackerOffhealing"] == false then return end
-    if potInfo.isOffhealing then
-        C_VoiceChat.SpeakText(1, "Offhaeling Active", Enum.VoiceTtsDestination.LocalPlayback, 01, 100)
-    end
+	if potInfo.isOffhealing and addon.db["potionTrackerOffhealing"] == false then return end
+	if potInfo.isOffhealing then C_VoiceChat.SpeakText(1, "Offhaeling Active", Enum.VoiceTtsDestination.LocalPlayback, 01, 100) end
 
-    local frame = CreateFrame("StatusBar", nil, UIParent, "BackdropTemplate")
-    frame:SetSize(anchorFrame:GetWidth() - addon.db["CooldownTrackerBarHeight"], addon.db["CooldownTrackerBarHeight"]) -- Größe des Balkens
-    frame:SetStatusBarTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
-    frame:SetMinMaxValues(0, duration)
-    frame:SetValue(duration)
-    frame:SetPoint("TOPLEFT", anchorFrame, "TOPLEFT", 0, 0)
-    -- Hintergrund (leicht schwarzer Rahmen)
-    frame:SetBackdrop({bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-                       edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 3,
-                       insets = {left = 0, right = 0, top = 0, bottom = 0}})
-    if addon.db["potionTrackerClassColor"] then
-        local rPerc, gPerc, bPerc = GetClassColor(select(2, UnitClass(unit)))
-        frame:SetStatusBarColor(rPerc, gPerc, bPerc)
-    end
-    frame:SetBackdropColor(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 50% Transparenz
-    local _, spellIcon
-    if potInfo.icon then
-        spellIcon = potInfo.icon
-    elseif potInfo.isInvis then
-        spellIcon = 136153 -- Invis icon
-    elseif potInfo.isHealpot then
-        spellIcon = 134756
-    else
-        -- Zaubername und Restzeit anzeigen
-        if C_Spell and C_Spell.GetSpellInfo then
-            local spellInfo = C_Spell.GetSpellInfo(spellID)
-            spellIcon = spellInfo.iconID
-        else
-            _, _, spellIcon = GetSpellInfo(spellID)
-        end
-    end
-    frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    frame.text:SetPoint("LEFT", frame, "LEFT", 3, 0)
-    frame.text:SetText(textLeft)
+	local frame = CreateFrame("StatusBar", nil, UIParent, "BackdropTemplate")
+	frame:SetSize(anchorFrame:GetWidth() - addon.db["CooldownTrackerBarHeight"], addon.db["CooldownTrackerBarHeight"]) -- Größe des Balkens
+	frame:SetStatusBarTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
+	frame:SetMinMaxValues(0, duration)
+	frame:SetValue(duration)
+	frame:SetPoint("TOPLEFT", anchorFrame, "TOPLEFT", 0, 0)
+	-- Hintergrund (leicht schwarzer Rahmen)
+	frame:SetBackdrop({ bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 3, insets = { left = 0, right = 0, top = 0, bottom = 0 } })
+	if addon.db["potionTrackerClassColor"] then
+		local rPerc, gPerc, bPerc = GetClassColor(select(2, UnitClass(unit)))
+		frame:SetStatusBarColor(rPerc, gPerc, bPerc)
+	end
+	frame:SetBackdropColor(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 50% Transparenz
+	local _, spellIcon
+	if potInfo.icon then
+		spellIcon = potInfo.icon
+	elseif potInfo.isInvis then
+		spellIcon = 136153 -- Invis icon
+	elseif potInfo.isHealpot then
+		spellIcon = 134756
+	else
+		-- Zaubername und Restzeit anzeigen
+		if C_Spell and C_Spell.GetSpellInfo then
+			local spellInfo = C_Spell.GetSpellInfo(spellID)
+			spellIcon = spellInfo.iconID
+		else
+			_, _, spellIcon = GetSpellInfo(spellID)
+		end
+	end
+	frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	frame.text:SetPoint("LEFT", frame, "LEFT", 3, 0)
+	frame.text:SetText(textLeft)
 
-    frame.time = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    frame.time:SetPoint("RIGHT", frame, "RIGHT", -3, 0)
+	frame.time = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	frame.time:SetPoint("RIGHT", frame, "RIGHT", -3, 0)
 
-    -- Spell-Icon hinzufügen
-    frame.icon = frame:CreateTexture(nil, "OVERLAY")
-    frame.icon:SetSize(addon.db["CooldownTrackerBarHeight"], addon.db["CooldownTrackerBarHeight"]) -- Größe des Icons
-    frame.icon:SetPoint("LEFT", frame, "RIGHT", 0, 0) -- Position am rechten Ende des Balkens
-    frame.icon:SetTexture(spellIcon) -- Setzt das Icon des Spells
+	-- Spell-Icon hinzufügen
+	frame.icon = frame:CreateTexture(nil, "OVERLAY")
+	frame.icon:SetSize(addon.db["CooldownTrackerBarHeight"], addon.db["CooldownTrackerBarHeight"]) -- Größe des Icons
+	frame.icon:SetPoint("LEFT", frame, "RIGHT", 0, 0) -- Position am rechten Ende des Balkens
+	frame.icon:SetTexture(spellIcon) -- Setzt das Icon des Spells
 
-    if addon.db["potionTrackerShowTooltip"] then
-        frame.icon:SetScript("OnEnter", function(self)
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetSpellByID(spellID) -- SpellID verwenden, um Tooltip anzuzeigen
-            GameTooltip:Show()
-        end)
-        frame.icon:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
-    end
+	frame.icon:SetScript("OnEnter", function(self)
+		if addon.db["potionTrackerShowTooltip"] then
+			GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+			GameTooltip:SetSpellByID(spellID) -- SpellID verwenden, um Tooltip anzuzeigen
+			GameTooltip:Show()
+		end
+	end)
+	frame.icon:SetScript("OnLeave", function(self)
+		if addon.db["potionTrackerShowTooltip"] then GameTooltip:Hide() end
+	end)
 
-    -- Speichere das unit, um später überprüfen zu können, ob die Einheit noch existiert
-    frame.unit = unit
-    frame.guid = UnitGUID(unit)
+	-- Speichere das unit, um später überprüfen zu können, ob die Einheit noch existiert
+	frame.unit = unit
+	frame.guid = UnitGUID(unit)
 
-    -- Timer Update
-    frame.timeElapsed = 0
-    frame:SetScript("OnUpdate", function(self, elapsed)
-        self.timeElapsed = self.timeElapsed + elapsed
-        if self.timeElapsed < duration then
-            local timeLeft = duration - self.timeElapsed
-            local timeText
+	-- Timer Update
+	frame.timeElapsed = 0
+	frame:SetScript("OnUpdate", function(self, elapsed)
+		self.timeElapsed = self.timeElapsed + elapsed
+		if self.timeElapsed < duration then
+			local timeLeft = duration - self.timeElapsed
+			local timeText
 
-            if timeLeft > 60 then
-                local minutes = math.floor(timeLeft / 60)
-                local seconds = math.floor(timeLeft % 60)
-                timeText = string.format("%d:%02d", minutes, seconds) .. "m"
-            elseif timeLeft < 10 then
-                timeText = string.format("%.1f", timeLeft) .. "s" -- Anzeige mit einer Nachkommastelle
-            else
-                timeText = string.format("%.0f", timeLeft) .. "s"
-            end
+			if timeLeft > 60 then
+				local minutes = math.floor(timeLeft / 60)
+				local seconds = math.floor(timeLeft % 60)
+				timeText = string.format("%d:%02d", minutes, seconds) .. "m"
+			elseif timeLeft < 10 then
+				timeText = string.format("%.1f", timeLeft) .. "s" -- Anzeige mit einer Nachkommastelle
+			else
+				timeText = string.format("%.0f", timeLeft) .. "s"
+			end
 
-            self:SetValue(timeLeft)
-            self.time:SetText(timeText)
-        else
-            self:SetScript("OnUpdate", nil)
-            self:Hide()
-            addon.MythicPlus.functions.updateBars()
-        end
-    end)
+			self:SetValue(timeLeft)
+			self.time:SetText(timeText)
+		else
+			self:SetScript("OnUpdate", nil)
+			self:Hide()
+			addon.MythicPlus.functions.updateBars()
+		end
+	end)
 
-    return frame
+	return frame
 end
 
 -- Main
@@ -215,20 +213,19 @@ frameAnchor.text:SetText(L["Drag me to position Cooldownbars"])
 
 frameAnchor:SetScript("OnDragStart", frameAnchor.StartMoving)
 frameAnchor:SetScript("OnDragStop", function(self)
-    self:StopMovingOrSizing()
-    -- Position speichern
-    local point, _, _, xOfs, yOfs = self:GetPoint()
-    addon.db["CooldownTrackerPoint"] = point
-    addon.db["CooldownTrackerX"] = xOfs
-    addon.db["CooldownTrackerY"] = yOfs
+	self:StopMovingOrSizing()
+	-- Position speichern
+	local point, _, _, xOfs, yOfs = self:GetPoint()
+	addon.db["CooldownTrackerPoint"] = point
+	addon.db["CooldownTrackerX"] = xOfs
+	addon.db["CooldownTrackerY"] = yOfs
 end)
 -- Frame-Position wiederherstellen
 local function RestorePosition()
-    if addon.db["CooldownTrackerPoint"] and addon.db["CooldownTrackerX"] and addon.db["CooldownTrackerY"] then
-        frameAnchor:ClearAllPoints()
-        frameAnchor:SetPoint(addon.db["CooldownTrackerPoint"], UIParent, addon.db["CooldownTrackerPoint"],
-            addon.db["CooldownTrackerX"], addon.db["CooldownTrackerY"])
-    end
+	if addon.db["CooldownTrackerPoint"] and addon.db["CooldownTrackerX"] and addon.db["CooldownTrackerY"] then
+		frameAnchor:ClearAllPoints()
+		frameAnchor:SetPoint(addon.db["CooldownTrackerPoint"], UIParent, addon.db["CooldownTrackerPoint"], addon.db["CooldownTrackerX"], addon.db["CooldownTrackerY"])
+	end
 end
 
 -- Frame wiederherstellen und überprüfen, wenn das Addon geladen wird
@@ -242,48 +239,46 @@ frameAnchor:RegisterEvent("GROUP_ROSTER_UPDATE")
 frameAnchor:RegisterEvent("ENCOUNTER_END")
 
 local function createBar(arg1, arg3)
-
-    -- Finde die Position des neuen Balkens
-    local yOffset = 0
-    for _, bar in pairs(activeBars) do
-        if bar:IsVisible() then
-            yOffset = yOffset + bar:GetHeight() + 5 -- 5px Abstand
-        end
-    end
-    -- Erstelle und positioniere den neuen Balken
-    local bar = createCooldownBar(arg3, frameAnchor, select(1, UnitName(arg1)), arg1)
-    if nil ~= bar then
-        table.insert(activeBars, bar)
-        bar:Show()
-        addon.MythicPlus.functions.updateBars()
-    end
+	-- Finde die Position des neuen Balkens
+	local yOffset = 0
+	for _, bar in pairs(activeBars) do
+		if bar:IsVisible() then
+			yOffset = yOffset + bar:GetHeight() + 5 -- 5px Abstand
+		end
+	end
+	-- Erstelle und positioniere den neuen Balken
+	local bar = createCooldownBar(arg3, frameAnchor, select(1, UnitName(arg1)), arg1)
+	if nil ~= bar then
+		table.insert(activeBars, bar)
+		bar:Show()
+		addon.MythicPlus.functions.updateBars()
+	end
 end
 
 local function eventHandler(self, event, arg1, arg2, arg3, arg4)
-    if addon.db["potionTracker"] then
-        local isInRaid = UnitInRaid("player")
-        if event == "UNIT_SPELLCAST_SUCCEEDED" then
-            if nil == allowedSpells[arg3] then
-                return
-            elseif arg1 == "player" and isInRaid then
-                return
-            elseif (arg1 == "player" and not isInRaid) then
-                createBar(arg1, arg3)
-                return
-            elseif string.match(arg1, "^party") and UnitInParty(arg1) and not UnitInRaid(arg1) then
-                createBar(arg1, arg3)
-                return
-            elseif addon.db["potionTrackerDisableRaid"] == false and string.match(arg1, "^raid") and UnitInRaid(arg1) then
-                createBar(arg1, arg3)
-                return
-            end
-        elseif event == "CHALLENGE_MODE_RESET" or
-            (event == "ENCOUNTER_END" and addon.MythicPlus.variables.resetCooldownEncounterDifficult[arg3]) then
-            addon.MythicPlus.functions.resetCooldownBars()
-        elseif event == "GROUP_ROSTER_UPDATE" then
-            addon.MythicPlus.functions.updateBars()
-        end
-    end
+	if addon.db["potionTracker"] then
+		local isInRaid = UnitInRaid("player")
+		if event == "UNIT_SPELLCAST_SUCCEEDED" then
+			if nil == allowedSpells[arg3] then
+				return
+			elseif arg1 == "player" and isInRaid then
+				return
+			elseif arg1 == "player" and not isInRaid then
+				createBar(arg1, arg3)
+				return
+			elseif string.match(arg1, "^party") and UnitInParty(arg1) and not UnitInRaid(arg1) then
+				createBar(arg1, arg3)
+				return
+			elseif addon.db["potionTrackerDisableRaid"] == false and string.match(arg1, "^raid") and UnitInRaid(arg1) then
+				createBar(arg1, arg3)
+				return
+			end
+		elseif event == "CHALLENGE_MODE_RESET" or (event == "ENCOUNTER_END" and addon.MythicPlus.variables.resetCooldownEncounterDifficult[arg3]) then
+			addon.MythicPlus.functions.resetCooldownBars()
+		elseif event == "GROUP_ROSTER_UPDATE" then
+			addon.MythicPlus.functions.updateBars()
+		end
+	end
 end
 
 -- Setze den Event-Handler

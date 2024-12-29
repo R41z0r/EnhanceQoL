@@ -7,6 +7,7 @@ else
 end
 
 addon.Drinks = {}
+addon.Drinks.functions = {}
 addon.Drinks.filteredDrinks = {} -- Used for the filtered List later
 addon.LDrinkMacro = {} -- Locales for drink macro
 

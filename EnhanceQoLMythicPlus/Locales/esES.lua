@@ -2,9 +2,9 @@ if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "es
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LMythicPlus
 
@@ -36,8 +36,7 @@ L["Drag me to position Cooldownbars"] = "Arrástrame"
 L["Potion Tracker"] = "Rastreador de pociones"
 L["Toggle Anchor"] = "Alternar ancla"
 L["Save Anchor"] = "Guardar ancla"
-L["potionTrackerHeadline"] =
-    "Esto te permite rastrear el CD de las\npociones de combate de los miembros de tu grupo como una barra móvil"
+L["potionTrackerHeadline"] = "Esto te permite rastrear el CD de las\npociones de combate de los miembros de tu grupo como una barra móvil"
 L["potionTracker"] = "Habilitar rastreador de enfriamiento de pociones"
 L["potionTrackerUpwardsBar"] = "Crecer hacia arriba"
 L["potionTrackerClassColor"] = "Usar colores de clase para las barras"
@@ -52,7 +51,7 @@ L["potionTrackerOffhealing"] = "Rastrear uso de CD de sanación secundaria"
 -- Herramientas de Buscador de Mazmorras
 
 L["DungeonBrowser"] = "Explorador de mazmorras"
-L["groupfinderAppText"] = "Ocultar el texto del buscador de grupos \"Tu grupo se está formando actualmente\""
+L["groupfinderAppText"] = 'Ocultar el texto del buscador de grupos "Tu grupo se está formando actualmente"'
 L["groupfinderSkipRolecheck"] = "Omitir la verificación de rol\ny usar el rol actual"
 
 -- Misc Frame
@@ -60,9 +59,7 @@ L["Misc"] = "Misceláneo"
 L["autoMarkTankInDungeon"] = "Marcar automáticamente al " .. TANK .. " en mazmorras"
 L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
 L["Disabled"] = "Desactivado"
-L["autoMarkTankExplanation"] = "El " .. TANK ..
-                                   " será marcado cuando\nno tenga una marca y solo cambiará la marca\nsi eres " ..
-                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK
+L["autoMarkTankExplanation"] = "El " .. TANK .. " será marcado cuando no tenga una marca y solo cambiará la marca si eres " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK
 
 -- Teleports
 L["Teleports"] = "Teletransportes"
@@ -73,3 +70,4 @@ L["teleportsEnableCompendium"] = "Habilitar Compendio de Teletransporte"
 L["teleportsHeadline"] = "Añade un marco con teletransportes de mazmorras a tu ventana JcE"
 L["portalHideMissing"] = "Ocultar teletransportes faltantes"
 L["portalShowTooltip"] = "Mostrar información emergente en los botones de teletransporte"
+L["hideActualSeason"] = "Ocultar los teletransportes de la temporada actual en " .. L["DungeonCompendium"]

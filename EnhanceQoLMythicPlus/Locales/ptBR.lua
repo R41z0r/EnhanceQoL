@@ -3,9 +3,9 @@ if (GAME_LOCALE or GetLocale()) ~= "ptBR" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LMythicPlus
 
@@ -37,8 +37,7 @@ L["Drag me to position Cooldownbars"] = "Arraste-me"
 L["Potion Tracker"] = "Rastreador de Poções"
 L["Toggle Anchor"] = "Alternar Âncora"
 L["Save Anchor"] = "Salvar Âncora"
-L["potionTrackerHeadline"] =
-    "Isso permite rastrear o CD das\npoções de combate dos membros do seu grupo como uma barra móvel"
+L["potionTrackerHeadline"] = "Isso permite rastrear o CD das\npoções de combate dos membros do seu grupo como uma barra móvel"
 L["potionTracker"] = "Ativar rastreador de tempo de recarga de poções"
 L["potionTrackerUpwardsBar"] = "Crescer para cima"
 L["potionTrackerClassColor"] = "Usar cores de classe para as barras"
@@ -53,7 +52,7 @@ L["potionTrackerOffhealing"] = "Acompanhar o uso de CD de cura secundária"
 -- Ferramentas LFG
 
 L["DungeonBrowser"] = "Explorador de Masmorras"
-L["groupfinderAppText"] = "Ocultar o texto do buscador de grupos \"Seu grupo está se formando atualmente\""
+L["groupfinderAppText"] = 'Ocultar o texto do buscador de grupos "Seu grupo está se formando atualmente"'
 L["groupfinderSkipRolecheck"] = "Pular verificação de função\ne usar a função atual"
 
 -- Misc Frame
@@ -61,9 +60,7 @@ L["Misc"] = "Diversos"
 L["autoMarkTankInDungeon"] = "Marcar automaticamente o " .. TANK .. " em masmorras"
 L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
 L["Disabled"] = "Desativado"
-L["autoMarkTankExplanation"] = "O " .. TANK ..
-                                   " será marcado quando\nnão tiver uma marca e só mudará a marca\nse você for " ..
-                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
+L["autoMarkTankExplanation"] = "O " .. TANK .. " será marcado quando não tiver uma marca e só mudará a marca se você for " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
 -- Teleports
 L["Teleports"] = "Teleportes"
 L["teleportEnabled"] = "Habilitar painel de teleporte"
@@ -73,3 +70,4 @@ L["teleportsEnableCompendium"] = "Habilitar Compêndio de Teleporte"
 L["teleportsHeadline"] = "Adiciona um painel com teleportes de masmorras à sua janela JxA"
 L["portalHideMissing"] = "Ocultar teleportes ausentes"
 L["portalShowTooltip"] = "Mostrar dica nos botões de teleporte"
+L["hideActualSeason"] = "Ocultar os teletransportes da temporada atual em " .. L["DungeonCompendium"]

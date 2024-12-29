@@ -1,9 +1,9 @@
 local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LMythicPlus
 
@@ -35,8 +35,7 @@ L["Drag me to position Cooldownbars"] = "Drag me to position Cooldownbars"
 L["Potion Tracker"] = "Potion tracker"
 L["Toggle Anchor"] = "Toggle anchor"
 L["Save Anchor"] = "Save anchor"
-L["potionTrackerHeadline"] =
-    "This enables you to track the CD of the\ncombat potions of your party members as a moveable bar"
+L["potionTrackerHeadline"] = "This enables you to track the CD of the\ncombat potions of your party members as a moveable bar"
 L["potionTracker"] = "Enable potion cooldown tracker"
 L["potionTrackerUpwardsBar"] = "Grow upwards"
 L["potionTrackerClassColor"] = "Use class colors for bars"
@@ -51,7 +50,7 @@ L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
 -- LFG Tools
 
 L["DungeonBrowser"] = "Dungeonbrowser"
-L["groupfinderAppText"] = "Hide the group finder text \"Your group is currently forming\""
+L["groupfinderAppText"] = 'Hide the group finder text "Your group is currently forming"'
 L["groupfinderSkipRolecheck"] = "Skip Role Check and use current role"
 
 -- Misc Frame
@@ -59,9 +58,7 @@ L["Misc"] = "Misc."
 L["autoMarkTankInDungeon"] = "Automatically mark the " .. TANK .. " in dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank marker"
 L["Disabled"] = "Disabled"
-L["autoMarkTankExplanation"] = "It will mark the " .. TANK ..
-                                   " when he has no mark\nand only changes the mark, when you are either\n" ..
-                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " or " .. TANK
+L["autoMarkTankExplanation"] = "It will mark the " .. TANK .. " when he has no mark and only changes the mark, when you are either " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " or " .. TANK
 
 -- Teleports
 L["Teleports"] = "Teleports"
@@ -72,3 +69,4 @@ L["teleportsEnableCompendium"] = "Enable Teleport Compendium"
 L["teleportsHeadline"] = "This adds a frame with Dungeon Teleports to your PVEFrame"
 L["portalHideMissing"] = "Hide missing Teleports"
 L["portalShowTooltip"] = "Show tooltip on Teleport buttons"
+L["hideActualSeason"] = "Hide Teleports from actual Season in " .. L["DungeonCompendium"]

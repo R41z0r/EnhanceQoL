@@ -200,6 +200,8 @@ if TooltipDataProcessor then
 	end)
 end
 
+addon.variables.statusTable.groups["tooltip"] = true
+
 addon.functions.addToTree(nil, {
 	value = "tooltip",
 	text = L["Tooltip"],

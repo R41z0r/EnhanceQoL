@@ -2,9 +2,9 @@ if (GAME_LOCALE or GetLocale()) ~= "deDE" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LMythicPlus
 
@@ -36,8 +36,7 @@ L["Drag me to position Cooldownbars"] = "Zieh mich"
 L["Potion Tracker"] = "Trank-Tracker"
 L["Toggle Anchor"] = "Anker umschalten"
 L["Save Anchor"] = "Anker speichern"
-L["potionTrackerHeadline"] =
-    "Dies ermöglicht es dir, die Abklingzeit der\nKampftränke deiner Gruppenmitglieder als verschiebbare Leiste zu verfolgen."
+L["potionTrackerHeadline"] = "Dies ermöglicht es dir, die Abklingzeit der\nKampftränke deiner Gruppenmitglieder als verschiebbare Leiste zu verfolgen."
 L["potionTracker"] = "Trank-Abklingzeit-Tracker aktivieren"
 L["potionTrackerUpwardsBar"] = "Nach oben wachsen"
 L["potionTrackerClassColor"] = "Klassenfarben für Leisten verwenden"
@@ -52,7 +51,7 @@ L["potionTrackerOffhealing"] = "Verfolge Offheilung CD Nutzung"
 -- LFG Tools
 
 L["DungeonBrowser"] = "Dungeonbrowser"
-L["groupfinderAppText"] = "Verstecke den Gruppenfinder-Text \"Deine Gruppe wird derzeit gebildet\""
+L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
 L["groupfinderSkipRolecheck"] = "Überspringe die Rollenauswahl\nund nutze die aktuelle Rolle"
 
 -- Misc Frame
@@ -60,9 +59,7 @@ L["Misc"] = "Verschiedenes"
 L["autoMarkTankInDungeon"] = "Markiere automatisch den " .. TANK .. " in Dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank-Marker"
 L["Disabled"] = "Deaktiviert"
-L["autoMarkTankExplanation"] = "Der " .. TANK ..
-                                   " wird markiert, wenn er\nkeine Markierung hat und die Markierung\nwird nur geändert, wenn du entweder\n" ..
-                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " oder " .. TANK .. " bist"
+L["autoMarkTankExplanation"] = "Der " .. TANK .. " wird markiert, wenn er keine Markierung hat und die Markierung\nwird nur geändert, wenn du entweder " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " oder " .. TANK .. " bist"
 -- Teleports
 L["Teleports"] = "Teleporte"
 L["teleportEnabled"] = "Teleport-Fenster aktivieren"
@@ -72,3 +69,4 @@ L["teleportsEnableCompendium"] = "Teleport-Kompendium aktivieren"
 L["teleportsHeadline"] = "Dies fügt ein Fenster mit Dungeon-Teleporten zu deinem PVE-Fenster hinzu"
 L["portalHideMissing"] = "Fehlende Teleporte ausblenden"
 L["portalShowTooltip"] = "Tooltip auf Teleport-Buttons anzeigen"
+L["hideActualSeason"] = "Verstecke Teleports der aktuellen Saison im " .. L["DungeonCompendium"]

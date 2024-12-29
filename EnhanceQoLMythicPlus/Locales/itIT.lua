@@ -3,9 +3,9 @@ if (GAME_LOCALE or GetLocale()) ~= "itIT" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LMythicPlus
 
@@ -37,8 +37,7 @@ L["Drag me to position Cooldownbars"] = "Trascinami"
 L["Potion Tracker"] = "Tracciatore di pozioni"
 L["Toggle Anchor"] = "Attiva/disattiva ancora"
 L["Save Anchor"] = "Salva ancora"
-L["potionTrackerHeadline"] =
-    "Questo ti permette di tracciare il CD delle\npozioni di combattimento dei membri del tuo gruppo come barra mobile"
+L["potionTrackerHeadline"] = "Questo ti permette di tracciare il CD delle\npozioni di combattimento dei membri del tuo gruppo come barra mobile"
 L["potionTracker"] = "Abilita tracciatore di ricarica delle pozioni"
 L["potionTrackerUpwardsBar"] = "Crescita verso l'alto"
 L["potionTrackerClassColor"] = "Usa i colori della classe per le barre"
@@ -53,7 +52,7 @@ L["potionTrackerOffhealing"] = "Traccia l'uso di CD di cura secondaria"
 -- Strumenti LFG
 
 L["DungeonBrowser"] = "Esploratore di dungeon"
-L["groupfinderAppText"] = "Nascondi il testo del cercatore di gruppi \"Il tuo gruppo si sta formando attualmente\""
+L["groupfinderAppText"] = 'Nascondi il testo del cercatore di gruppi "Il tuo gruppo si sta formando attualmente"'
 L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo\ne utilizza il ruolo attuale"
 
 -- Misc Frame
@@ -61,9 +60,7 @@ L["Misc"] = "Varie"
 L["autoMarkTankInDungeon"] = "Marca automaticamente il " .. TANK .. " nei dungeon"
 L["autoMarkTankInDungeonMarker"] = "Segnalatore del tank"
 L["Disabled"] = "Disabilitato"
-L["autoMarkTankExplanation"] = "Il " .. TANK ..
-                                   " verrà marcato quando\nnon ha un segno e cambierà il segno solo\nse sei " ..
-                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK
+L["autoMarkTankExplanation"] = "Il " .. TANK .. " verrà marcato quando non ha un segno e cambierà il segno solo se sei " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK
 
 -- Teleports
 L["Teleports"] = "Teletrasporti"
@@ -74,3 +71,4 @@ L["teleportsEnableCompendium"] = "Abilita il Compendio dei Teletrasporti"
 L["teleportsHeadline"] = "Aggiunge un pannello con i teletrasporti ai dungeon nella finestra PvE"
 L["portalHideMissing"] = "Nascondi i teletrasporti mancanti"
 L["portalShowTooltip"] = "Mostra il tooltip sui pulsanti di teletrasporto"
+L["hideActualSeason"] = "Nascondi i teletrasporti della stagione attuale in " .. L["DungeonCompendium"]

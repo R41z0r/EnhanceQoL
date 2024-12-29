@@ -359,7 +359,14 @@ function addon.functions.createSliderAce(text, value, min, max, step, callBack)
 	return slider
 end
 
+function addon.functions.createSpacerAce()
+	local spacer = addon.functions.createLabelAce(" ")
+	spacer:SetFullWidth(true)
+	return spacer
+end
+
 function addon.functions.createLabelAce(text, color, font, fontSize)
+	if nil == fontSize then fontSize = 12 end
 	local label = AceGUI:Create("Label")
 
 	label:SetText(text)
@@ -507,15 +514,13 @@ function addon.functions.addToTree(parentValue, newElement)
 		-- Füge einen neuen Parent-Knoten hinzu
 		table.insert(addon.treeGroupData, newElement)
 		addon.treeGroup:SetTree(addon.treeGroupData) -- Aktualisiere die TreeGroup mit der neuen Struktur
-		print("Added new parent node:", newElement.value)
+		addon.treeGroup:RefreshTree()
 		return
 	end
 
 	-- Versuche, das Element als Child eines bestehenden Parent-Knotens hinzuzufügen
 	if addToTree(addon.treeGroupData) then
 		addon.treeGroup:SetTree(addon.treeGroupData) -- Aktualisiere die TreeGroup mit der neuen Struktur
-		print("Added child to parent node:", parentValue)
-	else
-		print("Parent node not found:", parentValue)
 	end
+	addon.treeGroup:RefreshTree()
 end

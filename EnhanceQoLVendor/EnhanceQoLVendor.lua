@@ -8,7 +8,6 @@ else
 end
 
 local L = addon.LVendor
-local AceGUI = addon.AceGUI
 
 local frameLoad = CreateFrame("Frame")
 
@@ -307,6 +306,7 @@ local function addInExcludeFrame(container, type)
 	groupEntries:AddChild(btnRemoveItem)
 end
 
+addon.variables.statusTable.groups["vendor"] = true
 addon.functions.addToTree(nil, {
 	value = "vendor",
 	text = L["Vendor"],

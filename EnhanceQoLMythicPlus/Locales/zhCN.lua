@@ -3,9 +3,9 @@ if (GAME_LOCALE or GetLocale()) ~= "zhCN" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LMythicPlus
 
@@ -37,8 +37,7 @@ L["Drag me to position Cooldownbars"] = "拖动我"
 L["Potion Tracker"] = "药水跟踪器"
 L["Toggle Anchor"] = "切换锚点"
 L["Save Anchor"] = "保存锚点"
-L["potionTrackerHeadline"] =
-    "这使您能够将小队成员的战斗药水冷却时间\n以可移动的条形显示出来"
+L["potionTrackerHeadline"] = "这使您能够将小队成员的战斗药水冷却时间\n以可移动的条形显示出来"
 L["potionTracker"] = "启用药水冷却时间跟踪器"
 L["potionTrackerUpwardsBar"] = "向上增长"
 L["potionTrackerClassColor"] = "使用职业颜色显示条形"
@@ -53,7 +52,7 @@ L["potionTrackerOffhealing"] = "追踪次要治疗CD的使用"
 -- LFG 工具
 
 L["DungeonBrowser"] = "地城瀏覽器"
-L["groupfinderAppText"] = "隱藏組隊搜尋器的文字 \"您的隊伍目前正在組成中\""
+L["groupfinderAppText"] = '隱藏組隊搜尋器的文字 "您的隊伍目前正在組成中"'
 L["groupfinderSkipRolecheck"] = "跳過角色檢查並使用當前角色"
 
 -- Misc Frame
@@ -61,8 +60,7 @@ L["Misc"] = "雜項"
 L["autoMarkTankInDungeon"] = "在地下城自動標記" .. TANK
 L["autoMarkTankInDungeonMarker"] = "坦克標記"
 L["Disabled"] = "已停用"
-L["autoMarkTankExplanation"] = "如果坦克没有标记，它将自动\n标记，只有当你是\n" ..
-                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 或 " .. TANK .. " 时才会更改标记"
+L["autoMarkTankExplanation"] = "如果坦克没有标记，它将自动 标记，只有当你是 " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 或 " .. TANK .. " 时才会更改标记"
 
 -- Teleports
 L["Teleports"] = "传送"
@@ -73,3 +71,4 @@ L["teleportsEnableCompendium"] = "启用地下城传送手册"
 L["teleportsHeadline"] = "在PvE窗口中添加一个包含地下城传送的框架"
 L["portalHideMissing"] = "隐藏缺失的传送"
 L["portalShowTooltip"] = "在传送按钮上显示提示"
+L["hideActualSeason"] = "隐藏当前赛季的传送点于 " .. L["DungeonCompendium"]

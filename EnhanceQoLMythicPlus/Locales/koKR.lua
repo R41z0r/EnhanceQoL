@@ -3,9 +3,9 @@ if (GAME_LOCALE or GetLocale()) ~= "koKR" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LMythicPlus
 
@@ -37,8 +37,7 @@ L["Drag me to position Cooldownbars"] = "쿨다운바 위치 조정"
 L["Potion Tracker"] = "물약 추적기"
 L["Toggle Anchor"] = "앵커 토글"
 L["Save Anchor"] = "앵커 저장"
-L["potionTrackerHeadline"] =
-    "이 기능은 파티원의 전투 물약의 쿨다운을 추적하는\n이동 가능한 바를 제공합니다."
+L["potionTrackerHeadline"] = "이 기능은 파티원의 전투 물약의 쿨다운을 추적하는\n이동 가능한 바를 제공합니다."
 L["potionTracker"] = "물약 쿨다운 추적기 활성화"
 L["potionTrackerUpwardsBar"] = "위로 성장"
 L["potionTrackerClassColor"] = "바에 직업 색상 사용"
@@ -53,7 +52,7 @@ L["potionTrackerOffhealing"] = "보조 치유 CD 사용 추적"
 -- LFG 도구
 
 L["DungeonBrowser"] = "던전 브라우저"
-L["groupfinderAppText"] = "그룹 찾기 텍스트 \"당신의 그룹이 현재 형성 중입니다\" 숨기기"
+L["groupfinderAppText"] = '그룹 찾기 텍스트 "당신의 그룹이 현재 형성 중입니다" 숨기기'
 L["groupfinderSkipRolecheck"] = "역할 확인을 건너뛰고 현재 역할 사용"
 
 -- Misc Frame
@@ -61,9 +60,7 @@ L["Misc"] = "기타"
 L["autoMarkTankInDungeon"] = "던전에서 " .. TANK .. " 자동 표시"
 L["autoMarkTankInDungeonMarker"] = "탱커 징표"
 L["Disabled"] = "비활성화됨"
-L["autoMarkTankExplanation"] =
-    "탱커에게 표식이 없을 때\n자동으로 표식을 지정하고\n변경은 당신이\n" ..
-        COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 또는 " .. TANK .. "일 때만 가능합니다."
+L["autoMarkTankExplanation"] = "탱커에게 표식이 없을 때 자동으로 표식을 지정하고 변경은 당신이 " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 또는 " .. TANK .. "일 때만 가능합니다."
 
 -- Teleports
 L["Teleports"] = "순간이동"
@@ -74,3 +71,4 @@ L["teleportsEnableCompendium"] = "던전 순간이동 모음집 활성화"
 L["teleportsHeadline"] = "던전 순간이동을 포함한 프레임을 PVE 창에 추가합니다"
 L["portalHideMissing"] = "누락된 순간이동 숨기기"
 L["portalShowTooltip"] = "순간이동 버튼에 툴팁 표시"
+L["hideActualSeason"] = "현재 시즌의 순간이동 숨기기: " .. L["DungeonCompendium"]

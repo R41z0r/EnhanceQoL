@@ -2,9 +2,9 @@ if (GAME_LOCALE or GetLocale()) ~= "frFR" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LMythicPlus
 
@@ -36,8 +36,7 @@ L["Drag me to position Cooldownbars"] = "Faites glisser"
 L["Potion Tracker"] = "Suivi des potions"
 L["Toggle Anchor"] = "Basculer l'ancre"
 L["Save Anchor"] = "Enregistrer l'ancre"
-L["potionTrackerHeadline"] =
-    "Cela vous permet de suivre le CD des\npotions de combat des membres de votre groupe sous forme de barre déplaçable"
+L["potionTrackerHeadline"] = "Cela vous permet de suivre le CD des\npotions de combat des membres de votre groupe sous forme de barre déplaçable"
 L["potionTracker"] = "Activer le suivi des CD des potions"
 L["potionTrackerUpwardsBar"] = "Se développer vers le haut"
 L["potionTrackerClassColor"] = "Utiliser les couleurs de classe pour les barres"
@@ -52,7 +51,7 @@ L["potionTrackerOffhealing"] = "Suivi de l'utilisation des CD de soins secondair
 -- Outils de recherche de groupe
 
 L["DungeonBrowser"] = "Explorateur de donjons"
-L["groupfinderAppText"] = "Masquer le texte du recherche de groupe \"Votre groupe est actuellement en formation\""
+L["groupfinderAppText"] = 'Masquer le texte du recherche de groupe "Votre groupe est actuellement en formation"'
 L["groupfinderSkipRolecheck"] = "Ignorer la vérification de rôle\net utiliser le rôle actuel"
 
 -- Misc Frame
@@ -60,9 +59,7 @@ L["Misc"] = "Divers"
 L["autoMarkTankInDungeon"] = "Marquer automatiquement le " .. TANK .. " dans les donjons"
 L["autoMarkTankInDungeonMarker"] = "Marqueur de tank"
 L["Disabled"] = "Désactivé"
-L["autoMarkTankExplanation"] = "Le " .. TANK ..
-                                   " sera marqué s'il n'a\npas de marque et ne changera la marque\nque si vous êtes soit\n" ..
-                                   COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
+L["autoMarkTankExplanation"] = "Le " .. TANK .. " sera marqué s'il n'a pas de marque et ne changera la marque\nque si vous êtes soit " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
 
 -- Teleports
 L["Teleports"] = "Téléportations"
@@ -73,3 +70,4 @@ L["teleportsEnableCompendium"] = "Activer le Compendium de Téléportation"
 L["teleportsHeadline"] = "Ajoute un cadre avec les téléportations de donjon à votre fenêtre JcE"
 L["portalHideMissing"] = "Masquer les téléportations manquantes"
 L["portalShowTooltip"] = "Afficher l'infobulle sur les boutons de téléportation"
+L["hideActualSeason"] = "Masquer les téléportations de la saison actuelle dans " .. L["DungeonCompendium"]

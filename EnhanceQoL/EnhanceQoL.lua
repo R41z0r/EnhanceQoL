@@ -1070,186 +1070,109 @@ local function addQuestFrame(container, d)
 	local tExclude = {}
 	local list, order = addon.functions.prepareListForDropdown(addon.db["ignoredQuestNPC"])
 
-	if d then
-		local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-		container:AddChild(wrapper)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
 
-		local groupCore = addon.functions.createContainer("InlineGroup", "List")
-		wrapper:AddChild(groupCore)
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
 
-		local groupData = {
-			{
-				parent = "",
-				var = "autoChooseQuest",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = "",
-				var = "ignoreDailyQuests",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = "",
-				var = "ignoreTrivialQuests",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-		}
-		table.sort(groupData, function(a, b)
-			local textA = a.var
-			local textB = b.var
-			if a.text then
-				textA = a.text
-			else
-				textA = L[a.var]
-			end
-			if b.text then
-				textB = b.text
-			else
-				textB = L[b.var]
-			end
-			return textA < textB
-		end)
-		for _, checkboxData in ipairs(groupData) do
-			local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], function(self, _, value) addon.db[checkboxData.var] = value end)
-			groupCore:AddChild(cbautoChooseQuest)
+	local groupData = {
+		{
+			parent = "",
+			var = "autoChooseQuest",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db[self.var] = value end,
+		},
+		{
+			parent = "",
+			var = "ignoreDailyQuests",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db[self.var] = value end,
+		},
+		{
+			parent = "",
+			var = "ignoreTrivialQuests",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db[self.var] = value end,
+		},
+	}
+	table.sort(groupData, function(a, b)
+		local textA = a.var
+		local textB = b.var
+		if a.text then
+			textA = a.text
+		else
+			textA = L[a.var]
+		end
+		if b.text then
+			textB = b.text
+		else
+			textB = L[b.var]
+		end
+		return textA < textB
+	end)
+	for _, checkboxData in ipairs(groupData) do
+		local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], function(self, _, value) addon.db[checkboxData.var] = value end)
+		groupCore:AddChild(cbautoChooseQuest)
+	end
+
+	local groupNPC = addon.functions.createContainer("InlineGroup", "List")
+	groupNPC:SetTitle(L["questAddNPCToExclude"])
+	wrapper:AddChild(groupNPC)
+
+	local dropIncludeList = addon.functions.createDropdownAce(L["Excluded NPCs"], list, order, nil)
+	local btnAddNPC = addon.functions.createButtonAce(ADD, 100, function(self, _, value)
+		local guid = nil
+		local name = nil
+		local type = nil
+		local unitType = nil
+
+		if nil ~= UnitGUID("npc") then
+			type = "npc"
+		elseif nil ~= UnitGUID("target") then
+			type = "target"
+		else
+			return
 		end
 
-		local groupNPC = addon.functions.createContainer("InlineGroup", "List")
-		groupNPC:SetTitle(L["questAddNPCToExclude"])
-		wrapper:AddChild(groupNPC)
+		guid = UnitGUID(type)
+		name = UnitName(type)
+		unitType = strsplit("-", guid)
 
-		local dropIncludeList = addon.functions.createDropdownAce(L["Excluded NPCs"], list, order, nil)
-		local btnAddNPC = addon.functions.createButtonAce(ADD, 100, function(self, _, value)
-			local guid = nil
-			local name = nil
-			local type = nil
-			local unitType = nil
+		if UnitCanAttack(type, "player") or (UnitPlayerControlled(type) and not unitType == "Vehicle") then return end -- ignore attackable and player types
 
-			if nil ~= UnitGUID("npc") then
-				type = "npc"
-			elseif nil ~= UnitGUID("target") then
-				type = "target"
-			else
-				return
+		local mapID = C_Map.GetBestMapForUnit("player")
+		if mapID and not unitType == "Vehicle" then
+			local mapInfo = C_Map.GetMapInfo(mapID)
+			if mapInfo and mapInfo.name then name = name .. " (" .. mapInfo.name .. ")" end
+		end
+
+		guid = addon.functions.getIDFromGUID(guid)
+		if addon.db["ignoredQuestNPC"][guid] then return end -- no duplicates
+
+		print(ADD .. ":", guid, name)
+
+		addon.db["ignoredQuestNPC"][guid] = name
+		tExclude[guid] = name
+		local list, order = addon.functions.prepareListForDropdown(addon.db["ignoredQuestNPC"])
+
+		dropIncludeList:SetList(list, order)
+	end)
+	local btnRemoveNPC = addon.functions.createButtonAce(REMOVE, 100, function(self, _, value)
+		local selectedValue = dropIncludeList:GetValue() -- Hole den aktuellen Wert des Dropdowns
+		if selectedValue then
+			if addon.db["ignoredQuestNPC"][selectedValue] then
+				addon.db["ignoredQuestNPC"][selectedValue] = nil -- Entferne aus der Datenbank
+				-- Aktualisiere die Dropdown-Liste
+				local list, order = addon.functions.prepareListForDropdown(addon.db["ignoredQuestNPC"])
+				dropIncludeList:SetList(list, order)
+				dropIncludeList:SetValue(nil) -- Setze die Auswahl zurück
 			end
-
-			guid = UnitGUID(type)
-			name = UnitName(type)
-			unitType = strsplit("-", guid)
-
-			if UnitCanAttack(type, "player") or (UnitPlayerControlled(type) and not unitType == "Vehicle") then return end -- ignore attackable and player types
-
-			local mapID = C_Map.GetBestMapForUnit("player")
-			if mapID and not unitType == "Vehicle" then
-				local mapInfo = C_Map.GetMapInfo(mapID)
-				if mapInfo and mapInfo.name then name = name .. " (" .. mapInfo.name .. ")" end
-			end
-
-			guid = addon.functions.getIDFromGUID(guid)
-			if addon.db["ignoredQuestNPC"][guid] then return end -- no duplicates
-
-			print(ADD .. ":", guid, name)
-
-			addon.db["ignoredQuestNPC"][guid] = name
-			tExclude[guid] = name
-			local list, order = addon.functions.prepareListForDropdown(addon.db["ignoredQuestNPC"])
-
-			dropIncludeList:SetList(list, order)
-		end)
-		local btnRemoveNPC = addon.functions.createButtonAce(REMOVE, 100, function(self, _, value)
-			local selectedValue = dropIncludeList:GetValue() -- Hole den aktuellen Wert des Dropdowns
-			if selectedValue then
-				if addon.db["ignoredQuestNPC"][selectedValue] then
-					addon.db["ignoredQuestNPC"][selectedValue] = nil -- Entferne aus der Datenbank
-					-- Aktualisiere die Dropdown-Liste
-					local list, order = addon.functions.prepareListForDropdown(addon.db["ignoredQuestNPC"])
-					dropIncludeList:SetList(list, order)
-					dropIncludeList:SetValue(nil) -- Setze die Auswahl zurück
-				end
-			end
-		end)
-		groupNPC:AddChild(btnAddNPC)
-		groupNPC:AddChild(dropIncludeList)
-		groupNPC:AddChild(btnRemoveNPC)
-	else
-		local fQuest = addon.functions.createTabFrameMain(L["Quest"], container)
-		fQuest.tabs = {}
-		addon.functions.createTabFrameDynamic(fQuest, "Test")
-
-		local cbAutoChooseQuest = addon.functions.createCheckbox("autoChooseQuest", fQuest, L["autoChooseQuest"], 10, -10)
-		local cbIgnoreDailyQuests = addon.functions.createCheckbox("ignoreDailyQuests", fQuest, L["ignoreDailyQuests"], 10, (addon.functions.getHeightOffset(cbAutoChooseQuest)))
-		local cbIgnoreTrivialQuests = addon.functions.createCheckbox("ignoreTrivialQuests", fQuest, L["ignoreTrivialQuests"], 10, (addon.functions.getHeightOffset(cbIgnoreDailyQuests)))
-
-		local labelHeadline = addon.functions.createLabel(fQuest, L["questAddNPCToExclude"], 10, addon.functions.getHeightOffset(cbIgnoreTrivialQuests) - 10, "TOP", "TOP")
-
-		local dropIncludeList, btnRemoveInclude
-
-		local btnAddInclude = addon.functions.createButton(fQuest, 10, addon.functions.getHeightOffset(labelHeadline) - 7, 50, 30, ADD, function()
-			local guid = nil
-			local name = nil
-			local type = nil
-			local unitType = nil
-
-			if nil ~= UnitGUID("npc") then
-				type = "npc"
-			elseif nil ~= UnitGUID("target") then
-				type = "target"
-			else
-				return
-			end
-
-			guid = UnitGUID(type)
-			name = UnitName(type)
-			unitType = strsplit("-", guid)
-
-			if UnitCanAttack(type, "player") or (UnitPlayerControlled(type) and not unitType == "Vehicle") then return end -- ignore attackable and player types
-
-			local mapID = C_Map.GetBestMapForUnit("player")
-			if mapID and not unitType == "Vehicle" then
-				local mapInfo = C_Map.GetMapInfo(mapID)
-				if mapInfo and mapInfo.name then name = name .. " (" .. mapInfo.name .. ")" end
-			end
-
-			guid = addon.functions.getIDFromGUID(guid)
-			if addon.db["ignoredQuestNPC"][guid] then return end -- no duplicates
-
-			print(ADD .. ":", guid, name)
-
-			addon.db["ignoredQuestNPC"][guid] = name
-			addon.functions.addDropdownItem(dropIncludeList, tExclude, { text = name, value = guid })
-		end)
-		btnAddInclude:SetWidth(btnAddInclude:GetFontString():GetStringWidth() + 20)
-
-		dropIncludeList = addon.functions.createDropdownNoInitial("ignoredQuestNPC", fQuest, list, 150, L["ignoredQuestNPC"], 10, addon.functions.getHeightOffset(btnAddInclude) - 10)
-
-		btnRemoveInclude = addon.functions.createButton(fQuest, dropIncludeList:GetWidth(), addon.functions.getHeightOffset(btnAddInclude) - 20, 50, 30, REMOVE, function()
-			local selectedID = UIDropDownMenu_GetSelectedID(dropIncludeList)
-			if selectedID then
-				local selectedItem = tExclude[selectedID]
-				if selectedItem then
-					addon.db["ignoredQuestNPC"][selectedItem.value] = nil
-					table.remove(tExclude, selectedID)
-					local function Initialize(self, level)
-						local info = UIDropDownMenu_CreateInfo()
-						for i, item in ipairs(tExclude) do
-							info.text = item.text
-							info.value = item.value
-							info.checked = nil
-							info.func = function(self) UIDropDownMenu_SetSelectedID(dropIncludeList, i) end
-							UIDropDownMenu_AddButton(info, level)
-						end
-					end
-
-					UIDropDownMenu_Initialize(dropIncludeList, Initialize)
-					UIDropDownMenu_SetText(dropIncludeList, "")
-				end
-			end
-		end)
-		btnRemoveInclude:SetWidth(btnRemoveInclude:GetFontString():GetStringWidth() + 20)
-	end
+		end
+	end)
+	groupNPC:AddChild(btnAddNPC)
+	groupNPC:AddChild(dropIncludeList)
+	groupNPC:AddChild(btnRemoveNPC)
 end
 
 local function initDungeon()
@@ -1445,7 +1368,6 @@ local function CreateUI()
 	local frame = AceGUI:Create("Frame")
 	addon.aceFrame = frame.frame
 	frame:SetTitle("EnhanceQoL")
-	frame:SetStatusText("Configuration")
 	frame:SetWidth(800)
 	frame:SetHeight(600)
 	frame:SetLayout("Fill")
@@ -1515,12 +1437,13 @@ local function CreateUI()
 			addon.Tooltip.functions.treeCallback(container, group)
 		elseif string.match(group, "^vendor") then
 			addon.Vendor.functions.treeCallback(container, group)
-		else
-			local label = AceGUI:Create("Label")
-			label:SetText("No content defined for this section.")
-			container:AddChild(label)
+		elseif string.match(group, "^drink") then
+			addon.Drinks.functions.treeCallback(container, group)
+		elseif string.match(group, "^mythicplus") then
+			addon.MythicPlus.functions.treeCallback(container, group)
 		end
 	end)
+	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
 	frame:AddChild(addon.treeGroup)
 
 	-- Select the first group by default
