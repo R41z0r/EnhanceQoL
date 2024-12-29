@@ -572,68 +572,35 @@ local function setCharFrame()
 end
 
 local function addDungeonFrame(container, d)
-	if d then
-		local data = {
-			{
-				parent = DELVES_LABEL,
-				var = "autoChooseDelvePower",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = DUNGEONS,
-				var = "persistSignUpNote",
-				text = L["Persist LFG signup note"],
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = DUNGEONS,
-				var = "skipSignUpDialog",
-				text = L["Quick signup"],
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = DUNGEONS,
-				var = "lfgSortByRio",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-		}
-		addon.functions.createWrapperData(data, container, L)
-	else
-		local fDungeon = addon.functions.createTabFrameMain(L["Dungeon"], container)
-
-		local cbPersistSignUpNote = addon.functions.createCheckbox("persistSignUpNote", fDungeon, L["Persist LFG signup note"], 10, -10)
-
-		local cbSkipSignup = addon.functions.createCheckbox("skipSignUpDialog", fDungeon, L["Quick signup"], 10, (addon.functions.getHeightOffset(cbPersistSignUpNote)))
-
-		local cbAutoChooseDelvePower = addon.functions.createCheckbox("autoChooseDelvePower", fDungeon, L["autoChooseDelvePower"], 10, (addon.functions.getHeightOffset(cbSkipSignup)))
-
-		local cbSortApplicantsByRio = addon.functions.createCheckbox("lfgSortByRio", fDungeon, L["lfgSortByRio"], 10, (addon.functions.getHeightOffset(cbAutoChooseDelvePower)))
-	end
-end
-
-local function addHideOption(type, parent, anchor, className)
-	if type == "TOTEM" then
-		local cbHideTotemFrame = addon.functions.createCheckbox(className .. "_HideTotem", parent, L["shaman_HideTotem"], 10, (addon.functions.getHeightOffset(anchor)) - 10)
-		cbHideTotemFrame:SetScript("OnClick", function(self)
-			addon.db[className .. "_HideTotem"] = self:GetChecked()
-			if self:GetChecked() then
-				TotemFrame:Hide()
-			else
-				TotemFrame:Show()
-			end
-		end)
-		TotemFrame:HookScript("OnShow", function(self)
-			if addon.db[className .. "_HideTotem"] then
-				TotemFrame:Hide()
-			else
-				TotemFrame:Show()
-			end
-		end)
-	end
+	local data = {
+		{
+			parent = DELVES_LABEL,
+			var = "autoChooseDelvePower",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["autoChooseDelvePower"] = value end,
+		},
+		{
+			parent = DUNGEONS,
+			var = "persistSignUpNote",
+			text = L["Persist LFG signup note"],
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["persistSignUpNote"] = value end,
+		},
+		{
+			parent = DUNGEONS,
+			var = "skipSignUpDialog",
+			text = L["Quick signup"],
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["skipSignUpDialog"] = value end,
+		},
+		{
+			parent = DUNGEONS,
+			var = "lfgSortByRio",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["lfgSortByRio"] = value end,
+		},
+	}
+	addon.functions.createWrapperData(data, container, L)
 end
 
 local function addTotemHideToggle(dbValue, data)
@@ -681,42 +648,7 @@ local function addCVarFrame(container, d)
 		table.insert(sortedOptions, { key = key, description = data.description, trueValue = data.trueValue, falseValue = data.falseValue })
 	end
 
-	if d then
-		addon.functions.createWrapperData(frameData, container, L)
-	else
-		table.sort(sortedOptions, function(a, b) return a.description < b.description end)
-
-		local fCVar = addon.functions.createTabFrameMain(L["CVar"], container)
-		local lastElement = nil
-
-		for _, option in ipairs(sortedOptions) do
-			local key = option.key
-			local description = option.description
-			local trueValue = option.trueValue
-			local falseValue = option.falseValue
-
-			if lastElement ~= nil then
-				lastElement = addon.functions.createCheckboxNoDB(key, fCVar, description, 10, (addon.functions.getHeightOffset(lastElement)))
-			else
-				lastElement = addon.functions.createCheckboxNoDB(key, fCVar, description, 10, -10)
-			end
-
-			lastElement:SetScript("OnClick", function(self)
-				addon.variables.requireReload = true
-				if self:GetChecked() then
-					SetCVar(key, trueValue)
-				else
-					SetCVar(key, falseValue)
-				end
-			end)
-
-			if GetCVar(key) == trueValue then
-				lastElement:SetChecked(true)
-			else
-				lastElement:SetChecked(false)
-			end
-		end
-	end
+	addon.functions.createWrapperData(frameData, container, L)
 end
 
 local function addCharacterFrame(container)
@@ -726,7 +658,7 @@ local function addCharacterFrame(container)
 			var = "showIlvlOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db[self.var] = value
+				addon.db["showIlvlOnCharframe"] = value
 				setCharFrame()
 			end,
 		},
@@ -735,7 +667,7 @@ local function addCharacterFrame(container)
 			var = "showGemsOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db[self.var] = value
+				addon.db["showGemsOnCharframe"] = value
 				setCharFrame()
 			end,
 		},
@@ -744,7 +676,7 @@ local function addCharacterFrame(container)
 			var = "showEnchantOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db[self.var] = value
+				addon.db["showEnchantOnCharframe"] = value
 				setCharFrame()
 			end,
 		},
@@ -753,7 +685,7 @@ local function addCharacterFrame(container)
 			var = "showDurabilityOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db[self.var] = value
+				addon.db["showDurabilityOnCharframe"] = value
 				calculateDurability()
 				if value then
 					addon.general.durabilityIconFrame:Show()
@@ -767,7 +699,7 @@ local function addCharacterFrame(container)
 			var = "hideOrderHallBar",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db[self.var] = value
+				addon.db["hideOrderHallBar"] = value
 				if OrderHallCommandBar then
 					if value then
 						OrderHallCommandBar:Hide()
@@ -782,7 +714,7 @@ local function addCharacterFrame(container)
 			var = "showInfoOnInspectFrame",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db[self.var] = value
+				addon.db["showInfoOnInspectFrame"] = value
 				removeInspectElements()
 			end,
 		},
@@ -791,7 +723,7 @@ local function addCharacterFrame(container)
 			var = "showCatalystChargesOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db[self.var] = value
+				addon.db["showCatalystChargesOnCharframe"] = value
 				if value then
 					addon.general.iconFrame:Show()
 				else
@@ -804,16 +736,15 @@ local function addCharacterFrame(container)
 			var = "showIlvlOnBagItems",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db[self.var] = value
+				addon.db["showIlvlOnBagItems"] = value
 				for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
-					if frame:IsShown() then updateBags(frame) end
+					if frame:IsShown() then addon.functions.updateBags(frame) end
 				end
-				if ContainerFrameCombinedBags:IsShown() then updateBags(ContainerFrameCombinedBags) end
+				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
 			end,
 		},
 	}
 
-	-- local labelClassSpecific = addon.functions.createLabel(fCharacter, L["headerClassInfo"], 0, (addon.functions.getHeightOffset(cbHideOrderHallFrame)) - 20, "TOP", "TOP")
 	local classname = select(2, UnitClass("player"))
 	-- Classspecific stuff
 	if classname == "DEATHKNIGHT" then
@@ -918,152 +849,95 @@ local function addCharacterFrame(container)
 end
 
 local function addMiscFrame(container, d)
-	if d then
-		local data = {
-			{
-				parent = "",
-				var = "ignoreTalkingHead",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = "",
-				var = "autoRepair",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = "",
-				var = "sellAllJunk",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = "",
-				var = "deleteItemFillDialog",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = "",
-				var = "hideBagsBar",
-				type = "CheckBox",
-				callback = function(self, _, value)
-					addon.db[self.var] = value
-					addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
-				end,
-			},
-			{
-				parent = "",
-				var = "hideMinimapButton",
-				text = L["Hide Minimap Button"],
-				type = "CheckBox",
-				callback = function(self, _, value)
-					addon.db[self.var] = value
-					addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
-				end,
-			},
-			{
-				parent = "",
-				var = "hideRaidTools",
-				text = L["Hide Raid Tools"],
-				type = "CheckBox",
-				callback = function(self, _, value)
-					addon.db[self.var] = value
-					addon.functions.toggleRaidTools(addon.db["hideRaidTools"], _G.CompactRaidFrameManager)
-				end,
-			},
-			{
-				parent = "",
-				var = "openCharframeOnUpgrade",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-			{
-				parent = "",
-				var = "autoQuickLoot",
-				type = "CheckBox",
-				callback = function(self, _, value) addon.db[self.var] = value end,
-			},
-		}
+	local data = {
+		{
+			parent = "",
+			var = "ignoreTalkingHead",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["ignoreTalkingHead"] = value end,
+		},
+		{
+			parent = "",
+			var = "autoRepair",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["autoRepair"] = value end,
+		},
+		{
+			parent = "",
+			var = "sellAllJunk",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["sellAllJunk"] = value end,
+		},
+		{
+			parent = "",
+			var = "deleteItemFillDialog",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["deleteItemFillDialog"] = value end,
+		},
+		{
+			parent = "",
+			var = "hideBagsBar",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideBagsBar"] = value
+				addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
+			end,
+		},
+		{
+			parent = "",
+			var = "hideMinimapButton",
+			text = L["Hide Minimap Button"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideMinimapButton"] = value
+				addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
+			end,
+		},
+		{
+			parent = "",
+			var = "hideRaidTools",
+			text = L["Hide Raid Tools"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideRaidTools"] = value
+				addon.functions.toggleRaidTools(addon.db["hideRaidTools"], _G.CompactRaidFrameManager)
+			end,
+		},
+		{
+			parent = "",
+			var = "openCharframeOnUpgrade",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["openCharframeOnUpgrade"] = value end,
+		},
+		{
+			parent = "",
+			var = "autoQuickLoot",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["autoQuickLoot"] = value end,
+		},
+	}
 
-		for id in pairs(addon.variables.landingPageType) do
-			local actValue = false
-			local page = addon.variables.landingPageType[id]
-			if addon.db["hiddenLandingPages"][id] then actValue = true end
+	for id in pairs(addon.variables.landingPageType) do
+		local actValue = false
+		local page = addon.variables.landingPageType[id]
+		if addon.db["hiddenLandingPages"][id] then actValue = true end
 
-			table.insert(data, {
-				parent = L["landingPageHide"],
-				var = "landingPageType_" .. id,
-				type = "CheckBox",
-				value = actValue,
-				id = id,
-				text = page.checkbox,
-				title = page.title,
-				callback = function(self, _, value)
-					addon.db["hiddenLandingPages"][self.id] = value
-					addon.functions.toggleLandingPageButton(self.title, value)
-				end,
-			})
-		end
-
-		addon.functions.createWrapperData(data, container, L)
-	else
-		local fMisc = addon.functions.createTabFrameMain(L["Misc"], container)
-
-		local cbIgnoreTalkingHead = addon.functions.createCheckbox("ignoreTalkingHead", fMisc, L["ignoreTalkingHead"], 10, -10)
-
-		local cbAutoRepair = addon.functions.createCheckbox("autoRepair", fMisc, L["autoRepair"], 10, (addon.functions.getHeightOffset(cbIgnoreTalkingHead)))
-
-		local cbSellAllJunk = addon.functions.createCheckbox("sellAllJunk", fMisc, L["sellAllJunk"], 10, (addon.functions.getHeightOffset(cbAutoRepair)))
-
-		local cbDeleteItemFill = addon.functions.createCheckbox("deleteItemFillDialog", fMisc, L["deleteItemFillDialog"], 10, (addon.functions.getHeightOffset(cbSellAllJunk)))
-
-		local cbHideBagBar = addon.functions.createCheckbox("hideBagsBar", fMisc, L["hideBagsBar"], 10, (addon.functions.getHeightOffset(cbDeleteItemFill)))
-		cbHideBagBar:SetScript("OnClick", function(self)
-			addon.db["hideBagsBar"] = self:GetChecked()
-			addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
-		end)
-
-		local cbMinimapHide = addon.functions.createCheckbox("hideMinimapButton", fMisc, L["Hide Minimap Button"], 10, (addon.functions.getHeightOffset(cbHideBagBar)))
-		cbMinimapHide:SetScript("OnClick", function(self)
-			addon.db["hideMinimapButton"] = self:GetChecked()
-			addon.functions.toggleMinimapButton(addon.db["hideMinimapButton"])
-		end)
-
-		local cbHideRaidTools = addon.functions.createCheckbox("hideRaidTools", fMisc, L["Hide Raid Tools"], 10, (addon.functions.getHeightOffset(cbMinimapHide)))
-		cbHideRaidTools:SetScript("OnClick", function(self)
-			addon.db["hideRaidTools"] = self:GetChecked()
-			addon.functions.toggleRaidTools(addon.db["hideRaidTools"], _G.CompactRaidFrameManager)
-		end)
-
-		local cbOpenCharFrameOnUpgrade = addon.functions.createCheckbox("openCharframeOnUpgrade", fMisc, L["openCharframeOnUpgrade"], 10, (addon.functions.getHeightOffset(cbHideRaidTools)))
-		local cbQuickLoot = addon.functions.createCheckbox("autoQuickLoot", fMisc, L["autoQuickLoot"], 10, (addon.functions.getHeightOffset(cbOpenCharFrameOnUpgrade)))
-
-		local labelHeadline = addon.functions.createLabel(fMisc, L["landingPageHide"], 10, addon.functions.getHeightOffset(cbQuickLoot) - 20, "TOP", "TOP")
-
-		local lastCheckbox = labelHeadline
-
-		local sortedKeys = {}
-		for id in pairs(addon.variables.landingPageType) do
-			table.insert(sortedKeys, id)
-		end
-		table.sort(sortedKeys)
-
-		for _, id in ipairs(sortedKeys) do
-			local page = addon.variables.landingPageType[id]
-
-			-- Erstelle die Checkbox
-			local cbLandingPage = addon.functions.createCheckbox("landingPageType_" .. id, fMisc, page.checkbox, 10, (addon.functions.getHeightOffset(lastCheckbox)))
-			cbLandingPage:SetScript("OnClick", function(self)
-				addon.db["hiddenLandingPages"][id] = self:GetChecked()
-				addon.functions.toggleLandingPageButton(page.title, self:GetChecked())
-			end)
-			if addon.db["hiddenLandingPages"][id] then cbLandingPage:SetChecked(true) end
-
-			lastCheckbox = cbLandingPage
-		end
+		table.insert(data, {
+			parent = L["landingPageHide"],
+			var = "landingPageType_" .. id,
+			type = "CheckBox",
+			value = actValue,
+			id = id,
+			text = page.checkbox,
+			title = page.title,
+			callback = function(self, _, value)
+				addon.db["hiddenLandingPages"][id] = value
+				addon.functions.toggleLandingPageButton(page.title, value)
+			end,
+		})
 	end
+
+	addon.functions.createWrapperData(data, container, L)
 end
 
 local function addQuestFrame(container, d)
@@ -1213,48 +1087,9 @@ local function initCharacter()
 	addon.functions.InitDBValue("showEnchantOnCharframe", false)
 	addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
 
-	local function updateButtonInfo(itemButton, bag, slot)
-		local eItem = Item:CreateFromBagAndSlot(bag, slot)
-		if eItem and not eItem:IsItemEmpty() then
-			eItem:ContinueOnItemLoad(function()
-				if not itemButton.ItemLevelText then
-					itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-					itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-					itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
-
-					itemButton.ItemLevelText:SetShadowOffset(2, -2)
-					itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
-				end
-				local link = eItem:GetItemLink()
-				local invSlot = select(4, GetItemInfoInstant(link))
-				if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
-
-				local color = eItem:GetItemQualityColor()
-				local itemLevelText = eItem:GetCurrentItemLevel()
-
-				itemButton.ItemLevelText:SetFormattedText(itemLevelText)
-				itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
-
-				itemButton.ItemLevelText:Show()
-			end)
-		elseif itemButton.ItemLevelText then
-			itemButton.ItemLevelText:Hide()
-		end
-	end
-
-	local updateBags = function(frame)
-		for _, itemButton in frame:EnumerateValidItems() do
-			if addon.db["showIlvlOnBagItems"] then
-				updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID())
-			elseif itemButton.ItemLevelText then
-				itemButton.ItemLevelText:Hide()
-			end
-		end
-	end
-
-	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", updateBags)
+	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
-		hooksecurefunc(frame, "UpdateItems", updateBags)
+		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
 	end
 
 	-- Add Cataclyst charges in char frame
@@ -1363,6 +1198,14 @@ local function initCharacter()
 	end
 end
 
+-- Frame-Position wiederherstellen
+local function RestorePosition(frame)
+	if EnhanceQoLDB.point and EnhanceQoLDB.x and EnhanceQoLDB.y then
+		frame:ClearAllPoints()
+		frame:SetPoint(EnhanceQoLDB.point, UIParent, EnhanceQoLDB.point, EnhanceQoLDB.x, EnhanceQoLDB.y)
+	end
+end
+
 local function CreateUI()
 	-- Create the main frame
 	local frame = AceGUI:Create("Frame")
@@ -1371,7 +1214,15 @@ local function CreateUI()
 	frame:SetWidth(800)
 	frame:SetHeight(600)
 	frame:SetLayout("Fill")
-	frame.frame:SetScript("OnHide", function()
+
+	-- Frame wiederherstellen und überpr��fen, wenn das Addon geladen wird
+	frame.frame:Hide()
+	frame.frame:SetScript("OnShow", function(self) RestorePosition(self) end)
+	frame.frame:SetScript("OnHide", function(self)
+		local point, _, _, xOfs, yOfs = self:GetPoint()
+		EnhanceQoLDB.point = point
+		EnhanceQoLDB.x = xOfs
+		EnhanceQoLDB.y = yOfs
 		if addon.variables.requireReload == false then return end
 
 		local reloadFrame = CreateFrame("Frame", "ReloadUIPopup", UIParent, "BasicFrameTemplateWithInset")
@@ -1599,133 +1450,30 @@ end
 function loadMain()
 	CreateUI()
 
-	-- Erstelle das Hauptframe
-	local frame = CreateFrame("Frame", "EnhanceQoLMainFrame", UIParent, "BasicFrameTemplateWithInset")
-	frame:Hide() -- Das Frame wird initial versteckt
-	frame:SetSize(500, 550)
-
-	frame:SetPoint("CENTER", UIParent, "CENTER")
-	frame:SetMovable(true)
-	frame:EnableMouse(true)
-	frame:RegisterForDrag("LeftButton")
-	frame:SetScript("OnHide", function()
-		if addon.variables.requireReload == false then return end
-
-		local reloadFrame = CreateFrame("Frame", "ReloadUIPopup", UIParent, "BasicFrameTemplateWithInset")
-		reloadFrame:SetSize(500, 120) -- Breite und Höhe
-		reloadFrame:SetPoint("TOP", UIParent, "TOP", 0, -200) -- Zentriert auf dem Bildschirm
-
-		reloadFrame.title = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-		reloadFrame.title:SetPoint("TOP", reloadFrame, "TOP", 0, -6)
-		reloadFrame.title:SetText(L["tReloadInterface"])
-
-		reloadFrame.infoText = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-		reloadFrame.infoText:SetPoint("CENTER", reloadFrame, "CENTER", 0, 10)
-		reloadFrame.infoText:SetText(L["bReloadInterface"])
-
-		local reloadButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
-		reloadButton:SetSize(120, 30)
-		reloadButton:SetPoint("BOTTOMLEFT", reloadFrame, "BOTTOMLEFT", 10, 10)
-		reloadButton:SetText(RELOADUI)
-		reloadButton:SetScript("OnClick", function() ReloadUI() end)
-
-		local cancelButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
-		cancelButton:SetSize(120, 30)
-		cancelButton:SetPoint("BOTTOMRIGHT", reloadFrame, "BOTTOMRIGHT", -10, 10)
-		cancelButton:SetText(CANCEL)
-		cancelButton:SetScript("OnClick", function()
-			reloadFrame:Hide()
-			addon.variables.requireReload = false -- disable the prompt on cancel
-		end)
-
-		reloadFrame:Show()
-	end)
-
-	frame:SetScript("OnDragStart", frame.StartMoving)
-	frame:SetScript("OnDragStop", function(self)
-		self:StopMovingOrSizing()
-		-- Position speichern
-		local point, _, _, xOfs, yOfs = self:GetPoint()
-		EnhanceQoLDB.point = point
-		EnhanceQoLDB.x = xOfs
-		EnhanceQoLDB.y = yOfs
-	end)
-	if UISpecialFrames then table.insert(UISpecialFrames, frame:GetName()) end
-	frame.tabs = {}
-
-	frame:SetScript("OnSizeChanged", function(self, width, height)
-		for i, tab in ipairs(frame.tabs) do
-			tab:SetSize(width - 8, height - 20)
-		end
-	end)
-
-	function frame:ShowTab(id)
-		for _, tabContent in pairs(self.tabs) do
-			tabContent:Hide()
-		end
-		if self.tabs[id] then self.tabs[id]:Show() end
-	end
-	-- Titel des Frames
-	frame.title = frame:CreateFontString(nil, "OVERLAY")
-	frame.title:SetFontObject("GameFontHighlight")
-	frame.title:SetPoint("CENTER", frame.TitleBg, "CENTER", 0, 0)
-	frame.title:SetText(addonName)
-	frame:SetFrameStrata("DIALOG")
-
 	-- Schleife zur Erzeugung der Checkboxen
-	addon.frame = frame
 	addon.checkboxes = {}
 	addon.db = EnhanceQoLDB
 	addon.variables.acceptQuestID = {}
 
 	setAllHooks()
 
-	local fTab = addon.functions.createTabFrame(L["General"])
-	fTab.tabs = {} -- Add the tabs to switch
-
-	fTab:SetScript("OnSizeChanged", function(self, width, height)
-		for i, tab in ipairs(fTab.tabs) do
-			tab:SetSize(width - 5, height - 35)
-		end
-	end)
-	function fTab:ShowTab(id)
-		for _, tabContent in pairs(self.tabs) do
-			tabContent:Hide()
-		end
-		if self.tabs[id] then self.tabs[id]:Show() end
-	end
-
-	-- character
-	-- addCharacterFrame(contentFrame)
-	-- cvar
-	-- addCVarFrame(fTab, false)
-	-- dungeon
-	-- addDungeonFrame(fTab, false)
-	-- Misc
-	-- addMiscFrame(fTab, false)
-	-- quest
-	-- addQuestFrame(fTab, false)
-
 	-- Slash-Command hinzufügen
 	SLASH_ENHANCEQOL1 = "/eqol"
 	SLASH_ENHANCEQOL2 = "/eqol resetframe"
-	SLASH_ENHANCEQOL3 = "/eqol gossip"
 	SlashCmdList["ENHANCEQOL"] = function(msg)
 		if msg == "resetframe" then
 			-- Frame zurücksetzen
-			frame:ClearAllPoints()
-			frame:SetPoint("CENTER", UIParent, "CENTER")
+			addon.aceFrame:ClearAllPoints()
+			addon.aceFrame:SetPoint("CENTER", UIParent, "CENTER")
 			EnhanceQoLDB.point = "CENTER"
 			EnhanceQoLDB.x = 0
 			EnhanceQoLDB.y = 0
 			print(addonName .. " frame has been reset to the center.")
-		elseif msg == "gossip" then
-			if AutoGossipFrame then AutoGossipFrame:Show() end
 		else
-			if frame:IsShown() then
-				frame:Hide()
+			if addon.aceFrame:IsShown() then
+				addon.aceFrame:Hide()
 			else
-				frame:Show()
+				addon.aceFrame:Show()
 			end
 		end
 	end
@@ -1774,17 +1522,6 @@ function loadMain()
 	local category, layout = Settings.RegisterCanvasLayoutCategory(configFrame, configFrame.name)
 	Settings.RegisterAddOnCategory(category)
 	addon.settingsCategory = category
-
-	-- Frame-Position wiederherstellen
-	local function RestorePosition()
-		if EnhanceQoLDB.point and EnhanceQoLDB.x and EnhanceQoLDB.y then
-			frame:ClearAllPoints()
-			frame:SetPoint(EnhanceQoLDB.point, UIParent, EnhanceQoLDB.point, EnhanceQoLDB.x, EnhanceQoLDB.y)
-		end
-	end
-
-	-- Frame wiederherstellen und überpr��fen, wenn das Addon geladen wird
-	frame:SetScript("OnShow", function() RestorePosition() end)
 end
 
 -- Erstelle ein Frame für Events

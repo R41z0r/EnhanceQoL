@@ -45,7 +45,6 @@ addon.MythicPlus.functions = {}
 addon.MythicPlus.Buttons = {}
 addon.MythicPlus.nrOfButtons = 0
 addon.MythicPlus.variables = {}
-addon.MythicPlus.variables.numOfTabs = 0
 
 -- Teleports
 addon.functions.InitDBValue("teleportFrame", false)
@@ -97,24 +96,4 @@ function addon.MythicPlus.functions.removeExistingButton()
     end
     addon.MythicPlus.Buttons = {}
     addon.MythicPlus.nrOfButtons = 0
-end
-
-function addon.MythicPlus.functions.createTabFrame(text, frame)
-    addon.MythicPlus.variables.numOfTabs = addon.MythicPlus.variables.numOfTabs + 1
-    local tab1 = addon.functions.createTabButton(frame, addon.MythicPlus.variables.numOfTabs, text)
-    tab1:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
-
-    PanelTemplates_SetNumTabs(frame, addon.MythicPlus.variables.numOfTabs)
-    PanelTemplates_SetTab(frame, 1)
-
-    frame.tabs[addon.MythicPlus.variables.numOfTabs] = CreateFrame("Frame", nil, frame, "InsetFrameTemplate")
-    frame.tabs[addon.MythicPlus.variables.numOfTabs]:SetSize((frame:GetWidth() - 8), (frame:GetHeight() - 20))
-    frame.tabs[addon.MythicPlus.variables.numOfTabs]:SetPoint("TOPLEFT", 3, -2 - (tab1:GetHeight()))
-
-    if addon.MythicPlus.variables.numOfTabs == 1 then
-        frame.tabs[addon.MythicPlus.variables.numOfTabs]:Show()
-    else
-        frame.tabs[addon.MythicPlus.variables.numOfTabs]:Hide()
-    end
-    return frame.tabs[addon.MythicPlus.variables.numOfTabs]
 end

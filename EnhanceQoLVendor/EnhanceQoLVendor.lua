@@ -12,7 +12,7 @@ local L = addon.LVendor
 local frameLoad = CreateFrame("Frame")
 
 local function updateLegend(value, value2)
-	if not addon.frame:IsShown() then return end
+	if not addon.aceFrame:IsShown() then return end
 	local text = {}
 	if addon.db["vendor" .. value .. "IgnoreWarbound"] then table.insert(text, L["vendorIgnoreWarbound"]) end
 	if addon.db["vendor" .. value .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end

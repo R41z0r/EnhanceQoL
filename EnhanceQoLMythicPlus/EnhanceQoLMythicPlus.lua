@@ -446,7 +446,6 @@ local function addMiscFrame(container)
 
 	local cbAutoMarkTank = addon.functions.createCheckboxAce(L["autoMarkTankInDungeon"], addon.db["autoMarkTankInDungeon"], function(self, _, value)
 		addon.db["autoMarkTankInDungeon"] = value
-		print(addon.db["autoMarkTankInDungeon"])
 		if value and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
 			setActTank()
 			checkRaidMarker()

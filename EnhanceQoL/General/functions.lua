@@ -7,260 +7,10 @@ function addon.functions.InitDBValue(key, defaultValue)
 	if addon.db[key] == nil then addon.db[key] = defaultValue end
 end
 
--- Checkboxen erstellen
-function addon.functions.createCheckbox(name, parent, label, x, y)
-	local checkbox = CreateFrame("CheckButton", name, parent, "ChatConfigCheckButtonTemplate")
-	checkbox:SetPoint("TOPLEFT", x, y)
-	checkbox:SetChecked(addon.db["" .. name])
-	checkbox:SetScript("OnClick", function(self) addon.db["" .. name] = self:GetChecked() end)
-	getglobal(checkbox:GetName() .. "Text"):SetText(label)
-	table.insert(addon.checkboxes, checkbox)
-	return checkbox
-end
-
-function addon.functions.createCheckboxNoDB(name, parent, label, x, y)
-	local checkbox = CreateFrame("CheckButton", name, parent, "ChatConfigCheckButtonTemplate")
-	checkbox:SetPoint("TOPLEFT", x, y)
-	checkbox:SetScript("OnClick", function(self) addon.db["" .. name] = self:GetChecked() end)
-	getglobal(checkbox:GetName() .. "Text"):SetText(label)
-	return checkbox
-end
-
-function addon.functions.createSlider(id, parent, label, x, y, initial, min, max, addText)
-	local slider = CreateFrame("Slider", id, parent, "OptionsSliderTemplate")
-	slider:SetOrientation("HORIZONTAL")
-	slider:SetSize(200, 20)
-	slider:SetMinMaxValues(min, max)
-	if nil == initial then initial = 50 end
-	slider:SetValue(initial)
-	slider:SetValueStep(1)
-	slider:SetObeyStepOnDrag(true)
-	slider:ClearAllPoints()
-	slider:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)
-	slider:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -x, y)
-
-	_G[slider:GetName() .. "Low"]:SetText("" .. min .. addText)
-	_G[slider:GetName() .. "High"]:SetText(max .. addText)
-	_G[slider:GetName() .. "Text"]:SetText(label .. ": " .. initial .. addText)
-
-	slider:SetScript("OnValueChanged", function(self, value)
-		value = math.floor(value)
-		_G[self:GetName() .. "Text"]:SetText(label .. ": " .. value .. addText)
-		addon.db[id] = value
-	end)
-	return slider
-end
-
-function addon.functions.createHeader(parent, label, x, y)
-	local header = parent:CreateFontString(nil, "OVERLAY")
-	header:SetFontObject("GameFontHighlightLarge")
-	header:SetPoint("TOP", parent, "TOP", x, y)
-	header:SetText(label)
-	return header
-end
-
-function addon.functions.createTabButton(parent, id, text)
-	local tab = CreateFrame("Button", nil, parent, C_EditMode and "CharacterFrameTabTemplate" or "CharacterFrameTabButtonTemplate")
-	tab:SetID(id)
-	tab:SetText(text)
-	tab:SetScript("OnClick", function(self)
-		PanelTemplates_SetTab(parent, self:GetID())
-		parent:ShowTab(self:GetID())
-	end)
-	return tab
-end
-
-function addon.functions.createTabFrame(text)
-	addon.variables.numOfTabs = addon.variables.numOfTabs + 1
-	local tab1 = addon.functions.createTabButton(addon.frame, addon.variables.numOfTabs, text)
-	tab1:SetPoint("TOPLEFT", addon.frame, "BOTTOMLEFT", 5, 7)
-
-	PanelTemplates_SetNumTabs(addon.frame, addon.variables.numOfTabs)
-	PanelTemplates_SetTab(addon.frame, 1)
-
-	addon.frame.tabs[addon.variables.numOfTabs] = CreateFrame("Frame", nil, addon.frame, "InsetFrameTemplate")
-	addon.frame.tabs[addon.variables.numOfTabs]:SetSize((addon.frame:GetWidth() - 8), (addon.frame:GetHeight() - 20))
-	addon.frame.tabs[addon.variables.numOfTabs]:SetPoint("TOPLEFT", 3, -20)
-
-	if addon.variables.numOfTabs == 1 then
-		addon.frame.tabs[addon.variables.numOfTabs]:Show()
-	else
-		addon.frame.tabs[addon.variables.numOfTabs]:Hide()
-	end
-	return addon.frame.tabs[addon.variables.numOfTabs]
-end
-
-function addon.functions.createTabFrameDynamic(frame, text)
-	addon.gossip.variables.numOfTabs = addon.gossip.variables.numOfTabs + 1
-	local tabWidth = 100 -- Breite eines Tabs
-	local spacing = 5 -- Abstand zwischen Tabs
-	local maxRowWidth = frame:GetWidth() - 10 -- Maximale Breite für Tabs in einer Reihe
-	local tabsPerRow = math.floor(maxRowWidth / (tabWidth + spacing)) -- Wie viele Tabs in eine Reihe passen
-	local currentRow = math.ceil(addon.gossip.variables.numOfTabs / tabsPerRow) -- Bestimmen der aktuellen Reihe
-	local tabIndexInRow = addon.gossip.variables.numOfTabs % tabsPerRow -- Position in der Reihe
-
-	if tabIndexInRow == 0 then tabIndexInRow = tabsPerRow end
-
-	local tab1 = addon.functions.createTabButton(frame, addon.gossip.variables.numOfTabs, text)
-	tab1:SetSize(tabWidth, 25)
-	tab1:SetPoint("TOPLEFT", frame, "TOPLEFT", 5 + (tabIndexInRow - 1) * (tabWidth + spacing), 7 + (currentRow - 1) * (tab1:GetHeight() + spacing))
-
-	PanelTemplates_SetNumTabs(frame, addon.gossip.variables.numOfTabs)
-	PanelTemplates_SetTab(frame, 1)
-
-	frame.tabs[addon.gossip.variables.numOfTabs] = CreateFrame("Frame", nil, frame, "InsetFrameTemplate")
-	frame.tabs[addon.gossip.variables.numOfTabs]:SetSize((frame:GetWidth() - 8), (frame:GetHeight() - 20))
-	frame.tabs[addon.gossip.variables.numOfTabs]:SetPoint("TOPLEFT", 3, -20)
-
-	if addon.gossip.variables.numOfTabs == 1 then
-		frame.tabs[addon.gossip.variables.numOfTabs]:Show()
-	else
-		frame.tabs[addon.gossip.variables.numOfTabs]:Hide()
-	end
-
-	return frame.tabs[addon.gossip.variables.numOfTabs]
-end
-
-function addon.functions.createTabFrameMain(text, frame)
-	addon.general.variables.numOfTabs = addon.general.variables.numOfTabs + 1
-	local tab1 = addon.functions.createTabButton(frame, addon.general.variables.numOfTabs, text)
-	tab1:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
-
-	PanelTemplates_SetNumTabs(frame, addon.general.variables.numOfTabs)
-	PanelTemplates_SetTab(frame, 1)
-
-	frame.tabs[addon.general.variables.numOfTabs] = CreateFrame("Frame", nil, frame, "InsetFrameTemplate")
-	frame.tabs[addon.general.variables.numOfTabs]:SetSize((frame:GetWidth() - 8), (frame:GetHeight() - 20))
-	frame.tabs[addon.general.variables.numOfTabs]:SetPoint("TOPLEFT", 3, -2 - (tab1:GetHeight()))
-
-	if addon.general.variables.numOfTabs == 1 then
-		frame.tabs[addon.general.variables.numOfTabs]:Show()
-	else
-		frame.tabs[addon.general.variables.numOfTabs]:Hide()
-	end
-	return frame.tabs[addon.general.variables.numOfTabs]
-end
-
-function addon.functions.getHeightOffset(element)
-	local _, _, _, _, headerY = element:GetPoint()
-	return headerY - element:GetHeight()
-end
-
-function addon.functions.createLabel(frame, text, x, y, anchor, point)
-	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	label:SetPoint(point, frame, anchor, x, y)
-	label:SetText(text)
-	return label
-end
-
-function addon.functions.createDropdown(id, frame, items, width, text, x, y, initial)
-	-- Erstelle ein Label
-	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	label:SetPoint("TOPLEFT", frame, "TOPLEFT", x, y)
-	label:SetText(text)
-
-	-- Erstelle ein Dropdown-Menü
-	local dropdown = CreateFrame("Frame", "MyDropdown", frame, "UIDropDownMenuTemplate")
-	dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -16, -10) -- Position relativ zum Label
-
-	-- Initialisiere das Dropdown-Menü
-	UIDropDownMenu_SetWidth(dropdown, width)
-	UIDropDownMenu_SetText(dropdown, addon.L["Select an option"])
-	dropdown:SetFrameStrata("DIALOG")
-
-	-- Funktion zum Erstellen der Menüeinträge
-	local function OnClick(self)
-		UIDropDownMenu_SetSelectedID(dropdown, self:GetID())
-		addon.db[id] = self.value
-	end
-
-	local function Initialize(self, level)
-		local info = UIDropDownMenu_CreateInfo()
-		for i = 1, #items do
-			info.text = items[i].text
-			info.value = items[i].value
-			info.func = OnClick
-			info.arg1 = items[i].value
-			info.checked = nil
-			UIDropDownMenu_AddButton(info, level)
-		end
-	end
-	UIDropDownMenu_SetSelectedID(dropdown, initial)
-	UIDropDownMenu_SetText(dropdown, items[initial].text)
-	-- Initialisiere das Dropdown-Menü
-	UIDropDownMenu_Initialize(dropdown, Initialize)
-	return label, dropdown
-end
-
-function addon.functions.createDropdownNoInitial(id, frame, items, width, text, x, y)
-	table.sort(items, function(a, b) return a.text < b.text end)
-
-	-- Erstelle ein Label
-	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-	label:SetPoint("TOPLEFT", frame, "TOPLEFT", x, y)
-	label:SetText(text)
-
-	-- Erstelle ein Dropdown-Menü
-	local dropdown = CreateFrame("Frame", "MyDropdown", frame, "UIDropDownMenuTemplate")
-	dropdown:SetPoint("TOPLEFT", label, "BOTTOMLEFT", -16, -10) -- Position relativ zum Label
-
-	-- Initialisiere das Dropdown-Menü
-	UIDropDownMenu_SetWidth(dropdown, 180)
-	dropdown:SetFrameStrata("DIALOG")
-
-	local function Initialize(self, level)
-		local info = UIDropDownMenu_CreateInfo()
-		for i, item in ipairs(items) do
-			info.text = item.text
-			info.value = item.value
-			info.checked = nil
-			info.func = function(self) UIDropDownMenu_SetSelectedID(dropdown, i) end
-			UIDropDownMenu_AddButton(info, level)
-		end
-	end
-
-	UIDropDownMenu_SetText(dropdown, "")
-	-- Initialisiere das Dropdown-Menü
-	UIDropDownMenu_Initialize(dropdown, Initialize)
-	return dropdown
-end
-
 function addon.functions.getIDFromGUID(unitId)
 	local _, _, _, _, _, npcID = strsplit("-", unitId)
 	npcID = tonumber(npcID)
 	return npcID
-end
-
-function addon.functions.addDropdownItem(dropdown, items, newItem)
-	-- Füge das neue Item zur Items-Tabelle hinzu
-	table.insert(items, newItem)
-
-	table.sort(items, function(a, b) return a.text < b.text end)
-	-- Neuinitialisiere das Dropdown-Menü
-	local function Initialize(self, level)
-		local info = UIDropDownMenu_CreateInfo()
-		for i, item in ipairs(items) do
-			info.text = item.text
-			info.value = item.value
-			info.checked = nil
-			info.func = function(self) UIDropDownMenu_SetSelectedID(dropdown, i) end
-			UIDropDownMenu_AddButton(info, level)
-		end
-	end
-
-	UIDropDownMenu_Initialize(dropdown, Initialize)
-end
-
-function addon.functions.createButton(parent, x, y, width, height, text, script)
-	local button = CreateFrame("Button", nil, parent, "GameMenuButtonTemplate")
-	button:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)
-	button:SetSize(width, height)
-	button:SetText(text)
-	button:SetFrameStrata("DIALOG")
-	button:SetNormalFontObject("GameFontNormalLarge")
-	button:SetHighlightFontObject("GameFontHighlightLarge")
-	button:SetScript("OnClick", script)
-	return button
 end
 
 function addon.functions.toggleRaidTools(value, self)
@@ -523,4 +273,43 @@ function addon.functions.addToTree(parentValue, newElement)
 		addon.treeGroup:SetTree(addon.treeGroupData) -- Aktualisiere die TreeGroup mit der neuen Struktur
 	end
 	addon.treeGroup:RefreshTree()
+end
+
+local function updateButtonInfo(itemButton, bag, slot)
+	local eItem = Item:CreateFromBagAndSlot(bag, slot)
+	if eItem and not eItem:IsItemEmpty() then
+		eItem:ContinueOnItemLoad(function()
+			if not itemButton.ItemLevelText then
+				itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+				itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+				itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
+
+				itemButton.ItemLevelText:SetShadowOffset(2, -2)
+				itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+			end
+			local link = eItem:GetItemLink()
+			local invSlot = select(4, GetItemInfoInstant(link))
+			if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+
+			local color = eItem:GetItemQualityColor()
+			local itemLevelText = eItem:GetCurrentItemLevel()
+
+			itemButton.ItemLevelText:SetFormattedText(itemLevelText)
+			itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+
+			itemButton.ItemLevelText:Show()
+		end)
+	elseif itemButton.ItemLevelText then
+		itemButton.ItemLevelText:Hide()
+	end
+end
+
+function addon.functions.updateBags(frame)
+	for _, itemButton in frame:EnumerateValidItems() do
+		if addon.db["showIlvlOnBagItems"] then
+			updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID())
+		elseif itemButton.ItemLevelText then
+			itemButton.ItemLevelText:Hide()
+		end
+	end
 end

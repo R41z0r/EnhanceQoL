@@ -111,7 +111,6 @@ local portalCompendium = {
 
 local isKnown = {}
 local faction = UnitFactionGroup("player")
-local initialStart = true
 local parentFrame = PVEFrame
 local doAfterCombat = false
 
@@ -448,22 +447,18 @@ function addon.MythicPlus.functions.toggleFrame()
 			else
 				frameAnchorCompendium:Hide()
 			end
-			if initialStart then
-				initialStart = false
-				-- Based on RaiderIO Client place the Frame
-				if nil ~= RaiderIO_ProfileTooltip then
-					C_Timer.After(0.1, function()
-						local offsetX = RaiderIO_ProfileTooltip:GetSize()
-						frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
-					end)
-				else
-					frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
-				end
+			-- Based on RaiderIO Client place the Frame
+			if nil ~= RaiderIO_ProfileTooltip then
+				C_Timer.After(0.1, function()
+					local offsetX = RaiderIO_ProfileTooltip:GetSize()
+					frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+				end)
+			else
+				frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
 			end
 			checkCooldown()
 		else
 			frameAnchor:Hide()
-			initialStart = true
 		end
 	end
 end
