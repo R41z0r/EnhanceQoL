@@ -22,7 +22,19 @@ local portalSpells = { -- Actual Season
 }
 
 local portalCompendium = {
-	[1] = { headline = EXPANSION_NAME10, spells = { [445269] = { text = "SV" }, [445416] = { text = "COT" }, [445414] = { text = "DAWN" }, [445417] = { text = "ARAK" } } },
+	[1] = {
+		headline = EXPANSION_NAME10,
+		spells = {
+			[445269] = { text = "SV" },
+			[445416] = { text = "COT" },
+			[445414] = { text = "DAWN" },
+			[445417] = { text = "ARAK" },
+			[467546] = { text = "WW" }, -- not yet in game
+			[445440] = { text = "CBM" },
+			[445444] = { text = "PSF" },
+			[445441] = { text = "DC" },
+		},
+	},
 	[2] = {
 		headline = EXPANSION_NAME9,
 		spells = {
@@ -195,133 +207,10 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 		local spellID = spellData.spellID
 		local spellInfo = C_Spell.GetSpellInfo(spellID)
 
-		-- Button erstellen
-		local button = CreateFrame("Button", "PortalButton" .. index, frame, "SecureActionButtonTemplate")
-		button:SetSize(buttonSize, buttonSize)
-		button.spellID = spellID
-
-		-- Hintergrund
-		local bg = button:CreateTexture(nil, "BACKGROUND")
-		bg:SetAllPoints(button)
-		bg:SetColorTexture(0, 0, 0, 0.8)
-
-		-- Rahmen
-		local border = button:CreateTexture(nil, "BORDER")
-		border:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1)
-		border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
-		border:SetColorTexture(1, 1, 1, 1)
-
-		-- Highlight/Glow-Effekt bei Mouseover
-		local highlight = button:CreateTexture(nil, "HIGHLIGHT")
-		highlight:SetAllPoints(button)
-		highlight:SetColorTexture(1, 1, 0, 0.4) -- Gelber Glow mit 30% Transparenz
-		button:SetHighlightTexture(highlight)
-
-		-- Positionierung
-		local row = math.ceil(index / buttonsPerRow) - 1
-		local col = (index - 1) % buttonsPerRow
-		button:SetPoint("TOPLEFT", frame, "TOPLEFT", initialSpacing + col * (buttonSize + spacing), -40 - row * (buttonSize + hSpacing))
-
-		-- Icon
-		local icon = button:CreateTexture(nil, "ARTWORK")
-		icon:SetAllPoints(button)
-		icon:SetTexture(spellInfo.iconID or "Interface\\ICONS\\INV_Misc_QuestionMark")
-		button.icon = icon
-
-		-- Überprüfen, ob der Zauber bekannt ist
-		if not spellData.isKnown then
-			icon:SetDesaturated(true) -- Macht das Icon grau/schwarzweiß
-			icon:SetAlpha(0.5) -- Optional: Reduziert die Sichtbarkeit
-			button:EnableMouse(false) -- Deaktiviert Klicks auf den Button
-		else
-			isKnown[spellID] = true
-			icon:SetDesaturated(false)
-			icon:SetAlpha(1) -- Normale Sichtbarkeit
-			button:EnableMouse(true) -- Aktiviert Klicks
-		end
-
-		-- Cooldown-Spirale
-		button.cooldownFrame = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")
-		button.cooldownFrame:SetAllPoints(button)
-
-		-- Sichere Aktion (CastSpell)
-		button:SetAttribute("type", "spell")
-		button:SetAttribute("spell", spellID)
-		button:RegisterForClicks("AnyUp", "AnyDown")
-
-		-- Text und Tooltip
-		local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-		label:SetPoint("TOP", button, "BOTTOM", 0, -2)
-		label:SetText(spellData.text)
-
-		button:SetScript("OnEnter", function(self)
-			if addon.db["portalShowTooltip"] then
-				GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-				GameTooltip:SetSpellByID(spellID)
-				GameTooltip:Show()
-			end
-		end)
-		button:SetScript("OnLeave", function() GameTooltip:Hide() end)
-
-		-- Button speichern
-		table.insert(frame.buttons, button)
-		index = index + 1
-	end
-end
-
-local function CreatePortalCompendium(frame, compendium)
-	-- Entferne alle bestehenden Elemente
-	for _, button in pairs(frame.buttons or {}) do
-		button:Hide()
-		button:ClearAllPoints()
-	end
-	for _, headline in pairs(frame.headline or {}) do
-		headline:Hide()
-		headline:ClearAllPoints()
-	end
-	frame.buttons = {}
-	frame.headline = {}
-
-	-- Initiale Position
-	local currentYOffset = 0 - titleCompendium:GetStringHeight() - 20 -- Startabstand vom oberen Rand
-	local maxWidth = titleCompendium:GetStringWidth() + 20
-
-	-- Durchlaufe die Reihenfolge in `compendium`
-	for _, section in ipairs(compendium) do
-		local sortedSpells = {}
-		for spellID, data in pairs(section.spells) do
-			local known = IsSpellKnown(spellID)
-			if (not data.faction or data.faction == faction) and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known)) and (not addon.db["hideActualSeason"] or not portalSpells[spellID]) then
-				table.insert(sortedSpells, { spellID = spellID, text = data.text, iconID = data.iconID, isKnown = known })
-			end
-		end
-		table.sort(sortedSpells, function(a, b) return a.text < b.text end)
-
-		if #sortedSpells > 0 then
-			-- Überschrift (Headline)
-			local headline = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-			headline:SetPoint("TOP", frame, "TOP", 0, currentYOffset)
-			headline:SetText(section.headline)
-			currentYOffset = currentYOffset - headline:GetStringHeight() - 10 -- Abstand für Buttons
-			table.insert(frame.headline, headline)
-		end
-
-		-- Buttons generieren
-		local buttonsPerRow = math.max(1, math.ceil(#sortedSpells))
-		local totalButtonWidth = (buttonSize * buttonsPerRow) + (spacingCompendium * (buttonsPerRow - 1))
-		maxWidth = math.max(maxWidth, totalButtonWidth + 20)
-
-		local index = 0
-		for _, spellData in ipairs(sortedSpells) do
-			local spellID = spellData.spellID
-			local spellInfo = C_Spell.GetSpellInfo(spellID)
-			local row = math.floor(index / buttonsPerRow)
-			local col = index % buttonsPerRow
-
+		if spellInfo then
 			-- Button erstellen
-			local button = CreateFrame("Button", "CompendiumButton" .. index, frame, "SecureActionButtonTemplate")
+			local button = CreateFrame("Button", "PortalButton" .. index, frame, "SecureActionButtonTemplate")
 			button:SetSize(buttonSize, buttonSize)
-			button:SetPoint("TOPLEFT", frame, "TOPLEFT", 10 + col * (buttonSize + spacingCompendium), currentYOffset - row * (buttonSize + hSpacingCompendium))
 			button.spellID = spellID
 
 			-- Hintergrund
@@ -335,11 +224,16 @@ local function CreatePortalCompendium(frame, compendium)
 			border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
 			border:SetColorTexture(1, 1, 1, 1)
 
-			-- Highlight/Glow-Effekt
+			-- Highlight/Glow-Effekt bei Mouseover
 			local highlight = button:CreateTexture(nil, "HIGHLIGHT")
 			highlight:SetAllPoints(button)
-			highlight:SetColorTexture(1, 1, 0, 0.4)
+			highlight:SetColorTexture(1, 1, 0, 0.4) -- Gelber Glow mit 30% Transparenz
 			button:SetHighlightTexture(highlight)
+
+			-- Positionierung
+			local row = math.ceil(index / buttonsPerRow) - 1
+			local col = (index - 1) % buttonsPerRow
+			button:SetPoint("TOPLEFT", frame, "TOPLEFT", initialSpacing + col * (buttonSize + spacing), -40 - row * (buttonSize + hSpacing))
 
 			-- Icon
 			local icon = button:CreateTexture(nil, "ARTWORK")
@@ -373,7 +267,6 @@ local function CreatePortalCompendium(frame, compendium)
 			label:SetPoint("TOP", button, "BOTTOM", 0, -2)
 			label:SetText(spellData.text)
 
-			-- Tooltip
 			button:SetScript("OnEnter", function(self)
 				if addon.db["portalShowTooltip"] then
 					GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -383,10 +276,137 @@ local function CreatePortalCompendium(frame, compendium)
 			end)
 			button:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
+			-- Button speichern
 			table.insert(frame.buttons, button)
 			index = index + 1
 		end
+	end
+end
 
+local function CreatePortalCompendium(frame, compendium)
+	-- Entferne alle bestehenden Elemente
+	for _, button in pairs(frame.buttons or {}) do
+		button:Hide()
+		button:ClearAllPoints()
+	end
+	for _, headline in pairs(frame.headline or {}) do
+		headline:Hide()
+		headline:ClearAllPoints()
+	end
+	frame.buttons = {}
+	frame.headline = {}
+
+	-- Initiale Position
+	local currentYOffset = 0 - titleCompendium:GetStringHeight() - 20 -- Startabstand vom oberen Rand
+	local maxWidth = titleCompendium:GetStringWidth() + 20
+
+	-- Durchlaufe die Reihenfolge in `compendium`
+	for _, section in ipairs(compendium) do
+		local sortedSpells = {}
+		for spellID, data in pairs(section.spells) do
+			local known = IsSpellKnown(spellID)
+			if
+				(not data.faction or data.faction == faction)
+				and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
+				and (not addon.db["hideActualSeason"] or not portalSpells[spellID])
+			then
+				table.insert(sortedSpells, { spellID = spellID, text = data.text, iconID = data.iconID, isKnown = known })
+			end
+		end
+		table.sort(sortedSpells, function(a, b) return a.text < b.text end)
+
+		if #sortedSpells > 0 then
+			-- Überschrift (Headline)
+			local headline = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			headline:SetPoint("TOP", frame, "TOP", 0, currentYOffset)
+			headline:SetText(section.headline)
+			currentYOffset = currentYOffset - headline:GetStringHeight() - 10 -- Abstand für Buttons
+			table.insert(frame.headline, headline)
+		end
+
+		-- Buttons generieren
+		local buttonsPerRow = math.max(1, math.ceil(#sortedSpells))
+		local totalButtonWidth = (buttonSize * buttonsPerRow) + (spacingCompendium * (buttonsPerRow - 1))
+		maxWidth = math.max(maxWidth, totalButtonWidth + 20)
+
+		local index = 0
+		for _, spellData in ipairs(sortedSpells) do
+			local spellID = spellData.spellID
+			local spellInfo = C_Spell.GetSpellInfo(spellID)
+
+			if spellInfo then
+				local row = math.floor(index / buttonsPerRow)
+				local col = index % buttonsPerRow
+
+				-- Button erstellen
+				local button = CreateFrame("Button", "CompendiumButton" .. index, frame, "SecureActionButtonTemplate")
+				button:SetSize(buttonSize, buttonSize)
+				button:SetPoint("TOPLEFT", frame, "TOPLEFT", 10 + col * (buttonSize + spacingCompendium), currentYOffset - row * (buttonSize + hSpacingCompendium))
+				button.spellID = spellID
+
+				-- Hintergrund
+				local bg = button:CreateTexture(nil, "BACKGROUND")
+				bg:SetAllPoints(button)
+				bg:SetColorTexture(0, 0, 0, 0.8)
+
+				-- Rahmen
+				local border = button:CreateTexture(nil, "BORDER")
+				border:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1)
+				border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
+				border:SetColorTexture(1, 1, 1, 1)
+
+				-- Highlight/Glow-Effekt
+				local highlight = button:CreateTexture(nil, "HIGHLIGHT")
+				highlight:SetAllPoints(button)
+				highlight:SetColorTexture(1, 1, 0, 0.4)
+				button:SetHighlightTexture(highlight)
+
+				-- Icon
+				local icon = button:CreateTexture(nil, "ARTWORK")
+				icon:SetAllPoints(button)
+				icon:SetTexture(spellInfo.iconID or "Interface\\ICONS\\INV_Misc_QuestionMark")
+				button.icon = icon
+
+				-- Überprüfen, ob der Zauber bekannt ist
+				if not spellData.isKnown then
+					icon:SetDesaturated(true) -- Macht das Icon grau/schwarzweiß
+					icon:SetAlpha(0.5) -- Optional: Reduziert die Sichtbarkeit
+					button:EnableMouse(false) -- Deaktiviert Klicks auf den Button
+				else
+					isKnown[spellID] = true
+					icon:SetDesaturated(false)
+					icon:SetAlpha(1) -- Normale Sichtbarkeit
+					button:EnableMouse(true) -- Aktiviert Klicks
+				end
+
+				-- Cooldown-Spirale
+				button.cooldownFrame = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")
+				button.cooldownFrame:SetAllPoints(button)
+
+				-- Sichere Aktion (CastSpell)
+				button:SetAttribute("type", "spell")
+				button:SetAttribute("spell", spellID)
+				button:RegisterForClicks("AnyUp", "AnyDown")
+
+				-- Text und Tooltip
+				local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+				label:SetPoint("TOP", button, "BOTTOM", 0, -2)
+				label:SetText(spellData.text)
+
+				-- Tooltip
+				button:SetScript("OnEnter", function(self)
+					if addon.db["portalShowTooltip"] then
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+						GameTooltip:SetSpellByID(spellID)
+						GameTooltip:Show()
+					end
+				end)
+				button:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+				table.insert(frame.buttons, button)
+				index = index + 1
+			end
+		end
 		-- Höhe für die nächste Sektion berechnen
 		local rows = math.ceil(#sortedSpells / buttonsPerRow)
 		currentYOffset = currentYOffset - rows * (buttonSize + hSpacingCompendium + 10)
