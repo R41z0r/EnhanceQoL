@@ -15,10 +15,10 @@ local portalSpells = { -- Actual Season
 	[464256] = { text = "SIEG", faction = FACTION_HORDE },
 	[445418] = { text = "SIEG", faction = FACTION_ALLIANCE },
 	[445414] = { text = "DAWN" },
-	[445417] = { text = "COT" },
+	[445417] = { text = "ARAK" },
 	[445269] = { text = "SV" },
 	[445424] = { text = "GB" },
-	[445416] = { text = "ARAK" },
+	[445416] = { text = "COT" },
 }
 
 local portalCompendium = {
@@ -29,7 +29,7 @@ local portalCompendium = {
 			[424197] = { text = "DOTI" },
 			[393256] = { text = "RLP" },
 			[393262] = { text = "NO" },
-			[393267] = { text = "BRH" },
+			[393267] = { text = "BH" },
 			[393273] = { text = "AA" },
 			[393276] = { text = "NELT" },
 			[393279] = { text = "AV" },

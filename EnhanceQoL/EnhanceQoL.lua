@@ -1059,6 +1059,7 @@ local function initQuest()
 	addon.functions.InitDBValue("ignoreTrivialQuests", true)
 	addon.functions.InitDBValue("ignoreDailyQuests", true)
 	addon.functions.InitDBValue("ignoredQuestNPC", {})
+	addon.functions.InitDBValue("autogossipID", {})
 end
 
 local function initMisc()
@@ -1460,6 +1461,9 @@ function loadMain()
 	-- Slash-Command hinzufügen
 	SLASH_ENHANCEQOL1 = "/eqol"
 	SLASH_ENHANCEQOL2 = "/eqol resetframe"
+	SLASH_ENHANCEQOL3 = "/eqol aag"
+	SLASH_ENHANCEQOL4 = "/eqol rag"
+	SLASH_ENHANCEQOL5 = "/eqol lag"
 	SlashCmdList["ENHANCEQOL"] = function(msg)
 		if msg == "resetframe" then
 			-- Frame zurücksetzen
@@ -1469,6 +1473,31 @@ function loadMain()
 			EnhanceQoLDB.x = 0
 			EnhanceQoLDB.y = 0
 			print(addonName .. " frame has been reset to the center.")
+		elseif msg:match("^aag%s*(%d+)$") then
+			local id = tonumber(msg:match("^aag%s*(%d+)$")) -- Extrahiere die ID
+			if id then
+				addon.db["autogossipID"][id] = true
+				print(ADD, "ID: ", id)
+			else
+				print("|cffff0000Invalid input! Please provide a ID|r")
+			end
+		elseif msg:match("^rag%s*(%d+)$") then
+			local id = tonumber(msg:match("^rag%s*(%d+)$")) -- Extrahiere die ID
+			if id then
+				if addon.db["autogossipID"][id] then
+					addon.db["autogossipID"][id] = nil
+					print(REMOVE, "ID: ", id)
+				end
+			else
+				print("|cffff0000Invalid input! Please provide a ID|r")
+			end
+		elseif msg == "lag" then
+			local options = C_GossipInfo.GetOptions()
+			if #options > 0 then
+				for _, v in pairs(options) do
+					print(v.gossipOptionID, v.name)
+				end
+			end
 		else
 			if addon.aceFrame:IsShown() then
 				addon.aceFrame:Hide()
@@ -1582,7 +1611,9 @@ local eventHandlers = {
 			else
 				if options and #options > 0 then
 					if #options > 1 then
-						return
+						for _, v in pairs(options) do
+							if v.gossipOptionID and addon.db["autogossipID"][v.gossipOptionID] then C_GossipInfo.SelectOption(v.gossipOptionID) end
+						end
 					elseif #options == 1 and options[1] and not gossipClicked[options[1].gossipOptionID] then
 						gossipClicked[options[1].gossipOptionID] = true
 						C_GossipInfo.SelectOption(options[1].gossipOptionID)
@@ -1593,6 +1624,9 @@ local eventHandlers = {
 	end,
 	["GUILDBANK_UPDATE_MONEY"] = function()
 		if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+	end,
+	["LFG_LIST_APPLICANT_UPDATED"] = function()
+		if PVEFrame:IsShown() and addon.db["lfgSortByRio"] then C_LFGList.RefreshApplicants() end
 	end,
 	["LOOT_READY"] = function()
 		if addon.db["autoQuickLoot"] and not IsShiftKeyDown() then
