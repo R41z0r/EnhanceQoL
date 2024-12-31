@@ -163,7 +163,13 @@ local function checkItem(tooltip, id, name)
 	tooltip:Hide()
 end
 
-local function checkAura(tooltip)
+local function checkAura(tooltip, id, name)
+	if addon.db["TooltipShowSpellID"] then
+		if id then
+			tooltip:AddLine(" ")
+			tooltip:AddDoubleLine(name, id)
+		end
+	end
 	if addon.db["TooltipBuffHideType"] == 1 then return end -- only hide when ON
 	if addon.db["TooltipBuffHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
 	if addon.db["TooltipBuffHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
@@ -194,7 +200,9 @@ if TooltipDataProcessor then
 			checkItem(tooltip, id, name)
 			return
 		elseif kind == "aura" then
-			checkAura(tooltip)
+			id = data.id
+			name = L["SpellID"]
+			checkAura(tooltip, id, name)
 		end
 		-- print(kind, tonumber(data.type))
 	end)
