@@ -31,9 +31,9 @@ jobs:
       - name: Generate Changelog
         run: ./generate_changelog.sh
     
-      - name: Create Package
-      #   uses: BigWigsMods/packager@v2
-        run: ./.release/release.sh
+      - name: Create Package and release
+        uses: BigWigsMods/packager@v2
+        # run: ./.release/release.sh
         env:
           #   WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
           WAGO_API_TOKEN: ${{ secrets.WAGO_API_TOKEN }}
