@@ -1725,7 +1725,7 @@ local eventHandlers = {
 				end
 			end
 			for i = 1, GetNumActiveQuests() do
-				if select(2, GetActiveTitle(1)) then SelectActiveQuest(1) end
+				if select(2, GetActiveTitle(i)) then SelectActiveQuest(i) end
 			end
 		end
 	end,
