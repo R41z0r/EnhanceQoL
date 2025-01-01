@@ -7,6 +7,7 @@
 ## IconTexture: Interface\AddOns\EnhanceQoLDrinkMacro\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail
+## X-WoWI-ID: 26888
 
 Init.lua
 locales.xml

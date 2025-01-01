@@ -9,6 +9,7 @@
 ## X-Curse-Project-ID: 1076354
 ## Retail: true
 ## X-Compatible-With: retail
+## X-WoWI-ID: 26888
 
 Init.lua
 locales.xml
