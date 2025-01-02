@@ -107,7 +107,7 @@ local patchedFunc = function(self, numCriteria)
 	end
 end
 
-function toggleHookToPercentBar()
+local function toggleHookToPercentBar()
 	if addon.db["mythicPlusTruePercent"] then
 		if didApplyPatch then return end
 		ScenarioObjectiveTracker.UpdateCriteria = patchedFunc

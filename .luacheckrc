@@ -51,7 +51,13 @@ globals = {
 	"AceGUIMultiLineEditBoxInsertLink",
 	
 	-- EnhanceQoL
+	"ScenarioObjectiveTracker",
+	"SecondsToClock",
+	"C_ScenarioInfo",
 	"DELVES_LABEL",
+	"OBJECTIVE_DASH_STYLE_HIDE",
+	"OBJECTIVE_TRACKER_COLOR",
+	"ObjectiveTrackerAnimLineState",
 	"ContainerFrameContainer",
 	"DungeonTeleportFrame",
 	"ContainerFrameCombinedBags",
