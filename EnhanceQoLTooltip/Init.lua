@@ -9,8 +9,6 @@ end
 addon.functions.InitDBValue("TooltipUnitHideType", 1)
 addon.functions.InitDBValue("TooltipUnitHideInCombat", true)
 addon.functions.InitDBValue("TooltipUnitHideInDungeon", false)
-addon.functions.InitDBValue("TooltipUnitShowHealthBar", false)
-addon.functions.InitDBValue("TooltipUnitShowHealthText", false)
 addon.functions.InitDBValue("TooltipShowMythicScore", false)
 addon.functions.InitDBValue("TooltipShowClassColor", false)
 addon.functions.InitDBValue("TooltipShowNPCID", true)
