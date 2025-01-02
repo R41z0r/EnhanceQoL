@@ -25,6 +25,8 @@ L["sliderShortTime"] = "右键开怪计时器"
 L["sliderLongTime"] = "开怪计时器"
 L["Stating"] = "开始中..."
 L["autoKeyStart"] = "开怪计时器后自动开始钥石"
+L["mythicPlusTruePercent"] = "显示敌军力量的小数值"
+L["mythicPlusChestTimer"] = "显示箱子计时器"
 
 L["None"] = "没有开怪计时器"
 L["Blizzard Pull Timer"] = "暴雪开怪计时器"

@@ -24,6 +24,8 @@ L["sliderShortTime"] = "Temporizador de pull clic derecho"
 L["sliderLongTime"] = "Temporizador de pull"
 L["Stating"] = "Iniciando..."
 L["autoKeyStart"] = "Iniciar la piedra angular automáticamente después del temporizador de pull"
+L["mythicPlusTruePercent"] = "Mostrar el valor decimal de las fuerzas enemigas"
+L["mythicPlusChestTimer"] = "Mostrar temporizadores de cofres"
 
 L["None"] = "Sin temporizador de pull"
 L["Blizzard Pull Timer"] = "Temporizador de pull de Blizzard"

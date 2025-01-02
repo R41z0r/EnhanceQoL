@@ -11,6 +11,113 @@ local L = addon.LMythicPlus
 
 local frameLoad = CreateFrame("Frame")
 
+hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", function(self, elapsedTime)
+	if addon.db["mythicPlusChestTimer"] then
+		local timeLeft = math.max(0, self.timeLimit - elapsedTime)
+		local chest3Time = self.timeLimit * 0.4
+		local chest2Time = self.timeLimit * 0.2
+
+		if not self.CustomTextAdded then
+			self.ChestTimeText2 = self:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			self.ChestTimeText2:SetPoint("TOPLEFT", self.TimeLeft, "TOPRIGHT", 3, 2) -- Position rechts unter der Statusleiste
+			self.ChestTimeText3 = self:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+			self.ChestTimeText3:SetPoint("BOTTOMLEFT", self.TimeLeft, "BOTTOMRIGHT", 3, 0) -- Position rechts unter der Statusleiste
+			self.CustomTextAdded = true
+		end
+
+		if timeLeft > 0 then
+			local chestText3 = ""
+			local chestText2 = ""
+
+			if timeLeft >= chest3Time then chestText3 = string.format("+3: %s", SecondsToClock(timeLeft - chest3Time)) end
+			if timeLeft >= chest2Time then chestText2 = string.format("+2: %s", SecondsToClock(timeLeft - chest2Time)) end
+
+			self.ChestTimeText2:SetText(chestText2)
+			self.ChestTimeText3:SetText(chestText3)
+		else
+			self.ChestTimeText2:SetText("")
+			self.ChestTimeText3:SetText("")
+		end
+	elseif self.CustomTextAdded then
+		self.CustomTextAdded = false
+		if self.ChestTimeText2 then
+			self.ChestTimeText2:Hide()
+			self.ChestTimeText2 = nil
+		end
+		if self.ChestTimeText3 then
+			self.ChestTimeText3:Hide()
+			self.ChestTimeText3 = nil
+		end
+	end
+end)
+
+local didApplyPatch = false
+local originalFunc = ScenarioObjectiveTracker.UpdateCriteria
+local patchedFunc = function(self, numCriteria)
+	if not self:ShouldShowCriteria() then return end
+	local objectivesBlock = self.ObjectivesBlock
+	for criteriaIndex = 1, numCriteria do
+		local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
+		if criteriaInfo then
+			local criteriaString = criteriaInfo.description
+			if not criteriaInfo.isWeightedProgress and not criteriaInfo.isFormatted then
+				criteriaString = string.format("%d/%d %s", criteriaInfo.quantity, criteriaInfo.totalQuantity, criteriaInfo.description)
+			end
+			local line
+			if criteriaInfo.completed then
+				local existingLine = objectivesBlock:GetExistingLine(criteriaIndex)
+				line = objectivesBlock:AddObjective(criteriaIndex, criteriaString, nil, nil, OBJECTIVE_DASH_STYLE_HIDE, OBJECTIVE_TRACKER_COLOR["Complete"])
+				line.Icon:Show()
+				line.Icon:SetAtlas("ui-questtracker-tracker-check", false)
+				if existingLine and (not line.state or line.state == ObjectiveTrackerAnimLineState.Present) then line:SetState(ObjectiveTrackerAnimLineState.Completing) end
+			else
+				line = objectivesBlock:AddObjective(criteriaIndex, criteriaString, nil, nil, OBJECTIVE_DASH_STYLE_HIDE)
+				line.Icon:Show()
+				line.Icon:SetAtlas("ui-questtracker-objective-nub", false)
+			end
+			-- progress bar
+			if criteriaInfo.isWeightedProgress and not criteriaInfo.completed then
+				local pb = objectivesBlock:AddProgressBar(criteriaIndex, self.progressBarLineSpacing)
+
+				--@modified function
+				local sValue = criteriaInfo.quantity
+				if criteriaInfo.quantityString then
+					sValue = tonumber(string.sub(criteriaInfo.quantityString, 1, string.len(criteriaInfo.quantityString) - 1)) / criteriaInfo.totalQuantity * 100
+					sValue = math.floor(sValue * 100 + 0.5) / 100
+				end
+				ScenarioObjectiveTracker.trueValue = sValue
+				local oFunc = ScenarioTrackerProgressBarMixin.SetValue
+				local pFunc = function(self, percentage, trueValue)
+					self.Bar:SetValue(percentage)
+					if trueValue then
+						self.Bar.Label:SetFormattedText(trueValue .. "%%")
+					else
+						self.Bar.Label:SetFormattedText(PERCENTAGE_STRING, percentage)
+					end
+					self.percentage = percentage
+				end
+				pb.SetValue = pFunc
+				pb:SetValue(criteriaInfo.quantity, sValue)
+				--@modified function end
+			end
+
+			-- timer
+			if criteriaInfo.duration > 0 and criteriaInfo.elapsed <= criteriaInfo.duration then objectivesBlock:AddTimerBar(criteriaInfo.duration, GetTime() - criteriaInfo.elapsed) end
+		end
+	end
+end
+
+function toggleHookToPercentBar()
+	if addon.db["mythicPlusTruePercent"] then
+		if didApplyPatch then return end
+		ScenarioObjectiveTracker.UpdateCriteria = patchedFunc
+	elseif didApplyPatch then
+		ScenarioObjectiveTracker.UpdateCriteria = originalFunc
+	end
+end
+
+ScenarioObjectiveTracker:HookScript("OnShow", function(self) toggleHookToPercentBar() end)
+
 local function checkKeyStone()
 	addon.MythicPlus.variables.handled = false -- reset handle on Keystoneframe open
 	addon.MythicPlus.functions.removeExistingButton()
@@ -71,7 +178,9 @@ local function checkKeyStone()
 										local _, _, _, _, _, _, _, id = GetInstanceInfo()
 										local instanceId = tonumber(id) or 0
 										if addon.db["PullTimerType"] == 2 or addon.db["PullTimerType"] == 4 then C_PartyInfo.DoCountdown(cTime) end
-										if addon.db["PullTimerType"] == 3 or addon.db["PullTimerType"] == 4 then C_ChatInfo.SendAddonMessage("D4", ("PT\t%s\t%d"):format(cTime, instanceId), IsInGroup(2) and "INSTANCE_CHAT" or "RAID") end
+										if addon.db["PullTimerType"] == 3 or addon.db["PullTimerType"] == 4 then
+											C_ChatInfo.SendAddonMessage("D4", ("PT\t%s\t%d"):format(cTime, instanceId), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
+										end
 									end
 									if addon.MythicPlus.variables.breakIt == false then
 										if addon.db["cancelPullTimerOnClick"] == true then
@@ -268,6 +377,20 @@ local function addKeystoneFrame(container)
 		{
 			text = L["autoKeyStart"],
 			var = "autoKeyStart",
+		},
+		{
+			text = L["mythicPlusTruePercent"],
+			var = "mythicPlusTruePercent",
+			func = function(self, _, value)
+				addon.db["mythicPlusTruePercent"] = value
+				if value == true and didApplyPatch == false then
+				end
+				if ScenarioObjectiveTracker:IsShown() then toggleHookToPercentBar() end
+			end,
+		},
+		{
+			text = L["mythicPlusChestTimer"],
+			var = "mythicPlusChestTimer",
 		},
 	}
 

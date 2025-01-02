@@ -24,6 +24,8 @@ L["sliderShortTime"] = "Pull Timer rechtsklick"
 L["sliderLongTime"] = "Pull Timer"
 L["Stating"] = "Starten..."
 L["autoKeyStart"] = "Starte den Schlüsselstein automatisch nach Ablauf des Pull Timers"
+L["mythicPlusTruePercent"] = "Dezimalwert der Gegnerstärke anzeigen"
+L["mythicPlusChestTimer"] = "Truhen-Timer anzeigen"
 
 L["None"] = "Kein Pull Timer"
 L["Blizzard Pull Timer"] = "Blizzard Pull Timer"
@@ -59,7 +61,13 @@ L["Misc"] = "Verschiedenes"
 L["autoMarkTankInDungeon"] = "Markiere automatisch den " .. TANK .. " in Dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank-Marker"
 L["Disabled"] = "Deaktiviert"
-L["autoMarkTankExplanation"] = "Der " .. TANK .. " wird markiert, wenn er keine Markierung hat und die Markierung wird nur geändert, wenn du entweder " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " oder " .. TANK .. " bist"
+L["autoMarkTankExplanation"] = "Der "
+	.. TANK
+	.. " wird markiert, wenn er keine Markierung hat und die Markierung wird nur geändert, wenn du entweder "
+	.. COMMUNITY_MEMBER_ROLE_NAME_LEADER
+	.. " oder "
+	.. TANK
+	.. " bist"
 -- Teleports
 L["Teleports"] = "Teleporte"
 L["teleportEnabled"] = "Teleport-Fenster aktivieren"

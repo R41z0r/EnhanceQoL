@@ -43,6 +43,8 @@ L["TooltipShowMythicScore"] = "Show Mythic+ Score on Tooltip"
 L["TooltipShowClassColor"] = "Show class color on Tooltip"
 L["TooltipShowNPCID"] = "Show NPC ID"
 L["NPCID"] = "ID"
+L["TooltipUnitShowHealthBar"] = "Show Healthbar on Unit Tooltip"
+L["TooltipUnitShowHealthText"] = "Show Healthnumbers on Unit Tooltip"
 
 -- Spell
 L["TooltipSpellHideType"] = "Hide tooltip on Spells"

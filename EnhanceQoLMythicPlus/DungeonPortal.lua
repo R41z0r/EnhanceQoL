@@ -470,8 +470,12 @@ function addon.MythicPlus.functions.toggleFrame()
 			-- Based on RaiderIO Client place the Frame
 			if nil ~= RaiderIO_ProfileTooltip then
 				C_Timer.After(0.1, function()
-					local offsetX = RaiderIO_ProfileTooltip:GetSize()
-					frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+					if InCombatLockdown() then
+						doAfterCombat = true
+					else
+						local offsetX = RaiderIO_ProfileTooltip:GetSize()
+						frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+					end
 				end)
 			else
 				frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)

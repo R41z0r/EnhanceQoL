@@ -24,6 +24,8 @@ L["sliderShortTime"] = "Minuteur de pull clic droit"
 L["sliderLongTime"] = "Minuteur de pull"
 L["Stating"] = "Démarrage..."
 L["autoKeyStart"] = "Démarrer automatiquement la clé de voûte après expiration du minuteur de pull"
+L["mythicPlusTruePercent"] = "Afficher la valeur décimale des Forces ennemies"
+L["mythicPlusChestTimer"] = "Afficher les minuteries des coffres"
 
 L["None"] = "Aucun minuteur de pull"
 L["Blizzard Pull Timer"] = "Minuteur de pull Blizzard"

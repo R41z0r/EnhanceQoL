@@ -25,6 +25,8 @@ L["sliderShortTime"] = "Cronômetro de pull clique direito"
 L["sliderLongTime"] = "Cronômetro de pull"
 L["Stating"] = "Iniciando..."
 L["autoKeyStart"] = "Iniciar a chave automaticamente após o cronômetro de pull"
+L["mythicPlusTruePercent"] = "Mostrar o valor decimal das Forças Inimigas"
+L["mythicPlusChestTimer"] = "Mostrar os temporizadores de baús"
 
 L["None"] = "Nenhum cronômetro de pull"
 L["Blizzard Pull Timer"] = "Cronômetro de pull da Blizzard"

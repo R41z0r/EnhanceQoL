@@ -25,6 +25,8 @@ L["sliderShortTime"] = "풀 타이머 우클릭"
 L["sliderLongTime"] = "풀 타이머"
 L["Stating"] = "시작 중..."
 L["autoKeyStart"] = "풀 타이머 후 자동으로 쐐기돌 시작"
+L["mythicPlusTruePercent"] = "적군 세력의 소수점 값을 표시"
+L["mythicPlusChestTimer"] = "상자 타이머 표시"
 
 L["None"] = "풀 타이머 없음"
 L["Blizzard Pull Timer"] = "블리자드 풀 타이머"
@@ -60,7 +62,11 @@ L["Misc"] = "기타"
 L["autoMarkTankInDungeon"] = "던전에서 " .. TANK .. " 자동 표시"
 L["autoMarkTankInDungeonMarker"] = "탱커 징표"
 L["Disabled"] = "비활성화됨"
-L["autoMarkTankExplanation"] = "탱커에게 표식이 없을 때 자동으로 표식을 지정하고 변경은 당신이 " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 또는 " .. TANK .. "일 때만 가능합니다."
+L["autoMarkTankExplanation"] = "탱커에게 표식이 없을 때 자동으로 표식을 지정하고 변경은 당신이 "
+	.. COMMUNITY_MEMBER_ROLE_NAME_LEADER
+	.. " 또는 "
+	.. TANK
+	.. "일 때만 가능합니다."
 
 -- Teleports
 L["Teleports"] = "순간이동"

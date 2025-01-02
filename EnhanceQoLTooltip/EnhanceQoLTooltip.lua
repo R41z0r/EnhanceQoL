@@ -12,6 +12,104 @@ local AceGUI = addon.AceGUI
 
 local frameLoad = CreateFrame("Frame")
 
+local function prettyFormatNumber(value)
+	if value >= 1e6 then
+		return string.format("%.1fM", value / 1e6)
+	elseif value >= 1e3 then
+		return string.format("%.1fK", value / 1e3)
+	else
+		return tostring(value)
+	end
+end
+
+local function AddHealthBarToTooltip(tooltip)
+	-- Erstelle die Statusleiste, falls sie noch nicht existiert
+	if not tooltip.healthBar then
+		local bar = CreateFrame("StatusBar", nil, tooltip, "BackdropTemplate")
+		bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+		bar:SetMinMaxValues(0, 1) -- Initialwerte
+		bar:SetValue(0.5) -- Standardwert
+		bar:SetHeight(6) -- Höhe der Leiste
+		bar:SetPoint("BOTTOMLEFT", tooltip, "TOPLEFT", 0, 2) -- Position
+		bar:SetPoint("BOTTOMRIGHT", tooltip, "TOPRIGHT", 0, 2)
+
+		-- Setze eine Hintergrundfarbe
+		bar:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8x8" })
+		bar:SetBackdropColor(0, 0, 0, 0.5)
+
+		tooltip.healthBar = bar
+	end
+end
+local function AddHealthInfoToTooltip(tooltip, unit)
+	local healthLineIndex = nil
+	-- local healthRegex = HEALTH .. ":%s([%d%.%,]+[kKmM]?)%s*/%s*([%d%.%,]+[kKmM]?)%s*%((%d+)[%%]?%)"
+	local healthRegex = HEALTH .. ":.*/.*%(.*%)"
+
+	for i = 1, tooltip:NumLines() do
+		local line = _G[tooltip:GetName() .. "TextLeft" .. i]
+		if line and line:GetText() and line:GetText():find(healthRegex) then
+			healthLineIndex = i
+			break
+		end
+	end
+
+	local maxHealth = UnitHealthMax(unit)
+	local currentHealth = UnitHealth(unit)
+	if maxHealth > 0 then
+		local healthPercent = math.floor((currentHealth / maxHealth) * 100) .. "%"
+
+		local healthText = string.format(HEALTH .. ": %s / %s (%s)", prettyFormatNumber(currentHealth), prettyFormatNumber(maxHealth), healthPercent)
+		if healthLineIndex then
+			local line = _G[tooltip:GetName() .. "TextLeft" .. healthLineIndex]
+			line:SetText(healthText)
+		else
+			tooltip:AddLine(healthText, 1, 1, 1)
+		end
+	end
+end
+
+-- Aktualisiere die Lebensleiste basierend auf der Einheit
+local function UpdateHealthBar(tooltip, unit)
+	if not tooltip.healthBar then return end
+
+	local maxHealth = UnitHealthMax(unit)
+	local currentHealth = UnitHealth(unit)
+
+	tooltip.healthBar:SetMinMaxValues(0, maxHealth)
+	tooltip.healthBar:SetValue(currentHealth)
+
+	-- Optional: Färbe die Leiste basierend auf der Gesundheitsprozentzahl
+	local percentage = (currentHealth / maxHealth) * 100
+	if percentage > 75 then
+		tooltip.healthBar:SetStatusBarColor(0, 1, 0) -- Grün
+	elseif percentage > 35 then
+		tooltip.healthBar:SetStatusBarColor(1, 1, 0) -- Gelb
+	else
+		tooltip.healthBar:SetStatusBarColor(1, 0, 0) -- Rot
+	end
+end
+
+local function RegisterHealthUpdate(tooltip, unit)
+	if not tooltip.healthUpdateFrame then
+		-- Frame erstellen, um Events zu registrieren
+		local healthUpdateFrame = CreateFrame("Frame")
+		healthUpdateFrame:RegisterEvent("UNIT_HEALTH")
+		healthUpdateFrame:RegisterEvent("UNIT_MAXHEALTH")
+
+		-- Event-Handler setzen
+		healthUpdateFrame:SetScript("OnEvent", function(_, event, eventUnit)
+			-- Überprüfe, ob das Event für die Einheit gültig ist
+			if UnitIsUnit(eventUnit, unit) and tooltip:IsShown() then
+				UpdateHealthBar(tooltip, unit) -- Aktualisiere die HealthBar
+				if addon.db["TooltipUnitShowHealthText"] then AddHealthInfoToTooltip(tooltip, unit) end
+				tooltip:Show() -- Tooltip neu anzeigen
+			end
+		end)
+
+		tooltip.healthUpdateFrame = healthUpdateFrame
+	end
+end
+
 local function GetNPCIDFromGUID(guid)
 	if guid then
 		local type, _, _, _, _, npcID = strsplit("-", guid)
@@ -21,12 +119,6 @@ local function GetNPCIDFromGUID(guid)
 end
 
 local function checkSpell(tooltip, id, name)
-	if addon.db["TooltipShowSpellID"] then
-		if id then
-			tooltip:AddLine(" ")
-			tooltip:AddDoubleLine(name, id)
-		end
-	end
 	if addon.db["TooltipSpellHideType"] == 1 then return end -- only hide when ON
 	if addon.db["TooltipSpellHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
 	if addon.db["TooltipSpellHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
@@ -34,6 +126,13 @@ local function checkSpell(tooltip, id, name)
 end
 
 local function checkAdditionalTooltip(tooltip)
+	local unit = "mouseover"
+	-- if addon.db["TooltipUnitShowHealthBar"] then
+	-- 	AddHealthBarToTooltip(tooltip)
+	-- 	UpdateHealthBar(tooltip, unit)
+	-- 	RegisterHealthUpdate(tooltip, unit) -- Event für Gesundheitsaktualisierung registrieren
+	-- end
+	-- if addon.db["TooltipUnitShowHealthText"] then AddHealthInfoToTooltip(tooltip, unit) end
 	if addon.db["TooltipShowNPCID"] and not UnitPlayerControlled("mouseover") then
 		local id = GetNPCIDFromGUID(UnitGUID("mouseover"))
 		if id then
@@ -179,8 +278,19 @@ end
 if TooltipDataProcessor then
 	TooltipDataProcessor.AddTooltipPostCall(TooltipDataProcessor.AllTypes, function(tooltip, data)
 		if not data or not data.type then return end
+
 		local id, name, _, timeLimit
 		local kind = addon.Tooltip.variables.kindsByID[tonumber(data.type)]
+		if kind ~= "unit" then
+			if tooltip.healthBar then
+				tooltip.healthBar:Hide()
+				tooltip.healthBar = nil
+			end
+			if tooltip.healthUpdateFrame then
+				tooltip.healthUpdateFrame:Hide()
+				tooltip.healthUpdateFrame = nil
+			end
+		end
 		if kind == "spell" then
 			id = data.id
 			name = L["SpellID"]
@@ -204,7 +314,6 @@ if TooltipDataProcessor then
 			name = L["SpellID"]
 			checkAura(tooltip, id, name)
 		end
-		-- print(kind, tonumber(data.type))
 	end)
 end
 
@@ -326,6 +435,8 @@ local function addUnitFrame(container)
 		{ text = L["TooltipShowMythicScore"], var = "TooltipShowMythicScore" },
 		{ text = L["TooltipShowClassColor"], var = "TooltipShowClassColor" },
 		{ text = L["TooltipShowNPCID"], var = "TooltipShowNPCID" },
+		-- { text = L["TooltipUnitShowHealthBar"], var = "TooltipUnitShowHealthBar" },
+		-- { text = L["TooltipUnitShowHealthText"], var = "TooltipUnitShowHealthText" },
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)

@@ -23,6 +23,8 @@ L["sliderShortTime"] = "Pull Timer rightclick"
 L["sliderLongTime"] = "Pull Timer"
 L["Stating"] = "Starting..."
 L["autoKeyStart"] = "Start key automatically after Pull Timer"
+L["mythicPlusTruePercent"] = "Show decimal value of Enemy Forces"
+L["mythicPlusChestTimer"] = "Show chest timers"
 
 L["None"] = "No Pull Timer"
 L["Blizzard Pull Timer"] = "Blizzard Pull Timer"

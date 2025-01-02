@@ -25,6 +25,8 @@ L["sliderShortTime"] = "Timer di pull clic destro"
 L["sliderLongTime"] = "Timer di pull"
 L["Stating"] = "Inizio..."
 L["autoKeyStart"] = "Avvia automaticamente la chiave dopo il timer di pull"
+L["mythicPlusTruePercent"] = "Mostra il valore decimale delle Forze nemiche"
+L["mythicPlusChestTimer"] = "Mostra i timer delle casse"
 
 L["None"] = "Nessun timer di pull"
 L["Blizzard Pull Timer"] = "Timer di pull Blizzard"
