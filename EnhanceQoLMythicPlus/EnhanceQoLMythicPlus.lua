@@ -302,6 +302,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	elseif event == "READY_CHECK_FINISHED" and ChallengesKeystoneFrame and addon.MythicPlus.Buttons["ReadyCheck"] then
 		addon.MythicPlus.Buttons["ReadyCheck"]:SetText(L["ReadyCheck"])
 	elseif event == "LFG_LIST_APPLICANT_LIST_UPDATED" and addon.db["groupfinderAppText"] then
+		if InCombatLockdown() then return end
 		toggleGroupApplication(true)
 	elseif event == "LFG_ROLE_CHECK_SHOW" and addon.db["groupfinderSkipRolecheck"] and UnitInParty("player") then
 		skipRolecheck()

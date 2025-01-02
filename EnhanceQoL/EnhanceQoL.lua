@@ -1558,6 +1558,13 @@ local frameLoad = CreateFrame("Frame")
 
 local gossipClicked = {}
 
+local function sellAllJunk()
+	MerchantSellAllJunkButton:Click()
+	C_Timer.After(0.1, function()
+		if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end
+	end)
+end
+
 local eventHandlers = {
 	["ADDON_LOADED"] = function(arg1)
 		if arg1 == addonName then
@@ -1650,11 +1657,12 @@ local eventHandlers = {
 			end
 		end
 
-		if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then
-			MerchantSellAllJunkButton:Click()
-			C_Timer.After(0.1, function()
-				if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end
-			end)
+		if addon.db["sellAllJunk"] then
+			if MerchantSellAllJunkButton:IsEnabled() then
+				sellAllJunk()
+			else
+				C_Timer.After(0.1, function() sellAllJunk() end)
+			end
 		end
 	end,
 	["PLAYER_CHOICE_UPDATE"] = function()
