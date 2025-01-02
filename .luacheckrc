@@ -52,6 +52,7 @@ globals = {
 	
 	-- EnhanceQoL
 	"ScenarioObjectiveTracker",
+	"ScenarioTrackerProgressBarMixin",
 	"SecondsToClock",
 	"C_ScenarioInfo",
 	"DELVES_LABEL",
