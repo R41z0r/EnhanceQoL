@@ -31,6 +31,12 @@ local function GetNPCIDFromGUID(guid)
 end
 
 local function checkSpell(tooltip, id, name)
+	if addon.db["TooltipShowSpellID"] then
+		if id then
+			tooltip:AddLine(" ")
+			tooltip:AddDoubleLine(name, id)
+		end
+	end
 	if addon.db["TooltipSpellHideType"] == 1 then return end -- only hide when ON
 	if addon.db["TooltipSpellHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
 	if addon.db["TooltipSpellHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
