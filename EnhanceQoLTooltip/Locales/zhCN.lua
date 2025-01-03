@@ -17,6 +17,12 @@ L["Friendly"] = "友方"
 L["Both"] = "双方"
 L["TooltipOFF"] = "关闭"
 L["TooltipON"] = "开启"
+L["TooltipAnchorType"] = "提示位置"
+L["CursorCenter"] = "光标居中"
+L["CursorLeft"] = "光标左侧"
+L["CursorRight"] = "光标右侧"
+L["TooltipAnchorOffsetX"] = "水平偏移"
+L["TooltipAnchorOffsetY"] = "垂直偏移"
 
 -- Tabs
 L["Unit"] = "单位"

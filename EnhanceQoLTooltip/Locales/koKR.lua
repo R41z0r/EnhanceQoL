@@ -17,6 +17,12 @@ L["Friendly"] = "우호적"
 L["Both"] = "모두"
 L["TooltipOFF"] = "꺼짐"
 L["TooltipON"] = "켜짐"
+L["TooltipAnchorType"] = "툴팁 위치"
+L["CursorCenter"] = "커서 중앙"
+L["CursorLeft"] = "커서 왼쪽"
+L["CursorRight"] = "커서 오른쪽"
+L["TooltipAnchorOffsetX"] = "수평 오프셋"
+L["TooltipAnchorOffsetY"] = "수직 오프셋"
 
 -- Tabs
 L["Unit"] = "유닛"

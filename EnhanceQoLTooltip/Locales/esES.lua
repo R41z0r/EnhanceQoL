@@ -2,9 +2,9 @@ if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "es
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LTooltip
 
@@ -16,6 +16,12 @@ L["Friendly"] = "Amistoso"
 L["Both"] = "Ambos"
 L["TooltipOFF"] = "APAGADO"
 L["TooltipON"] = "ENCENDIDO"
+L["TooltipAnchorType"] = "Posición del Tooltip"
+L["CursorCenter"] = "Centrado en el cursor"
+L["CursorLeft"] = "A la izquierda del cursor"
+L["CursorRight"] = "A la derecha del cursor"
+L["TooltipAnchorOffsetX"] = "Desplazamiento horizontal"
+L["TooltipAnchorOffsetY"] = "Desplazamiento vertical"
 
 -- Tabs
 L["Unit"] = "Unidad"

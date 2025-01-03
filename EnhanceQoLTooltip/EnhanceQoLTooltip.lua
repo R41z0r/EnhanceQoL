@@ -235,6 +235,7 @@ addon.functions.addToTree(nil, {
 	value = "tooltip",
 	text = L["Tooltip"],
 	children = {
+		{ value = "general", text = GENERAL },
 		{ value = "buff_debuff", text = L["Buff_Debuff"] },
 		{ value = "item", text = L["Item"] },
 		{ value = "spell", text = L["Spell"] },
@@ -358,6 +359,53 @@ local function addUnitFrame(container)
 	end
 end
 
+local function addGeneralFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local list, order = addon.functions.prepareListForDropdown({ [1] = DEFAULT, [2] = L["CursorCenter"], [3] = L["CursorLeft"], [4] = L["CursorRight"] })
+
+	local dropTooltipUnitHideType = addon.functions.createDropdownAce(L["TooltipAnchorType"], list, order, function(self, _, value)
+		addon.db["TooltipAnchorType"] = self:GetValue()
+		addGeneralFrame(container)
+	end)
+	dropTooltipUnitHideType:SetValue(addon.db["TooltipAnchorType"])
+	dropTooltipUnitHideType:SetFullWidth(false)
+	dropTooltipUnitHideType:SetWidth(200)
+	groupCore:AddChild(dropTooltipUnitHideType)
+
+	if addon.db["TooltipAnchorType"] > 1 then
+		local sliderOffsetX = addon.functions.createSliderAce(
+			L["TooltipAnchorOffsetX"] .. ": " .. addon.db["TooltipAnchorOffsetX"],
+			addon.db["TooltipAnchorOffsetX"],
+			-300,
+			300,
+			1,
+			function(self, _, value2)
+				addon.db["TooltipAnchorOffsetX"] = value2
+				self:SetLabel(L["TooltipAnchorOffsetX"] .. ": " .. value2)
+			end
+		)
+		groupCore:AddChild(sliderOffsetX)
+
+		local sliderOffsetY = addon.functions.createSliderAce(
+			L["TooltipAnchorOffsetY"] .. ": " .. addon.db["TooltipAnchorOffsetY"],
+			addon.db["TooltipAnchorOffsetY"],
+			-300,
+			300,
+			1,
+			function(self, _, value2)
+				addon.db["TooltipAnchorOffsetY"] = value2
+				self:SetLabel(L["TooltipAnchorOffsetY"] .. ": " .. value2)
+			end
+		)
+		groupCore:AddChild(sliderOffsetY)
+	end
+end
+
 function addon.Tooltip.functions.treeCallback(container, group)
 	container:ReleaseChildren() -- Entfernt vorherige Inhalte
 	-- Prüfen, welche Gruppe ausgewählt wurde
@@ -369,9 +417,48 @@ function addon.Tooltip.functions.treeCallback(container, group)
 		addSpellFrame(container)
 	elseif group == "tooltip\001unit" then
 		addUnitFrame(container)
+	elseif group == "tooltip\001general" then
+		addGeneralFrame(container)
 	else
 		-- local label = AceGUI:Create("Label")
 		-- label:SetText("No content defined for this section.")
 		-- container:AddChild(label)
 	end
 end
+
+local isUpdatingTooltip = false -- Kontrollflag, um Rekursion zu verhindern
+local isAnchorApplied = false
+hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
+	if addon.db["TooltipAnchorType"] > 1 and isAnchorApplied == false then
+		tooltip:SetOwner(parent, "ANCHOR_CURSOR")
+		isAnchorApplied = true
+	elseif addon.db["TooltipAnchorType"] == 1 and isAnchorApplied then
+		tooltip:SetOwner(parent, "ANCHOR_NONE")
+		isAnchorApplied = false
+	end
+
+	if isUpdatingTooltip then return end -- Wenn bereits in Bearbeitung, beenden
+
+	isUpdatingTooltip = true -- Setze das Kontrollflag
+
+	tooltip:HookScript("OnUpdate", function(self)
+		if addon.db["TooltipAnchorType"] == 1 then return end
+
+		local width = self:GetSize()
+		local xOffset = addon.db["TooltipAnchorOffsetX"]
+		local yOffset = addon.db["TooltipAnchorOffsetY"]
+
+		if addon.db["TooltipAnchorType"] == 2 then
+			-- nothing
+		elseif addon.db["TooltipAnchorType"] == 3 then
+			xOffset = xOffset - width / 2
+		else
+			xOffset = xOffset + width / 2
+		end
+
+		local x, y = GetCursorPosition()
+		local scale = UIParent:GetEffectiveScale()
+		self:ClearAllPoints()
+		self:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", (x / scale) + xOffset - width / 2, (y / scale) + yOffset)
+	end)
+end)

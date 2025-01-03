@@ -16,6 +16,12 @@ L["Friendly"] = "Amical"
 L["Both"] = "Les deux"
 L["TooltipOFF"] = "DÉSACTIVÉ"
 L["TooltipON"] = "ACTIVÉ"
+L["TooltipAnchorType"] = "Position du Tooltip"
+L["CursorCenter"] = "Centré sur le curseur"
+L["CursorLeft"] = "À gauche du curseur"
+L["CursorRight"] = "À droite du curseur"
+L["TooltipAnchorOffsetX"] = "Décalage horizontal"
+L["TooltipAnchorOffsetY"] = "Décalage vertical"
 
 -- Tabs
 L["Unit"] = "Unité"

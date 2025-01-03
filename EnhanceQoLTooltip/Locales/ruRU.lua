@@ -3,9 +3,9 @@ if (GAME_LOCALE or GetLocale()) ~= "ruRU" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LTooltip
 
@@ -17,6 +17,12 @@ L["Friendly"] = "Дружественные"
 L["Both"] = "Оба"
 L["TooltipOFF"] = "ВЫКЛ"
 L["TooltipON"] = "ВКЛ"
+L["TooltipAnchorType"] = "Позиция подсказки"
+L["CursorCenter"] = "По центру курсора"
+L["CursorLeft"] = "Слева от курсора"
+L["CursorRight"] = "Справа от курсора"
+L["TooltipAnchorOffsetX"] = "Горизонтальное смещение"
+L["TooltipAnchorOffsetY"] = "Вертикальное смещение"
 
 -- Tabs
 L["Unit"] = "Единица"
@@ -67,8 +73,7 @@ L["ItemID"] = "ID предмета"
 L["TooltipShowItemID"] = "Показать ID предмета в подсказке"
 
 L["TooltipShowItemCount"] = "Показать количество предметов в подсказке"
-L["TooltipShowSeperateItemCount"] =
-    "Показать количество предметов по отдельным местам"
+L["TooltipShowSeperateItemCount"] = "Показать количество предметов по отдельным местам"
 L["Reagentbank"] = "Банк реагентов"
 L["Bank"] = "Банк"
 L["Bag"] = "Сумка"

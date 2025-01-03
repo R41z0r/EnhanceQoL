@@ -17,6 +17,12 @@ L["Friendly"] = "Amichevole"
 L["Both"] = "Entrambi"
 L["TooltipOFF"] = "SPENTO"
 L["TooltipON"] = "ACCESO"
+L["TooltipAnchorType"] = "Posizione Tooltip"
+L["CursorCenter"] = "Centrato sul cursore"
+L["CursorLeft"] = "A sinistra del cursore"
+L["CursorRight"] = "A destra del cursore"
+L["TooltipAnchorOffsetX"] = "Offset orizzontale"
+L["TooltipAnchorOffsetY"] = "Offset verticale"
 
 -- Tabs
 L["Unit"] = "Unità"

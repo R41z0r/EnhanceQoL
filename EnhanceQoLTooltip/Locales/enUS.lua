@@ -15,6 +15,12 @@ L["Friendly"] = "Friendly"
 L["Both"] = "Both"
 L["TooltipOFF"] = "OFF"
 L["TooltipON"] = "ON"
+L["TooltipAnchorType"] = "Tooltip Position"
+L["CursorCenter"] = "Centered on Cursor"
+L["CursorLeft"] = "Left of Cursor"
+L["CursorRight"] = "Right of Cursor"
+L["TooltipAnchorOffsetX"] = "Horizontal Offset"
+L["TooltipAnchorOffsetY"] = "Vertical Offset"
 
 -- Tabs
 L["Unit"] = "Unit"
