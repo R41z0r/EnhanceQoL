@@ -51,6 +51,7 @@ globals = {
 	"AceGUIMultiLineEditBoxInsertLink",
 	
 	-- EnhanceQoL
+	"IsAddOnLoadable",
 	"ScenarioObjectiveTracker",
 	"ScenarioTrackerProgressBarMixin",
 	"SecondsToClock",
