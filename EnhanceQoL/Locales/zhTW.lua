@@ -27,8 +27,11 @@ L["showDurabilityOnCharframe"] = "在角色裝備框架上顯示耐久度"
 L["hideOrderHallBar"] = "隐藏职业大厅指挥栏"
 L["showInfoOnInspectFrame"] = "在檢查框架中顯示額外資訊（實驗性功能"
 L["MissingEnchant"] = "附魔"
+L["hideHitIndicatorPlayer"] = "隱藏角色頭上的浮動戰鬥文字（傷害和治療）"
+L["hideHitIndicatorPet"] = "隱藏寵物頭上的浮動戰鬥文字（傷害和治療）"
+L["UnitFrame"] = "單位框架"
 
-L["deleteItemFillDialog"] = "將 \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" 添加到\"刪除確認彈出窗口\""
+L["deleteItemFillDialog"] = '將 "' .. DELETE_ITEM_CONFIRM_STRING .. '" 添加到"刪除確認彈出窗口"'
 L["autoChooseQuest"] = "自動接受並完成任務"
 
 L["General"] = "通用"
@@ -81,17 +84,17 @@ L["tReloadInterface"] = "需要重新加載界面"
 L["bReloadInterface"] = "您需要重新加載界面以應用更改"
 
 L["CVarOptions"] = {
-    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "啟用使用技能時自動下馬"},
-    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "啟用飛行時使用技能時自動下馬"},
-    ["chatMouseScroll"] = {description = "啟用聊天視窗的鼠標滾動", trueValue = "1", falseValue = "0"},
-    ["ffxDeath"] = {description = "禁用死亡效果", trueValue = "0", falseValue = "1"},
-    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "啟用移動時地圖淡出"},
-    ["scriptErrors"] = {description = "在界面上顯示 LUA 錯誤", trueValue = "1", falseValue = "0"},
-    ["ShowClassColorInNameplate"] = {description = "在姓名板上顯示職業顏色", trueValue = "1", falseValue = "0"},
-    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "顯示目標的施法條"},
-    ["showTutorials"] = {description = "禁用教程", trueValue = "0", falseValue = "1"},
-    ["UberTooltips"] = {description = "啟用增強提示", trueValue = "1", falseValue = "0"},
-    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "顯示玩家的公會名稱"},
-    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "顯示玩家的頭銜"},
-    ["WholeChatWindowClickable"] = {description = "使整個聊天視窗可點擊", trueValue = "1", falseValue = "0"},
+	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "啟用使用技能時自動下馬" },
+	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "啟用飛行時使用技能時自動下馬" },
+	["chatMouseScroll"] = { description = "啟用聊天視窗的鼠標滾動", trueValue = "1", falseValue = "0" },
+	["ffxDeath"] = { description = "禁用死亡效果", trueValue = "0", falseValue = "1" },
+	["mapFade"] = { trueValue = "1", falseValue = "0", description = "啟用移動時地圖淡出" },
+	["scriptErrors"] = { description = "在界面上顯示 LUA 錯誤", trueValue = "1", falseValue = "0" },
+	["ShowClassColorInNameplate"] = { description = "在姓名板上顯示職業顏色", trueValue = "1", falseValue = "0" },
+	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "顯示目標的施法條" },
+	["showTutorials"] = { description = "禁用教程", trueValue = "0", falseValue = "1" },
+	["UberTooltips"] = { description = "啟用增強提示", trueValue = "1", falseValue = "0" },
+	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "顯示玩家的公會名稱" },
+	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "顯示玩家的頭銜" },
+	["WholeChatWindowClickable"] = { description = "使整個聊天視窗可點擊", trueValue = "1", falseValue = "0" },
 }

@@ -27,9 +27,11 @@ L["showDurabilityOnCharframe"] = "Exibir durabilidade no quadro de equipamento d
 L["hideOrderHallBar"] = "Ocultar barra de comando do Salão da Ordem"
 L["showInfoOnInspectFrame"] = "Mostrar informações adicionais na janela de inspeção (Experimental)"
 L["MissingEnchant"] = "Encantamento"
+L["hideHitIndicatorPlayer"] = "隱藏角色頭上的浮動戰鬥文字（傷害和治療）"
+L["hideHitIndicatorPet"] = "隱藏寵物頭上的浮動戰鬥文字（傷害和治療）"
+L["UnitFrame"] = "單位框架"
 
-L["deleteItemFillDialog"] = "Adicionar \"" .. DELETE_ITEM_CONFIRM_STRING ..
-                                "\" ao \"Popup de confirmação de exclusão\""
+L["deleteItemFillDialog"] = 'Adicionar "' .. DELETE_ITEM_CONFIRM_STRING .. '" ao "Popup de confirmação de exclusão"'
 L["autoChooseQuest"] = "Aceitar e completar missões automaticamente"
 
 L["General"] = "Geral"
@@ -82,17 +84,17 @@ L["tReloadInterface"] = "Recarregamento da interface necessário"
 L["bReloadInterface"] = "Você precisa recarregar sua interface para aplicar as alterações"
 
 L["CVarOptions"] = {
-    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Ativar desmontagem automática ao usar habilidades"},
-    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Ativar desmontagem automática ao voar"},
-    ["chatMouseScroll"] = {description = "Ativar rolagem do mouse no chat", trueValue = "1", falseValue = "0"},
-    ["ffxDeath"] = {description = "Desativar efeitos de morte", trueValue = "0", falseValue = "1"},
-    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Ativar desvanecimento do mapa ao se mover"},
-    ["scriptErrors"] = {description = "Mostrar erros de LUA na interface", trueValue = "1", falseValue = "0"},
-    ["ShowClassColorInNameplate"] = {description = "Mostrar cores de classe nas placas de identificação", trueValue = "1", falseValue = "0"},
-    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Mostrar a barra de lançamento do alvo"},
-    ["showTutorials"] = {description = "Desativar tutoriais", trueValue = "0", falseValue = "1"},
-    ["UberTooltips"] = {description = "Ativar dicas de ferramentas avançadas", trueValue = "1", falseValue = "0"},
-    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Mostrar guilda nos jogadores"},
-    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Mostrar título nos jogadores"},
-    ["WholeChatWindowClickable"] = {description = "Tornar toda a janela de chat clicável", trueValue = "1", falseValue = "0"},
+	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Ativar desmontagem automática ao usar habilidades" },
+	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Ativar desmontagem automática ao voar" },
+	["chatMouseScroll"] = { description = "Ativar rolagem do mouse no chat", trueValue = "1", falseValue = "0" },
+	["ffxDeath"] = { description = "Desativar efeitos de morte", trueValue = "0", falseValue = "1" },
+	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Ativar desvanecimento do mapa ao se mover" },
+	["scriptErrors"] = { description = "Mostrar erros de LUA na interface", trueValue = "1", falseValue = "0" },
+	["ShowClassColorInNameplate"] = { description = "Mostrar cores de classe nas placas de identificação", trueValue = "1", falseValue = "0" },
+	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Mostrar a barra de lançamento do alvo" },
+	["showTutorials"] = { description = "Desativar tutoriais", trueValue = "0", falseValue = "1" },
+	["UberTooltips"] = { description = "Ativar dicas de ferramentas avançadas", trueValue = "1", falseValue = "0" },
+	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Mostrar guilda nos jogadores" },
+	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Mostrar título nos jogadores" },
+	["WholeChatWindowClickable"] = { description = "Tornar toda a janela de chat clicável", trueValue = "1", falseValue = "0" },
 }

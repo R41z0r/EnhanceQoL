@@ -25,6 +25,9 @@ L["showDurabilityOnCharframe"] = "Display Durability on Character Equipment Fram
 L["hideOrderHallBar"] = "Hide Order Hall Command Bar"
 L["showInfoOnInspectFrame"] = "Show additional information on the Inspect Frame (Experimental)"
 L["MissingEnchant"] = "Enchant"
+L["hideHitIndicatorPlayer"] = "Hide floating combat text (damage and healing) over your character"
+L["hideHitIndicatorPet"] = "Hide floating combat text (damage and healing) over your pet"
+L["UnitFrame"] = "UnitFrame"
 
 L["deleteItemFillDialog"] = 'Add "' .. DELETE_ITEM_CONFIRM_STRING .. '" to the "Delete confirmation Popup"'
 L["autoChooseQuest"] = "Automatically accept and complete Quests"

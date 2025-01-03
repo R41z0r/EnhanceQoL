@@ -26,8 +26,11 @@ L["showDurabilityOnCharframe"] = "Zeige Haltbarkeit auf dem Charakterausrüstung
 L["hideOrderHallBar"] = "Ordenshallen-Kommandoleiste ausblenden"
 L["showInfoOnInspectFrame"] = "Zeige zusätzliche Informationen im Betrachten-Fenster an (Experimentell)"
 L["MissingEnchant"] = "Verzauberung"
+L["hideHitIndicatorPlayer"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Charakter ausblenden"
+L["hideHitIndicatorPet"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Begleiter ausblenden"
+L["UnitFrame"] = "Einheitenfenster"
 
-L["deleteItemFillDialog"] = "Füge \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" zum \"Löschbestätigungs-Popup\" hinzu"
+L["deleteItemFillDialog"] = 'Füge "' .. DELETE_ITEM_CONFIRM_STRING .. '" zum "Löschbestätigungs-Popup" hinzu'
 L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
 
 L["General"] = "Allgemein"
@@ -80,17 +83,17 @@ L["tReloadInterface"] = "Interface-Neuladen erforderlich"
 L["bReloadInterface"] = "Sie müssen Ihr Interface neu laden, um Änderungen zu übernehmen"
 
 L["CVarOptions"] = {
-    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Automatisches Absteigen bei Fähigkeiten aktivieren"},
-    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Automatisches Absteigen beim Fliegen aktivieren"},
-    ["chatMouseScroll"] = {description = "Maus-Scrollen im Chat aktivieren", trueValue = "1", falseValue = "0"},
-    ["ffxDeath"] = {description = "Todeseffekte deaktivieren", trueValue = "0", falseValue = "1"},
-    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Karten-Ausblenden beim Bewegen aktivieren"},
-    ["scriptErrors"] = {description = "LUA-Fehler im Interface anzeigen", trueValue = "1", falseValue = "0"},
-    ["ShowClassColorInNameplate"] = {description = "Klassenfarben in Namensplaketten anzeigen", trueValue = "1", falseValue = "0"},
-    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Zauberleiste des Ziels anzeigen"},
-    ["showTutorials"] = {description = "Tutorials deaktivieren", trueValue = "0", falseValue = "1"},
-    ["UberTooltips"] = {description = "Erweiterte Tooltips aktivieren", trueValue = "1", falseValue = "0"},
-    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Gilde bei Spielern anzeigen"},
-    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Titel bei Spielern anzeigen"},
-    ["WholeChatWindowClickable"] = {description = "Ganzes Chatfenster anklickbar machen", trueValue = "1", falseValue = "0"},
+	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Automatisches Absteigen bei Fähigkeiten aktivieren" },
+	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Automatisches Absteigen beim Fliegen aktivieren" },
+	["chatMouseScroll"] = { description = "Maus-Scrollen im Chat aktivieren", trueValue = "1", falseValue = "0" },
+	["ffxDeath"] = { description = "Todeseffekte deaktivieren", trueValue = "0", falseValue = "1" },
+	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Karten-Ausblenden beim Bewegen aktivieren" },
+	["scriptErrors"] = { description = "LUA-Fehler im Interface anzeigen", trueValue = "1", falseValue = "0" },
+	["ShowClassColorInNameplate"] = { description = "Klassenfarben in Namensplaketten anzeigen", trueValue = "1", falseValue = "0" },
+	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Zauberleiste des Ziels anzeigen" },
+	["showTutorials"] = { description = "Tutorials deaktivieren", trueValue = "0", falseValue = "1" },
+	["UberTooltips"] = { description = "Erweiterte Tooltips aktivieren", trueValue = "1", falseValue = "0" },
+	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Gilde bei Spielern anzeigen" },
+	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Titel bei Spielern anzeigen" },
+	["WholeChatWindowClickable"] = { description = "Ganzes Chatfenster anklickbar machen", trueValue = "1", falseValue = "0" },
 }

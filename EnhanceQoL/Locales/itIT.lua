@@ -21,15 +21,17 @@ L["landingPageHide"] = "Abilita questa opzione per nascondere il pulsante della 
 L["showIlvlOnCharframe"] = "Mostra il livello dell'oggetto nel pannello dell'equipaggiamento del personaggio"
 L["showGemsOnCharframe"] = "Mostra le gemme nel pannello dell'equipaggiamento del personaggio"
 L["showEnchantOnCharframe"] = "Mostra gli incantamenti nel pannello dell'equipaggiamento del personaggio"
-L["showCatalystChargesOnCharframe"] =
-    "Mostra le cariche del Catalizzatore nel riquadro dell'equipaggiamento del personaggio"
+L["showCatalystChargesOnCharframe"] = "Mostra le cariche del Catalizzatore nel riquadro dell'equipaggiamento del personaggio"
 L["showIlvlOnBagItems"] = "Mostra il livello dell'oggetto sull'equipaggiamento in tutte le borse"
 L["showDurabilityOnCharframe"] = "Mostra la durabilità sulla finestra dell'equipaggiamento del personaggio"
 L["hideOrderHallBar"] = "Nascondi barra dei comandi della Enclave"
 L["showInfoOnInspectFrame"] = "Mostra informazioni aggiuntive nella finestra di ispezione (Sperimentale)"
 L["MissingEnchant"] = "Incantamento"
+L["hideHitIndicatorPlayer"] = "Nascondi il testo di combattimento fluttuante (danni e cure) sopra il tuo personaggio"
+L["hideHitIndicatorPet"] = "Nascondi il testo di combattimento fluttuante (danni e cure) sopra il tuo famiglio"
+L["UnitFrame"] = "Riquadro unità"
 
-L["deleteItemFillDialog"] = "Aggiungi \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" al \"Popup di conferma eliminazione\""
+L["deleteItemFillDialog"] = 'Aggiungi "' .. DELETE_ITEM_CONFIRM_STRING .. '" al "Popup di conferma eliminazione"'
 L["autoChooseQuest"] = "Accetta e completa le missioni automaticamente"
 
 L["General"] = "Generale"
@@ -49,8 +51,7 @@ L["ignoreTrivialQuests"] = "Ignora le missioni banali"
 L["ignoreDailyQuests"] = "Ignora missioni giornaliere/settimanali"
 
 L["autoQuickLoot"] = "Saccheggio rapido degli oggetti"
-L["openCharframeOnUpgrade"] =
-    "Apri il riquadro del personaggio durante il potenziamento degli oggetti presso il mercante"
+L["openCharframeOnUpgrade"] = "Apri il riquadro del personaggio durante il potenziamento degli oggetti presso il mercante"
 
 L["headerClassInfo"] = "Queste impostazioni si applicano solo a " .. select(1, UnitClass("player"))
 
@@ -83,17 +84,17 @@ L["tReloadInterface"] = "Ricaricamento interfaccia richiesto"
 L["bReloadInterface"] = "Devi ricaricare la tua interfaccia per applicare le modifiche"
 
 L["CVarOptions"] = {
-    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Abilita lo smontaggio automatico durante l'uso delle abilità"},
-    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Abilita lo smontaggio automatico durante il volo"},
-    ["chatMouseScroll"] = {description = "Abilita lo scorrimento del mouse nella chat", trueValue = "1", falseValue = "0"},
-    ["ffxDeath"] = {description = "Disabilita gli effetti di morte", trueValue = "0", falseValue = "1"},
-    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Abilita lo sbiadimento della mappa durante il movimento"},
-    ["scriptErrors"] = {description = "Mostra errori LUA nell'interfaccia", trueValue = "1", falseValue = "0"},
-    ["ShowClassColorInNameplate"] = {description = "Mostra i colori delle classi sulle targhette", trueValue = "1", falseValue = "0"},
-    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Mostra la barra degli incantesimi del bersaglio"},
-    ["showTutorials"] = {description = "Disattiva i tutorial", trueValue = "0", falseValue = "1"},
-    ["UberTooltips"] = {description = "Abilita tooltip avanzati", trueValue = "1", falseValue = "0"},
-    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Mostra la gilda sui giocatori"},
-    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Mostra il titolo sui giocatori"},
-    ["WholeChatWindowClickable"] = {description = "Rendi cliccabile l'intera finestra di chat", trueValue = "1", falseValue = "0"},
+	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Abilita lo smontaggio automatico durante l'uso delle abilità" },
+	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Abilita lo smontaggio automatico durante il volo" },
+	["chatMouseScroll"] = { description = "Abilita lo scorrimento del mouse nella chat", trueValue = "1", falseValue = "0" },
+	["ffxDeath"] = { description = "Disabilita gli effetti di morte", trueValue = "0", falseValue = "1" },
+	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Abilita lo sbiadimento della mappa durante il movimento" },
+	["scriptErrors"] = { description = "Mostra errori LUA nell'interfaccia", trueValue = "1", falseValue = "0" },
+	["ShowClassColorInNameplate"] = { description = "Mostra i colori delle classi sulle targhette", trueValue = "1", falseValue = "0" },
+	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Mostra la barra degli incantesimi del bersaglio" },
+	["showTutorials"] = { description = "Disattiva i tutorial", trueValue = "0", falseValue = "1" },
+	["UberTooltips"] = { description = "Abilita tooltip avanzati", trueValue = "1", falseValue = "0" },
+	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Mostra la gilda sui giocatori" },
+	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Mostra il titolo sui giocatori" },
+	["WholeChatWindowClickable"] = { description = "Rendi cliccabile l'intera finestra di chat", trueValue = "1", falseValue = "0" },
 }

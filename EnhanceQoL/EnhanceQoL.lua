@@ -19,6 +19,26 @@ hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
 	end
 end)
 
+-- local function UpdateTargetSpellbarShieldColor()
+-- 	local castBar = TargetFrameSpellBar
+-- 	if not castBar or not castBar.BorderShield then return end
+
+-- 	local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo("target")
+-- 	if notInterruptible then
+-- 		castBar:SetStatusBarColor(0, 0, 1, 1) -- Blau (RGB: 0, 0, 1)
+-- 	else
+-- 		castBar:SetStatusBarColor(0, 1, 0, 1) -- Grün (RGB: 0, 1, 0)
+-- 	end
+-- end
+
+-- -- Hook, um die Farbe bei Änderungen zu aktualisieren
+-- TargetFrameSpellBar:HookScript("OnEvent", function(self, event)
+-- 	if event == "UNIT_SPELLCAST_START" then UpdateTargetSpellbarShieldColor() end
+-- end)
+
+-- -- Initiales Update, falls das Frame bereits sichtbar ist
+-- UpdateTargetSpellbarShieldColor()
+
 LFGListApplicationDialog:HookScript("OnShow", function(self)
 	if not EnhanceQoLDB.skipSignUpDialog then return end
 
@@ -654,7 +674,7 @@ end
 local function addCharacterFrame(container)
 	local data = {
 		{
-			parent = "Info",
+			parent = INFO,
 			var = "showIlvlOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -663,7 +683,7 @@ local function addCharacterFrame(container)
 			end,
 		},
 		{
-			parent = "Info",
+			parent = INFO,
 			var = "showGemsOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -672,7 +692,7 @@ local function addCharacterFrame(container)
 			end,
 		},
 		{
-			parent = "Info",
+			parent = INFO,
 			var = "showEnchantOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -681,7 +701,7 @@ local function addCharacterFrame(container)
 			end,
 		},
 		{
-			parent = "Info",
+			parent = INFO,
 			var = "showDurabilityOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -695,7 +715,7 @@ local function addCharacterFrame(container)
 			end,
 		},
 		{
-			parent = "Info",
+			parent = INFO,
 			var = "hideOrderHallBar",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -710,7 +730,7 @@ local function addCharacterFrame(container)
 			end,
 		},
 		{
-			parent = "Inspect",
+			parent = INSPECT,
 			var = "showInfoOnInspectFrame",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -719,7 +739,7 @@ local function addCharacterFrame(container)
 			end,
 		},
 		{
-			parent = "Info",
+			parent = INFO,
 			var = "showCatalystChargesOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -734,7 +754,7 @@ local function addCharacterFrame(container)
 			end,
 		},
 		{
-			parent = "Bag",
+			parent = BAGSLOT,
 			var = "showIlvlOnBagItems",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -743,6 +763,28 @@ local function addCharacterFrame(container)
 					if frame:IsShown() then addon.functions.updateBags(frame) end
 				end
 				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
+			end,
+		},
+		{
+			parent = L["UnitFrame"],
+			var = "hideHitIndicatorPlayer",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideHitIndicatorPlayer"] = value
+				if value then
+					PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide()
+				else
+					PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Show()
+				end
+			end,
+		},
+		{
+			parent = L["UnitFrame"],
+			var = "hideHitIndicatorPet",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideHitIndicatorPet"] = value
+				if value and PetHitIndicator then PetHitIndicator:Hide() end
 			end,
 		},
 	}
@@ -1087,6 +1129,14 @@ local function initCharacter()
 	addon.functions.InitDBValue("showGemsOnCharframe", false)
 	addon.functions.InitDBValue("showEnchantOnCharframe", false)
 	addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
+	addon.functions.InitDBValue("hideHitIndicatorPlayer", false)
+	addon.functions.InitDBValue("hideHitIndicatorPet", false)
+
+	if addon.db["hideHitIndicatorPlayer"] then PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide() end
+
+	if PetHitIndicator then hooksecurefunc(PetHitIndicator, "Show", function(self)
+		if addon.db["hideHitIndicatorPet"] then PetHitIndicator:Hide() end
+	end) end
 
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do

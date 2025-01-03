@@ -27,8 +27,11 @@ L["showDurabilityOnCharframe"] = "캐릭터 장비 프레임에 내구도를 표
 L["hideOrderHallBar"] = "사령부 명령 바 숨기기"
 L["showInfoOnInspectFrame"] = "검사 창에 추가 정보를 표시합니다 (실험적 기능)"
 L["MissingEnchant"] = "마법부여"
+L["hideHitIndicatorPlayer"] = "캐릭터 위에 뜨는 전투 텍스트(피해 및 치유) 숨기기"
+L["hideHitIndicatorPet"] = "소환수 위에 뜨는 전투 텍스트(피해 및 치유) 숨기기"
+L["UnitFrame"] = "유닛 프레임"
 
-L["deleteItemFillDialog"] = "\"삭제 확인 팝업\"에 \"" .. DELETE_ITEM_CONFIRM_STRING .. "\" 추가"
+L["deleteItemFillDialog"] = '"삭제 확인 팝업"에 "' .. DELETE_ITEM_CONFIRM_STRING .. '" 추가'
 L["autoChooseQuest"] = "퀘스트 자동 수락 및 완료"
 
 L["General"] = "일반"
@@ -81,17 +84,17 @@ L["tReloadInterface"] = "인터페이스 다시 로드 필요"
 L["bReloadInterface"] = "변경 사항을 적용하려면 인터페이스를 다시 로드해야 합니다"
 
 L["CVarOptions"] = {
-    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "스킬 사용 시 자동 탈것 내리기 활성화"},
-    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "비행 중 스킬 사용 시 자동 탈것 내리기 활성화"},
-    ["chatMouseScroll"] = {description = "채팅에서 마우스 스크롤 활성화", trueValue = "1", falseValue = "0"},
-    ["ffxDeath"] = {description = "죽음 효과 비활성화", trueValue = "0", falseValue = "1"},
-    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "이동 중 지도 흐려짐 활성화"},
-    ["scriptErrors"] = {description = "UI에서 LUA 오류 표시", trueValue = "1", falseValue = "0"},
-    ["ShowClassColorInNameplate"] = {description = "이름표에 직업 색상 표시", trueValue = "1", falseValue = "0"},
-    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "대상의 시전 바 표시"},
-    ["showTutorials"] = {description = "튜토리얼 비활성화", trueValue = "0", falseValue = "1"},
-    ["UberTooltips"] = {description = "향상된 툴팁 활성화", trueValue = "1", falseValue = "0"},
-    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "플레이어의 길드 표시"},
-    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "플레이어의 칭호 표시"},
-    ["WholeChatWindowClickable"] = {description = "전체 채팅 창 클릭 가능하게 설정", trueValue = "1", falseValue = "0"},
+	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "스킬 사용 시 자동 탈것 내리기 활성화" },
+	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "비행 중 스킬 사용 시 자동 탈것 내리기 활성화" },
+	["chatMouseScroll"] = { description = "채팅에서 마우스 스크롤 활성화", trueValue = "1", falseValue = "0" },
+	["ffxDeath"] = { description = "죽음 효과 비활성화", trueValue = "0", falseValue = "1" },
+	["mapFade"] = { trueValue = "1", falseValue = "0", description = "이동 중 지도 흐려짐 활성화" },
+	["scriptErrors"] = { description = "UI에서 LUA 오류 표시", trueValue = "1", falseValue = "0" },
+	["ShowClassColorInNameplate"] = { description = "이름표에 직업 색상 표시", trueValue = "1", falseValue = "0" },
+	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "대상의 시전 바 표시" },
+	["showTutorials"] = { description = "튜토리얼 비활성화", trueValue = "0", falseValue = "1" },
+	["UberTooltips"] = { description = "향상된 툴팁 활성화", trueValue = "1", falseValue = "0" },
+	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "플레이어의 길드 표시" },
+	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "플레이어의 칭호 표시" },
+	["WholeChatWindowClickable"] = { description = "전체 채팅 창 클릭 가능하게 설정", trueValue = "1", falseValue = "0" },
 }

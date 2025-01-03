@@ -27,9 +27,11 @@ L["showDurabilityOnCharframe"] = "Afficher la durabilité sur la fenêtre d'équ
 L["hideOrderHallBar"] = "Masquer la barre de commande de domaine"
 L["showInfoOnInspectFrame"] = "Afficher des informations supplémentaires dans la fenêtre d'inspection (Expérimental)"
 L["MissingEnchant"] = "Enchantement"
+L["hideHitIndicatorPlayer"] = "Masquer le texte flottant de combat (dégâts et soins) au-dessus de votre personnage"
+L["hideHitIndicatorPet"] = "Masquer le texte flottant de combat (dégâts et soins) au-dessus de votre familier"
+L["UnitFrame"] = "Cadre d'unité"
 
-L["deleteItemFillDialog"] = "Ajouter \"" .. DELETE_ITEM_CONFIRM_STRING ..
-                                "\" au \"Popup de confirmation de suppression\""
+L["deleteItemFillDialog"] = 'Ajouter "' .. DELETE_ITEM_CONFIRM_STRING .. '" au "Popup de confirmation de suppression"'
 L["autoChooseQuest"] = "Accepter et compléter les quêtes automatiquement"
 
 L["General"] = "Général"
@@ -82,17 +84,17 @@ L["tReloadInterface"] = "Rechargement de l'interface requis"
 L["bReloadInterface"] = "Vous devez recharger votre interface pour appliquer les modifications"
 
 L["CVarOptions"] = {
-    ["autoDismount"] = {trueValue = "1", falseValue = "0", description = "Activer la descente automatique lors de l'utilisation des capacités"},
-    ["autoDismountFlying"] = {trueValue = "1", falseValue = "0", description = "Activer la descente automatique en vol"},
-    ["chatMouseScroll"] = {description = "Activer le défilement de la souris dans le chat", trueValue = "1", falseValue = "0"},
-    ["ffxDeath"] = {description = "Désactiver les effets de mort", trueValue = "0", falseValue = "1"},
-    ["mapFade"] = {trueValue = "1", falseValue = "0", description = "Activer l'estompage de la carte en déplacement"},
-    ["scriptErrors"] = {description = "Afficher les erreurs LUA sur l'interface", trueValue = "1", falseValue = "0"},
-    ["ShowClassColorInNameplate"] = {description = "Afficher les couleurs des classes sur les barres de noms", trueValue = "1", falseValue = "0"},
-    ["ShowTargetCastbar"] = {trueValue = "1", falseValue = "0", description = "Afficher la barre de lancement de votre cible"},
-    ["showTutorials"] = {description = "Désactiver les tutoriels", trueValue = "0", falseValue = "1"},
-    ["UberTooltips"] = {description = "Activer les info-bulles avancées", trueValue = "1", falseValue = "0"},
-    ["UnitNamePlayerGuild"] = {trueValue = "1", falseValue = "0", description = "Afficher la guilde sur les joueurs"},
-    ["UnitNamePlayerPVPTitle"] = {trueValue = "1", falseValue = "0", description = "Afficher le titre sur les joueurs"},
-    ["WholeChatWindowClickable"] = {description = "Rendre toute la fenêtre de chat cliquable", trueValue = "1", falseValue = "0"},
+	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Activer la descente automatique lors de l'utilisation des capacités" },
+	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Activer la descente automatique en vol" },
+	["chatMouseScroll"] = { description = "Activer le défilement de la souris dans le chat", trueValue = "1", falseValue = "0" },
+	["ffxDeath"] = { description = "Désactiver les effets de mort", trueValue = "0", falseValue = "1" },
+	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Activer l'estompage de la carte en déplacement" },
+	["scriptErrors"] = { description = "Afficher les erreurs LUA sur l'interface", trueValue = "1", falseValue = "0" },
+	["ShowClassColorInNameplate"] = { description = "Afficher les couleurs des classes sur les barres de noms", trueValue = "1", falseValue = "0" },
+	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Afficher la barre de lancement de votre cible" },
+	["showTutorials"] = { description = "Désactiver les tutoriels", trueValue = "0", falseValue = "1" },
+	["UberTooltips"] = { description = "Activer les info-bulles avancées", trueValue = "1", falseValue = "0" },
+	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Afficher la guilde sur les joueurs" },
+	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Afficher le titre sur les joueurs" },
+	["WholeChatWindowClickable"] = { description = "Rendre toute la fenêtre de chat cliquable", trueValue = "1", falseValue = "0" },
 }
