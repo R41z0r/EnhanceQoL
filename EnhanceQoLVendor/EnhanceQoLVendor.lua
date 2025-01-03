@@ -106,7 +106,16 @@ local function checkItem()
 			end
 		end
 	end
-	if #itemsToSell > 0 then C_Timer.After(0.1, function() sellItems(itemsToSell) end) end
+	if #itemsToSell > 0 then
+		if addon.db["vendorOnly12Items"] then
+			local limitedItems = {}
+			for i = 1, math.min(12, #itemsToSell) do
+				table.insert(limitedItems, itemsToSell[i])
+			end
+			itemsToSell = limitedItems
+		end
+		C_Timer.After(0.1, function() sellItems(itemsToSell) end)
+	end
 end
 
 local eventHandlers = {
@@ -325,6 +334,7 @@ local function addGeneralFrame(container)
 
 	local data = {
 		{ text = L["vendorSwapAutoSellShift"], var = "vendorSwapAutoSellShift" },
+		{ text = L["vendorOnly12Items"], var = "vendorOnly12Items" },
 	}
 	table.sort(data, function(a, b) return a.text < b.text end)
 

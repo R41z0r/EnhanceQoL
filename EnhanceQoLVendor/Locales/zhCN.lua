@@ -19,6 +19,7 @@ L["vendorIgnoreBoE"] = "忽略装备后绑定的物品"
 L["vendorIgnoreWarbound"] = "忽略战斗绑定的物品"
 L["vendorIgnoreUpgradable"] = "忽略可升级物品"
 L["vendorSwapAutoSellShift"] = "仅在打开时按住 Shift 时自动出售"
+L["vendorOnly12Items"] = "将每次交易出售的物品数量限制为12件，以便更轻松地从商人处回购。"
 
 L["IncludeVendorList"] = "物品列表"
 L["ExcludeVendorList"] = "物品列表"

@@ -19,6 +19,7 @@ L["vendorIgnoreBoE"] = "착용 시 귀속되는 아이템 무시"
 L["vendorIgnoreWarbound"] = "전쟁에 귀속된 아이템 무시"
 L["vendorIgnoreUpgradable"] = "업그레이드 가능한 아이템 무시"
 L["vendorSwapAutoSellShift"] = "열 때 Shift를 누르고 있을 때만 자동 판매"
+L["vendorOnly12Items"] = "거래당 판매되는 아이템 수를 12개로 제한하여 상인에게서 쉽게 재구매할 수 있도록 합니다."
 
 L["IncludeVendorList"] = "아이템 목록"
 L["ExcludeVendorList"] = "아이템 목록"

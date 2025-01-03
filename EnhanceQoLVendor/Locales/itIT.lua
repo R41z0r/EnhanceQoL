@@ -17,6 +17,7 @@ L["vendorIgnoreBoE"] = "Ignora oggetti che si vincolano quando equipaggiati"
 L["vendorIgnoreWarbound"] = "Ignora oggetti vincolati da guerra"
 L["vendorIgnoreUpgradable"] = "Ignora gli oggetti aggiornabili"
 L["vendorSwapAutoSellShift"] = "Vendere automaticamente solo quando Shift è premuto all'apertura"
+L["vendorOnly12Items"] = "Limita il numero di oggetti venduti per transazione a 12, consentendo un riacquisto più semplice dal mercante."
 
 L["IncludeVendorList"] = "Elenco articoli"
 L["ExcludeVendorList"] = "Elenco articoli"

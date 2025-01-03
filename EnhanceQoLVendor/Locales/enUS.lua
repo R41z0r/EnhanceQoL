@@ -16,6 +16,7 @@ L["vendorIgnoreBoE"] = "Ignore Bind on Equip items"
 L["vendorIgnoreWarbound"] = "Ignore Warbound items"
 L["vendorIgnoreUpgradable"] = "Ignore Upgradable items"
 L["vendorSwapAutoSellShift"] = "Only auto sell when Shift is held on open"
+L["vendorOnly12Items"] = "Limits the number of items sold per transaction to 12, allowing easier buyback from the merchant."
 
 L["IncludeVendorList"] = "Itemlist"
 L["ExcludeVendorList"] = "Itemlist"
