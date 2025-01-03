@@ -14,10 +14,12 @@ L["Vendor"] = "Продавец"
 L["MerchantWindowClosed"] = "Окно торговца закрыто. Остановка продаж"
 
 -- Общее
-L["vendorMinIlvlDif"] = "Минимальный уровень предмета ниже моего среднего, чтобы отметить его для автоматической продажи"
+L["vendorMinIlvlDif"] =
+	"Минимальный уровень предмета ниже моего среднего, чтобы отметить его для автоматической продажи"
 L["vendorIgnoreBoE"] = "Игнорировать предметы, привязываемые при надевании"
 L["vendorIgnoreWarbound"] = "Игнорировать военные предметы"
 L["vendorIgnoreUpgradable"] = "Игнорировать улучшаемые предметы"
+L["vendorSwapAutoSellShift"] = "Автопродажа только при удержании Shift во время открытия"
 
 L["IncludeVendorList"] = "Список предметов"
 L["ExcludeVendorList"] = "Список предметов"
@@ -39,7 +41,10 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 		.. ITEM_QUALITY_COLORS[key].hex
 		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
 		.. "|r на основе критериев фильтра при посещении торговца."
-	L["vendor" .. value .. "Enable"] = "Включить автоматическую продажу предметов качества " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r"
+	L["vendor" .. value .. "Enable"] = "Включить автоматическую продажу предметов качества "
+		.. ITEM_QUALITY_COLORS[key].hex
+		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
+		.. "|r"
 	L["labelExplained" .. value .. "line"] = "Это означает, что автоматически продаются "
 		.. ITEM_QUALITY_COLORS[key].hex
 		.. _G["ITEM_QUALITY" .. key .. "_DESC"]

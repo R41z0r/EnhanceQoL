@@ -15,6 +15,7 @@ L["vendorMinIlvlDif"] = "Min. ilvl under my average to mark for autosell"
 L["vendorIgnoreBoE"] = "Ignore Bind on Equip items"
 L["vendorIgnoreWarbound"] = "Ignore Warbound items"
 L["vendorIgnoreUpgradable"] = "Ignore Upgradable items"
+L["vendorSwapAutoSellShift"] = "Only auto sell when Shift is held on open"
 
 L["IncludeVendorList"] = "Itemlist"
 L["ExcludeVendorList"] = "Itemlist"
@@ -30,7 +31,10 @@ L["vendorAddItemToExclude"] = "Add items to this list to exclude for sale. IMPOR
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 	local value = addon.Vendor.variables.tabNames[key]
-	L["labelItemQuality" .. value .. "line"] = "This enabled you to automatically sell " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r items based on of filter criteria when at a merchant"
+	L["labelItemQuality" .. value .. "line"] = "This enabled you to automatically sell "
+		.. ITEM_QUALITY_COLORS[key].hex
+		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
+		.. "|r items based on of filter criteria when at a merchant"
 	L["vendor" .. value .. "Enable"] = "Enable automatic selling for " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r items"
 	L["labelExplained" .. value .. "line"] = "This means it automatically sells " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r items with an ilvl of %s and lower %s"
 end

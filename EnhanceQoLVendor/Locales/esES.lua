@@ -17,6 +17,7 @@ L["vendorMinIlvlDif"] = "Nivel de objeto mínimo bajo mi promedio para marcarlo 
 L["vendorIgnoreBoE"] = "Ignorar objetos que se ligan al equipar"
 L["vendorIgnoreWarbound"] = "Ignorar objetos vinculados por guerra"
 L["vendorIgnoreUpgradable"] = "Ignorar objetos mejorables"
+L["vendorSwapAutoSellShift"] = "Vender automáticamente solo cuando Shift se mantenga presionado al abrir"
 
 L["IncludeVendorList"] = "Lista de artículos"
 L["ExcludeVendorList"] = "Lista de artículos"
@@ -37,5 +38,8 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
 		.. "|r en función de criterios de filtro cuando estás en un comerciante."
 	L["vendor" .. value .. "Enable"] = "Activar la venta automática para objetos de calidad " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r"
-	L["labelExplained" .. value .. "line"] = "Esto significa que automáticamente vende " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r objetos con un nivel de objeto de %s o inferior %s"
+	L["labelExplained" .. value .. "line"] = "Esto significa que automáticamente vende "
+		.. ITEM_QUALITY_COLORS[key].hex
+		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
+		.. "|r objetos con un nivel de objeto de %s o inferior %s"
 end

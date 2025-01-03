@@ -18,6 +18,7 @@ L["vendorMinIlvlDif"] = "내 평균보다 낮은 최소 아이템 레벨을 자�
 L["vendorIgnoreBoE"] = "착용 시 귀속되는 아이템 무시"
 L["vendorIgnoreWarbound"] = "전쟁에 귀속된 아이템 무시"
 L["vendorIgnoreUpgradable"] = "업그레이드 가능한 아이템 무시"
+L["vendorSwapAutoSellShift"] = "열 때 Shift를 누르고 있을 때만 자동 판매"
 
 L["IncludeVendorList"] = "아이템 목록"
 L["ExcludeVendorList"] = "아이템 목록"
@@ -38,5 +39,8 @@ for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
 		.. "|r 품질의 아이템을 자동으로 판매할 수 있습니다."
 	L["vendor" .. value .. "Enable"] = "품질 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 아이템 자동 판매 활성화"
-	L["labelExplained" .. value .. "line"] = "이것은 자동으로 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 아이템 레벨이 %s 이하인 아이템을 판매합니다 %s"
+	L["labelExplained" .. value .. "line"] = "이것은 자동으로 "
+		.. ITEM_QUALITY_COLORS[key].hex
+		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
+		.. "|r 아이템 레벨이 %s 이하인 아이템을 판매합니다 %s"
 end

@@ -19,7 +19,9 @@ local function updateLegend(value, value2)
 	if addon.db["vendor" .. value .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
 	if addon.db["vendor" .. value .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
 
-	addon.Vendor.variables["labelExplained" .. value .. "line"]:SetText(string.format(L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - value2), table.concat(text, "\n")))
+	addon.Vendor.variables["labelExplained" .. value .. "line"]:SetText(
+		string.format(L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - value2), table.concat(text, "\n"))
+	)
 end
 
 local function sellItems(items)
@@ -93,7 +95,9 @@ local function checkItem()
 								end
 
 								if not canUpgrade then
-									if effectiveILvl <= (avgItemLevelEquipped - addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]) then table.insert(itemsToSell, { bag = bag, slot = slot }) end
+									if effectiveILvl <= (avgItemLevelEquipped - addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]) then
+										table.insert(itemsToSell, { bag = bag, slot = slot })
+									end
 								end
 							end
 						end
@@ -107,7 +111,7 @@ end
 
 local eventHandlers = {
 	["MERCHANT_SHOW"] = function()
-		if IsShiftKeyDown() then return end
+		if (IsShiftKeyDown() and addon.db["vendorSwapAutoSellShift"] == false) or (addon.db["vendorSwapAutoSellShift"] and not IsShiftKeyDown()) then return end
 		checkItem()
 	end,
 	["ITEM_DATA_LOAD_RESULT"] = function(arg1, arg2)
@@ -167,7 +171,9 @@ local function addVendorFrame(container, type)
 		if addon.db["vendor" .. sValue .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
 		if addon.db["vendor" .. sValue .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
 
-		labelHeadlineExplain:SetText("|cffffd700" .. string.format(L["labelExplained" .. sValue .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - sValue2), table.concat(text, " and ")) .. "|r")
+		labelHeadlineExplain:SetText(
+			"|cffffd700" .. string.format(L["labelExplained" .. sValue .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - sValue2), table.concat(text, " and ")) .. "|r"
+		)
 		wrapper:DoLayout()
 	end
 
@@ -220,7 +226,9 @@ local function addVendorFrame(container, type)
 		wrapper:AddChild(groupInfo)
 
 		labelHeadlineExplain = addon.functions.createLabelAce(
-			"|cffffd700" .. string.format(L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - addon.db["vendor" .. value .. "MinIlvlDif"]), table.concat(text, " and ")) .. "|r",
+			"|cffffd700"
+				.. string.format(L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - addon.db["vendor" .. value .. "MinIlvlDif"]), table.concat(text, " and "))
+				.. "|r",
 			nil,
 			nil,
 			14
@@ -308,11 +316,30 @@ local function addInExcludeFrame(container, type)
 	groupEntries:AddChild(btnRemoveItem)
 end
 
+local function addGeneralFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{ text = L["vendorSwapAutoSellShift"], var = "vendorSwapAutoSellShift" },
+	}
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, checked) addon.db[cbData.var] = checked end)
+		groupCore:AddChild(cbElement)
+	end
+end
+
 addon.variables.statusTable.groups["vendor"] = true
 addon.functions.addToTree(nil, {
 	value = "vendor",
 	text = L["Vendor"],
 	children = {
+		{ value = "general", text = ACCESSIBILITY_GENERAL_LABEL },
 		{ value = "common", text = ITEM_QUALITY_COLORS[1].hex .. _G["ITEM_QUALITY1_DESC"] .. "|r" },
 		{ value = "uncommon", text = ITEM_QUALITY_COLORS[2].hex .. _G["ITEM_QUALITY2_DESC"] .. "|r" },
 		{ value = "rare", text = ITEM_QUALITY_COLORS[3].hex .. _G["ITEM_QUALITY3_DESC"] .. "|r" },
@@ -340,5 +367,7 @@ function addon.Vendor.functions.treeCallback(container, group)
 		addInExcludeFrame(container, 1)
 	elseif group == "vendor\001exclude" then
 		addInExcludeFrame(container, 0)
+	elseif group == "vendor\001general" then
+		addGeneralFrame(container)
 	end
 end

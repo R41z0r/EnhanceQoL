@@ -16,6 +16,7 @@ L["vendorMinIlvlDif"] = "Mindestgegenstandsstufe unter meinem Durchschnitt, um z
 L["vendorIgnoreBoE"] = "Beim Anlegen gebundene Gegenstände ignorieren"
 L["vendorIgnoreWarbound"] = "Kriegsgebundene Gegenstände ignorieren"
 L["vendorIgnoreUpgradable"] = "Ignoriere upgradebare Gegenstände"
+L["vendorSwapAutoSellShift"] = "Automatisch nur verkaufen, wenn Shift beim Öffnen gehalten wird"
 
 L["IncludeVendorList"] = "Artikelliste"
 L["ExcludeVendorList"] = "Artikelliste"
@@ -31,7 +32,13 @@ L["vendorAddItemToExclude"] = "Füge Gegenstände zu dieser Liste hinzu, um sie 
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 	local value = addon.Vendor.variables.tabNames[key]
-	L["labelItemQuality" .. value .. "line"] = "Dies ermöglicht es Ihnen, " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r Gegenstände basierend auf Filterkriterien beim Händler automatisch zu verkaufen."
+	L["labelItemQuality" .. value .. "line"] = "Dies ermöglicht es Ihnen, "
+		.. ITEM_QUALITY_COLORS[key].hex
+		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
+		.. "|r Gegenstände basierend auf Filterkriterien beim Händler automatisch zu verkaufen."
 	L["vendor" .. value .. "Enable"] = "Automatisches Verkaufen für " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r Gegenstände aktivieren"
-	L["labelExplained" .. value .. "line"] = "Das bedeutet, dass automatisch " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r Gegenstände mit einer Gegenstandsstufe von %s und niedriger verkauft werden %s"
+	L["labelExplained" .. value .. "line"] = "Das bedeutet, dass automatisch "
+		.. ITEM_QUALITY_COLORS[key].hex
+		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
+		.. "|r Gegenstände mit einer Gegenstandsstufe von %s und niedriger verkauft werden %s"
 end

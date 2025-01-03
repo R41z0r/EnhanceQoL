@@ -35,6 +35,8 @@ for key in pairs(addon.Vendor.variables.tabNames) do
 end
 table.sort(addon.Vendor.variables.tabKeyNames)
 
+addon.functions.InitDBValue("vendorSwapAutoSellShift", false)
+
 for key, value in pairs(addon.Vendor.variables.tabNames) do
 	addon.functions.InitDBValue("vendor" .. value .. "Enable", false)
 	addon.functions.InitDBValue("vendor" .. value .. "MinIlvlDif", 200)
