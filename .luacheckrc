@@ -90,6 +90,8 @@ globals = {
 	"BagsBar",
 	"TotemFrame",
 	"EssencePlayerFrame",
+	"PlayerFrame",
+	"PetHitIndicator",
 	"RogueComboPointBarFrame",
 	"PaladinPowerBarFrame",
 	"QuestFrame",
