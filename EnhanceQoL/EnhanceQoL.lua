@@ -1565,6 +1565,15 @@ local function sellAllJunk()
 	end)
 end
 
+local function loadSubAddon(name)
+	local subAddonName = name
+
+	local loadable, reason = C_AddOns.IsAddOnLoadable(name)
+	if not loadable and reason == "DEMAND_LOADED" then
+		local loaded, value = C_AddOns.LoadAddOn(name)
+	end
+end
+
 local eventHandlers = {
 	["ADDON_LOADED"] = function(arg1)
 		if arg1 == addonName then
@@ -1572,6 +1581,11 @@ local eventHandlers = {
 
 			loadMain()
 			EQOL.PersistSignUpNote()
+
+			loadSubAddon("EnhanceQoLMythicPlus")
+			loadSubAddon("EnhanceQoLDrinkMacro")
+			loadSubAddon("EnhanceQoLTooltip")
+			loadSubAddon("EnhanceQoLVendor")
 		end
 	end,
 	["CURRENCY_DISPLAY_UPDATE"] = function(arg1)
