@@ -32,6 +32,8 @@ L["Item id or drag item"] = "物品ID或拖動物品"
 L["Item id does not exist"] = "物品ID不存在"
 L["vendorAddItemToInclude"] = "將物品添加到此列表中以包含在銷售中。 重要：這將忽略該物品的所有其他檢查"
 L["vendorAddItemToExclude"] = "將物品添加到此列表中以排除出售。 重要：排除總是優先，除非它是垃圾"
+L["vendorMinIlvl"] = "標記低於選定值的物品以進行自動出售"
+L["vendorAbsolutIlvl"] = "使用絕對物品等級出售裝備，而不是最低已裝備等級"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 	local value = addon.Vendor.variables.tabNames[key]

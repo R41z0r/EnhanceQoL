@@ -43,6 +43,7 @@ for key, value in pairs(addon.Vendor.variables.tabNames) do
 	addon.functions.InitDBValue("vendor" .. value .. "MinIlvlDif", 200)
 	addon.functions.InitDBValue("vendor" .. value .. "IgnoreWarbound", true)
 	addon.functions.InitDBValue("vendor" .. value .. "IgnoreBoE", true)
+	addon.functions.InitDBValue("vendor" .. value .. "AbsolutIlvl", false)
 
 	if key ~= 1 then addon.functions.InitDBValue("vendor" .. value .. "IgnoreUpgradable", false) end
 

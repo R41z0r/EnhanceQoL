@@ -31,6 +31,8 @@ L["Item id or drag item"] = "ID do item ou arraste o item"
 L["Item id does not exist"] = "ID do item não existe"
 L["vendorAddItemToInclude"] = "Adicione itens a esta lista para incluí-los na venda. IMPORTANTE: Isso ignora todas as outras verificações para este item"
 L["vendorAddItemToExclude"] = "Adicione itens a esta lista para excluí-los da venda. IMPORTANTE: A exclusão sempre prevalece, a menos que seja lixo"
+L["vendorMinIlvl"] = "Marcar itens com um ilvl abaixo do valor selecionado para venda automática"
+L["vendorAbsolutIlvl"] = "Use o ilvl absoluto para vender equipamentos em vez do ilvl mínimo equipado"
 
 for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
 	local value = addon.Vendor.variables.tabNames[key]

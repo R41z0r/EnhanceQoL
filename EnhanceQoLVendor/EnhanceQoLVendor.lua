@@ -95,9 +95,11 @@ local function checkItem()
 								end
 
 								if not canUpgrade then
-									if effectiveILvl <= (avgItemLevelEquipped - addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]) then
-										table.insert(itemsToSell, { bag = bag, slot = slot })
+									local rIlvl = (avgItemLevelEquipped - addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"])
+									if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "AbsolutIlvl"] then
+										rIlvl = addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]
 									end
+									if effectiveILvl <= rIlvl then table.insert(itemsToSell, { bag = bag, slot = slot }) end
 								end
 							end
 						end
@@ -180,9 +182,14 @@ local function addVendorFrame(container, type)
 		if addon.db["vendor" .. sValue .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
 		if addon.db["vendor" .. sValue .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
 
-		labelHeadlineExplain:SetText(
-			"|cffffd700" .. string.format(L["labelExplained" .. sValue .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - sValue2), table.concat(text, " and ")) .. "|r"
-		)
+		local lIlvl
+		if addon.db["vendor" .. value .. "AbsolutIlvl"] then
+			lIlvl = sValue2
+		else
+			lIlvl = addon.Vendor.variables.avgItemLevelEquipped - sValue2
+		end
+
+		labelHeadlineExplain:SetText("|cffffd700" .. string.format(L["labelExplained" .. sValue .. "line"], lIlvl, table.concat(text, " and ")) .. "|r")
 		wrapper:DoLayout()
 	end
 
@@ -202,6 +209,13 @@ local function addVendorFrame(container, type)
 	groupCore:AddChild(vendorEnable)
 
 	if addon.Vendor.variables.itemQualityFilter[type] then
+		local vendorEnable = addon.functions.createCheckboxAce(L["vendorAbsolutIlvl"], addon.db["vendor" .. value .. "AbsolutIlvl"], function(self, _, checked)
+			addon.db["vendor" .. value .. "AbsolutIlvl"] = checked
+			container:ReleaseChildren()
+			addVendorFrame(container, type)
+		end)
+		groupCore:AddChild(vendorEnable)
+
 		local data = {
 			{ text = L["vendorIgnoreBoE"], var = "vendor" .. value .. "IgnoreBoE" },
 			{ text = L["vendorIgnoreWarbound"], var = "vendor" .. value .. "IgnoreWarbound" },
@@ -219,7 +233,17 @@ local function addVendorFrame(container, type)
 			groupCore:AddChild(cbElement)
 		end
 
-		local vendorIlvl = addon.functions.createSliderAce(L["vendorMinIlvlDif"], addon.db["vendor" .. value .. "MinIlvlDif"], 1, 700, 1, function(self, _, value2)
+		local lIlvl
+		local hText
+		if addon.db["vendor" .. value .. "AbsolutIlvl"] then
+			hText = L["vendorMinIlvl"]
+			lIlvl = addon.db["vendor" .. value .. "MinIlvlDif"]
+		else
+			hText = L["vendorMinIlvlDif"]
+			lIlvl = (addon.Vendor.variables.avgItemLevelEquipped - addon.db["vendor" .. value .. "MinIlvlDif"])
+		end
+
+		local vendorIlvl = addon.functions.createSliderAce(hText, addon.db["vendor" .. value .. "MinIlvlDif"], 1, 700, 1, function(self, _, value2)
 			value2 = math.floor(value2)
 			addon.db["vendor" .. value .. "MinIlvlDif"] = value2
 			updateLegend(value, value2)
@@ -234,14 +258,7 @@ local function addVendorFrame(container, type)
 		groupInfo:SetTitle(INFO)
 		wrapper:AddChild(groupInfo)
 
-		labelHeadlineExplain = addon.functions.createLabelAce(
-			"|cffffd700"
-				.. string.format(L["labelExplained" .. value .. "line"], (addon.Vendor.variables.avgItemLevelEquipped - addon.db["vendor" .. value .. "MinIlvlDif"]), table.concat(text, " and "))
-				.. "|r",
-			nil,
-			nil,
-			14
-		)
+		labelHeadlineExplain = addon.functions.createLabelAce("|cffffd700" .. string.format(L["labelExplained" .. value .. "line"], lIlvl, table.concat(text, " and ")) .. "|r", nil, nil, 14)
 		groupInfo:AddChild(labelHeadlineExplain)
 		groupInfo:SetFullWidth(true)
 		labelHeadlineExplain:SetFullWidth(true)
