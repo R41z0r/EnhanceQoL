@@ -880,9 +880,9 @@ local function addCharacterFrame(container)
 			callback = function(self, _, value)
 				addon.db["warlock_HideSoulShardBar"] = value
 				if value then
-					PaladinPowerBarFrame:Hide()
+					WarlockPowerFrame:Hide()
 				else
-					PaladinPowerBarFrame:Show()
+					WarlockPowerFrame:Show()
 				end
 			end,
 		})

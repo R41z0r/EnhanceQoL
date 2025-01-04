@@ -229,6 +229,17 @@ if TooltipDataProcessor then
 	end)
 end
 
+hooksecurefunc("GameTooltip_SetDefaultAnchor", function(s, p)
+	if addon.db["TooltipAnchorType"] == 1 then return end
+	local anchor
+	if addon.db["TooltipAnchorType"] == 2 then anchor = "ANCHOR_CURSOR" end
+	if addon.db["TooltipAnchorType"] == 3 then anchor = "ANCHOR_CURSOR_LEFT" end
+	if addon.db["TooltipAnchorType"] == 4 then anchor = "ANCHOR_CURSOR_RIGHT" end
+	local xOffset = addon.db["TooltipAnchorOffsetX"]
+	local yOffset = addon.db["TooltipAnchorOffsetY"]
+	s:SetOwner(p, anchor, xOffset, yOffset)
+end)
+
 addon.variables.statusTable.groups["tooltip"] = true
 
 addon.functions.addToTree(nil, {
@@ -425,40 +436,3 @@ function addon.Tooltip.functions.treeCallback(container, group)
 		-- container:AddChild(label)
 	end
 end
-
-local isUpdatingTooltip = false -- Kontrollflag, um Rekursion zu verhindern
-local isAnchorApplied = false
-hooksecurefunc("GameTooltip_SetDefaultAnchor", function(tooltip, parent)
-	if addon.db["TooltipAnchorType"] > 1 and isAnchorApplied == false then
-		tooltip:SetOwner(parent, "ANCHOR_CURSOR")
-		isAnchorApplied = true
-	elseif addon.db["TooltipAnchorType"] == 1 and isAnchorApplied then
-		tooltip:SetOwner(parent, "ANCHOR_NONE")
-		isAnchorApplied = false
-	end
-
-	if isUpdatingTooltip then return end -- Wenn bereits in Bearbeitung, beenden
-
-	isUpdatingTooltip = true -- Setze das Kontrollflag
-
-	tooltip:HookScript("OnUpdate", function(self)
-		if addon.db["TooltipAnchorType"] == 1 then return end
-
-		local width = self:GetSize()
-		local xOffset = addon.db["TooltipAnchorOffsetX"]
-		local yOffset = addon.db["TooltipAnchorOffsetY"]
-
-		if addon.db["TooltipAnchorType"] == 2 then
-			-- nothing
-		elseif addon.db["TooltipAnchorType"] == 3 then
-			xOffset = xOffset - width / 2
-		else
-			xOffset = xOffset + width / 2
-		end
-
-		local x, y = GetCursorPosition()
-		local scale = UIParent:GetEffectiveScale()
-		self:ClearAllPoints()
-		self:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", (x / scale) + xOffset - width / 2, (y / scale) + yOffset)
-	end)
-end)
