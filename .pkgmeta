@@ -7,15 +7,15 @@ externals:
   EnhanceQoL/libs/LibDataBroker-1.1:
     url: https://github.com/tekkub/libdatabroker-1-1
     tag: latest
-  EnhanceQoL/libs/LibStub:
-    url: https://repos.curseforge.com/wow/libstub/trunk
-    tag: latest
-  EnhanceQoL/libs/CallbackHandler-1.0:
-    url: https://repos.curseforge.com/wow/callbackhandler/trunk
-    tag: latest
-  EnhanceQoL/libs/AceGUI-3.0:
-    url: https://repos.curseforge.com/wow/ace3/trunk/AceGUI-3.0
-    tag: latest
+  # EnhanceQoL/libs/LibStub:
+  #   url: https://repos.curseforge.com/wow/libstub/trunk
+  #   tag: latest
+  # EnhanceQoL/libs/CallbackHandler-1.0:
+  #   url: https://repos.curseforge.com/wow/callbackhandler/trunk
+  #   tag: latest
+  # EnhanceQoL/libs/AceGUI-3.0:
+  #   url: https://repos.curseforge.com/wow/ace3/trunk/AceGUI-3.0
+  #   tag: latest
 
 enable-nolib-creation: no
 
