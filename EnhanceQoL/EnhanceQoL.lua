@@ -1617,6 +1617,7 @@ local function sellAllJunk()
 	end)
 end
 
+--@debug@
 local function openItems(items)
 	local function openNextItem()
 		if #items == 0 then
@@ -1632,7 +1633,7 @@ local function openItems(items)
 	end
 	openNextItem()
 end
-
+--@end-debug@
 local function loadSubAddon(name)
 	local subAddonName = name
 

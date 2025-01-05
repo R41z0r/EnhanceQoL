@@ -55,6 +55,8 @@ globals = {
 	"AceGUIMultiLineEditBoxInsertLink",
 	
 	-- EnhanceQoL
+	"ItemLocation",
+	"securecallfunction",
 	"ACCESSIBILITY_GENERAL_LABEL",
 	"C_AddOns.IsAddOnLoadable",
 	"ScenarioObjectiveTracker",
