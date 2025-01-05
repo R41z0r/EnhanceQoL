@@ -1343,6 +1343,8 @@ local function CreateUI()
 			addon.Drinks.functions.treeCallback(container, group)
 		elseif string.match(group, "^mythicplus") then
 			addon.MythicPlus.functions.treeCallback(container, group)
+		elseif string.match(group, "^aura") then
+			addon.Aura.functions.treeCallback(container, group)
 		end
 	end)
 	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
@@ -1615,6 +1617,22 @@ local function sellAllJunk()
 	end)
 end
 
+local function openItems(items)
+	local function openNextItem()
+		if #items == 0 then
+			-- print("Finished selling items.")
+			return
+		end
+
+		local item = table.remove(items, 1)
+		local iLoc = ItemLocation:CreateFromBagAndSlot(item.bag, item.slot)
+		if C_Item.IsLocked(iLoc) then C_Item.UnlockItem(iLoc) end
+		C_Timer.After(0.1, function() C_Container.UseContainerItem(item.bag, item.slot) end)
+		C_Timer.After(0.2, openNextItem) -- 100ms Pause zwischen den Verkäufen
+	end
+	openNextItem()
+end
+
 local function loadSubAddon(name)
 	local subAddonName = name
 
@@ -1632,11 +1650,34 @@ local eventHandlers = {
 			loadMain()
 			EQOL.PersistSignUpNote()
 
+			loadSubAddon("EnhanceQoLAura")
 			loadSubAddon("EnhanceQoLMythicPlus")
 			loadSubAddon("EnhanceQoLDrinkMacro")
 			loadSubAddon("EnhanceQoLTooltip")
 			loadSubAddon("EnhanceQoLVendor")
 		end
+	end,
+	["BAG_UPDATE_DELAYED"] = function(arg1)
+		local itemsToOpen = {}
+		for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
+			for slot = 1, C_Container.GetContainerNumSlots(bag) do
+				containerInfo = C_Container.GetContainerItemInfo(bag, slot)
+				if containerInfo then
+					local eItem = Item:CreateFromBagAndSlot(bag, slot)
+					if eItem and not eItem:IsItemEmpty() then
+						eItem:ContinueOnItemLoad(function()
+							local tooltip = C_TooltipInfo.GetBagItem(bag, slot)
+							if tooltip then
+								for i, line in ipairs(tooltip.lines) do
+									if line.leftText == ITEM_OPENABLE then table.insert(itemsToOpen, { bag = bag, slot = slot }) end
+								end
+							end
+						end)
+					end
+				end
+			end
+		end
+		if #itemsToOpen > 0 then openItems(itemsToOpen) end
 	end,
 	["CURRENCY_DISPLAY_UPDATE"] = function(arg1)
 		if arg1 == addon.variables.catalystID then
