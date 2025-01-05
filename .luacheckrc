@@ -1,7 +1,11 @@
 std = "lua51"
 max_line_length = false
 exclude_files = {
-	".luacheckrc"
+	".luacheckrc",
+	"LibDataBroker-1.1.lua",
+	"LibStub.lua",
+	"CallbackHandler-1.0.lua",
+	"EnhanceQoLAura.lua"
 }
 ignore = {
 	"11./SLASH_.*", -- Setting an undefined (Slash handler) global variable

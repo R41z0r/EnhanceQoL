@@ -1650,13 +1650,16 @@ local eventHandlers = {
 			loadMain()
 			EQOL.PersistSignUpNote()
 
+			--@debug@
 			loadSubAddon("EnhanceQoLAura")
+			--@end-debug@
 			loadSubAddon("EnhanceQoLMythicPlus")
 			loadSubAddon("EnhanceQoLDrinkMacro")
 			loadSubAddon("EnhanceQoLTooltip")
 			loadSubAddon("EnhanceQoLVendor")
 		end
 	end,
+	--@debug@
 	["BAG_UPDATE_DELAYED"] = function(arg1)
 		local itemsToOpen = {}
 		for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
@@ -1679,6 +1682,7 @@ local eventHandlers = {
 		end
 		if #itemsToOpen > 0 then openItems(itemsToOpen) end
 	end,
+	--@end-debug@
 	["CURRENCY_DISPLAY_UPDATE"] = function(arg1)
 		if arg1 == addon.variables.catalystID then
 			local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
