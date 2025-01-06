@@ -1345,6 +1345,8 @@ local function CreateUI()
 			addon.MythicPlus.functions.treeCallback(container, group)
 		elseif string.match(group, "^aura") then
 			addon.Aura.functions.treeCallback(container, group)
+		elseif string.match(group, "^mouse") then
+			addon.Mouse.functions.treeCallback(container, group)
 		end
 	end)
 	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
@@ -1654,6 +1656,7 @@ local eventHandlers = {
 			--@debug@
 			loadSubAddon("EnhanceQoLAura")
 			--@end-debug@
+			loadSubAddon("EnhanceQoLMouse")
 			loadSubAddon("EnhanceQoLMythicPlus")
 			loadSubAddon("EnhanceQoLDrinkMacro")
 			loadSubAddon("EnhanceQoLTooltip")

@@ -76,9 +76,6 @@ local function getCastInfo(unit)
 	return name, duration, expirationTime, icon, notInterruptible, spellID, castType
 end
 
-local zones = { ["All"] = {} }
-local selectedZone = "All"
-
 -- Helper-Funktion: Spell-Liste aktualisieren
 local function UpdateSpellList(spellList)
 	spellList:ReleaseChildren()
@@ -103,7 +100,7 @@ local function addDrinkFrame(container)
 	zoneInput:SetLabel("Add Zone")
 	zoneInput:SetCallback("OnEnterPressed", function(widget, event, text)
 		local id
-		if text == "current" then
+		if string.lower(text) == string.lower(WORLD_MAP) then
 			id = C_Map.GetBestMapForUnit("player")
 		else
 			id = tonumber(text)
@@ -111,20 +108,31 @@ local function addDrinkFrame(container)
 
 		if id then
 			local mapInfo = C_Map.GetMapInfo(id)
-			if mapInfo then print(mapInfo.name, mapInfo.mapID) end
+			if mapInfo then
+				addon.db["AuraSafedZones"][mapInfo.mapID] = mapInfo.name
+				addTree("zone", {
+					value = mapInfo.mapID,
+					text = mapInfo.name,
+				})
+			end
 		end
 		widget:SetText("")
 	end)
 	mainGroup:AddChild(zoneInput)
+
+	local children = {
+		{ value = "any", text = "All" },
+	}
+	for i, v in pairs(addon.db["AuraSafedZones"]) do
+		table.insert(children, { value = i, text = v })
+	end
 
 	addon.Aura.treeGroup = AceGUI:Create("TreeGroup")
 	addon.Aura.treeGroupData = {}
 	addTree(nil, {
 		value = "zone",
 		text = ZONE,
-		children = {
-			{ value = "any", text = "All" },
-		},
+		children = children,
 	})
 	addon.Aura.treeGroup:SetLayout("Fill")
 	addon.Aura.treeGroup:SetFullWidth(true)
@@ -138,7 +146,6 @@ function addon.Aura.functions.treeCallback(container, group)
 	if group == "aura" then addDrinkFrame(container) end
 end
 
--- Addition für Potion Cooldown tracker
 local allowedSpells = {
 	[438471] = { "Buster", 4, true, "Bite.ogg" }, --Voracious Bite
 	[75136] = { "Buster", 4, true, "Bite.ogg" }, --Voracious Bite
