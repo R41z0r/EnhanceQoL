@@ -51,7 +51,7 @@ function addon.functions.toggleLandingPageButton(title, state)
 	end
 end
 
-function addon.functions.prepareListForDropdown(tList)
+function addon.functions.prepareListForDropdown(tList, sortKey)
 	local order = {}
 	local sortedList = {}
 	-- Tabelle in eine Liste umwandeln
@@ -59,7 +59,11 @@ function addon.functions.prepareListForDropdown(tList)
 		table.insert(sortedList, { key = key, value = value })
 	end
 	-- Sortieren nach `value`
-	table.sort(sortedList, function(a, b) return a.value < b.value end)
+	if sortKey then
+		table.sort(sortedList, function(a, b) return a.key < b.key end)
+	else
+		table.sort(sortedList, function(a, b) return a.value < b.value end)
+	end
 	-- Zurückkonvertieren für SetList
 	local dropdownList = {}
 	for _, item in ipairs(sortedList) do

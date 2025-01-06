@@ -10,4 +10,6 @@ local L = addon.LMouse
 L["mouseRingEnabled"] = "Enable visible ring around the mouse cursor"
 L["mouseTrailEnabled"] = "Enable visible trail while moving the mouse cursor"
 L["Trailinfo"] = "Depending on your Hardware this could have a performance impact"
+L["Trail Color"] = "Ring color"
+L["Trail Color"] = "Trail color"
 L["mouseTrailDensity"] = "Mouse trail density"
