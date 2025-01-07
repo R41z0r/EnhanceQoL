@@ -78,6 +78,7 @@ end
 
 -- Helper-Funktion: Spell-Liste aktualisieren
 local function UpdateSpellList(spellList)
+	local mapInfo = 1 -- muss noch angepasst werden
 	spellList:ReleaseChildren()
 	if addon.db["AuraSafedZones"][mapInfo.mapID] then
 		for _, spellID in ipairs(addon.db["AuraSafedZones"][mapInfo.mapID]) do
