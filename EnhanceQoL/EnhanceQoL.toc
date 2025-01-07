@@ -4,6 +4,16 @@
 ## Version: @project-version@
 ## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
 ## Notes: Little Tweaks for enhancing your Quality of Life
+## Notes-deDE: Kleine Anpassungen zur Verbesserung deiner Lebensqualität
+## Notes-esES: Pequeños ajustes para mejorar tu calidad de vida
+## Notes-esMX: Pequeños ajustes para mejorar tu calidad de vida
+## Notes-frFR: Petits ajustements pour améliorer votre confort de jeu
+## Notes-itIT: Piccole modifiche per migliorare la tua qualità di vita
+## Notes-ptBR: Pequenos ajustes para melhorar sua qualidade de vida
+## Notes-ruRU: Небольшие изменения для улучшения качества вашей игры
+## Notes-koKR: 사소한 편의 기능으로 게임 품질을 향상합니다
+## Notes-zhCN: 一些小调整，以改善您的游戏体验
+## Notes-zhTW: 一些小調整，以改善您的遊戲體驗
 ## SavedVariables: EnhanceQoLDB
 ## X-Wago-ID: aN0Ykv6j
 ## X-Curse-Project-ID: 1076354

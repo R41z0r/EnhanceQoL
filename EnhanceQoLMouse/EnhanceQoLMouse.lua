@@ -142,7 +142,6 @@ local function UpdateMouseTrail(delta)
 end
 
 local function createMouseRing()
-	--@debug@
 	if not addon.mousePointer then
 		local imageFrame = CreateFrame("Frame", "ImageTooltipFrame", UIParent, "BackdropTemplate")
 		imageFrame:SetSize(120, 120)
@@ -179,7 +178,6 @@ local function createMouseRing()
 		addon.mousePointer = imageFrame
 		addon.mousePointer.texture1 = texture1
 	end
-	--@end-debug@
 end
 
 local function removeMouseRing()

@@ -3,7 +3,16 @@
 ## Author: R41Z0R
 ## Version: @project-version@
 ## Notes: Mythic Plus extends your Game in Dungeons
-## Dependencies: EnhanceQoL
+## Notes-deDE: Mythic Plus erweitert dein Spielerlebnis in Dungeons
+## Notes-esES: Míticas+ amplían tu juego en mazmorras
+## Notes-esMX: Míticas+ extienden tu experiencia de juego en mazmorras
+## Notes-frFR: Mythique+ prolonge votre expérience de jeu en donjons
+## Notes-itIT: Mitiche+ estende la tua esperienza di gioco nei dungeon
+## Notes-ptBR: Mítico+ expande seu jogo em masmorras
+## Notes-ruRU: Мифический+ расширяет ваш опыт в подземельях
+## Notes-koKR: 쐐기돌 던전을 통해 게임을 확장합니다
+## Notes-zhCN: 史诗钥石使您的地下城游戏得到扩展
+## Notes-zhTW: 史詩鑰石使你的地城體驗更加擴充## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoLMythicPlus\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail

@@ -2,8 +2,17 @@
 ## Title: Enhance QoL Mouse
 ## Author: R41Z0R
 ## Version: @project-version@
-## Notes: Track buffs and debuffs
-## Dependencies: EnhanceQoL
+## Notes: Accessibility features for the mouse cursor
+## Notes-deDE: Barrierefreiheitsfunktionen für den Mauszeiger
+## Notes-esES: Funciones de accesibilidad para el cursor del ratón
+## Notes-esMX: Funciones de accesibilidad para el cursor del ratón
+## Notes-frFR: Fonctions d’accessibilité pour le curseur de la souris
+## Notes-itIT: Funzionalità di accessibilità per il cursore del mouse
+## Notes-ptBR: Recursos de acessibilidade para o cursor do mouse
+## Notes-ruRU: Функции доступности для курсора мыши
+## Notes-koKR: 마우스 커서에 대한 접근성 기능
+## Notes-zhCN: 为鼠标光标提供无障碍功能
+## Notes-zhTW: 為滑鼠指標提供無障礙功能## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoLMouse\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail

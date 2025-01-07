@@ -3,7 +3,16 @@
 ## Author: R41Z0R
 ## Version: @project-version@
 ## Notes: Tooltip modifies the visibility in different situations
-## Dependencies: EnhanceQoL
+## Notes-deDE: Tooltip passt die Sichtbarkeit in verschiedenen Situationen an
+## Notes-esES: El tooltip modifica la visibilidad en diferentes situaciones
+## Notes-esMX: El tooltip modifica la visibilidad en distintas situaciones
+## Notes-frFR: Le tooltip modifie la visibilité dans différentes situations
+## Notes-itIT: Il tooltip modifica la visibilità in diverse situazioni
+## Notes-ptBR: O tooltip modifica a visibilidade em diferentes situações
+## Notes-ruRU: Подсказка изменяет видимость в различных ситуациях
+## Notes-koKR: 툴팁은 다양한 상황에서 표시 여부를 수정합니다
+## Notes-zhCN: 提示信息在不同情况下更改可见性
+## Notes-zhTW: 提示在不同情況下修改可見性## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail
