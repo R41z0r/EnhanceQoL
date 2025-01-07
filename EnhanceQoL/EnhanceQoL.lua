@@ -641,34 +641,47 @@ local function addTotemHideToggle(dbValue, data)
 end
 
 local function addCVarFrame(container, d)
-	local frameData = {}
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
 
-	local sortedOptions = {}
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
 
-	for key, data in pairs(L["CVarOptions"]) do
-		local actValue = false
-		if GetCVar(key) == data.trueValue then actValue = true end
-		table.insert(frameData, {
-			parent = "",
-			var = key,
-			value = actValue,
-			text = data.description,
-			type = "CheckBox",
-			trueValue = data.trueValue,
-			falseValue = data.falseValue,
-			callback = function(self, _, value)
-				addon.variables.requireReload = true
-				if value then
-					SetCVar(key, self.trueValue)
-				else
-					SetCVar(key, self.falseValue)
-				end
-			end,
+	local data = L["CVarOptions"]
+
+	local cvarList = {}
+	for key, optionData in pairs(data) do
+		table.insert(cvarList, {
+			key = key,
+			description = optionData.description,
+			trueValue = optionData.trueValue,
+			falseValue = optionData.falseValue,
 		})
-		table.insert(sortedOptions, { key = key, description = data.description, trueValue = data.trueValue, falseValue = data.falseValue })
 	end
 
-	addon.functions.createWrapperData(frameData, container, L)
+	table.sort(cvarList, function(a, b) return (a.description or "") < (b.description or "") end)
+
+	for _, entry in ipairs(cvarList) do
+		local cvarKey = entry.key
+		local cvarDesc = entry.description
+		local cvarTrue = entry.trueValue
+		local cvarFalse = entry.falseValue
+
+		local actValue = (GetCVar(cvarKey) == cvarTrue)
+
+		local cbElement = addon.functions.createCheckboxAce(cvarDesc, actValue, function(self, _, value)
+			addon.variables.requireReload = true
+			if value then
+				SetCVar(cvarKey, cvarTrue)
+			else
+				SetCVar(cvarKey, cvarFalse)
+			end
+		end)
+		cbElement.trueValue = cvarTrue
+		cbElement.falseValue = cvarFalse
+
+		groupCore:AddChild(cbElement)
+	end
 end
 
 local function addCharacterFrame(container)
@@ -1092,14 +1105,14 @@ local function addQuestFrame(container, d)
 end
 
 local function initDungeon()
-	addon.functions.InitDBValue("autoChooseDelvePower", true)
-	addon.functions.InitDBValue("lfgSortByRio", true)
+	addon.functions.InitDBValue("autoChooseDelvePower", false)
+	addon.functions.InitDBValue("lfgSortByRio", false)
 end
 
 local function initQuest()
 	addon.functions.InitDBValue("autoChooseQuest", false)
-	addon.functions.InitDBValue("ignoreTrivialQuests", true)
-	addon.functions.InitDBValue("ignoreDailyQuests", true)
+	addon.functions.InitDBValue("ignoreTrivialQuests", false)
+	addon.functions.InitDBValue("ignoreDailyQuests", false)
 	addon.functions.InitDBValue("ignoredQuestNPC", {})
 	addon.functions.InitDBValue("autogossipID", {})
 end
@@ -1109,9 +1122,10 @@ local function initMisc()
 	addon.functions.InitDBValue("hideRaidTools", false)
 	addon.functions.InitDBValue("autoRepair", false)
 	addon.functions.InitDBValue("sellAllJunk", false)
-	addon.functions.InitDBValue("ignoreTalkingHead", true)
+	addon.functions.InitDBValue("ignoreTalkingHead", false)
 	addon.functions.InitDBValue("hiddenLandingPages", {})
 	addon.functions.InitDBValue("hideMinimapButton", false)
+	addon.functions.InitDBValue("hideBagsBar", false)
 
 	hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
 		if addon.db["ignoreTalkingHead"] then self:Hide() end

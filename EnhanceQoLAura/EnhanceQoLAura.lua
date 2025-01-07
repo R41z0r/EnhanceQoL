@@ -79,8 +79,8 @@ end
 -- Helper-Funktion: Spell-Liste aktualisieren
 local function UpdateSpellList(spellList)
 	spellList:ReleaseChildren()
-	if zones[selectedZone] then
-		for _, spellID in ipairs(zones[selectedZone]) do
+	if addon.db["AuraSafedZones"][mapInfo.mapID] then
+		for _, spellID in ipairs(addon.db["AuraSafedZones"][mapInfo.mapID]) do
 			local spellLabel = AceGUI:Create("Label")
 			spellLabel:SetText("ID: " .. spellID)
 			spellList:AddChild(spellLabel)

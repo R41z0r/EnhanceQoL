@@ -3,15 +3,15 @@ if (GAME_LOCALE or GetLocale()) ~= "zhCN" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
-local L = addon.LDrinkMacro
+local L = addon.LMouse
 
-L["Prefer mage food"] = "偏爱法师食物"
-L["Minimum mana restore for food"] = "食物的最低法力恢复"
-L["Ignore bufffood"] = "忽略“吃饱喝足”的食物"
-L["Drink Macro"] = "饮料宏"
-L[addonName] = "饮料宏"
-L["ignoreGemsEarthen"] = "忽略土灵种族的珠宝工艺宝石"
+L["mouseRingEnabled"] = "启用鼠标指针周围的可见环"
+L["mouseTrailEnabled"] = "启用鼠标移动时的可见轨迹"
+L["Trailinfo"] = "根据您的硬件配置，这可能会影响性能"
+L["Ring Color"] = "环的颜色"
+L["Trail Color"] = "轨迹颜色"
+L["mouseTrailDensity"] = "鼠标轨迹密度"

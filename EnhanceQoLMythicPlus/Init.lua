@@ -33,8 +33,8 @@ addon.functions.InitDBValue("potionTrackerHealingPotions", false)
 addon.functions.InitDBValue("potionTrackerOffhealing", false)
 
 -- Dungeon Browser
-addon.functions.InitDBValue("groupfinderAppText", true)
-addon.functions.InitDBValue("groupfinderSkipRolecheck", true)
+addon.functions.InitDBValue("groupfinderAppText", false)
+addon.functions.InitDBValue("groupfinderSkipRolecheck", false)
 
 -- Misc
 addon.functions.InitDBValue("autoMarkTankInDungeon", false)

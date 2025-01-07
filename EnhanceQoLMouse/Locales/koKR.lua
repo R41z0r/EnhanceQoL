@@ -3,15 +3,15 @@ if (GAME_LOCALE or GetLocale()) ~= "koKR" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
-local L = addon.LDrinkMacro
+local L = addon.LMouse
 
-L["Prefer mage food"] = "마법사 음식 선호"
-L["Minimum mana restore for food"] = "음식의 최소 마나 회복량"
-L["Ignore bufffood"] = "\"잘 먹었다\" 음식 무시"
-L["Drink Macro"] = "음료 매크로"
-L[addonName] = "음료 매크로"
-L["ignoreGemsEarthen"] = "토석인을 위한 보석세공 보석 무시"
+L["mouseRingEnabled"] = "마우스 커서 주위에 반지 모양 표시 활성화"
+L["mouseTrailEnabled"] = "마우스 커서 이동 시 표시되는 자취 활성화"
+L["Trailinfo"] = "하드웨어 성능에 따라 프레임 저하 등이 발생할 수 있습니다"
+L["Ring Color"] = "반지 색상"
+L["Trail Color"] = "자취 색상"
+L["mouseTrailDensity"] = "마우스 자취 밀도"

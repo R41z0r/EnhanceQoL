@@ -3,15 +3,15 @@ if (GAME_LOCALE or GetLocale()) ~= "esES" or (GAME_LOCALE or GetLocale()) ~= "es
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
-local L = addon.LDrinkMacro
+local L = addon.LMouse
 
-L["Prefer mage food"] = "Preferir comida de mago"
-L["Minimum mana restore for food"] = "Restauración mínima de maná para comida"
-L["Ignore bufffood"] = "Ignorar comida \"Bien alimentado\""
-L["Drink Macro"] = "Macro de bebida"
-L[addonName] = "Macro de bebida"
-L["ignoreGemsEarthen"] = "Ignorar gemas de orfebrería para la raza terránea"
+L["mouseRingEnabled"] = "Habilitar anillo visible alrededor del cursor"
+L["mouseTrailEnabled"] = "Habilitar rastro visible mientras se mueve el cursor"
+L["Trailinfo"] = "Dependiendo de tu hardware, esto podría impactar el rendimiento"
+L["Ring Color"] = "Color del anillo"
+L["Trail Color"] = "Color del rastro"
+L["mouseTrailDensity"] = "Densidad del rastro del ratón"

@@ -15,19 +15,19 @@ addon.functions.InitDBValue("TooltipUnitHideInCombat", true)
 addon.functions.InitDBValue("TooltipUnitHideInDungeon", false)
 addon.functions.InitDBValue("TooltipShowMythicScore", false)
 addon.functions.InitDBValue("TooltipShowClassColor", false)
-addon.functions.InitDBValue("TooltipShowNPCID", true)
+addon.functions.InitDBValue("TooltipShowNPCID", false)
 
 -- Spell
 addon.functions.InitDBValue("TooltipSpellHideType", 1)
 addon.functions.InitDBValue("TooltipSpellHideInCombat", false)
 addon.functions.InitDBValue("TooltipSpellHideInDungeon", false)
-addon.functions.InitDBValue("TooltipShowSpellID", true)
+addon.functions.InitDBValue("TooltipShowSpellID", false)
 
 -- Item
 addon.functions.InitDBValue("TooltipItemHideType", 1)
 addon.functions.InitDBValue("TooltipItemHideInCombat", false)
 addon.functions.InitDBValue("TooltipItemHideInDungeon", false)
-addon.functions.InitDBValue("TooltipShowItemID", true)
+addon.functions.InitDBValue("TooltipShowItemID", false)
 
 -- Buff
 addon.functions.InitDBValue("TooltipBuffHideType", 1)
