@@ -28,8 +28,8 @@ jobs:
           args: "--no-color -q"
           annotate: warning
 
-      - name: Generate Changelog
-        run: ./generate_changelog.sh
+      # - name: Generate Changelog
+      #   run: ./generate_changelog.sh
 
       - name: Create Package and release
         uses: BigWigsMods/packager@v2
