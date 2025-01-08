@@ -12,6 +12,16 @@
             "problemMatcher": []
         },
         {
+            "label": "Build and Deploy Addon PTR",
+            "type": "shell",
+            "command": "./scripts/buildPTR.sh",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Build and Deploy Addon BigWigsPackager",
             "type": "shell",
             "command": "./.release/release.sh",

@@ -9,117 +9,151 @@ end
 
 local L = addon.LMythicPlus
 
-local portalSpells = { -- Actual Season
-	[354464] = { text = "MISTS" },
-	[354462] = { text = "NW" },
-	[464256] = { text = "SIEG", faction = FACTION_HORDE },
-	[445418] = { text = "SIEG", faction = FACTION_ALLIANCE },
-	[445414] = { text = "DAWN" },
-	[445417] = { text = "ARAK" },
-	[445269] = { text = "SV" },
-	[445424] = { text = "GB" },
-	[445416] = { text = "COT" },
-}
+local cModeIDs
+local portalSpells = {}
 
 local portalCompendium = {
 	[1] = {
 		headline = EXPANSION_NAME10,
 		spells = {
-			[445269] = { text = "SV" },
-			[445416] = { text = "COT" },
-			[445414] = { text = "DAWN" },
-			[445417] = { text = "ARAK" },
-			[467546] = { text = "WW" }, -- not yet in game
-			[445440] = { text = "CBM" },
-			[445444] = { text = "PSF" },
-			[445441] = { text = "DC" },
+			[445269] = { text = "SV", cId = { [501] = true } },
+			[445416] = { text = "COT", cId = { [502] = true } },
+			[445414] = { text = "DAWN", cId = { [505] = true } },
+			[445417] = { text = "ARAK", cId = { [503] = true } },
+			[467546] = { text = "FLOOD", cId = { [525] = true } },
+			[445440] = { text = "CBM", cId = { [506] = true } },
+			[445444] = { text = "PSF", cId = { [499] = true } },
+			[445441] = { text = "DC", cId = { [504] = true } },
+			[445443] = { text = "ROOK", cId = { [500] = true } },
 		},
 	},
 	[2] = {
 		headline = EXPANSION_NAME9,
 		spells = {
-			[424197] = { text = "DOTI" },
-			[393256] = { text = "RLP" },
-			[393262] = { text = "NO" },
-			[393267] = { text = "BH" },
-			[393273] = { text = "AA" },
-			[393276] = { text = "NELT" },
-			[393279] = { text = "AV" },
-			[393283] = { text = "HOI" },
-			[393222] = { text = "ULD" },
-			[432254] = { text = "VOTI" },
-			[432258] = { text = "AMIR" },
-			[432257] = { text = "ASC" },
+			[424197] = { text = "DOTI", cId = { [463] = true, [464] = true } },
+			[393256] = { text = "RLP", cId = { [399] = true } },
+			[393262] = { text = "NO", cId = { [400] = true } },
+			[393267] = { text = "BH", cId = { [405] = true } },
+			[393273] = { text = "AA", cId = { [402] = true } },
+			[393276] = { text = "NELT", cId = { [404] = true } },
+			[393279] = { text = "AV", cId = { [401] = true } },
+			[393283] = { text = "HOI", cId = { [406] = true } },
+			[393222] = { text = "ULD", cId = { [403] = true } },
+			[432254] = { text = "VOTI", cId = {} },
+			[432258] = { text = "AMIR", cId = {} },
+			[432257] = { text = "ASC", cId = {} },
 		},
 	},
 	[3] = {
 		headline = EXPANSION_NAME8,
 		spells = {
-			[354462] = { text = "NW" },
-			[354463] = { text = "PF" },
-			[354464] = { text = "MISTS" },
-			[354465] = { text = "HOA" },
-			[354466] = { text = "SOA" },
-			[354467] = { text = "TOP" },
-			[354468] = { text = "DOS" },
-			[354469] = { text = "SD" },
-			[367416] = { text = "TAZA" },
-			[373190] = { text = "CN" },
-			[373192] = { text = "SFO" },
-			[373191] = { text = "SOD" },
+			[354462] = { text = "NW", cId = { [376] = true } },
+			[354463] = { text = "PF", cId = { [379] = true } },
+			[354464] = { text = "MISTS", cId = { [375] = true } },
+			[354465] = { text = "HOA", cId = { [378] = true } },
+			[354466] = { text = "SOA", cId = { [381] = true } },
+			[354467] = { text = "TOP", cId = { [382] = true } },
+			[354468] = { text = "DOS", cId = { [377] = true } },
+			[354469] = { text = "SD", cId = { [380] = true } },
+			[367416] = { text = "TAZA", cId = { [391] = true, [392] = true } },
+			[373190] = { text = "CN", cId = {} }, -- Raids
+			[373192] = { text = "SFO", cId = {} }, -- Raids
+			[373191] = { text = "SOD", cId = {} }, -- Raids
 		},
 	},
 	[4] = {
 		headline = EXPANSION_NAME7,
 		spells = {
-			[410071] = { text = "FH" },
-			[410074] = { text = "UR" },
-			[373274] = { text = "MECH" },
-			[424167] = { text = "WM" },
-			[424187] = { text = "AD" },
-			[445418] = { text = "SIEG" },
+			[410071] = { text = "FH", cId = { [245] = true } },
+			[410074] = { text = "UR", cId = { [251] = true } },
+			[373274] = { text = "MECH", cId = { [369] = true, [370] = true } },
+			[424167] = { text = "WM", cId = { [248] = true } },
+			[424187] = { text = "AD", cId = { [244] = true } },
+			[445418] = { text = "SIEG", faction = FACTION_ALLIANCE, cId = { [353] = true } },
+			[464256] = { text = "SIEG", faction = FACTION_HORDE, cId = { [353] = true } },
+			[467553] = { text = "ML", faction = FACTION_ALLIANCE, cId = { [247] = true } },
+			[467555] = { text = "ML", faction = FACTION_HORDE, cId = { [247] = true } },
 		},
 	},
 	[5] = {
 		headline = EXPANSION_NAME6,
 		spells = {
-			[424153] = { text = "BRH" },
-			[393766] = { text = "COS" },
-			[424163] = { text = "DHT" },
-			[393764] = { text = "HOV" },
-			[410078] = { text = "NL" },
-			[373262] = { text = "KARA" },
+			[424153] = { text = "BRH", cId = { [199] = true } },
+			[393766] = { text = "COS", cId = { [210] = true } },
+			[424163] = { text = "DHT", cId = { [198] = true } },
+			[393764] = { text = "HOV", cId = { [200] = true } },
+			[410078] = { text = "NL", cId = { [206] = true } },
+			[373262] = { text = "KARA", cId = { [227] = true, [234] = true } },
 		},
 	},
 	[6] = {
 		headline = EXPANSION_NAME5,
 		spells = {
-			[159897] = { text = "AUCH" },
-			[159895] = { text = "BSM" },
-			[159901] = { text = "EB" },
-			[159900] = { text = "GD" },
-			[159896] = { text = "ID" },
-			[159899] = { text = "SBG" },
-			[159898] = { text = "SR" },
-			[159902] = { text = "UBRS" },
+			[159897] = { text = "AUCH", cId = { [164] = true } },
+			[159895] = { text = "BSM", cId = { [163] = true } },
+			[159901] = { text = "EB", cId = { [168] = true } },
+			[159900] = { text = "GD", cId = { [166] = true } },
+			[159896] = { text = "ID", cId = { [169] = true } },
+			[159899] = { text = "SBG", cId = { [165] = true } },
+			[159898] = { text = "SR", cId = { [161] = true } },
+			[159902] = { text = "UBRS", cId = { [167] = true } },
 		},
 	},
 	[7] = {
 		headline = EXPANSION_NAME4,
 		spells = {
-			[131225] = { text = "GSS" },
-			[131222] = { text = "MP" },
-			[131232] = { text = "SCHO" },
-			[131231] = { text = "SH" },
-			[131229] = { text = "SM" },
-			[131228] = { text = "SN" },
-			[131206] = { text = "SPM" },
-			[131205] = { text = "SB" },
-			[131204] = { text = "TJS" },
+			[131225] = { text = "GSS", cId = { [57] = true } },
+			[131222] = { text = "MP", cId = { [60] = true } },
+			[131232] = { text = "SCHO", cId = { [76] = true } },
+			[131231] = { text = "SH", cId = { [77] = true } },
+			[131229] = { text = "SM", cId = { [78] = true } },
+			[131228] = { text = "SN", cId = { [59] = true } },
+			[131206] = { text = "SPM", cId = { [58] = true } },
+			[131205] = { text = "SB", cId = { [56] = true } },
+			[131204] = { text = "TJS", cId = { [2] = true } },
 		},
 	},
-	[8] = { headline = EXPANSION_NAME3, spells = { [445424] = { text = "GB" }, [424142] = { text = "TOTT" }, [410080] = { text = "VP" } } },
+	[8] = {
+		headline = EXPANSION_NAME3,
+		spells = { [445424] = { text = "GB", cId = { [507] = true } }, [424142] = { text = "TOTT", cId = { [456] = true } }, [410080] = { text = "VP", cId = { [438] = true } } },
+	},
 }
+
+local function getCurrentSeasonPortal()
+	local cModeIDs = C_ChallengeMode.GetMapTable()
+	local cModeIDLookup = {}
+	for _, id in ipairs(cModeIDs) do
+		cModeIDLookup[id] = true
+	end
+
+	local filteredPortalSpells = {}
+
+	for _, section in pairs(portalCompendium) do
+		for spellID, data in pairs(section.spells) do
+			if data.cId then
+				for cId in pairs(data.cId) do
+					if cModeIDLookup[cId] then
+						filteredPortalSpells[spellID] = {
+							text = data.text,
+							iconID = data.iconID,
+						}
+						if data.faction then filteredPortalSpells[spellID].faction = data.faction end
+						break
+					end
+				end
+			end
+		end
+	end
+
+	portalSpells = filteredPortalSpells
+end
+-- for _, exp in pairs(portalCompendium) do
+-- 	for spellId, data in pairs(exp.spells) do
+-- 		cIdMap[spellId] = { text = data.text }
+-- 		if data.faction then cIdMap[spellId].faction = data.faction end
+-- 		for cId, _ in pairs(data.cId) do
+-- 	end
+-- end
 
 local isKnown = {}
 local faction = UnitFactionGroup("player")
@@ -460,6 +494,7 @@ function addon.MythicPlus.functions.toggleFrame()
 		if addon.db["teleportFrame"] == true then
 			doAfterCombat = false
 			if not frameAnchor:IsShown() then frameAnchor:Show() end
+			if #portalSpells == 0 then getCurrentSeasonPortal() end
 			CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
 			if addon.db["teleportsEnableCompendium"] then
 				if not frameAnchorCompendium:IsShown() then frameAnchorCompendium:Show() end

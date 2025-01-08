@@ -1,4 +1,4 @@
-## Interface: 110000, 110002, 110005, 110007
+## Interface: 110000, 110002, 110005, 110007, 110100
 ## Title: Enhance QoL Mouse
 ## Author: R41Z0R
 ## Version: @project-version@
@@ -13,6 +13,7 @@
 ## Notes-koKR: 마우스 커서에 대한 접근성 기능
 ## Notes-zhCN: 为鼠标光标提供无障碍功能
 ## Notes-zhTW: 為滑鼠指標提供無障礙功能## Dependencies: EnhanceQoL
+## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoLMouse\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail

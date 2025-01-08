@@ -381,6 +381,7 @@ local function addGeneralFrame(container)
 
 	local dropTooltipUnitHideType = addon.functions.createDropdownAce(L["TooltipAnchorType"], list, order, function(self, _, value)
 		addon.db["TooltipAnchorType"] = self:GetValue()
+		container:ReleaseChildren()
 		addGeneralFrame(container)
 	end)
 	dropTooltipUnitHideType:SetValue(addon.db["TooltipAnchorType"])

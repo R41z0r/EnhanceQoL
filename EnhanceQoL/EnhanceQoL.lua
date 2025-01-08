@@ -1532,6 +1532,7 @@ function loadMain()
 	SLASH_ENHANCEQOL3 = "/eqol aag"
 	SLASH_ENHANCEQOL4 = "/eqol rag"
 	SLASH_ENHANCEQOL5 = "/eqol lag"
+	SLASH_ENHANCEQOL6 = "/eqol lcid"
 	SlashCmdList["ENHANCEQOL"] = function(msg)
 		if msg == "resetframe" then
 			-- Frame zurücksetzen
@@ -1565,6 +1566,11 @@ function loadMain()
 				for _, v in pairs(options) do
 					print(v.gossipOptionID, v.name)
 				end
+			end
+		elseif msg == "lcid" then
+			for i = 1, 600, 1 do
+				local name, id = C_ChallengeMode.GetMapUIInfo(i)
+				if name then print(name, id) end
 			end
 		else
 			if addon.aceFrame:IsShown() then
@@ -1669,6 +1675,7 @@ local eventHandlers = {
 
 			--@debug@
 			loadSubAddon("EnhanceQoLAura")
+			loadSubAddon("EnhanceQoLQuery")
 			--@end-debug@
 			loadSubAddon("EnhanceQoLMouse")
 			loadSubAddon("EnhanceQoLMythicPlus")

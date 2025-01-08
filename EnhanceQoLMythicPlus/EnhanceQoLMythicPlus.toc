@@ -1,4 +1,4 @@
-## Interface: 110000, 110002, 110005, 110007
+## Interface: 110000, 110002, 110005, 110007, 110100
 ## Title: Enhance QoL Mythic Plus
 ## Author: R41Z0R
 ## Version: @project-version@
@@ -13,6 +13,7 @@
 ## Notes-koKR: 쐐기돌 던전을 통해 게임을 확장합니다
 ## Notes-zhCN: 史诗钥石使您的地下城游戏得到扩展
 ## Notes-zhTW: 史詩鑰石使你的地城體驗更加擴充## Dependencies: EnhanceQoL
+## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoLMythicPlus\Icons\Icon.tga
 ## Retail: true
 ## X-Compatible-With: retail

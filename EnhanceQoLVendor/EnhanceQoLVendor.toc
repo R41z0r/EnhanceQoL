@@ -1,4 +1,4 @@
-## Interface: 110000, 110002, 110005, 110007
+## Interface: 110000, 110002, 110005, 110007, 110100
 ## Title: Enhance QoL Vendor
 ## Author: R41Z0R
 ## Version: @project-version@
@@ -14,6 +14,7 @@
 ## Notes-zhCN: 根据筛选器自动出售不同物品
 ## Notes-zhTW: 根據過濾器自動出售不同物品## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## Dependencies: EnhanceQoL
 ## Retail: true
 ## X-Compatible-With: retail
 ## LoadOnDemand: 1

@@ -1,4 +1,4 @@
-## Interface: 110000, 110002, 110005, 110007
+## Interface: 110000, 110002, 110005, 110007, 110100
 ## Title: Enhance QoL Tooltip
 ## Author: R41Z0R
 ## Version: @project-version@
@@ -14,6 +14,7 @@
 ## Notes-zhCN: 提示信息在不同情况下更改可见性
 ## Notes-zhTW: 提示在不同情況下修改可見性## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## Dependencies: EnhanceQoL
 ## Retail: true
 ## X-Compatible-With: retail
 ## X-WoWI-ID: 26888

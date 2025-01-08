@@ -1,10 +1,12 @@
-## Interface: 110000, 110002, 110005, 110007
+## Interface: 110000, 110002, 110005, 110007, 110100
 ## Title: Enhance QoL Query
 ## Notes: A simple addon to show item info
 ## Author: R41Z0R
 ## Version: @project-version@
-## Dependencies: EnhanceQoLDrinkMacro
+## Dependencies: EnhanceQoL, EnhanceQoLDrinkMacro
 ## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## LoadOnDemand: 1
+## X-Compatible-With: retail
 
 EnhanceQoLQuery.lua
 EnhanceQoLQuery.xml
