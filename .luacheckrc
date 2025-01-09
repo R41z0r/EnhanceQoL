@@ -5,7 +5,7 @@ exclude_files = {
 	"LibDataBroker-1.1.lua",
 	"LibStub.lua",
 	"CallbackHandler-1.0.lua",
-	"EnhanceQoLAura.lua"
+	"EnhanceQoLAura.lua",
 }
 ignore = {
 	"11./SLASH_.*", -- Setting an undefined (Slash handler) global variable
@@ -45,7 +45,7 @@ globals = {
 	"ChallengesKeystoneFrame",
 	"_G.CompactRaidFrameManager",
 	"SOUNDKIT",
-	
+
 	-- ACE
 	"GameFontDisableSmall",
 	"GameFontNormalSmall",
@@ -53,8 +53,12 @@ globals = {
 	"OpacitySliderFrame",
 	"AceGUIEditBoxInsertLink",
 	"AceGUIMultiLineEditBoxInsertLink",
-	
+
 	-- EnhanceQoL
+	"BankFrame",
+	"MERCHANT_ITEMS_PER_PAGE",
+	"EquipmentManager_UnpackLocation",
+	"AccountBankPanel",
 	"ItemLocation",
 	"securecallfunction",
 	"ACCESSIBILITY_GENERAL_LABEL",
@@ -76,21 +80,21 @@ globals = {
 	"WarlockPowerFrame",
 	"RuneFrame",
 	"LFGListApplicationViewer_UpdateResults",
-	"InspectHeadSlot", 
-	"InspectNeckSlot", 
-	"InspectShoulderSlot", 
-	"InspectBackSlot", 
-	"InspectChestSlot", 
-	"InspectWristSlot", 
-	"InspectHandsSlot", 
-	"InspectWaistSlot", 
-	"InspectLegsSlot", 
-	"InspectFeetSlot", 
-	"InspectFinger0Slot", 
-	"InspectFinger1Slot", 
-	"InspectTrinket0Slot", 
-	"InspectTrinket1Slot", 
-	"InspectMainHandSlot", 
+	"InspectHeadSlot",
+	"InspectNeckSlot",
+	"InspectShoulderSlot",
+	"InspectBackSlot",
+	"InspectChestSlot",
+	"InspectWristSlot",
+	"InspectHandsSlot",
+	"InspectWaistSlot",
+	"InspectLegsSlot",
+	"InspectFeetSlot",
+	"InspectFinger0Slot",
+	"InspectFinger1Slot",
+	"InspectTrinket0Slot",
+	"InspectTrinket1Slot",
+	"InspectMainHandSlot",
 	"InspectSecondaryHandSlot",
 	"InspectFrame",
 	"BagsBar",
@@ -245,9 +249,8 @@ globals = {
 	"ItemTransmogInfoMixin",
 	"TransmogPendingInfoMixin",
 	"TransmogLocationMixin",
-    "PlayerLocationMixin",
+	"PlayerLocationMixin",
 	"MenuUtil",
-
 
 	-- FrameXML frames
 	"GameTooltip",
