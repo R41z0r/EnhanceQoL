@@ -1,11 +1,14 @@
 ## Added:
 
-- Updated addon for 11.1.0
+- Display Item level on item quickswitch (ALT on itemslot)
 
-## Changed:
+### New Options
 
-- DungenPortals will now automatically detect which portal to show for current season.
+- Display Item level on the Bank Frame
+- Display Item level on the Merchant Frame
 
 ## Bugfix:
 
-- Tooltip Anchor settings weren't updated correctly
+- Item level on bags was sometimes wrong
+- Gemslots in Character Frame overlapped the item quickswitch (ALT on itemslot)
+- Long settings were overlapping on resize

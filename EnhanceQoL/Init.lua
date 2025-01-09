@@ -94,7 +94,8 @@ addon.variables.allowedSockets = {
 
 addon.variables.allowBagIlvlClassID = { [2] = true, [4] = true }
 addon.variables.denyBagIlvlClassSubClassID = { [4] = { [5] = true } }
-addon.variables.allowedEquipSlotsBagIlvl = { -- ["INVTYPE_NON_EQUIP_IGNORE"] = true,
+addon.variables.allowedEquipSlotsBagIlvl = {
+	["INVTYPE_NON_EQUIP_IGNORE"] = true,
 	["INVTYPE_HEAD"] = true,
 	["INVTYPE_NECK"] = true,
 	["INVTYPE_SHOULDER"] = true,

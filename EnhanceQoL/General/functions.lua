@@ -168,84 +168,76 @@ function addon.functions.createWrapperData(data, container, L)
 	end
 	table.sort(sortedParentKeys)
 
-	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Fill")
+	wrapper:SetFullWidth(true)
+	wrapper:SetFullHeight(true)
 	container:AddChild(wrapper)
 
-	-- Füge Inline-Gruppen und Checkboxen hinzu
+	local scroll = AceGUI:Create("ScrollFrame")
+	scroll:SetLayout("Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	wrapper:AddChild(scroll)
+
+	local scrollInner = addon.functions.createContainer("SimpleGroup", "Flow")
+	scrollInner:SetFullWidth(true)
+	scrollInner:SetFullHeight(true)
+	scroll:AddChild(scrollInner)
+
 	for _, parent in ipairs(sortedParentKeys) do
 		local groupData = sortedParents[parent]
 
-		-- Sortiere die Elemente innerhalb der Gruppe basierend auf `L[var]`
 		table.sort(groupData, function(a, b)
-			local textA = a.var
-			local textB = b.var
-			if a.text then
-				textA = a.text
-			else
-				textA = L[a.var]
-			end
-			if b.text then
-				textB = b.text
-			else
-				textB = L[b.var]
-			end
+			local textA = a.text or L[a.var]
+			local textB = b.text or L[b.var]
 			return textA < textB
 		end)
 
-		-- Erstelle die Inline-Gruppe
-		local group = addon.functions.createContainer("InlineGroup", "List")
-		group:SetTitle(parent) -- Titel basierend auf `parent`
-		wrapper:AddChild(group)
+		local group = AceGUI:Create("InlineGroup")
+		group:SetLayout("List")
+		group:SetFullWidth(true)
+		group:SetTitle(parent)
+		scrollInner:AddChild(group)
 
-		-- Füge Checkboxen in die Inline-Gruppe ein
 		for _, checkboxData in ipairs(groupData) do
-			local checkbox = AceGUI:Create(checkboxData.type)
+			local widget = AceGUI:Create(checkboxData.type)
 
 			if checkboxData.type == "CheckBox" then
-				if checkboxData.text then
-					checkbox:SetLabel(checkboxData.text)
-				else
-					checkbox:SetLabel(L[checkboxData.var])
-				end
-				if checkboxData.value then
-					checkbox:SetValue(checkboxData.value)
-				else
-					checkbox:SetValue(addon.db[checkboxData.var])
-				end
-				checkbox:SetCallback("OnValueChanged", checkboxData.callback)
-				checkbox:SetFullWidth(true)
-				group:AddChild(checkbox)
+				widget:SetLabel(checkboxData.text or L[checkboxData.var])
+				widget:SetValue(checkboxData.value or addon.db[checkboxData.var])
+				widget:SetCallback("OnValueChanged", checkboxData.callback)
+				widget:SetFullWidth(true)
+				group:AddChild(widget)
 
 				if checkboxData.desc then
 					local subtext = AceGUI:Create("Label")
 					subtext:SetText(checkboxData.desc)
-					subtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE") -- Schriftart und Größe anpassen
+					subtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
 					subtext:SetFullWidth(true)
-					subtext:SetColor(1, 1, 1) -- Farbe (weiß in diesem Beispiel)
+					subtext:SetColor(1, 1, 1)
 					group:AddChild(subtext)
 				end
 			elseif checkboxData.type == "Button" then
-				local button = AceGUI:Create("Button")
-				button:SetText(checkboxData.text)
-				button:SetWidth(checkboxData.width or 100)
-				if checkboxData.callback then button:SetCallback("OnClick", checkboxData.callback) end
-				group:AddChild(button)
+				widget:SetText(checkboxData.text)
+				widget:SetWidth(checkboxData.width or 100)
+				if checkboxData.callback then widget:SetCallback("OnClick", checkboxData.callback) end
+				group:AddChild(widget)
 			elseif checkboxData.type == "Dropdown" then
-				local dropdown = AceGUI:Create("Dropdown")
-				dropdown:SetLabel(checkboxData.text or "")
-
+				widget:SetLabel(checkboxData.text or "")
 				if checkboxData.order then
-					dropdown:SetList(checkboxData.list, checkboxData.order)
+					widget:SetList(checkboxData.list, checkboxData.order)
 				else
-					dropdown:SetList(checkboxData.list)
+					widget:SetList(checkboxData.list)
 				end
-				dropdown:SetFullWidth(true)
-				if checkboxData.callback then dropdown:SetCallback("OnValueChanged", checkboxData.callback) end
-				group:AddChild(dropdown)
+				widget:SetFullWidth(true)
+				if checkboxData.callback then widget:SetCallback("OnValueChanged", checkboxData.callback) end
+				group:AddChild(widget)
 			end
-			if checkboxData.gv then addon.elements[checkboxData.gv] = checkbox end
+			if checkboxData.gv then addon.elements[checkboxData.gv] = widget end
 		end
 	end
+	scroll:DoLayout()
+	scrollInner:DoLayout()
 end
 
 function addon.functions.addToTree(parentValue, newElement, noSort)
@@ -291,39 +283,60 @@ function addon.functions.addToTree(parentValue, newElement, noSort)
 	addon.treeGroup:RefreshTree()
 end
 
-local function updateButtonInfo(itemButton, bag, slot)
+local knownButtons = {}
+
+local function updateButtonInfo(itemButton, bag, slot, frameName)
 	local eItem = Item:CreateFromBagAndSlot(bag, slot)
 	if eItem and not eItem:IsItemEmpty() then
 		eItem:ContinueOnItemLoad(function()
-			if not itemButton.ItemLevelText then
-				itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-				itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
-				itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
+			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(eItem:GetItemLink())
 
-				itemButton.ItemLevelText:SetShadowOffset(2, -2)
-				itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+			if
+				(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
+			then
+				if not itemButton.ItemLevelText then
+					itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+					itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+					itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
+
+					itemButton.ItemLevelText:SetShadowOffset(2, -2)
+					itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+				end
+				if frameName then table.insert(knownButtons[frameName], itemButton) end
+				local link = eItem:GetItemLink()
+				local invSlot = select(4, GetItemInfoInstant(link))
+				if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+
+				local color = eItem:GetItemQualityColor()
+				local itemLevelText = eItem:GetCurrentItemLevel()
+
+				itemButton.ItemLevelText:SetFormattedText(itemLevelText)
+				itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+
+				itemButton.ItemLevelText:Show()
+			elseif itemButton.ItemLevelText then
+				itemButton.ItemLevelText:Hide()
 			end
-			local link = eItem:GetItemLink()
-			local invSlot = select(4, GetItemInfoInstant(link))
-			if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
-
-			local color = eItem:GetItemQualityColor()
-			local itemLevelText = eItem:GetCurrentItemLevel()
-
-			itemButton.ItemLevelText:SetFormattedText(itemLevelText)
-			itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
-
-			itemButton.ItemLevelText:Show()
 		end)
 	elseif itemButton.ItemLevelText then
 		itemButton.ItemLevelText:Hide()
 	end
 end
 
+function addon.functions.updateBank(itemButton, bag, slot) updateButtonInfo(itemButton, bag, slot) end
+
 function addon.functions.updateBags(frame)
+	if nil == knownButtons[frame:GetName()] then
+		knownButtons[frame:GetName()] = {}
+	else
+		for i, v in pairs(knownButtons[frame:GetName()]) do
+			if v.ItemLevelText then v.ItemLevelText:Hide() end
+		end
+	end
+	knownButtons[frame:GetName()] = {} -- clear the list again
 	for _, itemButton in frame:EnumerateValidItems() do
 		if addon.db["showIlvlOnBagItems"] then
-			updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID())
+			updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID(), frame:GetName())
 		elseif itemButton.ItemLevelText then
 			itemButton.ItemLevelText:Hide()
 		end

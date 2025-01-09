@@ -687,12 +687,39 @@ end
 local function addCharacterFrame(container)
 	local data = {
 		{
+			parent = BAGSLOT,
+			var = "showIlvlOnMerchantframe",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["showIlvlOnMerchantframe"] = value end,
+		},
+		{
 			parent = INFO,
 			var = "showIlvlOnCharframe",
 			type = "CheckBox",
 			callback = function(self, _, value)
 				addon.db["showIlvlOnCharframe"] = value
 				setCharFrame()
+			end,
+		},
+		{
+			parent = BAGSLOT,
+			var = "showIlvlOnBankFrame",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showIlvlOnBankFrame"] = value
+				if value then
+					if BankFrame:IsShown() then
+						for slot = 1, NUM_BANKGENERIC_SLOTS do
+							local itemButton = _G["BankFrameItem" .. slot]
+							if itemButton then addon.functions.updateBank(itemButton, -1, slot) end
+						end
+					end
+				else
+					for slot = 1, NUM_BANKGENERIC_SLOTS do
+						local itemButton = _G["BankFrameItem" .. slot]
+						if itemButton and itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+					end
+				end
 			end,
 		},
 		{
@@ -907,6 +934,14 @@ end
 
 local function addMiscFrame(container, d)
 	local data = {
+		--@debug@
+		{
+			parent = "",
+			var = "automaticallyOpenContainer",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["automaticallyOpenContainer"] = value end,
+		},
+		--@end-debug@
 		{
 			parent = "",
 			var = "ignoreTalkingHead",
@@ -1104,6 +1139,133 @@ local function addQuestFrame(container, d)
 	groupNPC:AddChild(btnRemoveNPC)
 end
 
+local function updateBankButtonInfo()
+	if not addon.db["showIlvlOnBankFrame"] then return end
+
+	local function setBankInfo(itemButton, bag, slot)
+		local eItem = Item:CreateFromBagAndSlot(bag, slot)
+		if eItem and not eItem:IsItemEmpty() then
+			eItem:ContinueOnItemLoad(function()
+				local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(eItem:GetItemLink())
+
+				if
+					(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
+				then
+					-- Falls keine Textanzeige vorhanden ist, erstelle eine neue
+					if not itemButton.ItemLevelText then
+						itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+						itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
+						itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
+						itemButton.ItemLevelText:SetShadowOffset(1, -1)
+						itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+					end
+
+					local color = eItem:GetItemQualityColor()
+					itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
+					itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+					itemButton.ItemLevelText:Show()
+				elseif itemButton and itemButton.ItemLevelText then
+					itemButton.ItemLevelText:Hide()
+				end
+			end)
+		elseif itemButton and itemButton.ItemLevelText then
+			itemButton.ItemLevelText:Hide()
+		end
+	end
+end
+
+BankFrame:HookScript("OnShow", updateBankButtonInfo)
+
+local function updateMerchantButtonInfo()
+	if addon.db["showIlvlOnMerchantframe"] then
+		local itemsPerPage = MERCHANT_ITEMS_PER_PAGE or 10 -- Anzahl der Items pro Seite (Standard 10)
+		local currentPage = MerchantFrame.page or 1 -- Aktuelle Seite
+		local startIndex = (currentPage - 1) * itemsPerPage + 1 -- Startindex basierend auf der aktuellen Seite
+
+		for i = 1, itemsPerPage do
+			local itemIndex = startIndex + i - 1
+			local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
+			local itemLink = GetMerchantItemLink(itemIndex)
+
+			if itemLink and itemButton then
+				local eItem = Item:CreateFromItemLink(itemLink)
+				eItem:ContinueOnItemLoad(function()
+					-- local itemName, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
+					local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
+
+					if
+						(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
+					then
+						local link = eItem:GetItemLink()
+						local invSlot = select(4, GetItemInfoInstant(link))
+						if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+
+						if not itemButton.ItemLevelText then
+							itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+							itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
+							itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
+							itemButton.ItemLevelText:SetShadowOffset(1, -1)
+							itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+						end
+
+						local color = eItem:GetItemQualityColor()
+						itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
+						itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+						itemButton.ItemLevelText:Show()
+					elseif itemButton and itemButton.ItemLevelText then
+						itemButton.ItemLevelText:Hide()
+					end
+				end)
+			elseif itemButton and itemButton.ItemLevelText then
+				itemButton.ItemLevelText:Hide()
+			end
+		end
+	end
+end
+
+local function updateFlyoutButtonInfo(button)
+	if not button then return end
+
+	if addon.db["showIlvlOnCharframe"] then
+		local location = button.location
+		if not location then return end
+
+		local player, bank, bags, voidStorage, slot, bag = EquipmentManager_UnpackLocation(location)
+
+		local itemLink
+		if bags then
+			itemLink = C_Container.GetContainerItemLink(bag, slot)
+		elseif not bags then
+			itemLink = GetInventoryItemLink("player", slot)
+		end
+
+		if itemLink then
+			local eItem = Item:CreateFromItemLink(itemLink)
+			if eItem and not eItem:IsItemEmpty() then
+				eItem:ContinueOnItemLoad(function()
+					local itemLevel = eItem:GetCurrentItemLevel()
+					local quality = eItem:GetItemQualityColor()
+
+					if not button.ItemLevelText then
+						button.ItemLevelText = button:CreateFontString(nil, "OVERLAY")
+						button.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
+						button.ItemLevelText:SetPoint("TOPRIGHT", button, "TOPRIGHT", -1, -1)
+					end
+
+					-- Setze den Text und die Farbe
+					button.ItemLevelText:SetText(itemLevel)
+					button.ItemLevelText:SetTextColor(quality.r, quality.g, quality.b, 1)
+					button.ItemLevelText:Show()
+				end)
+			end
+		elseif button.ItemLevelText then
+			button.ItemLevelText:Hide()
+		end
+	elseif button.ItemLevelText then
+		button.ItemLevelText:Hide()
+	end
+end
+
 local function initDungeon()
 	addon.functions.InitDBValue("autoChooseDelvePower", false)
 	addon.functions.InitDBValue("lfgSortByRio", false)
@@ -1126,6 +1288,9 @@ local function initMisc()
 	addon.functions.InitDBValue("hiddenLandingPages", {})
 	addon.functions.InitDBValue("hideMinimapButton", false)
 	addon.functions.InitDBValue("hideBagsBar", false)
+	--@debug@
+	addon.functions.InitDBValue("automaticallyOpenContainer", false)
+	--@end-debug@
 
 	hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
 		if addon.db["ignoreTalkingHead"] then self:Hide() end
@@ -1138,6 +1303,8 @@ local function initMisc()
 end
 
 local function initCharacter()
+	addon.functions.InitDBValue("showIlvlOnBankFrame", false)
+	addon.functions.InitDBValue("showIlvlOnMerchantframe", false)
 	addon.functions.InitDBValue("showIlvlOnCharframe", false)
 	addon.functions.InitDBValue("showInfoOnInspectFrame", false)
 	addon.functions.InitDBValue("showGemsOnCharframe", false)
@@ -1155,6 +1322,32 @@ local function initCharacter()
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
 		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
+	end
+	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
+	hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
+
+	if _G.AccountBankPanel then
+		local knownButtons = {}
+		local update = function(frame)
+			if nil == knownButtons then
+				knownButtons = {}
+			else
+				for i, v in pairs(knownButtons) do
+					if v.ItemLevelText then v.ItemLevelText:Hide() end
+				end
+			end
+			knownButtons = {} -- clear the list again
+			if addon.db["showIlvlOnBankFrame"] then
+				for itemButton in frame:EnumerateValidItems() do
+					local bag = itemButton:GetBankTabID()
+					local slot = itemButton:GetContainerSlotID()
+					if bag and slot then addon.functions.updateBank(itemButton, bag, slot) end
+					table.insert(knownButtons, itemButton)
+				end
+			end
+		end
+		hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", update)
+		hooksecurefunc(AccountBankPanel, "RefreshAllItemsForSelectedTab", update)
 	end
 
 	-- Add Cataclyst charges in char frame
@@ -1239,7 +1432,7 @@ local function initCharacter()
 				value.gems[i]:SetPoint("BOTTOM", value, "TOPLEFT", -1, 5 + (i - 1) * 16)
 			end
 
-			value.gems[i]:SetFrameStrata("DIALOG")
+			value.gems[i]:SetFrameStrata("HIGH")
 
 			value.gems[i].icon = value.gems[i]:CreateTexture(nil, "OVERLAY")
 			value.gems[i].icon:SetAllPoints(value.gems[i])
@@ -1647,15 +1840,18 @@ local function openItems(items)
 			return
 		end
 
-		local item = table.remove(items, 1)
-		local iLoc = ItemLocation:CreateFromBagAndSlot(item.bag, item.slot)
-		if C_Item.IsLocked(iLoc) then C_Item.UnlockItem(iLoc) end
-		C_Timer.After(0.1, function() C_Container.UseContainerItem(item.bag, item.slot) end)
-		C_Timer.After(0.2, openNextItem) -- 100ms Pause zwischen den Verkäufen
+		if not MerchantFrame:IsShown() then
+			local item = table.remove(items, 1)
+			local iLoc = ItemLocation:CreateFromBagAndSlot(item.bag, item.slot)
+			if C_Item.IsLocked(iLoc) then C_Item.UnlockItem(iLoc) end
+			C_Timer.After(0.1, function() C_Container.UseContainerItem(item.bag, item.slot) end)
+			C_Timer.After(0.2, openNextItem) -- 100ms Pause zwischen den Verkäufen
+		end
 	end
 	openNextItem()
 end
 --@end-debug@
+
 local function loadSubAddon(name)
 	local subAddonName = name
 
@@ -1686,28 +1882,37 @@ local eventHandlers = {
 	end,
 	--@debug@
 	["BAG_UPDATE_DELAYED"] = function(arg1)
-		local itemsToOpen = {}
-		for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
-			for slot = 1, C_Container.GetContainerNumSlots(bag) do
-				containerInfo = C_Container.GetContainerItemInfo(bag, slot)
-				if containerInfo then
-					local eItem = Item:CreateFromBagAndSlot(bag, slot)
-					if eItem and not eItem:IsItemEmpty() then
-						eItem:ContinueOnItemLoad(function()
-							local tooltip = C_TooltipInfo.GetBagItem(bag, slot)
-							if tooltip then
-								for i, line in ipairs(tooltip.lines) do
-									if line.leftText == ITEM_OPENABLE then table.insert(itemsToOpen, { bag = bag, slot = slot }) end
+		if addon.db["automaticallyOpenContainer"] then
+			local itemsToOpen = {}
+			for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
+				for slot = 1, C_Container.GetContainerNumSlots(bag) do
+					containerInfo = C_Container.GetContainerItemInfo(bag, slot)
+					if containerInfo then
+						local eItem = Item:CreateFromBagAndSlot(bag, slot)
+						if eItem and not eItem:IsItemEmpty() then
+							eItem:ContinueOnItemLoad(function()
+								local tooltip = C_TooltipInfo.GetBagItem(bag, slot)
+								if tooltip then
+									for i, line in ipairs(tooltip.lines) do
+										if line.leftText == ITEM_OPENABLE then table.insert(itemsToOpen, { bag = bag, slot = slot }) end
+									end
 								end
-							end
-						end)
+							end)
+						end
 					end
 				end
 			end
+			if #itemsToOpen > 0 then openItems(itemsToOpen) end
 		end
-		if #itemsToOpen > 0 then openItems(itemsToOpen) end
 	end,
 	--@end-debug@
+	["BANKFRAME_OPENED"] = function()
+		if not addon.db["showIlvlOnBankFrame"] then return end
+		for slot = 1, NUM_BANKGENERIC_SLOTS do
+			local itemButton = _G["BankFrameItem" .. slot]
+			if itemButton then addon.functions.updateBank(itemButton, -1, slot) end
+		end
+	end,
 	["CURRENCY_DISPLAY_UPDATE"] = function(arg1)
 		if arg1 == addon.variables.catalystID then
 			local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
@@ -1798,6 +2003,11 @@ local eventHandlers = {
 				C_Timer.After(0.1, function() sellAllJunk() end)
 			end
 		end
+	end,
+	["PLAYERBANKSLOTS_CHANGED"] = function(arg1)
+		if not addon.db["showIlvlOnBankFrame"] then return end
+		local itemButton = _G["BankFrameItem" .. arg1]
+		if itemButton then addon.functions.updateBank(itemButton, -1, arg1) end
 	end,
 	["PLAYER_CHOICE_UPDATE"] = function()
 		if select(3, GetInstanceInfo()) == 208 and addon.db["autoChooseDelvePower"] then
