@@ -84,6 +84,19 @@ local function CheckItemGems(element, itemLink, emptySocketsCount, key, pdElemen
 		if gemName then
 			local icon = GetItemIcon(gemLink)
 			element.gems[i].icon:SetTexture(icon)
+			element.gems[i].OnEnter = nil
+			element.gems[i]:SetScript("OnEnter", function(self)
+				if gemLink and addon.db["showGemsTooltipOnCharframe"] then
+					local anchor = "ANCHOR_CURSOR"
+					if addon.db["TooltipAnchorType"] == 3 then anchor = "ANCHOR_CURSOR_LEFT" end
+					if addon.db["TooltipAnchorType"] == 4 then anchor = "ANCHOR_CURSOR_RIGHT" end
+					local xOffset = addon.db["TooltipAnchorOffsetX"] or 0
+					local yOffset = addon.db["TooltipAnchorOffsetY"] or 0
+					GameTooltip:SetOwner(self, anchor, xOffset, yOffset)
+					GameTooltip:SetHyperlink(gemLink)
+					GameTooltip:Show()
+				end
+			end)
 		else
 			-- Wiederhole die Überprüfung nach einer Verzögerung, wenn der Edelstein noch nicht geladen ist
 			C_Timer.After(0.1, function() CheckItemGems(element, itemLink, emptySocketsCount, key, pdElement, attempts + 1) end)
@@ -254,6 +267,7 @@ local function onInspect(arg1)
 										end
 
 										element.gems[i]:SetFrameStrata("DIALOG")
+										element.gems[i]:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
 
 										element.gems[i].icon = element.gems[i]:CreateTexture(nil, "OVERLAY")
 										element.gems[i].icon:SetAllPoints(element.gems[i])
@@ -430,6 +444,20 @@ local function setIlvlText(element, slot)
 							if gemName then
 								local icon = GetItemIcon(gemLink)
 								element.gems[i].icon:SetTexture(icon)
+								element.gems[i].OnEnter = nil
+								element.gems[i]:SetScript("OnEnter", function(self)
+									if gemLink and addon.db["showGemsTooltipOnCharframe"] then
+										local anchor = "ANCHOR_CURSOR"
+										if addon.db["TooltipAnchorType"] == 3 then anchor = "ANCHOR_CURSOR_LEFT" end
+										if addon.db["TooltipAnchorType"] == 4 then anchor = "ANCHOR_CURSOR_RIGHT" end
+										local xOffset = addon.db["TooltipAnchorOffsetX"] or 0
+										local yOffset = addon.db["TooltipAnchorOffsetY"] or 0
+										GameTooltip:SetOwner(self, anchor, xOffset, yOffset)
+										GameTooltip:SetHyperlink(gemLink)
+										GameTooltip:Show()
+									end
+								end)
+
 								emptySocketsCount = emptySocketsCount - 1
 							end
 						end
@@ -721,6 +749,13 @@ local function addCharacterFrame(container)
 					end
 				end
 			end,
+		},
+
+		{
+			parent = INFO,
+			var = "showGemsTooltipOnCharframe",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["showGemsTooltipOnCharframe"] = value end,
 		},
 		{
 			parent = INFO,
@@ -1308,6 +1343,7 @@ local function initCharacter()
 	addon.functions.InitDBValue("showIlvlOnCharframe", false)
 	addon.functions.InitDBValue("showInfoOnInspectFrame", false)
 	addon.functions.InitDBValue("showGemsOnCharframe", false)
+	addon.functions.InitDBValue("showGemsTooltipOnCharframe", false)
 	addon.functions.InitDBValue("showEnchantOnCharframe", false)
 	addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
 	addon.functions.InitDBValue("hideHitIndicatorPlayer", false)
@@ -1433,6 +1469,8 @@ local function initCharacter()
 			end
 
 			value.gems[i]:SetFrameStrata("HIGH")
+
+			value.gems[i]:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
 
 			value.gems[i].icon = value.gems[i]:CreateTexture(nil, "OVERLAY")
 			value.gems[i].icon:SetAllPoints(value.gems[i])
@@ -1843,9 +1881,11 @@ local function openItems(items)
 		if not MerchantFrame:IsShown() then
 			local item = table.remove(items, 1)
 			local iLoc = ItemLocation:CreateFromBagAndSlot(item.bag, item.slot)
-			if C_Item.IsLocked(iLoc) then C_Item.UnlockItem(iLoc) end
+			if iLoc then
+				if C_Item.IsLocked(iLoc) then C_Item.UnlockItem(iLoc) end
+			end
 			C_Timer.After(0.1, function() C_Container.UseContainerItem(item.bag, item.slot) end)
-			C_Timer.After(0.2, openNextItem) -- 100ms Pause zwischen den Verkäufen
+			C_Timer.After(0.4, openNextItem) -- 100ms Pause zwischen den Verkäufen
 		end
 	end
 	openNextItem()
