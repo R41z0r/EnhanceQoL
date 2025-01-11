@@ -34,6 +34,7 @@ L["MissingEnchant"] = "Enchantement"
 L["hideHitIndicatorPlayer"] = "Masquer le texte flottant de combat (dégâts et soins) au-dessus de votre personnage"
 L["hideHitIndicatorPet"] = "Masquer le texte flottant de combat (dégâts et soins) au-dessus de votre familier"
 L["UnitFrame"] = "Cadre d'unité"
+L["SellJunkIgnoredBag"] = "Vous avez désactivé la vente des objets inutiles dans %d sacs.\nCela peut empêcher la vente automatique de tous les objets inutiles."
 
 L["deleteItemFillDialog"] = 'Ajouter "' .. DELETE_ITEM_CONFIRM_STRING .. '" au "Popup de confirmation de suppression"'
 L["confirmPatronOrderDialog"] = "Confirme automatiquement l'utilisation de vos propres matériaux pour les commandes de " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC

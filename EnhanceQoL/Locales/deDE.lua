@@ -33,6 +33,7 @@ L["MissingEnchant"] = "Verzauberung"
 L["hideHitIndicatorPlayer"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Charakter ausblenden"
 L["hideHitIndicatorPet"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Begleiter ausblenden"
 L["UnitFrame"] = "Einheitenfenster"
+L["SellJunkIgnoredBag"] = "Du hast das Verkaufen von Plunder in %d Taschen deaktiviert.\nDies könnte verhindern, dass alle Plunder-Artikel automatisch verkauft werden."
 
 L["deleteItemFillDialog"] = 'Füge "' .. DELETE_ITEM_CONFIRM_STRING .. '" zum "Löschbestätigungs-Popup" hinzu'
 L["confirmPatronOrderDialog"] = "Bestätigt automatisch die Nutzung eigener Materialien für " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. "-Aufträge"

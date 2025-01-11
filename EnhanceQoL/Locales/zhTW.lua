@@ -34,6 +34,7 @@ L["MissingEnchant"] = "附魔"
 L["hideHitIndicatorPlayer"] = "隱藏角色頭上的浮動戰鬥文字（傷害和治療）"
 L["hideHitIndicatorPet"] = "隱藏寵物頭上的浮動戰鬥文字（傷害和治療）"
 L["UnitFrame"] = "單位框架"
+L["SellJunkIgnoredBag"] = "您已在 %d 個背包中停用了垃圾物品的銷售。\n這可能會阻止所有垃圾物品的自動銷售。"
 
 L["deleteItemFillDialog"] = '將 "' .. DELETE_ITEM_CONFIRM_STRING .. '" 添加到"刪除確認彈出窗口"'
 L["confirmPatronOrderDialog"] = "自动确认使用自己的材料进行 " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " 制作订单"

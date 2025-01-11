@@ -34,6 +34,7 @@ L["MissingEnchant"] = "마법부여"
 L["hideHitIndicatorPlayer"] = "캐릭터 위에 뜨는 전투 텍스트(피해 및 치유) 숨기기"
 L["hideHitIndicatorPet"] = "소환수 위에 뜨는 전투 텍스트(피해 및 치유) 숨기기"
 L["UnitFrame"] = "유닛 프레임"
+L["SellJunkIgnoredBag"] = "가방 %d개에서 쓰레기 판매를 비활성화했습니다.\n이로 인해 모든 쓰레기 아이템이 자동으로 판매되지 않을 수 있습니다."
 
 L["deleteItemFillDialog"] = '"삭제 확인 팝업"에 "' .. DELETE_ITEM_CONFIRM_STRING .. '" 추가'
 L["confirmPatronOrderDialog"] = "자체 재료 사용을 " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " 제작 주문에 자동으로 확인합니다."

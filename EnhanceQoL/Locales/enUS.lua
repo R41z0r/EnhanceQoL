@@ -32,6 +32,7 @@ L["MissingEnchant"] = "Enchant"
 L["hideHitIndicatorPlayer"] = "Hide floating combat text (damage and healing) over your character"
 L["hideHitIndicatorPet"] = "Hide floating combat text (damage and healing) over your pet"
 L["UnitFrame"] = "UnitFrame"
+L["SellJunkIgnoredBag"] = "You have ignored junk on %d bags.\nThis may prevent selling all junk items automatically."
 
 L["deleteItemFillDialog"] = 'Add "' .. DELETE_ITEM_CONFIRM_STRING .. '" to the "Delete confirmation Popup"'
 L["confirmPatronOrderDialog"] = "Automatically confirm to use own materials on " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " crafting orders"

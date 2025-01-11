@@ -34,6 +34,7 @@ L["MissingEnchant"] = "Incantamento"
 L["hideHitIndicatorPlayer"] = "Nascondi il testo di combattimento fluttuante (danni e cure) sopra il tuo personaggio"
 L["hideHitIndicatorPet"] = "Nascondi il testo di combattimento fluttuante (danni e cure) sopra il tuo famiglio"
 L["UnitFrame"] = "Riquadro unità"
+L["SellJunkIgnoredBag"] = "Hai disattivato la vendita di oggetti inutili in %d borse.\nQuesto potrebbe impedire la vendita automatica di tutti gli oggetti inutili."
 
 L["deleteItemFillDialog"] = 'Aggiungi "' .. DELETE_ITEM_CONFIRM_STRING .. '" al "Popup di conferma eliminazione"'
 L["confirmPatronOrderDialog"] = "Conferma automaticamente l'uso dei materiali propri per gli ordini di " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC

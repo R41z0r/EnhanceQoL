@@ -19,6 +19,29 @@ hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
 	end
 end)
 
+local function checkBagIgnoreJunk()
+	if addon.db["sellAllJunk"] then
+		local counter = 0
+		for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
+			if C_Container.GetBagSlotFlag(bag, Enum.BagSlotFlags.ExcludeJunkSell) then counter = counter + 1 end
+		end
+		if counter > 0 then
+			local message = string.format(L["SellJunkIgnoredBag"], counter)
+
+			StaticPopupDialogs["SellJunkIgnoredBag"] = {
+				text = message,
+				button1 = "OK",
+				timeout = 15,
+				whileDead = true,
+				hideOnEscape = true,
+				preferredIndex = 3,
+				OnShow = function(self) self:SetFrameStrata("TOOLTIP") end,
+			}
+			StaticPopup_Show("SellJunkIgnoredBag")
+		end
+	end
+end
+
 -- local function UpdateTargetSpellbarShieldColor()
 -- 	local castBar = TargetFrameSpellBar
 -- 	if not castBar or not castBar.BorderShield then return end
@@ -1006,7 +1029,10 @@ local function addMiscFrame(container, d)
 			parent = "",
 			var = "sellAllJunk",
 			type = "CheckBox",
-			callback = function(self, _, value) addon.db["sellAllJunk"] = value end,
+			callback = function(self, _, value)
+				addon.db["sellAllJunk"] = value
+				if value then checkBagIgnoreJunk() end
+			end,
 		},
 		{
 			parent = "",
@@ -1973,6 +1999,8 @@ local eventHandlers = {
 			loadSubAddon("EnhanceQoLDrinkMacro")
 			loadSubAddon("EnhanceQoLTooltip")
 			loadSubAddon("EnhanceQoLVendor")
+
+			checkBagIgnoreJunk()
 		end
 	end,
 	--@debug@
