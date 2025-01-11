@@ -1378,13 +1378,15 @@ local function initMisc()
 		local popup = _G["StaticPopup" .. i]
 		if popup then
 			hooksecurefunc(popup, "Show", function(self)
-				if addon.db["sellAllJunk"] and self.data and self.data.text == SELL_ALL_JUNK_ITEMS_POPUP and self.button1 then
-					self.button1:Click()
-				elseif addon.db["deleteItemFillDialog"] and self.which == "DELETE_GOOD_ITEM" and self.editBox then
-					self.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
-				elseif addon.db["confirmPatronOrderDialog"] and self.data and self.data.text == CRAFTING_ORDERS_OWN_REAGENTS_CONFIRMATION then
-					local order = C_CraftingOrders.GetClaimedOrder()
-					if order and order.npcCustomerCreatureID and order.npcCustomerCreatureID > 0 then self.button1:Click() end
+				if self then
+					if addon.db["sellAllJunk"] and self.data and type(self.data) == "table" and self.data.text == SELL_ALL_JUNK_ITEMS_POPUP and self.button1 then
+						self.button1:Click()
+					elseif addon.db["deleteItemFillDialog"] and self.which == "DELETE_GOOD_ITEM" and self.editBox then
+						self.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
+					elseif addon.db["confirmPatronOrderDialog"] and self.data and type(self.data) == "table" and self.data.text == CRAFTING_ORDERS_OWN_REAGENTS_CONFIRMATION then
+						local order = C_CraftingOrders.GetClaimedOrder()
+						if order and order.npcCustomerCreatureID and order.npcCustomerCreatureID > 0 then self.button1:Click() end
+					end
 				end
 			end)
 		end
