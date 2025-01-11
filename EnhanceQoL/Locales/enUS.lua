@@ -34,6 +34,7 @@ L["hideHitIndicatorPet"] = "Hide floating combat text (damage and healing) over 
 L["UnitFrame"] = "UnitFrame"
 
 L["deleteItemFillDialog"] = 'Add "' .. DELETE_ITEM_CONFIRM_STRING .. '" to the "Delete confirmation Popup"'
+L["confirmPatronOrderDialog"] = "Automatically confirm to use own materials on " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " crafting orders"
 L["autoChooseQuest"] = "Automatically accept and complete Quests"
 
 L["General"] = "General"

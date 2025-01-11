@@ -36,6 +36,7 @@ L["hideHitIndicatorPet"] = "Masquer le texte flottant de combat (dégâts et soi
 L["UnitFrame"] = "Cadre d'unité"
 
 L["deleteItemFillDialog"] = 'Ajouter "' .. DELETE_ITEM_CONFIRM_STRING .. '" au "Popup de confirmation de suppression"'
+L["confirmPatronOrderDialog"] = "Confirme automatiquement l'utilisation de vos propres matériaux pour les commandes de " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC
 L["autoChooseQuest"] = "Accepter et compléter les quêtes automatiquement"
 
 L["General"] = "Général"

@@ -36,6 +36,7 @@ L["hideHitIndicatorPet"] = "소환수 위에 뜨는 전투 텍스트(피해 및 
 L["UnitFrame"] = "유닛 프레임"
 
 L["deleteItemFillDialog"] = '"삭제 확인 팝업"에 "' .. DELETE_ITEM_CONFIRM_STRING .. '" 추가'
+L["confirmPatronOrderDialog"] = "자체 재료 사용을 " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " 제작 주문에 자동으로 확인합니다."
 L["autoChooseQuest"] = "퀘스트 자동 수락 및 완료"
 
 L["General"] = "일반"

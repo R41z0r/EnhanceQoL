@@ -36,6 +36,7 @@ L["hideHitIndicatorPet"] = "隐藏宠物头上的浮动战斗文字（伤害和�
 L["UnitFrame"] = "单位框架"
 
 L["deleteItemFillDialog"] = '将 "' .. DELETE_ITEM_CONFIRM_STRING .. '" 添加到“删除确认弹窗”'
+L["confirmPatronOrderDialog"] = "自动确认使用自己的材料进行 " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " 制作订单"
 L["autoChooseQuest"] = "自动接受并完成任务"
 
 L["General"] = "通用"

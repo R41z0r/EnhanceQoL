@@ -35,6 +35,7 @@ L["hideHitIndicatorPet"] = "Schwebenden Kampftext (Schaden und Heilung) über de
 L["UnitFrame"] = "Einheitenfenster"
 
 L["deleteItemFillDialog"] = 'Füge "' .. DELETE_ITEM_CONFIRM_STRING .. '" zum "Löschbestätigungs-Popup" hinzu'
+L["confirmPatronOrderDialog"] = "Bestätigt automatisch die Nutzung eigener Materialien für " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. "-Aufträge"
 L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
 
 L["General"] = "Allgemein"

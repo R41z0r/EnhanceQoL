@@ -36,6 +36,7 @@ L["hideHitIndicatorPet"] = "隱藏寵物頭上的浮動戰鬥文字（傷害和�
 L["UnitFrame"] = "單位框架"
 
 L["deleteItemFillDialog"] = 'Adicionar "' .. DELETE_ITEM_CONFIRM_STRING .. '" ao "Popup de confirmação de exclusão"'
+L["confirmPatronOrderDialog"] = "Confirma automaticamente o uso de materiais próprios em encomendas de " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC
 L["autoChooseQuest"] = "Aceitar e completar missões automaticamente"
 
 L["General"] = "Geral"

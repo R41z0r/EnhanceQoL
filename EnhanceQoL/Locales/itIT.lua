@@ -36,6 +36,7 @@ L["hideHitIndicatorPet"] = "Nascondi il testo di combattimento fluttuante (danni
 L["UnitFrame"] = "Riquadro unità"
 
 L["deleteItemFillDialog"] = 'Aggiungi "' .. DELETE_ITEM_CONFIRM_STRING .. '" al "Popup di conferma eliminazione"'
+L["confirmPatronOrderDialog"] = "Conferma automaticamente l'uso dei materiali propri per gli ordini di " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC
 L["autoChooseQuest"] = "Accetta e completa le missioni automaticamente"
 
 L["General"] = "Generale"

@@ -1003,6 +1003,12 @@ local function addMiscFrame(container, d)
 		},
 		{
 			parent = "",
+			var = "confirmPatronOrderDialog",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["confirmPatronOrderDialog"] = value end,
+		},
+		{
+			parent = "",
 			var = "hideBagsBar",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1315,6 +1321,7 @@ local function initQuest()
 end
 
 local function initMisc()
+	addon.functions.InitDBValue("confirmPatronOrderDialog", false)
 	addon.functions.InitDBValue("deleteItemFillDialog", false)
 	addon.functions.InitDBValue("hideRaidTools", false)
 	addon.functions.InitDBValue("autoRepair", false)
@@ -1336,6 +1343,9 @@ local function initMisc()
 					self.button1:Click()
 				elseif addon.db["deleteItemFillDialog"] and self.which == "DELETE_GOOD_ITEM" and self.editBox then
 					self.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
+				elseif addon.db["confirmPatronOrderDialog"] and self.data and self.data.text == CRAFTING_ORDERS_OWN_REAGENTS_CONFIRMATION then
+					local order = C_CraftingOrders.GetClaimedOrder()
+					if order and order.npcCustomerCreatureID and order.npcCustomerCreatureID > 0 then self.button1:Click() end
 				end
 			end)
 		end
@@ -1902,9 +1912,9 @@ local function openItems(items)
 		if not MerchantFrame:IsShown() then
 			local item = table.remove(items, 1)
 			local iLoc = ItemLocation:CreateFromBagAndSlot(item.bag, item.slot)
-			if iLoc then
-				if C_Item.IsLocked(iLoc) then C_Item.UnlockItem(iLoc) end
-			end
+			-- if iLoc then
+			-- 	if C_Item.IsLocked(iLoc) then C_Item.UnlockItem(iLoc) end
+			-- end
 			C_Timer.After(0.1, function() C_Container.UseContainerItem(item.bag, item.slot) end)
 			C_Timer.After(0.4, openNextItem) -- 100ms Pause zwischen den Verkäufen
 		end
