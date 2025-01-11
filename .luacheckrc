@@ -57,6 +57,8 @@ globals = {
 	-- EnhanceQoL
 	"BankFrame",
 	"PROFESSIONS_CRAFTER_ORDER_TAB_NPC",
+	"CRAFTING_ORDERS_OWN_REAGENTS_CONFIRMATION",
+	"C_CraftingOrders",
 	"SELL_ALL_JUNK_ITEMS_POPUP",
 	"MERCHANT_ITEMS_PER_PAGE",
 	"EquipmentManager_UnpackLocation",
