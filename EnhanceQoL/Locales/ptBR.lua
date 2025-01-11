@@ -75,6 +75,9 @@ L["paladin_HideHolyPower"] = "Ocultar barra de poder sagrado"
 -- Ladino
 L["rogue_HideComboPoint"] = "Ocultar barra de pontos de combo"
 
+-- Druid
+L["druid_HideComboPoint"] = L["rogue_HideComboPoint"]
+
 -- Xamã
 L["shaman_HideTotem"] = "Ocultar barra de totens"
 

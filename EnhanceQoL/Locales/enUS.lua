@@ -72,6 +72,9 @@ L["paladin_HideHolyPower"] = "Hide Holypowerbar"
 -- Rogue
 L["rogue_HideComboPoint"] = "Hide Combopointbar"
 
+-- Druid
+L["druid_HideComboPoint"] = L["rogue_HideComboPoint"]
+
 -- Shaman
 L["shaman_HideTotem"] = "Hide Totembar"
 

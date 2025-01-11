@@ -76,6 +76,9 @@ L["paladin_HideHolyPower"] = "Скрыть панель священной си�
 -- Разбойник
 L["rogue_HideComboPoint"] = "Скрыть панель очков серии"
 
+-- Druid
+L["druid_HideComboPoint"] = L["rogue_HideComboPoint"]
+
 -- Шаман
 L["shaman_HideTotem"] = "Скрыть панель тотемов"
 

@@ -883,6 +883,19 @@ local function addCharacterFrame(container)
 		addTotemHideToggle("deathknight_HideTotemBar", data)
 	elseif classname == "DRUID" then
 		addTotemHideToggle("druid_HideTotemBar", data)
+		table.insert(data, {
+			parent = L["headerClassInfo"],
+			var = "druid_HideComboPoint",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["druid_HideComboPoint"] = value
+				if value then
+					DruidComboPointBarFrame:Hide()
+				else
+					DruidComboPointBarFrame:Show()
+				end
+			end,
+		})
 	elseif classname == "EVOKER" then
 		table.insert(data, {
 			parent = L["headerClassInfo"],
@@ -1690,6 +1703,17 @@ local function setAllHooks()
 		end)
 
 		if addon.db["deathknight_HideRuneFrame"] then RuneFrame:Hide() end
+	end
+
+	if DruidComboPointBarFrame then
+		DruidComboPointBarFrame:HookScript("OnShow", function(self)
+			if addon.db["druid_HideComboPoint"] then
+				DruidComboPointBarFrame:Hide()
+			else
+				DruidComboPointBarFrame:Show()
+			end
+		end)
+		if addon.db["druid_HideComboPoint"] then DruidComboPointBarFrame:Hide() end
 	end
 
 	if EssencePlayerFrame then

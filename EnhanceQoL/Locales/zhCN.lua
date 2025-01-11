@@ -75,6 +75,9 @@ L["paladin_HideHolyPower"] = "隐藏圣能条"
 -- 潜行者
 L["rogue_HideComboPoint"] = "隐藏连击点数条"
 
+-- Druid
+L["druid_HideComboPoint"] = L["rogue_HideComboPoint"]
+
 -- 萨满
 L["shaman_HideTotem"] = "隐藏图腾条"
 

@@ -74,6 +74,9 @@ L["paladin_HideHolyPower"] = "Heilige Kraft-Leiste ausblenden"
 -- Schurke
 L["rogue_HideComboPoint"] = "Kombopunktleiste ausblenden"
 
+-- Druid
+L["druid_HideComboPoint"] = L["rogue_HideComboPoint"]
+
 -- Schamane
 L["shaman_HideTotem"] = "Totemleiste ausblenden"
 

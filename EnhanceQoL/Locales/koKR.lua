@@ -75,6 +75,9 @@ L["paladin_HideHolyPower"] = "신성한 힘 바 숨기기"
 -- 도적
 L["rogue_HideComboPoint"] = "연계 점수 바 숨기기"
 
+-- Druid
+L["druid_HideComboPoint"] = L["rogue_HideComboPoint"]
+
 -- 주술사
 L["shaman_HideTotem"] = "토템 바 숨기기"
 
