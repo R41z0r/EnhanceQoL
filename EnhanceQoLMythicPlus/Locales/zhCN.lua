@@ -66,6 +66,7 @@ L["autoMarkTankExplanation"] = "如果坦克没有标记，它将自动 标记�
 L["mythicPlusIgnoreMythic"] = "不要在" .. PLAYER_DIFFICULTY6 .. "地下城中应用团队标记"
 L["mythicPlusIgnoreHeroic"] = "不要在" .. PLAYER_DIFFICULTY2 .. "地下城中应用团队标记"
 L["mythicPlusIgnoreNormal"] = "不要在" .. PLAYER_DIFFICULTY1 .. "地下城中应用团队标记"
+L["mythicPlusIgnoreTimewalking"] = "不要在" .. PLAYER_DIFFICULTY_TIMEWALKER .. "地下城中应用团队标记"
 
 -- Teleports
 L["Teleports"] = "传送"

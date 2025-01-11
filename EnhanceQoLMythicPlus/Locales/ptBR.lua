@@ -66,6 +66,7 @@ L["autoMarkTankExplanation"] = "O " .. TANK .. " será marcado quando não tiver
 L["mythicPlusIgnoreMythic"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY6
 L["mythicPlusIgnoreHeroic"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY2
 L["mythicPlusIgnoreNormal"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY1
+L["mythicPlusIgnoreTimewalking"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY_TIMEWALKER
 
 -- Teleports
 L["Teleports"] = "Teleportes"

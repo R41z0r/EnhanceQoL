@@ -65,6 +65,7 @@ L["autoMarkTankExplanation"] = "El " .. TANK .. " será marcado cuando no tenga 
 L["mythicPlusIgnoreMythic"] = "No aplicar un marcador de banda en mazmorras " .. PLAYER_DIFFICULTY6
 L["mythicPlusIgnoreHeroic"] = "No aplicar un marcador de banda en mazmorras " .. PLAYER_DIFFICULTY2
 L["mythicPlusIgnoreNormal"] = "No aplicar un marcador de banda en mazmorras " .. PLAYER_DIFFICULTY1
+L["mythicPlusIgnoreTimewalking"] = "No aplicar un marcador de banda en mazmorras " .. PLAYER_DIFFICULTY_TIMEWALKER
 
 -- Teleports
 L["Teleports"] = "Teletransportes"

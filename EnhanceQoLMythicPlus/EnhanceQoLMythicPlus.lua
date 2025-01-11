@@ -298,7 +298,8 @@ local function checkCondition()
 		local _, _, difficultyID, difficultyName = GetInstanceInfo()
 		if difficultyID == 1 and addon.db["mythicPlusIgnoreNormal"] then return false end
 		if difficultyID == 2 and addon.db["mythicPlusIgnoreHeroic"] then return false end
-		if difficultyID == 23 and addon.db["mythicPlusIgnoreMythic"] then return false end
+		if (difficultyID == 23 or difficultyID == 150) and addon.db["mythicPlusIgnoreMythic"] then return false end
+		if difficultyID == 24 and addon.db["mythicPlusIgnoreTimewalking"] then return false end
 		if UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then return true end
 	end
 	return false
@@ -614,6 +615,7 @@ local function addMiscFrame(container)
 			{ text = L["mythicPlusIgnoreNormal"], var = "mythicPlusIgnoreNormal" },
 			{ text = L["mythicPlusIgnoreHeroic"], var = "mythicPlusIgnoreHeroic" },
 			{ text = L["mythicPlusIgnoreMythic"], var = "mythicPlusIgnoreMythic" },
+			{ text = L["mythicPlusIgnoreTimewalking"], var = "mythicPlusIgnoreTimewalking" },
 		}
 
 		-- table.sort(data, function(a, b) return a.text < b.text end)

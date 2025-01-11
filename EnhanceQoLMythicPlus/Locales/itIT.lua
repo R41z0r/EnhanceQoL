@@ -66,6 +66,7 @@ L["autoMarkTankExplanation"] = "Il " .. TANK .. " verrà marcato quando non ha u
 L["mythicPlusIgnoreMythic"] = "Non applicare un marcatore da raid nei dungeon " .. PLAYER_DIFFICULTY6
 L["mythicPlusIgnoreHeroic"] = "Non applicare un marcatore da raid nei dungeon " .. PLAYER_DIFFICULTY2
 L["mythicPlusIgnoreNormal"] = "Non applicare un marcatore da raid nei dungeon " .. PLAYER_DIFFICULTY1
+L["mythicPlusIgnoreTimewalking"] = "Non applicare un marcatore da raid nei dungeon " .. PLAYER_DIFFICULTY_TIMEWALKER
 
 -- Teleports
 L["Teleports"] = "Teletrasporti"

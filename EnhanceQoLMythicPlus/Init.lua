@@ -42,6 +42,7 @@ addon.functions.InitDBValue("autoMarkTankInDungeonMarker", 6)
 addon.functions.InitDBValue("mythicPlusIgnoreMythic", true)
 addon.functions.InitDBValue("mythicPlusIgnoreHeroic", true)
 addon.functions.InitDBValue("mythicPlusIgnoreNormal", true)
+addon.functions.InitDBValue("mythicPlusIgnoreTimewalking", true)
 
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus
