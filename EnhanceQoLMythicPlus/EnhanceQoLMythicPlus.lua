@@ -293,6 +293,17 @@ local function checkRaidMarker()
 	end
 end
 
+local function checkCondition()
+	if addon.db["autoMarkTankInDungeon"] then
+		local _, _, difficultyID, difficultyName = GetInstanceInfo()
+		if difficultyID == 1 and addon.db["mythicPlusIgnoreNormal"] then return false end
+		if difficultyID == 2 and addon.db["mythicPlusIgnoreHeroic"] then return false end
+		if difficultyID == 23 and addon.db["mythicPlusIgnoreMythic"] then return false end
+		if UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then return true end
+	end
+	return false
+end
+
 -- Funktion zum Umgang mit Events
 local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	if event == "ADDON_LOADED" and arg1 == addonName then
@@ -306,15 +317,15 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 		toggleGroupApplication(true)
 	elseif event == "LFG_ROLE_CHECK_SHOW" and addon.db["groupfinderSkipRolecheck"] and UnitInParty("player") then
 		skipRolecheck()
-	elseif event == "RAID_TARGET_UPDATE" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
+	elseif event == "RAID_TARGET_UPDATE" and checkCondition() then
 		C_Timer.After(0.5, function() checkRaidMarker() end)
-	elseif event == "PLAYER_ROLES_ASSIGNED" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
+	elseif event == "PLAYER_ROLES_ASSIGNED" and checkCondition() then
 		setActTank()
 		checkRaidMarker()
-	elseif event == "GROUP_ROSTER_UPDATE" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
+	elseif event == "GROUP_ROSTER_UPDATE" and checkCondition() then
 		setActTank()
 		checkRaidMarker()
-	elseif event == "READY_CHECK" and addon.db["autoMarkTankInDungeon"] and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
+	elseif event == "READY_CHECK" and checkCondition() then
 		setActTank()
 		checkRaidMarker()
 	end
@@ -580,17 +591,6 @@ local function addMiscFrame(container)
 	groupCore:AddChild(cbAutoMarkTank)
 
 	if addon.db["autoMarkTankInDungeon"] then
-		local data = {}
-
-		table.sort(data, function(a, b) return a.text < b.text end)
-
-		for _, cbData in ipairs(data) do
-			local uFunc = function(self, _, value) addon.db[cbData.var] = value end
-			if cbData.func then uFunc = cbData.func end
-			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
-			groupCore:AddChild(cbElement)
-		end
-
 		local list, order = addon.functions.prepareListForDropdown({
 			[1] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:20|t",
 			[2] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:20|t",
@@ -607,6 +607,23 @@ local function addMiscFrame(container)
 		dropTankMark:SetFullWidth(false)
 		dropTankMark:SetWidth(100)
 		groupCore:AddChild(dropTankMark)
+
+		groupCore:AddChild(addon.functions.createSpacerAce())
+
+		local data = {
+			{ text = L["mythicPlusIgnoreNormal"], var = "mythicPlusIgnoreNormal" },
+			{ text = L["mythicPlusIgnoreHeroic"], var = "mythicPlusIgnoreHeroic" },
+			{ text = L["mythicPlusIgnoreMythic"], var = "mythicPlusIgnoreMythic" },
+		}
+
+		-- table.sort(data, function(a, b) return a.text < b.text end)
+
+		for _, cbData in ipairs(data) do
+			local uFunc = function(self, _, value) addon.db[cbData.var] = value end
+			if cbData.func then uFunc = cbData.func end
+			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+			groupCore:AddChild(cbElement)
+		end
 	end
 
 	groupCore:AddChild(addon.functions.createSpacerAce())

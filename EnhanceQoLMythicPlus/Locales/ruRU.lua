@@ -69,6 +69,9 @@ L["autoMarkTankExplanation"] = "Будет поставлена метка на 
 	.. COMMUNITY_MEMBER_ROLE_NAME_LEADER
 	.. " или "
 	.. TANK
+L["mythicPlusIgnoreMythic"] = "Не применять метку рейда в подземельях " .. PLAYER_DIFFICULTY6
+L["mythicPlusIgnoreHeroic"] = "Не применять метку рейда в подземельях " .. PLAYER_DIFFICULTY2
+L["mythicPlusIgnoreNormal"] = "Не применять метку рейда в подземельях " .. PLAYER_DIFFICULTY1
 
 -- Teleports
 L["Teleports"] = "Телепорты"

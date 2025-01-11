@@ -62,6 +62,10 @@ L["autoMarkTankInDungeonMarker"] = "Tank marker"
 L["Disabled"] = "Disabled"
 L["autoMarkTankExplanation"] = "It will mark the " .. TANK .. " when he has no mark and only changes the mark, when you are either " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " or " .. TANK
 
+L["mythicPlusIgnoreMythic"] = "Do not apply a raid marker in " .. PLAYER_DIFFICULTY6 .. " dungeons"
+L["mythicPlusIgnoreHeroic"] = "Do not apply a raid marker in " .. PLAYER_DIFFICULTY2 .. " dungeons"
+L["mythicPlusIgnoreNormal"] = "Do not apply a raid marker in " .. PLAYER_DIFFICULTY1 .. " dungeons"
+
 -- Teleports
 L["Teleports"] = "Teleports"
 L["teleportEnabled"] = "Enable Teleport Frame"

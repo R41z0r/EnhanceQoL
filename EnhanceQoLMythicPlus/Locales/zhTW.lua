@@ -63,6 +63,9 @@ L["autoMarkTankInDungeon"] = "在地下城自動標記" .. TANK
 L["autoMarkTankInDungeonMarker"] = "坦克標記"
 L["Disabled"] = "已停用"
 L["autoMarkTankExplanation"] = "如果坦克沒有標記，它將自動 標記，並且只有當您是 " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 或 " .. TANK .. " 時才會更改標記"
+L["mythicPlusIgnoreMythic"] = "不要在" .. PLAYER_DIFFICULTY6 .. "地城中應用團隊標記"
+L["mythicPlusIgnoreHeroic"] = "不要在" .. PLAYER_DIFFICULTY2 .. "地城中應用團隊標記"
+L["mythicPlusIgnoreNormal"] = "不要在" .. PLAYER_DIFFICULTY1 .. "地城中應用團隊標記"
 
 -- Teleports
 L["Teleports"] = "傳送"

@@ -1383,7 +1383,7 @@ local function initMisc()
 						self.button1:Click()
 					elseif addon.db["deleteItemFillDialog"] and self.which == "DELETE_GOOD_ITEM" and self.editBox then
 						self.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
-					elseif addon.db["confirmPatronOrderDialog"] and self.data and type(self.data) == "table" and self.data.text == CRAFTING_ORDERS_OWN_REAGENTS_CONFIRMATION then
+					elseif addon.db["confirmPatronOrderDialog"] and self.data and type(self.data) == "table" and self.data.text == CRAFTING_ORDERS_OWN_REAGENTS_CONFIRMATION and self.button1 then
 						local order = C_CraftingOrders.GetClaimedOrder()
 						if order and order.npcCustomerCreatureID and order.npcCustomerCreatureID > 0 then self.button1:Click() end
 					end

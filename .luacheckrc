@@ -55,6 +55,10 @@ globals = {
 	"AceGUIMultiLineEditBoxInsertLink",
 
 	-- EnhanceQoL
+	"PLAYER_DIFFICULTY1",
+	"PLAYER_DIFFICULTY2",
+	"PLAYER_DIFFICULTY6",
+	"GetInstanceInfo()",
 	"BankFrame",
 	"DruidComboPointBarFrame",
 	"PROFESSIONS_CRAFTER_ORDER_TAB_NPC",

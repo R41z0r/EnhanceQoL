@@ -68,6 +68,10 @@ L["autoMarkTankExplanation"] = "Der "
 	.. " oder "
 	.. TANK
 	.. " bist"
+L["mythicPlusIgnoreMythic"] = "Keinen Raid-Marker in " .. PLAYER_DIFFICULTY6 .. "-Dungeons anwenden"
+L["mythicPlusIgnoreHeroic"] = "Keinen Raid-Marker in " .. PLAYER_DIFFICULTY2 .. "-Dungeons anwenden"
+L["mythicPlusIgnoreNormal"] = "Keinen Raid-Marker in " .. PLAYER_DIFFICULTY1 .. "-Dungeons anwenden"
+
 -- Teleports
 L["Teleports"] = "Teleporte"
 L["teleportEnabled"] = "Teleport-Fenster aktivieren"

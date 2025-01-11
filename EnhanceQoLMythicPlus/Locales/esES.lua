@@ -62,6 +62,9 @@ L["autoMarkTankInDungeon"] = "Marcar automáticamente al " .. TANK .. " en mazmo
 L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
 L["Disabled"] = "Desactivado"
 L["autoMarkTankExplanation"] = "El " .. TANK .. " será marcado cuando no tenga una marca y solo cambiará la marca si eres " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " o " .. TANK
+L["mythicPlusIgnoreMythic"] = "No aplicar un marcador de banda en mazmorras " .. PLAYER_DIFFICULTY6
+L["mythicPlusIgnoreHeroic"] = "No aplicar un marcador de banda en mazmorras " .. PLAYER_DIFFICULTY2
+L["mythicPlusIgnoreNormal"] = "No aplicar un marcador de banda en mazmorras " .. PLAYER_DIFFICULTY1
 
 -- Teleports
 L["Teleports"] = "Teletransportes"

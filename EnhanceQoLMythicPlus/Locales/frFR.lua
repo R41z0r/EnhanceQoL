@@ -62,6 +62,9 @@ L["autoMarkTankInDungeon"] = "Marquer automatiquement le " .. TANK .. " dans les
 L["autoMarkTankInDungeonMarker"] = "Marqueur de tank"
 L["Disabled"] = "Désactivé"
 L["autoMarkTankExplanation"] = "Le " .. TANK .. " sera marqué s'il n'a pas de marque et ne changera la marque que si vous êtes soit " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
+L["mythicPlusIgnoreMythic"] = "Ne pas appliquer de marqueur de raid dans les donjons " .. PLAYER_DIFFICULTY6
+L["mythicPlusIgnoreHeroic"] = "Ne pas appliquer de marqueur de raid dans les donjons " .. PLAYER_DIFFICULTY2
+L["mythicPlusIgnoreNormal"] = "Ne pas appliquer de marqueur de raid dans les donjons " .. PLAYER_DIFFICULTY1
 
 -- Teleports
 L["Teleports"] = "Téléportations"

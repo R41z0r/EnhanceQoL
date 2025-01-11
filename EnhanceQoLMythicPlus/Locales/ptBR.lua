@@ -63,6 +63,10 @@ L["autoMarkTankInDungeon"] = "Marcar automaticamente o " .. TANK .. " em masmorr
 L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
 L["Disabled"] = "Desativado"
 L["autoMarkTankExplanation"] = "O " .. TANK .. " será marcado quando não tiver uma marca e só mudará a marca se você for " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
+L["mythicPlusIgnoreMythic"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY6
+L["mythicPlusIgnoreHeroic"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY2
+L["mythicPlusIgnoreNormal"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY1
+
 -- Teleports
 L["Teleports"] = "Teleportes"
 L["teleportEnabled"] = "Habilitar painel de teleporte"

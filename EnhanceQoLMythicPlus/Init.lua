@@ -39,6 +39,9 @@ addon.functions.InitDBValue("groupfinderSkipRolecheck", false)
 -- Misc
 addon.functions.InitDBValue("autoMarkTankInDungeon", false)
 addon.functions.InitDBValue("autoMarkTankInDungeonMarker", 6)
+addon.functions.InitDBValue("mythicPlusIgnoreMythic", true)
+addon.functions.InitDBValue("mythicPlusIgnoreHeroic", true)
+addon.functions.InitDBValue("mythicPlusIgnoreNormal", true)
 
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus
