@@ -39,6 +39,7 @@ L["SellJunkIgnoredBag"] = "您已在 %d 個背包中停用了垃圾物品的銷�
 L["deleteItemFillDialog"] = '將 "' .. DELETE_ITEM_CONFIRM_STRING .. '" 添加到"刪除確認彈出窗口"'
 L["confirmPatronOrderDialog"] = "自动确认使用自己的材料进行 " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " 制作订单"
 L["autoChooseQuest"] = "自動接受並完成任務"
+L["confirmTimerRemovalTrade"] = "自動確認在交易時間內出售可交易的戰利品"
 
 L["General"] = "通用"
 L["Character"] = "角色"

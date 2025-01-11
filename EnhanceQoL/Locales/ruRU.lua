@@ -41,6 +41,7 @@ L["deleteItemFillDialog"] = 'Добавить "' .. DELETE_ITEM_CONFIRM_STRING .
 L["confirmPatronOrderDialog"] = "Автоматически подтверждает использование собственных материалов для заказов у "
 	.. PROFESSIONS_CRAFTER_ORDER_TAB_NPC
 L["autoChooseQuest"] = "Автоматически принимать и завершать задания"
+L["confirmTimerRemovalTrade"] = "Автоматически подтверждать продажу обменной добычи в течение времени для обмена"
 
 L["General"] = "Общий"
 L["Character"] = "Персонаж"

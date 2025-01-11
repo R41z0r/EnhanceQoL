@@ -39,6 +39,7 @@ L["SellJunkIgnoredBag"] = "가방 %d개에서 쓰레기 판매를 비활성화�
 L["deleteItemFillDialog"] = '"삭제 확인 팝업"에 "' .. DELETE_ITEM_CONFIRM_STRING .. '" 추가'
 L["confirmPatronOrderDialog"] = "자체 재료 사용을 " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " 제작 주문에 자동으로 확인합니다."
 L["autoChooseQuest"] = "퀘스트 자동 수락 및 완료"
+L["confirmTimerRemovalTrade"] = "교환 기간 내 교환 가능한 전리품 판매를 자동으로 확인"
 
 L["General"] = "일반"
 L["Character"] = "캐릭터"

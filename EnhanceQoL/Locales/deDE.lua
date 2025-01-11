@@ -38,6 +38,7 @@ L["SellJunkIgnoredBag"] = "Du hast das Verkaufen von Plunder in %d Taschen deakt
 L["deleteItemFillDialog"] = 'Füge "' .. DELETE_ITEM_CONFIRM_STRING .. '" zum "Löschbestätigungs-Popup" hinzu'
 L["confirmPatronOrderDialog"] = "Bestätigt automatisch die Nutzung eigener Materialien für " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. "-Aufträge"
 L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
+L["confirmTimerRemovalTrade"] = "Automatisch bestätigen, handelbare Beute im Handelszeitraum zu verkaufen"
 
 L["General"] = "Allgemein"
 L["Character"] = "Charakter"

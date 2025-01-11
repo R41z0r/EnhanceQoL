@@ -4,10 +4,12 @@
 
 ### New Options
 
+- Automatically confirm to sell tradeable loot within the trade window time frame
+  - Accepts the dialog notification to sell
 - Automatically confirm to use own materials on Patron crafting orders
   - Accepts the dialog that shows
 - Option to hide Druid Combo Points Bar
-- Option to ignore automark tank in normal/heroic/mythic/timewalking dungeons
+- Option to ignore raid mark tank in normal/heroic/mythic/timewalking dungeons
 
 ## Changed:
 

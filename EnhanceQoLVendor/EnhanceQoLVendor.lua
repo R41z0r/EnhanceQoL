@@ -39,7 +39,6 @@ local function sellItems(items)
 		C_Container.UseContainerItem(item.bag, item.slot)
 		C_Timer.After(0.1, sellNextItem) -- 100ms Pause zwischen den Verkäufen
 	end
-
 	sellNextItem()
 end
 

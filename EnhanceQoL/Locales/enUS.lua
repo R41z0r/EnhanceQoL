@@ -37,6 +37,7 @@ L["SellJunkIgnoredBag"] = "You have ignored junk on %d bags.\nThis may prevent s
 L["deleteItemFillDialog"] = 'Add "' .. DELETE_ITEM_CONFIRM_STRING .. '" to the "Delete confirmation Popup"'
 L["confirmPatronOrderDialog"] = "Automatically confirm to use own materials on " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " crafting orders"
 L["autoChooseQuest"] = "Automatically accept and complete Quests"
+L["confirmTimerRemovalTrade"] = "Automatically confirm to sell tradeable loot within the trade window time frame"
 
 L["General"] = "General"
 L["Character"] = "Character"

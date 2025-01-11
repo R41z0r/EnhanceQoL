@@ -39,6 +39,7 @@ L["SellJunkIgnoredBag"] = "Você desativou a venda de itens inúteis em %d bolsa
 L["deleteItemFillDialog"] = 'Adicionar "' .. DELETE_ITEM_CONFIRM_STRING .. '" ao "Popup de confirmação de exclusão"'
 L["confirmPatronOrderDialog"] = "Confirma automaticamente o uso de materiais próprios em encomendas de " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC
 L["autoChooseQuest"] = "Aceitar e completar missões automaticamente"
+L["confirmTimerRemovalTrade"] = "Confirmar automaticamente a venda de saques negociáveis durante o período de troca"
 
 L["General"] = "Geral"
 L["Character"] = "Personagem"

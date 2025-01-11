@@ -1048,6 +1048,13 @@ local function addMiscFrame(container, d)
 		},
 		{
 			parent = "",
+			var = "confirmTimerRemovalTrade",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["confirmTimerRemovalTrade"] = value end,
+		},
+
+		{
+			parent = "",
 			var = "hideBagsBar",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1360,6 +1367,7 @@ local function initQuest()
 end
 
 local function initMisc()
+	addon.functions.InitDBValue("confirmTimerRemovalTrade", false)
 	addon.functions.InitDBValue("confirmPatronOrderDialog", false)
 	addon.functions.InitDBValue("deleteItemFillDialog", false)
 	addon.functions.InitDBValue("hideRaidTools", false)
@@ -1381,11 +1389,13 @@ local function initMisc()
 				if self then
 					if addon.db["sellAllJunk"] and self.data and type(self.data) == "table" and self.data.text == SELL_ALL_JUNK_ITEMS_POPUP and self.button1 then
 						self.button1:Click()
-					elseif addon.db["deleteItemFillDialog"] and self.which == "DELETE_GOOD_ITEM" and self.editBox then
+					elseif addon.db["deleteItemFillDialog"] and (self.which == "DELETE_GOOD_ITEM" or self.which == "DELETE_GOOD_QUEST_ITEM") and self.editBox then
 						self.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
 					elseif addon.db["confirmPatronOrderDialog"] and self.data and type(self.data) == "table" and self.data.text == CRAFTING_ORDERS_OWN_REAGENTS_CONFIRMATION and self.button1 then
 						local order = C_CraftingOrders.GetClaimedOrder()
 						if order and order.npcCustomerCreatureID and order.npcCustomerCreatureID > 0 then self.button1:Click() end
+					elseif addon.db["confirmTimerRemovalTrade"] and self.which == "CONFIRM_MERCHANT_TRADE_TIMER_REMOVAL" and self.button1 then
+						self.button1:Click()
 					end
 				end
 			end)
