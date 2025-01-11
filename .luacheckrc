@@ -56,6 +56,7 @@ globals = {
 
 	-- EnhanceQoL
 	"BankFrame",
+	"DruidComboPointBarFrame",
 	"PROFESSIONS_CRAFTER_ORDER_TAB_NPC",
 	"CRAFTING_ORDERS_OWN_REAGENTS_CONFIRMATION",
 	"C_CraftingOrders",
