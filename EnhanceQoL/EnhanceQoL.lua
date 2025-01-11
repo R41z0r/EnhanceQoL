@@ -1327,6 +1327,34 @@ local function initMisc()
 	addon.functions.InitDBValue("automaticallyOpenContainer", false)
 	--@end-debug@
 
+	-- Hook all static popups, because not the first one has to be the one for sell all junk if another popup is already shown
+	for i = 1, 4 do
+		local popup = _G["StaticPopup" .. i]
+		if popup then
+			hooksecurefunc(popup, "Show", function(self)
+				if addon.db["sellAllJunk"] and self.data and self.data.text == SELL_ALL_JUNK_ITEMS_POPUP and self.button1 then
+					self.button1:Click()
+				elseif addon.db["deleteItemFillDialog"] and self.which == "DELETE_GOOD_ITEM" and self.editBox then
+					self.editBox:SetText(DELETE_ITEM_CONFIRM_STRING)
+				end
+			end)
+		end
+	end
+
+	hooksecurefunc(MerchantFrame, "Show", function(self, button)
+		if addon.db["autoRepair"] then
+			if CanMerchantRepair() then
+				local repairAllCost = GetRepairAllCost()
+				if repairAllCost and repairAllCost > 0 then
+					RepairAllItems()
+					PlaySound(SOUNDKIT.ITEM_REPAIR)
+					print(L["repairCost"] .. addon.functions.formatMoney(repairAllCost))
+				end
+			end
+		end
+		if addon.db["sellAllJunk"] and MerchantSellAllJunkButton:IsEnabled() then MerchantSellAllJunkButton:Click() end
+	end)
+
 	hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
 		if addon.db["ignoreTalkingHead"] then self:Hide() end
 	end)
@@ -1863,13 +1891,6 @@ local frameLoad = CreateFrame("Frame")
 
 local gossipClicked = {}
 
-local function sellAllJunk()
-	MerchantSellAllJunkButton:Click()
-	C_Timer.After(0.1, function()
-		if StaticPopup1 and StaticPopup1:IsShown() then StaticPopup1.button1:Click() end
-	end)
-end
-
 --@debug@
 local function openItems(items)
 	local function openNextItem()
@@ -1964,9 +1985,6 @@ local eventHandlers = {
 			C_Timer.After(1, function() setIlvlText(addon.variables.itemSlots[arg2.equipmentSlotIndex], arg2.equipmentSlotIndex) end)
 		end
 	end,
-	["DELETE_ITEM_CONFIRM"] = function()
-		if addon.db["deleteItemFillDialog"] and StaticPopup1:IsShown() then StaticPopup1EditBox:SetText(DELETE_ITEM_CONFIRM_STRING) end
-	end,
 	["GOSSIP_CLOSED"] = function()
 		gossipClicked = {} -- clear all already clicked gossips
 	end,
@@ -2023,26 +2041,6 @@ local eventHandlers = {
 	end,
 	["INSPECT_READY"] = function(arg1)
 		if addon.db["showInfoOnInspectFrame"] then onInspect(arg1) end
-	end,
-	["MERCHANT_SHOW"] = function()
-		if addon.db["autoRepair"] then
-			if CanMerchantRepair() then
-				local repairAllCost = GetRepairAllCost()
-				if repairAllCost and repairAllCost > 0 then
-					RepairAllItems()
-					PlaySound(SOUNDKIT.ITEM_REPAIR)
-					print(L["repairCost"] .. addon.functions.formatMoney(repairAllCost))
-				end
-			end
-		end
-
-		if addon.db["sellAllJunk"] then
-			if MerchantSellAllJunkButton:IsEnabled() then
-				sellAllJunk()
-			else
-				C_Timer.After(0.1, function() sellAllJunk() end)
-			end
-		end
 	end,
 	["PLAYERBANKSLOTS_CHANGED"] = function(arg1)
 		if not addon.db["showIlvlOnBankFrame"] then return end

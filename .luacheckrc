@@ -56,6 +56,7 @@ globals = {
 
 	-- EnhanceQoL
 	"BankFrame",
+	"SELL_ALL_JUNK_ITEMS_POPUP",
 	"MERCHANT_ITEMS_PER_PAGE",
 	"EquipmentManager_UnpackLocation",
 	"AccountBankPanel",
