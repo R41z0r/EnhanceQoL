@@ -1679,6 +1679,8 @@ local function CreateUI()
 			addon.MythicPlus.functions.treeCallback(container, group)
 		elseif string.match(group, "^aura") then
 			addon.Aura.functions.treeCallback(container, group)
+		elseif string.match(group, "^sound") then
+			addon.Sounds.functions.treeCallback(container, group)
 		elseif string.match(group, "^mouse") then
 			addon.Mouse.functions.treeCallback(container, group)
 		end
@@ -1964,10 +1966,11 @@ local frameLoad = CreateFrame("Frame")
 local gossipClicked = {}
 
 --@debug@
+local wOpen = false -- Variable to ignore multiple checks for openItems
 local function openItems(items)
 	local function openNextItem()
 		if #items == 0 then
-			-- print("Finished selling items.")
+			addon.functions.checkForContainer()
 			return
 		end
 
@@ -1977,11 +1980,39 @@ local function openItems(items)
 			-- if iLoc then
 			-- 	if C_Item.IsLocked(iLoc) then C_Item.UnlockItem(iLoc) end
 			-- end
-			C_Timer.After(0.1, function() C_Container.UseContainerItem(item.bag, item.slot) end)
-			C_Timer.After(0.4, openNextItem) -- 100ms Pause zwischen den Verkäufen
+			C_Timer.After(0.1, function()
+				C_Container.UseContainerItem(item.bag, item.slot)
+				C_Timer.After(0.4, openNextItem) -- 100ms Pause zwischen den Verkäufen
+			end)
 		end
 	end
 	openNextItem()
+end
+function addon.functions.checkForContainer()
+	local itemsToOpen = {}
+	for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
+		for slot = 1, C_Container.GetContainerNumSlots(bag) do
+			containerInfo = C_Container.GetContainerItemInfo(bag, slot)
+			if containerInfo then
+				local eItem = Item:CreateFromBagAndSlot(bag, slot)
+				if eItem and not eItem:IsItemEmpty() then
+					eItem:ContinueOnItemLoad(function()
+						local tooltip = C_TooltipInfo.GetBagItem(bag, slot)
+						if tooltip then
+							for i, line in ipairs(tooltip.lines) do
+								if line.leftText == ITEM_OPENABLE then table.insert(itemsToOpen, { bag = bag, slot = slot }) end
+							end
+						end
+					end)
+				end
+			end
+		end
+	end
+	if #itemsToOpen > 0 then
+		openItems(itemsToOpen)
+	else
+		wOpen = false
+	end
 end
 --@end-debug@
 
@@ -2005,6 +2036,7 @@ local eventHandlers = {
 			--@debug@
 			loadSubAddon("EnhanceQoLAura")
 			loadSubAddon("EnhanceQoLQuery")
+			loadSubAddon("EnhanceQoLSound")
 			--@end-debug@
 			loadSubAddon("EnhanceQoLMouse")
 			loadSubAddon("EnhanceQoLMythicPlus")
@@ -2018,26 +2050,9 @@ local eventHandlers = {
 	--@debug@
 	["BAG_UPDATE_DELAYED"] = function(arg1)
 		if addon.db["automaticallyOpenContainer"] then
-			local itemsToOpen = {}
-			for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
-				for slot = 1, C_Container.GetContainerNumSlots(bag) do
-					containerInfo = C_Container.GetContainerItemInfo(bag, slot)
-					if containerInfo then
-						local eItem = Item:CreateFromBagAndSlot(bag, slot)
-						if eItem and not eItem:IsItemEmpty() then
-							eItem:ContinueOnItemLoad(function()
-								local tooltip = C_TooltipInfo.GetBagItem(bag, slot)
-								if tooltip then
-									for i, line in ipairs(tooltip.lines) do
-										if line.leftText == ITEM_OPENABLE then table.insert(itemsToOpen, { bag = bag, slot = slot }) end
-									end
-								end
-							end)
-						end
-					end
-				end
-			end
-			if #itemsToOpen > 0 then openItems(itemsToOpen) end
+			if wOpen then return end
+			wOpen = true
+			addon.functions.checkForContainer()
 		end
 	end,
 	--@end-debug@

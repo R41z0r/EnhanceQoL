@@ -67,7 +67,7 @@ L["evoker_HideEssence"] = "Hide Essencebar"
 
 -- Monk
 L["monk_HideHarmonyBar"] = "Hide Harmonybar"
-
+L["monk_MuteBanlu"] = MUTE .. ": Ban-Lu"
 -- Paladin
 L["paladin_HideHolyPower"] = "Hide Holypowerbar"
 
