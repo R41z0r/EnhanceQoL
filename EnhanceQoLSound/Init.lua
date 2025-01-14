@@ -15,34 +15,7 @@ addon.functions.InitDBValue("soundMutedSounds", {})
 
 addon.Sounds.soundFiles = {
 	["class"] = {
-		["monk"] = {
-			["banlu"] = {
-				1593212, --Good to see you again, Grandmaster.
-				1593213, --Lay off the manabuns.
-				1593214, --Good luck, Grandmaster.
-				1593215, --Farewell.
-				1593216, --The lazy yak never gets washed.
-				1593217, --Listen to all voices, Grandmaster. .
-				1593218, --Idleness rarely leads to success, Grandmaster.
-				1593219, --Is it much further, Grandmaster.
-				1593220, --Remember to finish crossing the river
-				1593221, --To speak of change without being willing taking action
-				1593222, --A kite can not fly without the wind blowing against it.
-				1593223, --The wise monk chooses their own style
-				1593224, --The best time to plant a tree
-				1593225, --Do not concern yourself
-				1593226, --The wise brewmaster
-				1593227, --Have a told you the tale of the hozen
-				1593228, --Ah, a refreshing swim
-				1593229, --Don't worry about me, Grandmanster
-				1593230, --Filled with sorry
-				1593231, --But in the mists of that reflection
-				1593232, --You have show patience
-				1593233, --It is clear you embody
-				1593234, --Your skils are impressive
-				1593236, --Where are we going today, Grandmaster
-			},
-		},
+		["monk"] = {},
 	},
 	["dungeon"] = {
 		["affix"] = {
@@ -55,6 +28,94 @@ addon.Sounds.soundFiles = {
 				5835726, -- The void consumes everything
 				5835725, -- Inevitable
 			},
+		},
+		["tww"] = {
+			["stonevault"] = {
+				["dagran_thaurissan_ii"] = {
+					5835282, -- So here we are. High Speaker Eirich... or is it just Eirich now?
+					5835283, -- He's fled from the Hall of Awakening into the Stonevault
+					5835268, -- He's probably running like a frightened mouse. Wee, sleekit, cowering, timorous beastie!
+				},
+			},
+		},
+	},
+	["mounts"] = {
+		["banlu"] = {
+			1593212, --Good to see you again, Grandmaster.
+			1593213, --Lay off the manabuns.
+			1593214, --Good luck, Grandmaster.
+			1593215, --Farewell.
+			1593216, --The lazy yak never gets washed.
+			1593217, --Listen to all voices, Grandmaster. .
+			1593218, --Idleness rarely leads to success, Grandmaster.
+			1593219, --Is it much further, Grandmaster.
+			1593220, --Remember to finish crossing the river
+			1593221, --To speak of change without being willing taking action
+			1593222, --A kite can not fly without the wind blowing against it.
+			1593223, --The wise monk chooses their own style
+			1593224, --The best time to plant a tree
+			1593225, --Do not concern yourself
+			1593226, --The wise brewmaster
+			1593227, --Have a told you the tale of the hozen
+			1593228, --Ah, a refreshing swim
+			1593229, --Don't worry about me, Grandmanster
+			1593230, --Filled with sorry
+			1593231, --But in the mists of that reflection
+			1593232, --You have show patience
+			1593233, --It is clear you embody
+			1593234, --Your skils are impressive
+			1593236, --Where are we going today, Grandmaster
+		},
+		["grand_expedition_yak"] = {
+			-- Cousing Slowhands --
+			-- Greetings
+			640336,
+			640338,
+			640340,
+			-- Farewell
+			640314,
+			640316,
+			640318,
+			640320,
+			-- Mystic Birdhat --
+			-- Greetings
+			640180,
+			640182,
+			640184,
+			-- Farewell
+			640158,
+			640160,
+			640162,
+			640164,
+		},
+		["peafowl"] = {
+			5546937,
+			5546939,
+			5546941,
+			5546943,
+		},
+		["wonderwing_20"] = {
+			2148660,
+			2148661,
+			2148662,
+			2148663,
+			2148664,
+		},
+	},
+	["spells"] = {
+		["bloodlust"] = {
+			568812, -- Bloodlust
+			569013, -- Heroism
+			569578, -- Timewarp
+			569379, -- Timewarp
+			568818, -- Timewarp
+			569126, -- Timewarp
+			568451, -- Timewarp
+			4558551,
+			4558553,
+			4558555,
+			4558557,
+			4558559,
 		},
 	},
 	["emotes"] = {
