@@ -27,6 +27,14 @@ addon.Sounds.soundFiles = {
 				5834623, -- Oh he's alone
 				5835726, -- The void consumes everything
 				5835725, -- Inevitable
+
+				5854706, -- Haha
+				5835195, -- So Easily Overlooked
+				5835215, -- Only The Strongest Survive
+				2530811, -- Do You See It?
+				2530835, -- A Stone To Call Forth The Darkness
+				2530794, -- Open Your Mind To The Whispers
+				5834632, -- Embrace Who You Truly Are
 			},
 		},
 		["tww"] = {

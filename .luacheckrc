@@ -55,6 +55,9 @@ globals = {
 	"AceGUIMultiLineEditBoxInsertLink",
 
 	-- EnhanceQoL
+	"INTERFACE_LABEL",
+	"MuteSoundFile",
+	"UnmuteSoundFile",
 	"PLAYER_DIFFICULTY1",
 	"PLAYER_DIFFICULTY2",
 	"PLAYER_DIFFICULTY6",

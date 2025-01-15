@@ -19,7 +19,6 @@ for i, v in pairs(addon.Sounds.soundFiles["dungeon"]) do
 	else
 		local subChilden = {}
 		for dungeon in pairs(v) do
-			print(dungeon)
 			if L[dungeon] then table.insert(subChilden, { text = L[dungeon], value = dungeon }) end
 		end
 		if #subChilden and L[i] then table.insert(dungeonChildren, { text = L[i], value = i, children = subChilden }) end

@@ -578,7 +578,7 @@ end
 
 local function calculateDurability()
 	local maxDur = 0 -- combined value of durability
-	local counter = 0 -- general counter for damaged items
+	local currentDura = 0
 	local critDura = 0 -- counter of items under 50%
 
 	for key, _ in pairs(addon.variables.itemSlots) do
@@ -591,8 +591,8 @@ local function calculateDurability()
 						local current, maximum = GetInventoryItemDurability(key)
 						if nil ~= current then
 							local fDur = tonumber(string.format("%." .. 0 .. "f", current * 100 / maximum))
-							counter = counter + 1
-							maxDur = maxDur + fDur
+							maxDur = maxDur + maximum
+							currentDura = currentDura + current
 							if fDur < 50 then critDura = critDura + 1 end
 						end
 					end
@@ -602,17 +602,19 @@ local function calculateDurability()
 	end
 
 	-- When we only have full durable items so fake the numbers to show 100%
-	if maxDur == 0 and counter == 0 then
+	if maxDur == 0 and currentDura == 0 then
 		maxDur = 100
-		counter = 1
+		currentDura = 100
 	end
 
-	addon.variables.durabilityCount = tonumber(string.format("%." .. 0 .. "f", maxDur / counter)) .. "%"
+	local durValue = currentDura / maxDur * 100
+
+	addon.variables.durabilityCount = tonumber(string.format("%." .. 0 .. "f", durValue)) .. "%"
 	addon.general.durabilityIconFrame.count:SetText(addon.variables.durabilityCount)
 
-	if tonumber(string.format("%." .. 0 .. "f", maxDur / counter)) > 80 then
+	if tonumber(string.format("%." .. 0 .. "f", durValue)) > 80 then
 		addon.general.durabilityIconFrame.count:SetTextColor(1, 1, 1)
-	elseif tonumber(string.format("%." .. 0 .. "f", maxDur / counter)) > 50 then
+	elseif tonumber(string.format("%." .. 0 .. "f", durValue)) > 50 then
 		addon.general.durabilityIconFrame.count:SetTextColor(1, 1, 0)
 	else
 		addon.general.durabilityIconFrame.count:SetTextColor(1, 0, 0)
