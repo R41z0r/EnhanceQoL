@@ -315,18 +315,17 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 
 				itemButton.ItemLevelText:Show()
 
-				local data = C_TooltipInfo.GetBagItem(bag, slot)
-
 				local bType
 
 				if addon.db["showBindOnBagItems"] then
+					local data = C_TooltipInfo.GetBagItem(bag, slot)
 					for i, v in pairs(data.lines) do
 						if v.type == 20 then
 							if v.leftText == ITEM_BIND_ON_EQUIP then
 								bType = "BoE"
-							elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP then
+							elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
 								bType = "WuE"
-							elseif v.leftText == ITEM_ACCOUNTBOUND then
+							elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
 								bType = "WB"
 							end
 							break
