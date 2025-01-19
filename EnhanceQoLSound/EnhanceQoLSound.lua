@@ -121,7 +121,11 @@ local function addClassFrame(container, group, sounds)
 		for key in pairs(sounds) do
 			table.insert(sortedKeys, key)
 		end
-		table.sort(sortedKeys, function(a, b) return L[a] < L[b] end) -- Alphabetisch sortieren
+		table.sort(sortedKeys, function(a, b)
+			local lA = L[a] or a
+			local lB = L[b] or b
+			return lA < lB
+		end) -- Alphabetisch sortieren
 
 		local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 		container:AddChild(wrapper)
@@ -130,13 +134,13 @@ local function addClassFrame(container, group, sounds)
 		wrapper:AddChild(groupCore)
 
 		for _, key in ipairs(sortedKeys) do
-			if L[key] then
-				local cbElement = addon.functions.createCheckboxAce(L[key], addon.db["sounds_" .. group .. "_" .. key], function(self, _, value)
-					addon.db["sounds_" .. group .. "_" .. key] = value
-					toggleSounds(sounds[key], value)
-				end)
-				groupCore:AddChild(cbElement)
-			end
+			local lKey = L[key] or key
+
+			local cbElement = addon.functions.createCheckboxAce(lKey, addon.db["sounds_" .. group .. "_" .. key], function(self, _, value)
+				addon.db["sounds_" .. group .. "_" .. key] = value
+				toggleSounds(sounds[key], value)
+			end)
+			groupCore:AddChild(cbElement)
 		end
 	end
 end

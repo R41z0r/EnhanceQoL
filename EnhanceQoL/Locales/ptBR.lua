@@ -23,6 +23,13 @@ L["showIlvlOnBankFrame"] = "Mostrar o nível do item no Banco"
 L["showIlvlOnMerchantframe"] = "Exibir o nível do item na janela do mercador"
 L["showIlvlOnCharframe"] = "Exibir nível do item no quadro de equipamentos do personagem"
 L["showGemsOnCharframe"] = "Exibir slots de gemas no quadro de equipamentos do personagem"
+L["showBindOnBagItems"] = "Exibe "
+	.. _G.ITEM_BIND_ON_EQUIP
+	.. " (BoE), "
+	.. _G.ITEM_ACCOUNTBOUND_UNTIL_EQUIP
+	.. " (WuE) e "
+	.. _G.ITEM_BNETACCOUNTBOUND
+	.. " (WB) como adição ao nível do item nos itens"
 L["showGemsTooltipOnCharframe"] = "Exibir os slots de gemas na moldura de equipamentos do personagem"
 L["showEnchantOnCharframe"] = "Exibir encantamentos no quadro de equipamentos do personagem"
 L["showCatalystChargesOnCharframe"] = "Mostrar cargas do catalisador no quadro de equipamento do personagem"

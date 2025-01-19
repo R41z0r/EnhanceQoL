@@ -44,6 +44,9 @@ globals = {
 	"PanelTemplates_SetNumTabs",
 	"ChallengesKeystoneFrame",
 	"_G.CompactRaidFrameManager",
+	"_G.ITEM_BIND_ON_EQUIP",
+	"_G.ITEM_ACCOUNTBOUND_UNTIL_EQUIP",
+	"_G.ITEM_BNETACCOUNTBOUND",
 	"SOUNDKIT",
 
 	-- ACE

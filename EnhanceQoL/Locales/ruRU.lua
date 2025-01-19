@@ -23,6 +23,13 @@ L["showIlvlOnBankFrame"] = "Отображать уровень предмета
 L["showIlvlOnMerchantframe"] = "Отображать уровень предмета в окне торговца"
 L["showIlvlOnCharframe"] = "Отображать уровень предмета на экране экипировки персонажа"
 L["showGemsOnCharframe"] = "Отображать гнезда для камней на экране экипировки персонажа"
+L["showBindOnBagItems"] = "Отображает "
+	.. _G.ITEM_BIND_ON_EQUIP
+	.. " (BoE), "
+	.. _G.ITEM_ACCOUNTBOUND_UNTIL_EQUIP
+	.. " (WuE) и "
+	.. _G.ITEM_BNETACCOUNTBOUND
+	.. " (WB) в дополнение к уровню предмета"
 L["showGemsTooltipOnCharframe"] = "Отображать ячейки для камней в окне экипировки персонажа"
 L["showEnchantOnCharframe"] = "Отображать чары на экране экипировки персонажа"
 L["showCatalystChargesOnCharframe"] = "Отображать заряды катализатора на экране экипировки персонажа"

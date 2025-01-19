@@ -866,6 +866,18 @@ local function addCharacterFrame(container)
 			end,
 		},
 		{
+			parent = BAGSLOT,
+			var = "showBindOnBagItems",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showBindOnBagItems"] = value
+				for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+					if frame:IsShown() then addon.functions.updateBags(frame) end
+				end
+				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
+			end,
+		},
+		{
 			parent = L["UnitFrame"],
 			var = "hideHitIndicatorPlayer",
 			type = "CheckBox",
@@ -1345,12 +1357,48 @@ local function updateFlyoutButtonInfo(button)
 					button.ItemLevelText:SetText(itemLevel)
 					button.ItemLevelText:SetTextColor(quality.r, quality.g, quality.b, 1)
 					button.ItemLevelText:Show()
+
+					local bType
+					if bag and slot then
+						local data = C_TooltipInfo.GetBagItem(bag, slot)
+
+						if addon.db["showBindOnBagItems"] then
+							for i, v in pairs(data.lines) do
+								if v.type == 20 then
+									if v.leftText == ITEM_BIND_ON_EQUIP then
+										bType = "BoE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP then
+										bType = "WuE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND then
+										bType = "WB"
+									end
+									break
+								end
+							end
+						end
+					end
+					if bType then
+						if not button.ItemBoundType then
+							button.ItemBoundType = button:CreateFontString(nil, "OVERLAY")
+							button.ItemBoundType:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+							button.ItemBoundType:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 2, 2)
+
+							button.ItemBoundType:SetShadowOffset(2, 2)
+							button.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+						end
+						button.ItemBoundType:SetFormattedText(bType)
+						button.ItemBoundType:Show()
+					elseif button.ItemBoundType then
+						button.ItemBoundType:Hide()
+					end
 				end)
 			end
 		elseif button.ItemLevelText then
+			if button.ItemBoundType then button.ItemBoundType:Hide() end
 			button.ItemLevelText:Hide()
 		end
 	elseif button.ItemLevelText then
+		if button.ItemBoundType then button.ItemBoundType:Hide() end
 		button.ItemLevelText:Hide()
 	end
 end

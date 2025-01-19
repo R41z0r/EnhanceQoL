@@ -14,7 +14,38 @@ addon.LSounds = {} -- Locales for aura
 addon.functions.InitDBValue("soundMutedSounds", {})
 
 addon.Sounds.soundFiles = {
-	["class"] = {},
+	["class"] = {
+		["class_warlock"] = {
+			["class_warlock_summon_imp"] = {
+				-- 1255429,
+				-- 1255430,
+				-- 1255431,
+				-- 1255432,
+				-- 1255433,
+				551168,
+			},
+			["class_warlock_succubus_butt_slap"] = {
+				561144,
+				1466150,
+			},
+			["class_warlock_summon_felguard"] = {
+				547320,
+				547328,
+				547335,
+				547332,
+			},
+			["class_warlock_summon_succubus"] = {
+				561163,
+				561168,
+				561157,
+				561154,
+			},
+			["class_warlock_summon"] = {
+				2068351,
+				2068352,
+			},
+		},
+	},
 	["dungeon"] = {
 		["affix"] = {
 			["xalatath"] = {
@@ -106,6 +137,30 @@ addon.Sounds.soundFiles = {
 			2148662,
 			2148663,
 			2148664,
+		},
+		["mount_chopper"] = {
+			569859,
+			569858,
+			569855,
+			569857,
+			569863,
+			569856,
+			569860,
+			569862,
+			569861,
+			569854,
+			569845,
+			569852,
+			598736,
+			598745,
+			598748,
+			568252,
+		},
+		["mount_mimiron_head"] = {
+			555364,
+			595097,
+			595100,
+			595103,
 		},
 	},
 	["spells"] = {
@@ -261,6 +316,26 @@ addon.Sounds.soundFiles = {
 				569792,
 				569794,
 				569821,
+			},
+		},
+		["ping"] = {
+			["ping_minimap"] = {
+				567416,
+			},
+			["ping_warning"] = {
+				5342387,
+			},
+			["ping_ping"] = {
+				5339002,
+			},
+			["ping_assist"] = {
+				5339006,
+			},
+			["ping_omw"] = {
+				5340605,
+			},
+			["ping_attack"] = {
+				5350036,
 			},
 		},
 		["auctionhouse"] = {

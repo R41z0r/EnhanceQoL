@@ -314,11 +314,46 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 				itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
 
 				itemButton.ItemLevelText:Show()
+
+				local data = C_TooltipInfo.GetBagItem(bag, slot)
+
+				local bType
+
+				if addon.db["showBindOnBagItems"] then
+					for i, v in pairs(data.lines) do
+						if v.type == 20 then
+							if v.leftText == ITEM_BIND_ON_EQUIP then
+								bType = "BoE"
+							elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP then
+								bType = "WuE"
+							elseif v.leftText == ITEM_ACCOUNTBOUND then
+								bType = "WB"
+							end
+							break
+						end
+					end
+				end
+				if bType then
+					if not itemButton.ItemBoundType then
+						itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
+						itemButton.ItemBoundType:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+						itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+
+						itemButton.ItemBoundType:SetShadowOffset(2, 2)
+						itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+					end
+					itemButton.ItemBoundType:SetFormattedText(bType)
+					itemButton.ItemBoundType:Show()
+				elseif itemButton.ItemBoundType then
+					itemButton.ItemBoundType:Hide()
+				end
 			elseif itemButton.ItemLevelText then
+				if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
 				itemButton.ItemLevelText:Hide()
 			end
 		end)
 	elseif itemButton.ItemLevelText then
+		if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
 		itemButton.ItemLevelText:Hide()
 	end
 end

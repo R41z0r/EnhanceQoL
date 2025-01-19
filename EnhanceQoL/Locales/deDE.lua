@@ -22,6 +22,13 @@ L["showIlvlOnBankFrame"] = "Zeige Gegenstandsstufe im Bankfenster an"
 L["showIlvlOnMerchantframe"] = "Gegenstandslevel im Händlerfenster anzeigen"
 L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anzeigen"
 L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"
+L["showBindOnBagItems"] = "Zeigt "
+	.. _G.ITEM_BIND_ON_EQUIP
+	.. " (BoE), "
+	.. _G.ITEM_ACCOUNTBOUND_UNTIL_EQUIP
+	.. " (WuE) und "
+	.. _G.ITEM_BNETACCOUNTBOUND
+	.. " (WB) zusätzlich zur Gegenstandsstufe auf Gegenständen an"
 L["showGemsTooltipOnCharframe"] = "Zeige Edelstein-Sockel-Tooltip im Charakterausrüstungsfenster"
 L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster anzeigen"
 L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstungsfenster anzeigen"

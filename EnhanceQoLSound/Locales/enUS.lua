@@ -13,8 +13,8 @@ L["affix"] = "Affix"
 L["xalatath"] = "Mute Xal'atath in Dungeons"
 L["train"] = "Mute all Train-Emotes"
 
-L["open"] = "Mute open-sound"
-L["close"] = "Mute close-sound"
+L["open"] = MUTE .. " open"
+L["close"] = MUTE .. " " .. CLOSE
 L["changeTab"] = "Mute UI Tabs switch"
 L["enterQueue"] = "Mute Enter Queue (PVP/Dungeon)"
 L["readycheck"] = "Mute " .. READY_CHECK
@@ -35,3 +35,17 @@ L["wonderwing_20"] = "Mute Wonderwing 2.0 squeak"
 
 -- Spells
 L["bloodlust"] = "Mute Bloodlust/Heroism sounds"
+
+-- Interface
+L["interface"] = INTERFACE_LABEL
+L["general"] = GENERAL
+--Auction House
+L["auctionhouse"] = BUTTON_LAG_AUCTIONHOUSE
+-- Pings
+L["ping_attack"] = MUTE .. " " .. PING .. " " .. BINDING_NAME_PINGATTACK
+L["ping_assist"] = MUTE .. " " .. PING .. " " .. BINDING_NAME_PINGASSIST
+L["ping_omw"] = MUTE .. " " .. PING .. " " .. BINDING_NAME_PINGONMYWAY
+L["ping_warning"] = MUTE .. " " .. PING .. " " .. BINDING_NAME_PINGWARNING
+L["ping_ping"] = MUTE .. " " .. DEFAULT .. " " .. PING
+L["ping_minimap"] = MUTE .. " " .. PING .. " " .. MINIMAP_LABEL
+L["ping"] = PING

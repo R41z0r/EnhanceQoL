@@ -23,6 +23,13 @@ L["showIlvlOnBankFrame"] = "在銀行介面顯示物品等級"
 L["showIlvlOnMerchantframe"] = "在商人視窗顯示物品等級"
 L["showIlvlOnCharframe"] = "在角色裝備框架上顯示物品等級"
 L["showGemsOnCharframe"] = "在角色裝備框架上顯示寶石插槽"
+L["showBindOnBagItems"] = "在物品上顯示"
+	.. _G.ITEM_BIND_ON_EQUIP
+	.. " (BoE)、"
+	.. _G.ITEM_ACCOUNTBOUND_UNTIL_EQUIP
+	.. " (WuE)以及"
+	.. _G.ITEM_BNETACCOUNTBOUND
+	.. " (WB)，作為物品等級的附加資訊"
 L["showGemsTooltipOnCharframe"] = "在角色裝備框架上顯示寶石插槽提示"
 L["showEnchantOnCharframe"] = "在角色裝備框架上顯示附魔"
 L["showCatalystChargesOnCharframe"] = "在角色裝備介面顯示催化劑次數"

@@ -1,4 +1,5 @@
-## Bugfix
+## Added
 
-- Calculation of durability was slightly wrong
-- Vendor help notice in options had an error when changing equipment while any other option window was shown
+### New Options
+
+- Display Bind on Equip (BoE), Warbound until Equipped (WuE) and Warbound (WB) on equippable items
