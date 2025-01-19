@@ -13,34 +13,90 @@ addon.variables.statusTable.groups["sound"] = true
 
 local dungeonChildren = {}
 
-for i, v in pairs(addon.Sounds.soundFiles["dungeon"]) do
-	if i == "affix" then
-		table.insert(dungeonChildren, { text = L[i], value = i })
+local function capitalize(str) return (str:gsub("^%l", string.upper)) end
+
+local function isPureNumbersTable(tbl)
+	local isRun = false
+	for _, v in pairs(tbl) do
+		isRun = true
+		if type(v) ~= "number" then return false end
+	end
+	if isRun then
+		return true
 	else
-		local subChilden = {}
-		for dungeon in pairs(v) do
-			if L[dungeon] then table.insert(subChilden, { text = L[dungeon], value = dungeon }) end
-		end
-		if #subChilden and L[i] then table.insert(dungeonChildren, { text = L[i], value = i, children = subChilden }) end
+		return false
 	end
 end
 
+-- Prüfen, ob alle Einträge reine Nummern‐Tabellen sind
+local function allChildrenArePureNumbersTbl(tbl)
+	local isRun = false
+	for _, childValue in pairs(tbl) do
+		isRun = true
+		if type(childValue) ~= "table" or not isPureNumbersTable(childValue) then return false end
+	end
+	if isRun then
+		return true
+	else
+		return false
+	end
+end
+
+-- Rekursive Funktion zum Erstellen der Baumstruktur
+local function buildDynamicTree(sourceTable)
+	local tree = {}
+
+	for key, value in pairs(sourceTable) do
+		local nodeText = L[key] or capitalize(key)
+		local nodeValue = key
+		local fullValue = nodeValue
+		if type(value) == "table" then
+			if isPureNumbersTable(value) then
+				-- 1) Endknoten: Reines Zahlenarray
+				table.insert(tree, {
+					text = nodeText,
+					value = fullValue,
+				})
+			elseif allChildrenArePureNumbersTbl(value) then
+				-- 2) Sonderfall: Dieser Knoten hat N Untereinträge, die ALLE reine Zahlenarrays sind
+				-- --> Wir behandeln DAS hier als "Endknoten".
+				table.insert(tree, {
+					text = nodeText,
+					value = fullValue,
+				})
+			else
+				-- 3) "Normale" Verschachtelung
+				local subChildren = buildDynamicTree(value)
+				if #subChildren > 0 then table.insert(tree, {
+					text = nodeText,
+					value = fullValue,
+					children = subChildren,
+				}) end
+			end
+		elseif type(value) == "number" then
+			-- Single number
+			table.insert(tree, {
+				text = nodeText,
+				value = fullValue,
+			})
+		end
+	end
+
+	return tree
+end
+
+-- Baue die dynamische Baumstruktur basierend auf soundFiles
+local dynamicChildren = buildDynamicTree(addon.Sounds.soundFiles)
+
+--@debug@
+table.insert(dynamicChildren, { value = "debug", text = "Debug" })
+--@end-debug@
+
+-- Übergib die dynamische Baumstruktur an addToTree
 addon.functions.addToTree(nil, {
 	value = "sound",
 	text = SOUND,
-	children = {
-		-- { value = "general", text = ACCESSIBILITY_GENERAL_LABEL },
-		-- { value = "toy", text = TOY },
-		--@debug@
-		{ value = "debug", text = "Debug" },
-		--@end-debug@
-		{ value = "mounts", text = MOUNT },
-		{ value = "spells", text = SPELLS },
-		{ value = "interface", text = INTERFACE_LABEL, children = { { value = "auctionhouse", text = BUTTON_LAG_AUCTIONHOUSE }, { value = "general", text = GENERAL } } },
-		{ value = "emotes", text = CHAT_MSG_EMOTE },
-		{ value = "dungeon", text = LFG_TYPE_DUNGEON, children = dungeonChildren },
-		-- { value = "class", text = CLASS, children = { { value = "monk", text = "Monk" }, { value = "deathknight", text = "Death Knight" } } },
-	},
+	children = dynamicChildren,
 }, true)
 
 local AceGUI = addon.AceGUI
@@ -101,44 +157,32 @@ end
 local function addTWWFrame(container, group) addClassFrame() end
 
 function addon.Sounds.functions.treeCallback(container, group)
-	container:ReleaseChildren() -- Entfernt vorherige Inhalte
-	if group == "sound\001class\001monk" then
-		addClassFrame(container, "class_monk", addon.Sounds.soundFiles["class"]["monk"])
-	elseif group == "sound\001debug" then
+	container:ReleaseChildren()
+	if group == "sound\001debug" then
 		addDebugFrame(container)
-	elseif group == "sound\001dungeon\001affix" then
-		addClassFrame(container, "dungeon_affix", addon.Sounds.soundFiles["dungeon"]["affix"])
-	elseif string.match(group, "^sound\001dungeon\001") then
-		local formattedGroup = string.gsub(string.gsub(group, "^sound\001", ""), "\001", "_")
-		local segments = {}
-		for segment in string.gmatch(formattedGroup, "[^_]+") do
-			table.insert(segments, segment)
-		end
+		return
+	end
+	local partialGroup = string.gsub(group, "^sound\001", "")
+	local segments = {}
+	for segment in string.gmatch(partialGroup, "([^\001]+)") do
+		table.insert(segments, segment)
+	end
 
-		if #segments == 2 then return end
-		local soundFileTable = addon.Sounds.soundFiles
-		for _, segment in ipairs(segments) do
-			if soundFileTable[segment] then
-				soundFileTable = soundFileTable[segment]
-			else
-				soundFileTable = nil
-				break
-			end
+	local soundFileTable = addon.Sounds.soundFiles
+	for _, seg in ipairs(segments) do
+		if type(soundFileTable[seg]) == "table" then
+			soundFileTable = soundFileTable[seg]
+		else
+			soundFileTable = nil
+			break
 		end
+	end
 
-		if soundFileTable then addClassFrame(container, formattedGroup, soundFileTable) end
-	elseif group == "sound\001toy" then
-		addClassFrame(container, "toy")
-	elseif group == "sound\001emotes" then
-		addClassFrame(container, "emotes", addon.Sounds.soundFiles["emotes"])
-	elseif group == "sound\001interface\001auctionhouse" then
-		addClassFrame(container, "interface_auctionhouse", addon.Sounds.soundFiles["interface"]["auctionhouse"])
-	elseif group == "sound\001interface\001general" then
-		addClassFrame(container, "interface_general", addon.Sounds.soundFiles["interface"]["general"])
-	elseif group == "sound\001mounts" then
-		addClassFrame(container, "mounts", addon.Sounds.soundFiles["mounts"])
-	elseif group == "sound\001spells" then
-		addClassFrame(container, "spells", addon.Sounds.soundFiles["spells"])
+	if soundFileTable then
+		if isPureNumbersTable(soundFileTable) or allChildrenArePureNumbersTbl(soundFileTable) then
+			local formattedGroup = string.gsub(partialGroup, "\001", "_")
+			addClassFrame(container, formattedGroup, soundFileTable)
+		end
 	end
 end
 

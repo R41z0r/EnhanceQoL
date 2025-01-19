@@ -14,9 +14,7 @@ addon.LSounds = {} -- Locales for aura
 addon.functions.InitDBValue("soundMutedSounds", {})
 
 addon.Sounds.soundFiles = {
-	["class"] = {
-		["monk"] = {},
-	},
+	["class"] = {},
 	["dungeon"] = {
 		["affix"] = {
 			["xalatath"] = {
@@ -75,22 +73,22 @@ addon.Sounds.soundFiles = {
 			1593236, --Where are we going today, Grandmaster
 		},
 		["grand_expedition_yak"] = {
-			-- Cousing Slowhands --
-			-- Greetings
+			--Cousing Slowhands --
+			--Greetings
 			640336,
 			640338,
 			640340,
-			-- Farewell
+			--Farewell
 			640314,
 			640316,
 			640318,
 			640320,
-			-- Mystic Birdhat --
-			-- Greetings
+			--Mystic Birdhat --
+			--Greetings
 			640180,
 			640182,
 			640184,
-			-- Farewell
+			--Farewell
 			640158,
 			640160,
 			640162,
@@ -128,112 +126,112 @@ addon.Sounds.soundFiles = {
 	},
 	["emotes"] = {
 		["train"] = {
-			-- Orc --
+			--Orc --
 			541239, --Male
 			541157, --Female
 
-			-- Undead --
+			--Undead --
 			542600, --Male
 			542526, --Female
 
-			-- Tauren --
+			--Tauren --
 			542896, --Male
 			542818, --Female
 
-			-- Troll --
+			--Troll --
 			543093, --Male
 			543085, --Female
 
-			-- Blood Elf --
+			--Blood Elf --
 			539203, --Male
 			539219, --Female
 			1306531, --Male Demon Hunter
 			1313588, --Female Demon Hunter
 
-			-- Goblin --
+			--Goblin --
 			542017, --Male
 			541769, --Female
 
-			-- Nightborne --
+			--Nightborne --
 			1732405, --Male
 			1732030, --Female
 
-			-- Highmountain Tauren --
+			--Highmountain Tauren --
 			1730908, --Male
 			1730534, --Female
 
-			-- Mag'har Orc --
+			--Mag'har Orc --
 			1951458, --Male
 			1951457, --Female
 
-			-- Zandalari Troll --
+			--Zandalari Troll --
 			1903522, --Male
 			1903049, --Female
 
-			-- Vulpera --
+			--Vulpera --
 			3106717, --Male
 			3106252, --Female
 
-			-- Pandaren --
+			--Pandaren --
 			630296, --Male Train 01
 			630298, --Male Train 02
 			636621, --Female
 
-			-- Dracthyr --
+			--Dracthyr --
 			4737561, --Male Visage
 			4738601, --Male Dragonkin
 			4741007, --Female Visage
 			4739531, --Female Dragonkin
 
-			-- Earthen --
+			--Earthen --
 			6021052, -- Female
 			6021067, -- Male
 
-			-- Human --
+			--Human --
 			540734, --Male
 			540535, --Female
 
-			-- Dwarf --
+			--Dwarf --
 			539881, --Male
 			539802, --Female
 
-			-- Night Elf --
+			--Night Elf --
 			540947, --Male
 			540870, --Female
 			1304872, --Male Demon Hunter
 			1316209, --Female Demon Hunter
 
-			-- Gnome --
+			--Gnome --
 			540275, --Male
 			540271, --Female
 
-			-- Draenei --
+			--Draenei --
 			539730, --Male
 			539516, --Female
 
-			-- Worgen --
+			--Worgen --
 			541601, --Male (Human Form)
 			542206, --Male (Worgen Form)
 			541463, --Female (Human Form)
 			542035, --Female (Worgen Form)
 
-			-- Void Elf --
+			--Void Elf --
 			1733163, --Male
 			1732785, --Female
 
-			-- Lightforged Draenei --
+			--Lightforged Draenei --
 			1731656, --Male
 			1731282, --Female
 
-			-- Dark Iron Dwarf --
+			--Dark Iron Dwarf --
 			1902543, --Male
 			1902030, --Female
 
-			-- Kul Tiran Human --
+			--Kul Tiran Human --
 			2491898, --Male
 			2531204, --Female
 
-			-- Mechagnome --
+			--Mechagnome --
 			3107182, --Male
 			3107651, --Female
 		},
