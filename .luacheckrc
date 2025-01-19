@@ -58,6 +58,9 @@ globals = {
 	"AceGUIMultiLineEditBoxInsertLink",
 
 	-- EnhanceQoL
+	"PING",
+	"ITEM_ACCOUNTBOUND_UNTIL_EQUIP",
+	"ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP",
 	"INTERFACE_LABEL",
 	"MuteSoundFile",
 	"UnmuteSoundFile",
