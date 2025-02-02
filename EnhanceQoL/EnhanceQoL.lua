@@ -103,11 +103,11 @@ local function CheckItemGems(element, itemLink, emptySocketsCount, key, pdElemen
 
 	for i = 1, emptySocketsCount do
 		local gemName, gemLink = C_Item.GetItemGem(itemLink, i)
+		element.gems[i]:SetScript("OnEnter", nil)
 
 		if gemName then
 			local icon = GetItemIcon(gemLink)
 			element.gems[i].icon:SetTexture(icon)
-			element.gems[i].OnEnter = nil
 			element.gems[i]:SetScript("OnEnter", function(self)
 				if gemLink and addon.db["showGemsTooltipOnCharframe"] then
 					local anchor = "ANCHOR_CURSOR"
@@ -366,6 +366,7 @@ local function onInspect(arg1)
 							tooltip:SetOwner(UIParent, "ANCHOR_NONE")
 							tooltip:SetHyperlink(itemLink)
 							local foundEnchant = false
+							local foundIcon = false
 							for i = 1, tooltip:NumLines() do
 								local line = _G["ScanTooltipTextLeft" .. i]:GetText()
 								if line then
@@ -373,6 +374,11 @@ local function onInspect(arg1)
 									if enchant then
 										local color1, color2 = strmatch(enchant, "(|cn.-:).-(|r)")
 										local text = strmatch(gsub(gsub(gsub(line, "%s?|A.-|a", ""), "|cn.-:(.-)|r", "%1"), "[&+] ?", ""), addon.variables.enchantString)
+
+										local icons = {}
+										line:gsub("(|A.-|a)", function(iconString) table.insert(icons, iconString) end)
+										-- Wir gehen davon aus, dass nur eins da ist:
+										if #icons > 0 then foundIcon = icons[1] end
 
 										foundEnchant = true
 
@@ -385,7 +391,7 @@ local function onInspect(arg1)
 										local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 
 										enchantText = enchantText:gsub("%%", "%%%%")
-
+										if foundIcon then enchantText = enchantText .. foundIcon end
 										if color1 or color2 then
 											element.enchant:SetFormattedText(format("%s%s%s", color1 or "", string.utf8sub(enchantText, 1, 20), color2 or ""))
 										else
@@ -432,6 +438,7 @@ local function setIlvlText(element, slot)
 				if element.gems[i] then
 					element.gems[i]:Hide()
 					element.gems[i].icon:SetTexture("Interface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic")
+					element.gems[i]:SetScript("OnEnter", nil)
 				end
 			end
 		end
@@ -467,7 +474,6 @@ local function setIlvlText(element, slot)
 							if gemName then
 								local icon = GetItemIcon(gemLink)
 								element.gems[i].icon:SetTexture(icon)
-								element.gems[i].OnEnter = nil
 								element.gems[i]:SetScript("OnEnter", function(self)
 									if gemLink and addon.db["showGemsTooltipOnCharframe"] then
 										local anchor = "ANCHOR_CURSOR"
@@ -480,7 +486,6 @@ local function setIlvlText(element, slot)
 										GameTooltip:Show()
 									end
 								end)
-
 								emptySocketsCount = emptySocketsCount - 1
 							end
 						end
@@ -506,6 +511,7 @@ local function setIlvlText(element, slot)
 					tooltip:SetOwner(UIParent, "ANCHOR_NONE")
 					tooltip:SetHyperlink(link)
 					local foundEnchant = false
+					local foundIcon = nil
 					for i = 1, tooltip:NumLines() do
 						local line = _G["ScanTooltipTextLeft" .. i]:GetText()
 						if line then
@@ -513,6 +519,11 @@ local function setIlvlText(element, slot)
 							if enchant then
 								local color1, color2 = strmatch(enchant, "(|cn.-:).-(|r)")
 								local text = strmatch(gsub(gsub(gsub(line, "%s?|A.-|a", ""), "|cn.-:(.-)|r", "%1"), "[&+] ?", ""), addon.variables.enchantString)
+
+								local icons = {}
+								line:gsub("(|A.-|a)", function(iconString) table.insert(icons, iconString) end)
+								-- Wir gehen davon aus, dass nur eins da ist:
+								if #icons > 0 then foundIcon = icons[1] end
 
 								foundEnchant = true
 
@@ -527,6 +538,7 @@ local function setIlvlText(element, slot)
 								local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 
 								enchantText = enchantText:gsub("%%", "%%%%")
+								if foundIcon then enchantText = enchantText .. foundIcon end
 
 								if color1 or color2 then
 									element.enchant:SetFormattedText(format("%s%s%s", color1 or "", string.utf8sub(enchantText, 1, 20), color2 or ""))
@@ -2294,7 +2306,7 @@ local eventHandlers = {
 	["QUEST_PROGRESS"] = function()
 		if addon.db["autoChooseQuest"] and not IsShiftKeyDown() and IsQuestCompletable() then CompleteQuest() end
 	end,
-	["SOCKET_INFO_ACCEPT"] = function()
+	["SOCKET_INFO_UPDATE"] = function()
 		if PaperDollFrame:IsShown() and addon.db["showGemsOnCharframe"] then C_Timer.After(0.5, function() setCharFrame() end) end
 	end,
 	["ZONE_CHANGED_NEW_AREA"] = function()
