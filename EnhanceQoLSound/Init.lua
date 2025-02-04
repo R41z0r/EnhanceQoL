@@ -291,6 +291,29 @@ addon.Sounds.soundFiles = {
 			3107651, --Female
 		},
 	},
+	["professions"] = {
+		["skinning"] = {
+			-- Soundkit 3781
+			567454,
+			567494,
+			567417,
+		},
+		["herbalism"] = {
+			-- Soundkit 1142
+			569824,
+			569825,
+			569797,
+			569818,
+		},
+		["mining"] = {
+			-- Soundkit 1143
+			569801,
+			569811,
+			569792,
+			569794,
+			569821,
+		},
+	},
 	["interface"] = {
 		["general"] = {
 			["changeTab"] = {
@@ -317,6 +340,22 @@ addon.Sounds.soundFiles = {
 				569794,
 				569821,
 			},
+			["summoning_stone"] = {
+				-- Soundkit 3136 for loop sound
+				568938,
+				-- Soundkit 119083 for first Sound on portal open
+				1684459,
+				1684460,
+				1684461,
+				1684462,
+				1684463,
+			},
+		},
+		["chat"] = {
+			["wisper"] = {
+				-- Soundkit 3081
+				567421,
+			},
 		},
 		["ping"] = {
 			["ping_minimap"] = {
@@ -338,11 +377,23 @@ addon.Sounds.soundFiles = {
 				5350036,
 			},
 		},
+		["quest"] = {
+			["quest_complete"] = {
+				-- Soundkit 619
+				567439,
+			},
+		},
 		["auctionhouse"] = {
 			["open"] = {
 				567482,
 			},
 			["close"] = { 567499 },
+		},
+	},
+	["misc"] = {
+		["eating"] = {
+			-- Soundkit 45
+			567612,
 		},
 	},
 }

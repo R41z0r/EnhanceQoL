@@ -1450,6 +1450,13 @@ end
 local function initDungeon()
 	addon.functions.InitDBValue("autoChooseDelvePower", false)
 	addon.functions.InitDBValue("lfgSortByRio", false)
+
+	--@debug@
+	if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.SearchPanel.FilterButton and LFGListFrame.SearchPanel.FilterButton.ResetButton then
+		LFGListFrame.SearchPanel.FilterButton.ResetButton:ClearAllPoints()
+		LFGListFrame.SearchPanel.FilterButton.ResetButton:SetPoint("TOPLEFT", LFGListFrame.SearchPanel.FilterButton, "TOPLEFT", -7, 13)
+	end
+	--@end-debug@
 end
 
 local function initQuest()
