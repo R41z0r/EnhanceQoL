@@ -172,8 +172,8 @@ frameAnchor:SetBackdropColor(0, 0, 0, 0.8) -- Dunkler Hintergrund mit 80% Transp
 -- Überschrift hinzufügen
 local title = frameAnchor:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 title:SetPoint("TOP", 0, -10)
-local mSeasonTitle = format(MYTHIC_DUNGEON_SEASON, "", 1)
-title:SetFormattedText(mSeasonTitle:gsub("%(%s", "("))
+local mSeasonTitle = MYTHIC_DUNGEON_SEASON
+title:SetFormattedText(string.gsub(mSeasonTitle, "%s*%b()", ""))
 frameAnchor:SetSize(title:GetStringWidth() + 20, 170) -- Breite x Höhe
 
 -- Compendium

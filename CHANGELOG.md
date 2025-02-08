@@ -1,3 +1,3 @@
-## Bugfix
+## Changed
 
-- Sometimes there was an LUA error when you enabled "Display item bind on items"
+- Text in Teleport Compendium to match any season

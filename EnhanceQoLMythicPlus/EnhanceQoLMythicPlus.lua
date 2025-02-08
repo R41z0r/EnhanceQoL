@@ -294,6 +294,14 @@ local function checkRaidMarker()
 end
 
 local function checkCondition()
+	--@debug@
+	-- No Automark for healer when it's me
+	if UnitInParty("player") and UnitGroupRolesAssigned("player") == "HEALER" then
+		local rIndex = GetRaidTargetIndex("player")
+		if nil ~= rIndex then SetRaidTarget("player", 0) end
+	end
+	--@end-debug@
+
 	if addon.db["autoMarkTankInDungeon"] then
 		local _, _, difficultyID, difficultyName = GetInstanceInfo()
 		if difficultyID == 1 and addon.db["mythicPlusIgnoreNormal"] then return false end
@@ -310,6 +318,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	if event == "ADDON_LOADED" and arg1 == addonName then
 		-- loadMain()
 	elseif event == "CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN" then
+		if InCombatLockdown() then return end
 		checkKeyStone()
 	elseif event == "READY_CHECK_FINISHED" and ChallengesKeystoneFrame and addon.MythicPlus.Buttons["ReadyCheck"] then
 		addon.MythicPlus.Buttons["ReadyCheck"]:SetText(L["ReadyCheck"])
