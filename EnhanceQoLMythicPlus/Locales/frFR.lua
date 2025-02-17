@@ -64,6 +64,7 @@ L["Disabled"] = "Désactivé"
 L["autoMarkTankExplanation"] = "Le " .. TANK .. " sera marqué s'il n'a pas de marque et ne changera la marque que si vous êtes soit " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
 L["mythicPlusIgnoreMythic"] = "Ne pas appliquer de marqueur de raid dans les donjons " .. PLAYER_DIFFICULTY6
 L["mythicPlusIgnoreHeroic"] = "Ne pas appliquer de marqueur de raid dans les donjons " .. PLAYER_DIFFICULTY2
+L["mythicPlusIgnoreEvent"] = "Ne pas appliquer de marqueur de raid dans les donjons " .. BATTLE_PET_SOURCE_7
 L["mythicPlusIgnoreNormal"] = "Ne pas appliquer de marqueur de raid dans les donjons " .. PLAYER_DIFFICULTY1
 L["mythicPlusIgnoreTimewalking"] = "Ne pas appliquer de marqueur de raid dans les donjons " .. PLAYER_DIFFICULTY_TIMEWALKER
 

@@ -65,6 +65,7 @@ L["Disabled"] = "Desativado"
 L["autoMarkTankExplanation"] = "O " .. TANK .. " será marcado quando não tiver uma marca e só mudará a marca se você for " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " ou " .. TANK
 L["mythicPlusIgnoreMythic"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY6
 L["mythicPlusIgnoreHeroic"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY2
+L["mythicPlusIgnoreEvent"] = "Não aplicar um marcador de raide em masmorras " .. BATTLE_PET_SOURCE_7
 L["mythicPlusIgnoreNormal"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY1
 L["mythicPlusIgnoreTimewalking"] = "Não aplicar um marcador de raide em masmorras " .. PLAYER_DIFFICULTY_TIMEWALKER
 

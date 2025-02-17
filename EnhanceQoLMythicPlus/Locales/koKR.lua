@@ -69,6 +69,7 @@ L["autoMarkTankExplanation"] = "탱커에게 표식이 없을 때 자동으로 �
 	.. "일 때만 가능합니다."
 L["mythicPlusIgnoreMythic"] = PLAYER_DIFFICULTY6 .. " 던전에서 공격대 징표를 적용하지 않음"
 L["mythicPlusIgnoreHeroic"] = PLAYER_DIFFICULTY2 .. " 던전에서 공격대 징표를 적용하지 않음"
+L["mythicPlusIgnoreEvent"] = BATTLE_PET_SOURCE_7 .. " 던전에서 공격대 징표를 적용하지 않음"
 L["mythicPlusIgnoreNormal"] = PLAYER_DIFFICULTY1 .. " 던전에서 공격대 징표를 적용하지 않음"
 L["mythicPlusIgnoreTimewalking"] = PLAYER_DIFFICULTY_TIMEWALKER .. " 던전에서 공격대 징표를 적용하지 않음"
 

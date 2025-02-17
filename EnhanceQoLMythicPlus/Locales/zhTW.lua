@@ -65,6 +65,7 @@ L["Disabled"] = "已停用"
 L["autoMarkTankExplanation"] = "如果坦克沒有標記，它將自動 標記，並且只有當您是 " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " 或 " .. TANK .. " 時才會更改標記"
 L["mythicPlusIgnoreMythic"] = "不要在" .. PLAYER_DIFFICULTY6 .. "地城中應用團隊標記"
 L["mythicPlusIgnoreHeroic"] = "不要在" .. PLAYER_DIFFICULTY2 .. "地城中應用團隊標記"
+L["mythicPlusIgnoreEvent"] = "不要在" .. BATTLE_PET_SOURCE_7 .. "地下城中应用团队标记"
 L["mythicPlusIgnoreNormal"] = "不要在" .. PLAYER_DIFFICULTY1 .. "地城中應用團隊標記"
 L["mythicPlusIgnoreTimewalking"] = "不要在" .. PLAYER_DIFFICULTY_TIMEWALKER .. "地下城中应用团队标记"
 

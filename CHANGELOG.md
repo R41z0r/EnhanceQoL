@@ -1,3 +1,3 @@
-## Changed
+## Added
 
-- Text in Teleport Compendium to match any season
+- Option to disable automarking of tanks in Event Dungeons

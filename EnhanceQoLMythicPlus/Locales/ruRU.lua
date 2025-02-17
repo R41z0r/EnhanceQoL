@@ -71,6 +71,7 @@ L["autoMarkTankExplanation"] = "Будет поставлена метка на 
 	.. TANK
 L["mythicPlusIgnoreMythic"] = "Не применять метку рейда в подземельях " .. PLAYER_DIFFICULTY6
 L["mythicPlusIgnoreHeroic"] = "Не применять метку рейда в подземельях " .. PLAYER_DIFFICULTY2
+L["mythicPlusIgnoreEvent"] = "Не применять метку рейда в подземельях " .. BATTLE_PET_SOURCE_7
 L["mythicPlusIgnoreNormal"] = "Не применять метку рейда в подземельях " .. PLAYER_DIFFICULTY1
 L["mythicPlusIgnoreTimewalking"] = "Не применять метку рейда в подземельях " .. PLAYER_DIFFICULTY_TIMEWALKER
 
