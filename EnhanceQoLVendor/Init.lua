@@ -56,7 +56,7 @@ for key, value in pairs(addon.Vendor.variables.tabNames) do
 		[4] = false, -- Quest item
 		[5] = false, -- Unused 1
 		[6] = false, -- Unused 2
-		[7] = true, -- Bind to Account
+		[7] = not addon.db["vendor" .. value .. "IgnoreWarbound"], -- Bind to Account
 		[8] = not addon.db["vendor" .. value .. "IgnoreWarbound"], -- Bind to Warband
 		[9] = not addon.db["vendor" .. value .. "IgnoreWarbound"], -- Bind to Warband
 	}

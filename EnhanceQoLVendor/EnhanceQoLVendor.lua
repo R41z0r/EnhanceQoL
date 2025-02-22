@@ -56,49 +56,57 @@ local function checkItem()
 						local link = eItem:GetItemLink()
 						local itemName, itemLink, _, itemLevel, _, _, _, _, _, _, sellPrice, classID, subclassID, bindType, expansionID = C_Item.GetItemInfo(link)
 
-						if classID == 4 and subclassID == 5 and not C_TransmogCollection.PlayerHasTransmog(containerInfo.itemID) then
+						if sellPrice and sellPrice > 0 then
+							if classID == 4 and subclassID == 5 and not C_TransmogCollection.PlayerHasTransmog(containerInfo.itemID) then
 							-- Transmog not used don't sell
-						elseif addon.db["vendorExcludeSellList"][containerInfo.itemID] then -- ignore everything and exclude in sell
+							elseif addon.db["vendorExcludeSellList"][containerInfo.itemID] then -- ignore everything and exclude in sell
 							-- do nothing
-						elseif addon.db["vendorIncludeSellList"][containerInfo.itemID] then -- ignore everything and include in sell
-							if sellPrice > 0 then table.insert(itemsToSell, { bag = bag, slot = slot }) end
-						elseif addon.Vendor.variables.itemQualityFilter[containerInfo.quality] then
-							local effectiveILvl = C_Item.GetDetailedItemLevelInfo(link) -- item level of the item with all upgrades calculated
-							-- local effectiveILvl = itemLevel -- item level of the item with all upgrades calculated
+							elseif addon.db["vendorIncludeSellList"][containerInfo.itemID] then -- ignore everything and include in sell
+								if sellPrice > 0 then table.insert(itemsToSell, { bag = bag, slot = slot }) end
+							elseif addon.Vendor.variables.itemQualityFilter[containerInfo.quality] then
+								local effectiveILvl = C_Item.GetDetailedItemLevelInfo(link) -- item level of the item with all upgrades calculated
+								-- local effectiveILvl = itemLevel -- item level of the item with all upgrades calculated
 
-							if
-								sellPrice
-								and sellPrice > 0
-								and addon.Vendor.variables.itemTypeFilter[classID]
-								and (not addon.Vendor.variables.itemSubTypeFilter[classID] or (addon.Vendor.variables.itemSubTypeFilter[classID] and addon.Vendor.variables.itemSubTypeFilter[classID][subclassID]))
-								and addon.Vendor.variables.itemBindTypeQualityFilter[containerInfo.quality][bindType]
-							then -- Check if classID is allowed for AutoSell
+								local bType = nil
 								local canUpgrade = false
-								if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "IgnoreUpgradable"] then
-									local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
-									tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-									tooltip:SetHyperlink(link)
-									for i = 1, tooltip:NumLines() do
-										local line = _G["ScanTooltipTextLeft" .. i]:GetText()
-										if line then
-											local upgrade = strmatch(line, addon.Vendor.variables.upgradePattern)
-											if upgrade then
-												local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
-												if not (r > 0.5 and g > 0.5 and b > 0.5) then -- gray upgrade text = old item upgradable --> not = ignore gray
-													canUpgrade = true
+								local data = C_TooltipInfo.GetBagItem(bag, slot)
+								if nil ~= data then
+									for i, v in pairs(data.lines) do
+										if v.type == 20 then
+											if v.leftText == ITEM_BIND_ON_EQUIP then
+												bType = 2
+											elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+												bType = 8
+											elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+												bType = 7
+											end
+											break
+										elseif v.type == 0 and addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "IgnoreUpgradable"] then
+											if strmatch(v.leftText, addon.Vendor.variables.upgradePattern) then
+												local color = v.leftColor
+												if color and color.r and color.g and color.b then
+													if not (color.r > 0.5 and color.g > 0.5 and color.b > 0.5) then -- gray upgrade text = old item upgradable --> not = ignore gray
+														canUpgrade = true
+													end
 												end
-												break
 											end
 										end
 									end
 								end
-
-								if not canUpgrade then
-									local rIlvl = (avgItemLevelEquipped - addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"])
-									if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "AbsolutIlvl"] then
-										rIlvl = addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]
+								if nil ~= bType and bindType < bType then bindType = bType end
+								if nil == bType then bindType = 0 end
+								if
+									addon.Vendor.variables.itemTypeFilter[classID]
+									and (not addon.Vendor.variables.itemSubTypeFilter[classID] or (addon.Vendor.variables.itemSubTypeFilter[classID] and addon.Vendor.variables.itemSubTypeFilter[classID][subclassID]))
+									and addon.Vendor.variables.itemBindTypeQualityFilter[containerInfo.quality][bindType]
+								then -- Check if classID is allowed for AutoSell
+									if not canUpgrade then
+										local rIlvl = (avgItemLevelEquipped - addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"])
+										if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "AbsolutIlvl"] then
+											rIlvl = addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]
+										end
+										if effectiveILvl <= rIlvl then table.insert(itemsToSell, { bag = bag, slot = slot }) end
 									end
-									if effectiveILvl <= rIlvl then table.insert(itemsToSell, { bag = bag, slot = slot }) end
 								end
 							end
 						end
@@ -216,8 +224,8 @@ local function addVendorFrame(container, type)
 		groupCore:AddChild(vendorEnable)
 
 		local data = {
-			{ text = L["vendorIgnoreBoE"], var = "vendor" .. value .. "IgnoreBoE" },
-			{ text = L["vendorIgnoreWarbound"], var = "vendor" .. value .. "IgnoreWarbound" },
+			{ text = L["vendorIgnoreBoE"], var = "vendor" .. value .. "IgnoreBoE", filter = { 2 } },
+			{ text = L["vendorIgnoreWarbound"], var = "vendor" .. value .. "IgnoreWarbound", filter = { 7, 8, 9 } },
 		}
 		if type ~= 1 then table.insert(data, { text = L["vendorIgnoreUpgradable"], var = "vendor" .. value .. "IgnoreUpgradable" }) end
 
@@ -226,7 +234,11 @@ local function addVendorFrame(container, type)
 		for _, cbData in ipairs(data) do
 			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, checked)
 				addon.db[cbData.var] = checked
-				addon.Vendor.variables.itemBindTypeQualityFilter[type][2] = not checked
+				if cbData.filter then
+					for _, v in pairs(cbData.filter) do
+						addon.Vendor.variables.itemBindTypeQualityFilter[type][v] = not checked
+					end
+				end
 				updateLegend(value, addon.db["vendor" .. value .. "MinIlvlDif"])
 			end)
 			groupCore:AddChild(cbElement)
