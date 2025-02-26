@@ -2271,7 +2271,9 @@ local eventHandlers = {
 	["QUEST_COMPLETE"] = function()
 		if addon.db["autoChooseQuest"] and not IsShiftKeyDown() then
 			local numQuestRewards = GetNumQuestChoices()
-			if numQuestRewards > 0 then
+			if numQuestRewards > 1 then
+			elseif numQuestRewards == 1 then
+				GetQuestReward(1)
 			else
 				GetQuestReward()
 			end
