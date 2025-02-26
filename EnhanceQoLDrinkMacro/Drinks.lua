@@ -478,7 +478,7 @@ addon.Drinks.drinkList = { -- Special Food
 	{ key = "LiquidGold", id = 236681, requiredLevel = 75, mana = 3700000, isBuffFood = false },
 	{ key = "LiquidNitro", id = 236648, requiredLevel = 75, mana = 3700000, isBuffFood = false },
 	{ key = "FewScrewsLoose", id = 236649, requiredLevel = 75, mana = 3700000, isBuffFood = false },
-	
+
 	-- Earthen food
 	{ key = "DeadlyAmber", id = 213503, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
 	{ key = "DeadlyAmber", id = 213502, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
