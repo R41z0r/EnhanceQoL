@@ -109,10 +109,19 @@ end
 
 local function toggleHookToPercentBar()
 	if addon.db["mythicPlusTruePercent"] then
+		if IsInInstance() == false then
+			if didApplyPatch then
+				ScenarioObjectiveTracker.UpdateCriteria = originalFunc
+				didApplyPatch = false
+			end
+			return
+		end
 		if didApplyPatch then return end
+		didApplyPatch = true
 		ScenarioObjectiveTracker.UpdateCriteria = patchedFunc
 	elseif didApplyPatch then
 		ScenarioObjectiveTracker.UpdateCriteria = originalFunc
+		didApplyPatch = false
 	end
 end
 
@@ -223,6 +232,7 @@ frameLoad:RegisterEvent("RAID_TARGET_UPDATE")
 frameLoad:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 frameLoad:RegisterEvent("READY_CHECK")
 frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
+frameLoad:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 local function skipRolecheck()
 	local tank, healer, dps = false, false, false
@@ -336,6 +346,8 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	elseif event == "GROUP_ROSTER_UPDATE" and checkCondition() then
 		setActTank()
 		checkRaidMarker()
+	elseif event == "PLAYER_ENTERING_WORLD" then
+		toggleHookToPercentBar()
 	elseif event == "READY_CHECK" and checkCondition() then
 		setActTank()
 		checkRaidMarker()

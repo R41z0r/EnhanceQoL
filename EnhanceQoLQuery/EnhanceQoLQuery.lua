@@ -13,6 +13,8 @@ local resultsAHSearch = {}
 
 local executeSearch = false
 
+addon.Query = {}
+
 frame:SetSize(400, 300)
 frame:SetPoint("CENTER")
 frame:SetMovable(true)
@@ -426,3 +428,5 @@ end
 
 function addon.Performance.GetPerformanceData() return addon.Performance.Data end
 function addon.Performance.GetPerformanceData() return addon.Performance.Data end
+
+addon.Query.frame = frame

@@ -1968,6 +1968,7 @@ function loadMain()
 	SLASH_ENHANCEQOL4 = "/eqol rag"
 	SLASH_ENHANCEQOL5 = "/eqol lag"
 	SLASH_ENHANCEQOL6 = "/eqol lcid"
+	SLASH_ENHANCEQOL6 = "/eqol rq"
 	SlashCmdList["ENHANCEQOL"] = function(msg)
 		if msg == "resetframe" then
 			-- Frame zurücksetzen
@@ -2007,6 +2008,8 @@ function loadMain()
 				local name, id = C_ChallengeMode.GetMapUIInfo(i)
 				if name then print(name, id) end
 			end
+		elseif msg == "rq" then
+			if addon.Query and addon.Query.frame then addon.Query.frame:Show() end
 		else
 			if addon.aceFrame:IsShown() then
 				addon.aceFrame:Hide()

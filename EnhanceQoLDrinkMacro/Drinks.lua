@@ -468,6 +468,17 @@ addon.Drinks.drinkList = { -- Special Food
 	{ key = "BorerBloodPudding", id = 227335, requiredLevel = 75, mana = 3700000, isBuffFood = false },
 	{ key = "SugarSlurry", id = 227336, requiredLevel = 75, mana = 3700000, isBuffFood = false },
 
+	-- TWW Season 2
+	{ key = "GallagioEspecial", id = 236646, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	{ key = "GlimmeringDelicacy", id = 227333, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	{ key = "ImitationCrabMeat", id = 236680, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	{ key = "Paincracker", id = 236650, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	{ key = "CoinandKaja", id = 236647, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	{ key = "Low-TownFizz", id = 236633, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	{ key = "LiquidGold", id = 236681, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	{ key = "LiquidNitro", id = 236648, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	{ key = "FewScrewsLoose", id = 236649, requiredLevel = 75, mana = 3700000, isBuffFood = false },
+	
 	-- Earthen food
 	{ key = "DeadlyAmber", id = 213503, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },
 	{ key = "DeadlyAmber", id = 213502, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true, isGem = true },

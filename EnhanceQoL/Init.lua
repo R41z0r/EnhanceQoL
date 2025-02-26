@@ -10,7 +10,7 @@ addon.L = {} -- Language
 addon.elements = {}
 
 addon.variables.requireReload = false
-addon.variables.catalystID = 2813 -- Change to get the actual cataclyst charges in char frame
+addon.variables.catalystID = 3116 -- Change to get the actual cataclyst charges in char frame
 addon.variables.durabilityIcon = 136241 -- Anvil Symbol
 addon.variables.durabilityCount = 0
 addon.variables.hookedOrderHall = false
