@@ -55,6 +55,7 @@ L["potionTrackerOffhealing"] = "Rastrear uso de CD de sanación secundaria"
 L["DungeonBrowser"] = "Explorador de mazmorras"
 L["groupfinderAppText"] = 'Ocultar el texto del buscador de grupos "Tu grupo se está formando actualmente"'
 L["groupfinderSkipRolecheck"] = "Omitir la verificación de rol y usar el rol actual"
+L["groupfinderMoveResetButton"] = "Mueve el botón de restablecer filtro del buscador de mazmorras al lado izquierdo."
 
 -- Misc Frame
 L["Misc"] = "Misceláneo"

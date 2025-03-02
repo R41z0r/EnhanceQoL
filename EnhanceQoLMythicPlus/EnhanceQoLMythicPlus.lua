@@ -107,6 +107,24 @@ local patchedFunc = function(self, numCriteria)
 	end
 end
 
+local point, relativeTo, relativePoint, xOfs, yOfs
+if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.SearchPanel.FilterButton and LFGListFrame.SearchPanel.FilterButton.ResetButton then
+	point, relativeTo, relativePoint, xOfs, yOfs = LFGListFrame.SearchPanel.FilterButton.ResetButton:GetPoint()
+end
+
+local function toggleLFGFilterPosition()
+	if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.SearchPanel.FilterButton and LFGListFrame.SearchPanel.FilterButton.ResetButton then
+		if addon.db["groupfinderMoveResetButton"] then
+			LFGListFrame.SearchPanel.FilterButton.ResetButton:ClearAllPoints()
+			LFGListFrame.SearchPanel.FilterButton.ResetButton:SetPoint("TOPLEFT", LFGListFrame.SearchPanel.FilterButton, "TOPLEFT", -7, 13)
+		else
+			LFGListFrame.SearchPanel.FilterButton.ResetButton:ClearAllPoints()
+			LFGListFrame.SearchPanel.FilterButton.ResetButton:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs)
+		end
+	end
+end
+if addon.db["groupfinderMoveResetButton"] then toggleLFGFilterPosition() end
+
 local function toggleHookToPercentBar()
 	if addon.db["mythicPlusTruePercent"] then
 		if IsInInstance() == false then
@@ -375,6 +393,14 @@ local function addDungeonBrowserFrame(container)
 			end,
 		},
 		{ text = L["groupfinderSkipRolecheck"], var = "groupfinderSkipRolecheck", func = function(self, _, value) addon.db["groupfinderSkipRolecheck"] = value end },
+		{
+			text = L["groupfinderMoveResetButton"],
+			var = "groupfinderMoveResetButton",
+			func = function(self, _, value)
+				addon.db["groupfinderMoveResetButton"] = value
+				toggleLFGFilterPosition()
+			end,
+		},
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)

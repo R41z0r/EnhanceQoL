@@ -56,6 +56,7 @@ L["potionTrackerOffhealing"] = "追踪次要治疗CD的使用"
 L["DungeonBrowser"] = "地城瀏覽器"
 L["groupfinderAppText"] = '隱藏組隊搜尋器的文字 "您的隊伍目前正在組成中"'
 L["groupfinderSkipRolecheck"] = "跳過角色檢查並使用當前角色"
+L["groupfinderMoveResetButton"] = "将地下城查找器的重置过滤按钮移动到左侧。"
 
 -- Misc Frame
 L["Misc"] = "雜項"

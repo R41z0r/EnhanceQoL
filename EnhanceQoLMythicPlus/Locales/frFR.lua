@@ -55,6 +55,7 @@ L["potionTrackerOffhealing"] = "Suivi de l'utilisation des CD de soins secondair
 L["DungeonBrowser"] = "Explorateur de donjons"
 L["groupfinderAppText"] = 'Masquer le texte du recherche de groupe "Votre groupe est actuellement en formation"'
 L["groupfinderSkipRolecheck"] = "Ignorer la vérification de rôle et utiliser le rôle actuel"
+L["groupfinderMoveResetButton"] = "Déplacez le bouton de réinitialisation du navigateur de donjons sur le côté gauche."
 
 -- Misc Frame
 L["Misc"] = "Divers"

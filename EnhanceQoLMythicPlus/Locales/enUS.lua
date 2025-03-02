@@ -54,6 +54,7 @@ L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
 L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = 'Hide the group finder text "Your group is currently forming"'
 L["groupfinderSkipRolecheck"] = "Skip Role Check and use current role"
+L["groupfinderMoveResetButton"] = "Shift the 'Reset Filter' button in the Dungeon Browser to the left side."
 
 -- Misc Frame
 L["Misc"] = "Misc."

@@ -56,6 +56,7 @@ L["potionTrackerOffhealing"] = "보조 치유 CD 사용 추적"
 L["DungeonBrowser"] = "던전 브라우저"
 L["groupfinderAppText"] = '그룹 찾기 텍스트 "당신의 그룹이 현재 형성 중입니다" 숨기기'
 L["groupfinderSkipRolecheck"] = "역할 확인을 건너뛰고 현재 역할 사용"
+L["groupfinderMoveResetButton"] = "던전 찾기의 필터 초기화 버튼을 왼쪽으로 이동합니다."
 
 -- Misc Frame
 L["Misc"] = "기타"

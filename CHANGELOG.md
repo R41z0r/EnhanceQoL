@@ -1,8 +1,5 @@
 ## Added
-- Some new drinks from Season 2
+- Option to move the dungeon filter reset button (red cross) to the left side
 
 ## Changed
-- Cataclyst charges in Character Frame updated for Season 2 Essence
-
-## Bugfix
-- Sometimes a LUA-Error because of quest interaction happend
+- Updated dungeon shotnames for teleports
