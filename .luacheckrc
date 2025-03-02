@@ -4300,6 +4300,7 @@ globals = {
 	"LFDGetNumDungeons",
 	"LFGConstructDeclinedMessage",
 	"LFGDebug",
+	"LFGListFram",
 	"LFGIsIDHeader",
 	"LFGListFilterChoices",
 	"LFGListRemoveCollapsedChildren",

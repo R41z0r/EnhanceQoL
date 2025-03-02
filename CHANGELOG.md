@@ -3,3 +3,4 @@
 
 ## Changed
 - Updated dungeon shotnames for teleports
+- Button spacing in Dungeon Compendium changed

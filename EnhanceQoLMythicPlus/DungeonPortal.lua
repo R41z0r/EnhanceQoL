@@ -198,7 +198,7 @@ local activeBars = {}
 addon.MythicPlus.portalFrame = frameAnchor
 
 local buttonSize = 30
-local spacing = 20
+local spacing = 15
 local spacingCompendium = 11
 local hSpacing = 30
 local hSpacingCompendium = 10
