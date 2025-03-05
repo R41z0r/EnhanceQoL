@@ -8,6 +8,74 @@ addon.general = {}
 addon.general.variables = {}
 addon.L = {} -- Language
 addon.elements = {}
+--@debug@
+addon.itemBagFilters = {}
+addon.itemBagFiltersQuality = {}
+addon.itemBagFilterTypes = {
+	WARRIOR = { "Plate" },
+	PALADIN = { "Plate" },
+	HUNTER = { "Mail" },
+	ROGUE = { "Leather" },
+	PRIEST = { "Cloth" },
+	DEATHKNIGHT = { "Plate" },
+	SHAMAN = { "Mail" },
+	MAGE = { "Cloth" },
+	WARLOCK = { "Cloth" },
+	MONK = { "Leather" },
+	DRUID = {
+		[1] = { --Balance
+			[2] = { -- Weapon
+				[10] = true, -- Staff
+				[15] = true, -- Daggers
+				[4] = true, -- Mace 1h
+				[5] = true, -- Mace 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+				[6] = true, -- Shield
+			},
+		},
+		[2] = { --Feral
+			[2] = { -- Weapon
+				[10] = true, -- Staff
+				[6] = true, -- Polearm
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+		[3] = { --Guardian
+			[2] = { -- Weapon
+				[10] = true, -- Staff
+				[6] = true, -- Polearm
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+		[4] = { --Restoration
+			[2] = { -- Weapon
+				[10] = true, -- Staff
+				[15] = true, -- Daggers
+				[4] = true, -- Mace 1h
+				[5] = true, -- Mace 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+				[6] = true, -- Shield
+			},
+		},
+	},
+	DEMONHUNTER = { "Leather" },
+	EVOKER = { "Mail" },
+}
+addon.variables.unitClass = select(2, UnitClass("player"))
+addon.variables.unitSpec = GetSpecialization()
+--@end-debug@
 
 addon.variables.requireReload = false
 addon.variables.catalystID = 3116 -- Change to get the actual cataclyst charges in char frame

@@ -11,6 +11,9 @@ local L = addon.LMythicPlus
 
 local cModeIDs
 local portalSpells = {}
+local mapInfo = {}
+local mapIDInfo = {}
+local selectedMapId
 
 local portalCompendium = {
 	[1] = {
@@ -20,11 +23,11 @@ local portalCompendium = {
 			[445416] = { text = "COT", cId = { [502] = true } },
 			[445414] = { text = "DAWN", cId = { [505] = true } },
 			[445417] = { text = "ARAK", cId = { [503] = true } },
-			[467546] = { text = "FLOOD", cId = { [525] = true } },
-			[445440] = { text = "MEAD", cId = { [506] = true } },
-			[445444] = { text = "PRIO", cId = { [499] = true } },
-			[445441] = { text = "DFC", cId = { [504] = true } },
-			[445443] = { text = "ROOK", cId = { [500] = true } },
+			[467546] = { text = "FLOOD", cId = { [525] = true }, mapID = 2773 },
+			[445440] = { text = "MEAD", cId = { [506] = true }, mapID = 2661 },
+			[445444] = { text = "PRIO", cId = { [499] = true }, mapID = 2649 },
+			[445441] = { text = "DFC", cId = { [504] = true }, mapID = 2651 },
+			[445443] = { text = "ROOK", cId = { [500] = true }, mapID = 2648 },
 		},
 	},
 	[2] = {
@@ -52,7 +55,7 @@ local portalCompendium = {
 			[354464] = { text = "MISTS", cId = { [375] = true } },
 			[354465] = { text = "HOA", cId = { [378] = true } },
 			[354466] = { text = "SOA", cId = { [381] = true } },
-			[354467] = { text = "TOP", cId = { [382] = true } },
+			[354467] = { text = "TOP", cId = { [382] = true }, mapID = 2293 },
 			[354468] = { text = "DOS", cId = { [377] = true } },
 			[354469] = { text = "SD", cId = { [380] = true } },
 			[367416] = { text = "TAZA", cId = { [391] = true, [392] = true } },
@@ -66,13 +69,13 @@ local portalCompendium = {
 		spells = {
 			[410071] = { text = "FH", cId = { [245] = true } },
 			[410074] = { text = "UR", cId = { [251] = true } },
-			[373274] = { text = "WORK", cId = { [369] = true, [370] = true } },
+			[373274] = { text = "WORK", cId = { [369] = true, [370] = true }, mapID = 2097 },
 			[424167] = { text = "WM", cId = { [248] = true } },
 			[424187] = { text = "AD", cId = { [244] = true } },
 			[445418] = { text = "SIEG", faction = FACTION_ALLIANCE, cId = { [353] = true } },
 			[464256] = { text = "SIEG", faction = FACTION_HORDE, cId = { [353] = true } },
-			[467553] = { text = "ML", faction = FACTION_ALLIANCE, cId = { [247] = true } },
-			[467555] = { text = "ML", faction = FACTION_HORDE, cId = { [247] = true } },
+			[467553] = { text = "ML", faction = FACTION_ALLIANCE, cId = { [247] = true }, mapID = 1594 },
+			[467555] = { text = "ML", faction = FACTION_HORDE, cId = { [247] = true }, mapID = 1594 },
 		},
 	},
 	[5] = {
@@ -127,6 +130,8 @@ local function getCurrentSeasonPortal()
 	end
 
 	local filteredPortalSpells = {}
+	local filteredMapInfo = {}
+	local filteredMapID = {}
 
 	for _, section in pairs(portalCompendium) do
 		for spellID, data in pairs(section.spells) do
@@ -137,6 +142,10 @@ local function getCurrentSeasonPortal()
 							text = data.text,
 							iconID = data.iconID,
 						}
+						filteredMapInfo[cId] = {
+							text = data.text,
+						}
+						if data.mapID then filteredMapID[data.mapID] = cId end
 						if data.faction then filteredPortalSpells[spellID].faction = data.faction end
 						break
 					end
@@ -144,8 +153,9 @@ local function getCurrentSeasonPortal()
 			end
 		end
 	end
-
 	portalSpells = filteredPortalSpells
+	mapInfo = filteredMapInfo
+	mapIDInfo = filteredMapID
 end
 -- for _, exp in pairs(portalCompendium) do
 -- 	for spellId, data in pairs(exp.spells) do
@@ -487,6 +497,143 @@ local function waitCooldown(arg3)
 	end)
 end
 
+local textList = {}
+local gFrameAnchorScore
+
+local function createString(textLeft, textRight, colorLeft, colorRight, anchor, selected)
+	local titleScore1 = gFrameAnchorScore:CreateFontString(nil, "OVERLAY")
+	titleScore1:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+	titleScore1:SetFormattedText(textLeft)
+	titleScore1:SetPoint("TOPLEFT", 7, (addon.functions.getHeightOffset(anchor) - 10))
+	if colorLeft then titleScore1:SetTextColor(colorLeft.r, colorLeft.g, colorLeft.b, 1) end
+	if selected then titleScore1:SetTextColor(0, 1, 0, 1) end
+	table.insert(textList, titleScore1)
+
+	local titleScoreValue = gFrameAnchorScore:CreateFontString(nil, "OVERLAY")
+	titleScoreValue:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+	titleScoreValue:SetFormattedText(textRight)
+	titleScoreValue:SetPoint("TOPRIGHT", -7, (addon.functions.getHeightOffset(anchor) - 10))
+	if colorRight then titleScoreValue:SetTextColor(colorRight.r, colorRight.g, colorRight.b, 1) end
+	table.insert(textList, titleScoreValue)
+	return titleScore1
+end
+
+local function CreateRioScore()
+	if gFrameAnchorScore then
+		gFrameAnchorScore:Hide()
+		gFrameAnchorScore:SetScript("OnUpdate", nil)
+		gFrameAnchorScore:SetScript("OnEvent", nil)
+		gFrameAnchorScore:UnregisterAllEvents()
+		gFrameAnchorScore:SetParent(nil)
+		gFrameAnchorScore = nil
+	end
+
+	if addon.db["dungeonScoreFrame"] == true then
+		local frameAnchorScore = CreateFrame("Frame", nil, parentFrame, "BackdropTemplate")
+		gFrameAnchorScore = frameAnchorScore
+		frameAnchorScore:SetBackdrop({
+			bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", -- Hintergrund
+			edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", -- Rahmen
+			edgeSize = 16,
+			insets = { left = 4, right = 4, top = 4, bottom = 4 },
+		})
+		frameAnchorScore:SetBackdropColor(0, 0, 0, 0.8) -- Dunkler Hintergrund mit 80% Transparenz
+
+		-- Überschrift hinzufügen
+		local titleScore = frameAnchorScore:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+		titleScore:SetFormattedText("Mythic+ Score")
+		titleScore:SetPoint("TOP", 0, -10)
+
+		frameAnchorScore:SetSize(max(titleScore:GetStringWidth() + 20, 200), 170) -- Breite x Höhe
+		frameAnchorScore:SetPoint("TOPLEFT", DungeonTeleportFrame, "BOTTOMLEFT", 0, 0)
+
+		local ratingInfo = {}
+
+		for i, v in pairs(textList) do
+			v:Hide()
+		end
+		if #portalSpells == 0 then getCurrentSeasonPortal() end
+		local name, _, timeLimit
+		local rating = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("player")
+		if rating then
+			for _, key in pairs(rating.runs) do
+				ratingInfo[key.challengeModeID] = key
+			end
+
+			local r, g, b = C_ChallengeMode.GetDungeonScoreRarityColor(rating.currentSeasonScore):GetRGB()
+
+			local l1 = createString("Current Mythic+ Score", rating.currentSeasonScore, nil, { r = r, g = g, b = b }, titleScore)
+
+			local nWidth = l1:GetStringWidth() + 60
+
+			local dungeonList = {}
+
+			-- Sammle und sortiere die Dungeons nach Score
+			for _, key in pairs(C_ChallengeMode.GetMapScoreInfo()) do
+				if mapInfo[key.mapChallengeModeID] then
+					local name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(key.mapChallengeModeID)
+					local r, g, b = C_ChallengeMode.GetKeystoneLevelRarityColor(key.level):GetRGB()
+					local stars = ""
+
+					local data = key
+					data.bestRunDurationMS = 0
+
+					if ratingInfo[key.mapChallengeModeID] then
+						data.level = ratingInfo[key.mapChallengeModeID].bestRunLevel
+						data.dungeonScore = ratingInfo[key.mapChallengeModeID].mapScore
+						data.bestRunDurationMS = ratingInfo[key.mapChallengeModeID].bestRunDurationMS
+					end
+
+					if data.level > 0 then
+						local bestRunDuration = data.bestRunDurationMS / 1000
+						local timeForPlus3 = timeLimit * 0.6
+						local timeForPlus2 = timeLimit * 0.8
+						local timeForPlus1 = timeLimit
+
+						if bestRunDuration <= timeForPlus3 then
+							stars = "+++"
+						elseif bestRunDuration <= timeForPlus2 then
+							stars = "++"
+						elseif bestRunDuration <= timeForPlus1 then
+							stars = "+"
+						end
+						stars = stars .. data.level
+					else
+						stars = data.level
+					end
+
+					local selected = false
+					if key.mapChallengeModeID == selectedMapId then selected = true end
+					-- Speichere die Daten für spätere Sortierung
+					table.insert(dungeonList, {
+						text = mapInfo[data.mapChallengeModeID].text,
+						stars = stars,
+						score = data.dungeonScore,
+						r = r,
+						g = g,
+						b = b,
+						select = selected,
+					})
+				end
+			end
+
+			-- Sortiere die Liste basierend auf dungeonScore (höchste zuerst)
+			table.sort(dungeonList, function(a, b) return a.score > b.score end)
+
+			-- Erstelle die Strings nach der neuen Reihenfolge
+			local lastElement = l1 -- Speichert das letzte UI-Element, um die richtige Position zu setzen
+
+			for _, dungeon in ipairs(dungeonList) do
+				lastElement = createString(dungeon.text, dungeon.stars, nil, { r = dungeon.r, g = dungeon.g, b = dungeon.b }, lastElement, dungeon.select)
+			end
+
+			-- Aktualisiere die Frame-Größe
+			local _, _, _, _, lp = lastElement:GetPoint()
+			frameAnchorScore:SetSize(max(nWidth + 20, 200), max(lp * -1 + 30, 170)) -- Breite x Höhe
+		end
+	end
+end
+
 function addon.MythicPlus.functions.toggleFrame()
 	if InCombatLockdown() then
 		doAfterCombat = true
@@ -519,6 +666,7 @@ function addon.MythicPlus.functions.toggleFrame()
 		else
 			frameAnchor:Hide()
 		end
+		CreateRioScore()
 	end
 end
 
@@ -538,6 +686,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 			if event == "ADDON_LOADED" and arg1 == addonName then
 				CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
 				CreatePortalCompendium(frameAnchorCompendium, portalCompendium)
+				CreateRioScore()
 				frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 230, 0)
 				frameAnchor:Show()
 				if addon.db["teleportsEnableCompendium"] then
@@ -559,6 +708,42 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 		end
 	end
 end
+
+GameTooltip:HookScript("OnShow", function(self)
+	if PVEFrame:IsVisible() then
+		selectedMapId = nil
+		local owner = self:GetOwner()
+		if
+			owner
+			and owner.GetParent
+			and LFGListFrame
+			and LFGListFrame.SearchPanel
+			and LFGListFrame.SearchPanel.ScrollBox
+			and LFGListFrame.SearchPanel.ScrollBox.ScrollTarget
+			and owner:GetParent() == LFGListFrame.SearchPanel.ScrollBox.ScrollTarget
+		then
+			local resultID = owner.resultID
+			if resultID then
+				local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
+				if searchResultInfo then
+					local mapData = C_LFGList.GetActivityInfoTable(searchResultInfo.activityIDs[1])
+					if mapData then
+						if mapIDInfo[mapData.mapID] then selectedMapId = mapIDInfo[mapData.mapID] end
+					end
+				end
+			end
+			CreateRioScore()
+			if gFrameAnchorScore then gFrameAnchorScore:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", 0, 0) end
+		end
+	end
+end)
+GameTooltip:HookScript("OnHide", function(self)
+	if PVEFrame:IsVisible() then
+		selectedMapId = nil
+		CreateRioScore()
+		if gFrameAnchorScore then gFrameAnchorScore:SetPoint("TOPLEFT", DungeonTeleportFrame, "BOTTOMLEFT", 0, 0) end
+	end
+end)
 
 -- Setze den Event-Handler
 frameAnchor:SetScript("OnEvent", eventHandler)

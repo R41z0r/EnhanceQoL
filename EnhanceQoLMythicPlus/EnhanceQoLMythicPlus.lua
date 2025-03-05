@@ -401,6 +401,14 @@ local function addDungeonBrowserFrame(container)
 				toggleLFGFilterPosition()
 			end,
 		},
+		{
+			text = L["dungeonScoreFrame"],
+			var = "dungeonScoreFrame",
+			func = function(self, _, value)
+				addon.db["dungeonScoreFrame"] = value
+				addon.MythicPlus.functions.toggleFrame()
+			end,
+		},
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)

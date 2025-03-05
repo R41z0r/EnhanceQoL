@@ -2124,6 +2124,17 @@ local function loadSubAddon(name)
 end
 
 local eventHandlers = {
+	--@debug@
+	["ACTIVE_PLAYER_SPECIALIZATION_CHANGED"] = function(arg1)
+		addon.variables.unitSpec = GetSpecialization()
+		if addon.db["showIlvlOnBagItems"] then
+			addon.functions.updateBags(ContainerFrameCombinedBags)
+			for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+				addon.functions.updateBags(frame)
+			end
+		end
+	end,
+	--@end-debug@
 	["ADDON_LOADED"] = function(arg1)
 		if arg1 == addonName then
 			if not EnhanceQoLDB then EnhanceQoLDB = {} end

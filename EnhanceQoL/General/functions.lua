@@ -119,6 +119,11 @@ function addon.functions.createSpacerAce()
 	return spacer
 end
 
+function addon.functions.getHeightOffset(element)
+    local _, _, _, _, headerY = element:GetPoint()
+    return headerY - element:GetHeight()
+end
+
 function addon.functions.createLabelAce(text, color, font, fontSize)
 	if nil == fontSize then fontSize = 12 end
 	local label = AceGUI:Create("Label")
@@ -285,11 +290,43 @@ end
 
 local knownButtons = {}
 
+local function setItemVisibility(itemButton)
+	itemButton:SetAlpha(0.2)
+	if itemButton.ItemLevelText then itemButton.ItemLevelText:SetAlpha(0.2) end
+	if itemButton.ItemBoundType then itemButton.ItemBoundType:SetAlpha(0.2) end
+end
+
 local function updateButtonInfo(itemButton, bag, slot, frameName)
+	itemButton:SetAlpha(1)
+	if itemButton.ItemLevelText then itemButton.ItemLevelText:SetAlpha(1) end
+	if itemButton.ItemBoundType then itemButton.ItemBoundType:SetAlpha(1) end
 	local eItem = Item:CreateFromBagAndSlot(bag, slot)
 	if eItem and not eItem:IsItemEmpty() then
 		eItem:ContinueOnItemLoad(function()
 			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(eItem:GetItemLink())
+			local setVisibility = false
+			if addon.filterFrame and addon.filterFrame:IsVisible() then
+				if addon.itemBagFilters["rarity"] then
+					if nil == addon.itemBagFiltersQuality[eItem:GetItemQuality()] or addon.itemBagFiltersQuality[eItem:GetItemQuality()] == false then setVisibility = true end
+				end
+				if addon.itemBagFilters["equipment"] and (nil == itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE") then setVisibility = true end
+				if
+					addon.itemBagFilters["usableOnly"]
+					and (
+						C_Item.IsEquippableItem(eItem:GetItemLink()) == false
+						or (
+							(
+								nil == addon.itemBagFilterTypes[addon.variables.unitClass]
+								or nil == addon.itemBagFilterTypes[addon.variables.unitClass][addon.variables.unitSpec]
+								or nil == addon.itemBagFilterTypes[addon.variables.unitClass][addon.variables.unitSpec][classID]
+								or nil == addon.itemBagFilterTypes[addon.variables.unitClass][addon.variables.unitSpec][classID][subclassID]
+							) and itemEquipLoc ~= "INVTYPE_CLOAK" -- ignore Cloaks
+						)
+					)
+				then
+					setVisibility = true
+				end
+			end
 
 			if
 				(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
@@ -305,53 +342,54 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 				if frameName then table.insert(knownButtons[frameName], itemButton) end
 				local link = eItem:GetItemLink()
 				local invSlot = select(4, GetItemInfoInstant(link))
-				if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+				if nil ~= addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
+					local color = eItem:GetItemQualityColor()
+					local itemLevelText = eItem:GetCurrentItemLevel()
 
-				local color = eItem:GetItemQualityColor()
-				local itemLevelText = eItem:GetCurrentItemLevel()
+					itemButton.ItemLevelText:SetFormattedText(itemLevelText)
+					itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
 
-				itemButton.ItemLevelText:SetFormattedText(itemLevelText)
-				itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+					itemButton.ItemLevelText:Show()
 
-				itemButton.ItemLevelText:Show()
+					local bType
 
-				local bType
-
-				if addon.db["showBindOnBagItems"] then
-					local data = C_TooltipInfo.GetBagItem(bag, slot)
-					if data and data.lines then
-						for i, v in pairs(data.lines) do
-							if v.type == 20 then
-								if v.leftText == ITEM_BIND_ON_EQUIP then
-									bType = "BoE"
-								elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
-									bType = "WuE"
-								elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
-									bType = "WB"
+					if addon.db["showBindOnBagItems"] then
+						local data = C_TooltipInfo.GetBagItem(bag, slot)
+						if data and data.lines then
+							for i, v in pairs(data.lines) do
+								if v.type == 20 then
+									if v.leftText == ITEM_BIND_ON_EQUIP then
+										bType = "BoE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+										bType = "WuE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+										bType = "WB"
+									end
+									break
 								end
-								break
 							end
 						end
 					end
-				end
-				if bType then
-					if not itemButton.ItemBoundType then
-						itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
-						itemButton.ItemBoundType:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
-						itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+					if bType then
+						if not itemButton.ItemBoundType then
+							itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
+							itemButton.ItemBoundType:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+							itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
-						itemButton.ItemBoundType:SetShadowOffset(2, 2)
-						itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+							itemButton.ItemBoundType:SetShadowOffset(2, 2)
+							itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+						end
+						itemButton.ItemBoundType:SetFormattedText(bType)
+						itemButton.ItemBoundType:Show()
+					elseif itemButton.ItemBoundType then
+						itemButton.ItemBoundType:Hide()
 					end
-					itemButton.ItemBoundType:SetFormattedText(bType)
-					itemButton.ItemBoundType:Show()
-				elseif itemButton.ItemBoundType then
-					itemButton.ItemBoundType:Hide()
+				elseif itemButton.ItemLevelText then
+					if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+					itemButton.ItemLevelText:Hide()
 				end
-			elseif itemButton.ItemLevelText then
-				if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-				itemButton.ItemLevelText:Hide()
 			end
+			if setVisibility then setItemVisibility(itemButton) end
 		end)
 	elseif itemButton.ItemLevelText then
 		if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
@@ -361,7 +399,178 @@ end
 
 function addon.functions.updateBank(itemButton, bag, slot) updateButtonInfo(itemButton, bag, slot) end
 
+-- Datenstruktur für das Menü
+local filterData = {
+	-- {
+	-- 	label = "Level Range",
+	-- 	child = {
+	-- 		{ type = "EditBox", key = "minLevel", label = "Min Level" },
+	-- 		{ type = "EditBox", key = "maxLevel", label = "Max Level" },
+	-- 	},
+	-- },
+	{
+		label = "Equipment",
+		child = {
+			{ type = "CheckBox", key = "equipment", label = "Equipment only" },
+			{ type = "CheckBox", key = "usableOnly", label = "Usable only" },
+		},
+	},
+	-- {
+	-- 	label = "Equipment",
+	-- 	child = {
+	-- 		{ type = "CheckBox", key = "upgrades", label = "Upgrades Only" },
+	-- 		{ type = "CheckBox", key = "usable", label = "Usable Only" },
+	-- 	},
+	-- },
+	{
+		label = "Rarity",
+		child = {
+			-- { type = "CheckBox", key = "poor", label = "|cff9d9d9dPoor", qFilter = 0 },
+			-- { type = "CheckBox", key = "common", label = "|cffffffffCommon", qFilter = 1 },
+			{ type = "CheckBox", key = "uncommon", label = "|cff1eff00Uncommon", qFilter = 2 },
+			{ type = "CheckBox", key = "rare", label = "|cff0070ddRare", qFilter = 3 },
+			{ type = "CheckBox", key = "epic", label = "|cffa335eeEpic", qFilter = 4 },
+			{ type = "CheckBox", key = "legendary", label = "|cffff8000Legendary", qFilter = 5 },
+			-- { type = "CheckBox", key = "artifact", label = "|cffe6cc80Artifact", qFilter = 6 },
+		},
+	},
+}
+
+local function checkActiveQualityFilter()
+	for _, value in pairs(addon.itemBagFiltersQuality) do
+		if value == true then
+			addon.itemBagFilters["rarity"] = true
+			return
+		end
+	end
+	addon.itemBagFilters["rarity"] = false
+end
+
+-- Funktion zum Erstellen des Filtermenüs mit AceGUI
+local function CreateFilterMenu()
+	-- Haupt-Frame für das Filtermenü
+	-- local frame = AceGUI:Create("Frame")
+	-- frame:SetTitle("Item Filter")
+	-- frame:SetLayout("Fill")
+	-- frame:SetWidth(220)
+	-- frame:SetHeight(300)
+	-- frame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
+	-- frame:Hide()
+	-- frame.frame:SetParent(ContainerFrameCombinedBags)
+	-- frame.frame:SetFrameStrata("HIGH")
+
+	local frame = CreateFrame("Frame", "InventoryFilterPanel", ContainerFrameCombinedBags, "BackdropTemplate")
+	frame:SetSize(220, 300) -- Feste Größe
+	frame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
+	frame:SetBackdrop({
+		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+		edgeSize = 12,
+		insets = { left = 2, right = 2, top = 2, bottom = 2 },
+	})
+	frame:Hide() -- Standardmäßig ausblenden
+	frame:SetFrameStrata("HIGH")
+	frame:SetMovable(false)
+	frame:EnableMouse(true)
+
+	-- Scrollbarer Bereich
+	local scrollContainer = AceGUI:Create("ScrollFrame")
+	scrollContainer:SetLayout("Flow")
+	scrollContainer:SetFullWidth(true)
+	scrollContainer:SetFullHeight(true)
+
+	scrollContainer.frame:SetParent(frame)
+	scrollContainer.frame:ClearAllPoints()
+	scrollContainer.frame:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -10)
+	scrollContainer.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
+
+	-- Dynamisch die UI-Elemente aus `filterData` erstellen
+	for _, section in ipairs(filterData) do
+		-- Überschrift für jede Sektion
+		local label = AceGUI:Create("Label")
+		label:SetText("|cffffd100" .. section.label .. "|r") -- Goldene Überschrift
+		label:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+		label:SetFullWidth(true)
+		scrollContainer:AddChild(label)
+
+		-- Füge die Kind-Elemente hinzu
+		for _, item in ipairs(section.child) do
+			local widget
+
+			if item.type == "CheckBox" then
+				widget = AceGUI:Create("CheckBox")
+				widget:SetLabel(item.label)
+				widget:SetValue(addon.itemBagFilters[item.key])
+				widget:SetCallback("OnValueChanged", function(_, _, value)
+					addon.itemBagFilters[item.key] = value
+					if item.qFilter then
+						addon.itemBagFiltersQuality[item.qFilter] = value
+						checkActiveQualityFilter()
+					end
+					-- Hier könnte man die Filterlogik triggern, z. B.:
+					-- UpdateInventoryDisplay()
+					addon.functions.updateBags(ContainerFrameCombinedBags)
+					for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+						addon.functions.updateBags(frame)
+					end
+				end)
+			elseif item.type == "EditBox" then
+				widget = AceGUI:Create("EditBox")
+				widget:SetLabel(item.label)
+				widget:SetWidth(100)
+				widget:SetText(addon.itemBagFilters[item.key] or "")
+				widget:SetCallback("OnEnterPressed", function(_, _, text)
+					addon.itemBagFilters[item.key] = tonumber(text)
+					-- Hier könnte man die Filterlogik triggern
+				end)
+			end
+
+			if widget then
+				widget:SetFullWidth(true)
+				scrollContainer:AddChild(widget)
+			end
+		end
+	end
+	return frame
+end
+
+-- **Funktion zum Ein-/Ausblenden des Menüs über einen Button**
+local function ToggleFilterMenu(self)
+	if not addon.filterFrame then addon.filterFrame = CreateFilterMenu() end
+	if addon.filterFrame:IsVisible() then
+		addon.filterFrame:Hide()
+		self:SetText("Filter off")
+	else
+		addon.filterFrame:Show()
+		self:SetText("Filter on")
+		addon.filterFrame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
+	end
+
+	addon.functions.updateBags(ContainerFrameCombinedBags)
+	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+		addon.functions.updateBags(frame)
+	end
+end
+
+-- **Button zum Öffnen/Schließen des Menüs neben dem Suchfeld**
+local function CreateFilterToggleButton()
+	local button = CreateFrame("Button", "InventoryFilterToggleButton", ContainerFrameCombinedBags, "UIPanelButtonTemplate")
+	button:SetSize(60, 20)
+	button:SetPoint("RIGHT", BagItemSearchBox, "LEFT", -5, 0)
+	button:SetText("Filter off")
+	button:SetScript("OnClick", ToggleFilterMenu)
+	addon.filterButton = button
+end
+
+-- Initialisierung beim Laden des UI
+local function InitializeFilterUI()
+	if nil == InventoryFilterToggleButton then CreateFilterToggleButton() end
+end
+
 function addon.functions.updateBags(frame)
+	--@debug@
+	if addon.db["showIlvlOnBagItems"] then InitializeFilterUI() end
+	--@end-debug@
 	if nil == knownButtons[frame:GetName()] then
 		knownButtons[frame:GetName()] = {}
 	else
@@ -371,10 +580,12 @@ function addon.functions.updateBags(frame)
 	end
 	knownButtons[frame:GetName()] = {} -- clear the list again
 	for _, itemButton in frame:EnumerateValidItems() do
-		if addon.db["showIlvlOnBagItems"] then
-			updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID(), frame:GetName())
-		elseif itemButton.ItemLevelText then
-			itemButton.ItemLevelText:Hide()
+		if itemButton then
+			if addon.db["showIlvlOnBagItems"] then
+				updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID(), frame:GetName())
+			elseif itemButton.ItemLevelText then
+				itemButton.ItemLevelText:Hide()
+			end
 		end
 	end
 end
