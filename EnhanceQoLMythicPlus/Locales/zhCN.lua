@@ -57,6 +57,7 @@ L["DungeonBrowser"] = "地城瀏覽器"
 L["groupfinderAppText"] = '隱藏組隊搜尋器的文字 "您的隊伍目前正在組成中"'
 L["groupfinderSkipRolecheck"] = "跳過角色檢查並使用當前角色"
 L["groupfinderMoveResetButton"] = "将地下城查找器的重置过滤按钮移动到左侧。"
+L["groupfinderShowDungeonScoreFrame"] = "在地下城搜索旁显示 " .. DUNGEON_SCORE .. " 框架"
 
 -- Misc Frame
 L["Misc"] = "雜項"

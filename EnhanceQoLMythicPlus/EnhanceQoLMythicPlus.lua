@@ -402,10 +402,10 @@ local function addDungeonBrowserFrame(container)
 			end,
 		},
 		{
-			text = L["dungeonScoreFrame"],
-			var = "dungeonScoreFrame",
+			text = L["groupfinderShowDungeonScoreFrame"],
+			var = "groupfinderShowDungeonScoreFrame",
 			func = function(self, _, value)
-				addon.db["dungeonScoreFrame"] = value
+				addon.db["groupfinderShowDungeonScoreFrame"] = value
 				addon.MythicPlus.functions.toggleFrame()
 			end,
 		},

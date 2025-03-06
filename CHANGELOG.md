@@ -1,6 +1,7 @@
 ## Added
-- Option to move the dungeon filter reset button (red cross) to the left side
+
+- Option to show a Mythic+ Rating window next to the group finder sorted by best->worst keylevel run
 
 ## Changed
-- Updated dungeon shotnames for teleports
-- Button spacing in Dungeon Compendium changed
+
+- Show Mythic+ Rating on Tooltip now shows all keylevels for every dungeon

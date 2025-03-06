@@ -57,6 +57,7 @@ L["DungeonBrowser"] = "Esploratore di dungeon"
 L["groupfinderAppText"] = 'Nascondi il testo del cercatore di gruppi "Il tuo gruppo si sta formando attualmente"'
 L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo e utilizza il ruolo attuale"
 L["groupfinderMoveResetButton"] = "Sposta il pulsante di ripristino del filtro del Ricerca Spedizioni sul lato sinistro."
+L["groupfinderShowDungeonScoreFrame"] = "Mostra il riquadro " .. DUNGEON_SCORE .. " accanto al Ricerca delle spedizioni"
 
 -- Misc Frame
 L["Misc"] = "Varie"

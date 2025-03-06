@@ -58,6 +58,7 @@ L["DungeonBrowser"] = "Поиск подземелий"
 L["groupfinderAppText"] = 'Скрыть текст поиска группы "Ваша группа в настоящее время формируется"'
 L["groupfinderSkipRolecheck"] = "Пропустить проверку роли и использовать текущую роль"
 L["groupfinderMoveResetButton"] = "Переместите кнопку сброса фильтра в окне поиска подземелий на левую сторону."
+L["groupfinderShowDungeonScoreFrame"] = "Показать рамку " .. DUNGEON_SCORE .. " рядом с Поиском подземелий"
 
 -- Misc Frame
 L["Misc"] = "Разное"

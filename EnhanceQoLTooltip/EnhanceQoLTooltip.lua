@@ -70,40 +70,106 @@ local function checkAdditionalTooltip(tooltip)
 		local name, _, timeLimit
 		local rating = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("mouseover")
 		if rating then
-			local r, g, b = C_ChallengeMode.GetDungeonScoreRarityColor(rating.currentSeasonScore):GetRGB()
+			local r, g, b
 			local bestDungeon
-			for _, key in pairs(rating.runs) do
-				name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(key.challengeModeID)
-				if nil == bestDungeon then
-					bestDungeon = key
-				else
-					if bestDungeon.mapScore < key.mapScore then bestDungeon = key end
-				end
-			end
+			local dungeonList = {}
+			local ratingInfo = {}
+
 			tooltip:AddLine(" ")
-			tooltip:AddDoubleLine(L["Mythic+ Score"], rating.currentSeasonScore, 1, 1, 0, r, g, b)
-			if bestDungeon and bestDungeon.mapScore > 0 then
-				name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(bestDungeon.challengeModeID)
-				r, g, b = C_ChallengeMode.GetKeystoneLevelRarityColor(bestDungeon.bestRunLevel):GetRGB()
-				local stars = ""
-				local hexColor = string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
-				if bestDungeon.finishedSuccess then
-					local bestRunDuration = bestDungeon.bestRunDurationMS / 1000
-					local timeForPlus3 = timeLimit * 0.6
-					local timeForPlus2 = timeLimit * 0.8
-					local timeForPlus1 = timeLimit
-					if bestRunDuration <= timeForPlus3 then
-						stars = "+++"
-					elseif bestRunDuration <= timeForPlus2 then
-						stars = "++"
-					elseif bestRunDuration <= timeForPlus1 then
-						stars = "+"
-					end
-					stars = stars .. bestDungeon.bestRunLevel
-				else
-					stars = bestDungeon.bestRunLevel
+			r, g, b = C_ChallengeMode.GetDungeonScoreRarityColor(rating.currentSeasonScore):GetRGB()
+			tooltip:AddDoubleLine(DUNGEON_SCORE, rating.currentSeasonScore, 1, 1, 0, r, g, b)
+
+			if rating.currentSeasonScore > 0 then
+				for _, key in pairs(rating.runs) do
+					ratingInfo[key.challengeModeID] = key
 				end
-				tooltip:AddDoubleLine(L["BestMythic+run"], hexColor .. stars .. "|r " .. name, 1, 1, 0, 1, 1, 1)
+
+				for _, key in pairs(C_ChallengeMode.GetMapTable()) do
+					name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(key)
+					r, g, b = 0.5, 0.5, 0.5
+
+					local data = key
+					local mId = key
+					local stars = 0
+					local score = 0
+					if ratingInfo[key] then
+						data = ratingInfo[key]
+						mId = data.challengeModeID
+						if nil == bestDungeon then
+							bestDungeon = data
+						else
+							if bestDungeon.mapScore < data.mapScore then bestDungeon = data end
+						end
+
+						if data.bestRunLevel > 0 then
+							r, g, b = 1, 1, 1
+
+							local bestRunDuration = data.bestRunDurationMS / 1000
+							local timeForPlus3 = timeLimit * 0.6
+							local timeForPlus2 = timeLimit * 0.8
+							local timeForPlus1 = timeLimit
+							score = data.mapScore
+							if bestRunDuration <= timeForPlus3 then
+								stars = "|cFFFFD700+++|r" -- Gold für 3 Sterne
+							elseif bestRunDuration <= timeForPlus2 then
+								stars = "|cFFFFD700++|r" -- Gold für 2 Sterne
+							elseif bestRunDuration <= timeForPlus1 then
+								stars = "|cFFFFD700+|r" -- Gold für 1 Stern
+							else
+								stars = ""
+								r = 0.5
+								g = 0.5
+								b = 0.5
+							end
+							stars = stars .. data.bestRunLevel
+						else
+							stars = 0
+							r = 0.5
+							g = 0.5
+							b = 0.5
+						end
+					end
+
+					table.insert(dungeonList, {
+						text = addon.Tooltip.variables.challengeMapID[mId] or "UNKNOWN",
+						level = stars,
+						score = score,
+						r = r,
+						g = g,
+						b = b,
+					})
+				end
+				if bestDungeon and bestDungeon.mapScore > 0 then
+					name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(bestDungeon.challengeModeID)
+					r, g, b = 1, 1, 1
+					local stars = ""
+					local hexColor = string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
+					if bestDungeon.finishedSuccess then
+						local bestRunDuration = bestDungeon.bestRunDurationMS / 1000
+						local timeForPlus3 = timeLimit * 0.6
+						local timeForPlus2 = timeLimit * 0.8
+						local timeForPlus1 = timeLimit
+						if bestRunDuration <= timeForPlus3 then
+							stars = "+++"
+						elseif bestRunDuration <= timeForPlus2 then
+							stars = "++"
+						elseif bestRunDuration <= timeForPlus1 then
+							stars = "+"
+						end
+						stars = stars .. bestDungeon.bestRunLevel
+					else
+						stars = bestDungeon.bestRunLevel
+						r, g, b = 0.5, 0.5, 0.5
+					end
+					tooltip:AddDoubleLine(L["BestMythic+run"], hexColor .. stars .. "|r " .. addon.Tooltip.variables.challengeMapID[bestDungeon.challengeModeID], 1, 1, 0, r, g, b)
+					tooltip:AddLine(" ")
+				end
+
+				table.sort(dungeonList, function(a, b) return a.score > b.score end)
+
+				for _, dungeon in ipairs(dungeonList) do
+					tooltip:AddDoubleLine(dungeon.text, dungeon.level, 1, 1, 1, dungeon.r, dungeon.g, dungeon.b)
+				end
 			end
 		end
 	end
@@ -225,6 +291,7 @@ if TooltipDataProcessor then
 			id = data.id
 			name = L["SpellID"]
 			checkAura(tooltip, id, name)
+			return
 		end
 	end)
 end

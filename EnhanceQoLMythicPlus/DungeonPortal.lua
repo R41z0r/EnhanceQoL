@@ -527,8 +527,9 @@ local function CreateRioScore()
 		gFrameAnchorScore:SetParent(nil)
 		gFrameAnchorScore = nil
 	end
+	if addon.variables.maxLevel ~= UnitLevel("player") then return end
 
-	if addon.db["dungeonScoreFrame"] == true then
+	if addon.db["groupfinderShowDungeonScoreFrame"] == true then
 		local frameAnchorScore = CreateFrame("Frame", nil, parentFrame, "BackdropTemplate")
 		gFrameAnchorScore = frameAnchorScore
 		frameAnchorScore:SetBackdrop({
@@ -541,7 +542,7 @@ local function CreateRioScore()
 
 		-- Überschrift hinzufügen
 		local titleScore = frameAnchorScore:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-		titleScore:SetFormattedText("Mythic+ Score")
+		titleScore:SetFormattedText(DUNGEON_SCORE)
 		titleScore:SetPoint("TOP", 0, -10)
 
 		frameAnchorScore:SetSize(max(titleScore:GetStringWidth() + 20, 200), 170) -- Breite x Höhe
@@ -562,7 +563,7 @@ local function CreateRioScore()
 
 			local r, g, b = C_ChallengeMode.GetDungeonScoreRarityColor(rating.currentSeasonScore):GetRGB()
 
-			local l1 = createString("Current Mythic+ Score", rating.currentSeasonScore, nil, { r = r, g = g, b = b }, titleScore)
+			local l1 = createString(BATTLEGROUND_RATING, rating.currentSeasonScore, nil, { r = r, g = g, b = b }, titleScore)
 
 			local nWidth = l1:GetStringWidth() + 60
 
@@ -572,7 +573,6 @@ local function CreateRioScore()
 			for _, key in pairs(C_ChallengeMode.GetMapScoreInfo()) do
 				if mapInfo[key.mapChallengeModeID] then
 					local name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(key.mapChallengeModeID)
-					local r, g, b = C_ChallengeMode.GetKeystoneLevelRarityColor(key.level):GetRGB()
 					local stars = ""
 
 					local data = key
@@ -583,6 +583,8 @@ local function CreateRioScore()
 						data.dungeonScore = ratingInfo[key.mapChallengeModeID].mapScore
 						data.bestRunDurationMS = ratingInfo[key.mapChallengeModeID].bestRunDurationMS
 					end
+					-- local r, g, b = C_ChallengeMode.GetKeystoneLevelRarityColor(data.level):GetRGB()
+					local r, g, b = 1, 1, 1
 
 					if data.level > 0 then
 						local bestRunDuration = data.bestRunDurationMS / 1000
@@ -591,15 +593,22 @@ local function CreateRioScore()
 						local timeForPlus1 = timeLimit
 
 						if bestRunDuration <= timeForPlus3 then
-							stars = "+++"
+							stars = "|cFFFFD700+++|r" -- Gold für 3 Sterne
 						elseif bestRunDuration <= timeForPlus2 then
-							stars = "++"
+							stars = "|cFFFFD700++|r" -- Gold für 2 Sterne
 						elseif bestRunDuration <= timeForPlus1 then
-							stars = "+"
+							stars = "|cFFFFD700+|r" -- Gold für 1 Stern
+						else
+							r = 0.5
+							g = 0.5
+							b = 0.5
 						end
 						stars = stars .. data.level
 					else
 						stars = data.level
+						r = 0.5
+						g = 0.5
+						b = 0.5
 					end
 
 					local selected = false
@@ -617,19 +626,16 @@ local function CreateRioScore()
 				end
 			end
 
-			-- Sortiere die Liste basierend auf dungeonScore (höchste zuerst)
 			table.sort(dungeonList, function(a, b) return a.score > b.score end)
 
-			-- Erstelle die Strings nach der neuen Reihenfolge
 			local lastElement = l1 -- Speichert das letzte UI-Element, um die richtige Position zu setzen
 
 			for _, dungeon in ipairs(dungeonList) do
 				lastElement = createString(dungeon.text, dungeon.stars, nil, { r = dungeon.r, g = dungeon.g, b = dungeon.b }, lastElement, dungeon.select)
 			end
 
-			-- Aktualisiere die Frame-Größe
 			local _, _, _, _, lp = lastElement:GetPoint()
-			frameAnchorScore:SetSize(max(nWidth + 20, 200), max(lp * -1 + 30, 170)) -- Breite x Höhe
+			frameAnchorScore:SetSize(max(nWidth + 20, 205), max(lp * -1 + 30, 170)) -- Breite x Höhe
 		end
 	end
 end
@@ -740,6 +746,7 @@ end)
 GameTooltip:HookScript("OnHide", function(self)
 	if PVEFrame:IsVisible() then
 		selectedMapId = nil
+		local owner = self:GetOwner()
 		CreateRioScore()
 		if gFrameAnchorScore then gFrameAnchorScore:SetPoint("TOPLEFT", DungeonTeleportFrame, "BOTTOMLEFT", 0, 0) end
 	end

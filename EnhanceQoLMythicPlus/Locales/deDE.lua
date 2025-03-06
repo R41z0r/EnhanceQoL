@@ -56,6 +56,7 @@ L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
 L["groupfinderSkipRolecheck"] = "Überspringe die Rollenauswahl und nutze die aktuelle Rolle"
 L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite."
+L["groupfinderShowDungeonScoreFrame"] = DUNGEON_SCORE .. "-Anzeige neben dem Dungeonbrowser anzeigen"
 
 -- Misc Frame
 L["Misc"] = "Verschiedenes"
