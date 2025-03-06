@@ -80,6 +80,7 @@ L["Teleports"] = "순간이동"
 L["teleportEnabled"] = "순간이동 창 활성화"
 L["DungeonCompendium"] = "던전 순간이동 모음집"
 L["teleportsEnableCompendium"] = "던전 순간이동 모음집 활성화"
+L["teleportCompendiumHeadline"] = "특정 확장팩의 순간이동 숨기기"
 
 L["teleportsHeadline"] = "던전 순간이동을 포함한 프레임을 PVE 창에 추가합니다"
 L["portalHideMissing"] = "누락된 순간이동 숨기기"

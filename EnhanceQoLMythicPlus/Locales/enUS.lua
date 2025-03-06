@@ -77,6 +77,7 @@ L["DungeonCompendium"] = "Teleport Compendium"
 L["teleportsEnableCompendium"] = "Enable Teleport Compendium"
 
 L["teleportsHeadline"] = "This adds a frame with Dungeon Teleports to your PVEFrame"
+L["teleportCompendiumHeadline"] = "Hide teleports from specific expansions"
 L["portalHideMissing"] = "Hide missing Teleports"
 L["portalShowTooltip"] = "Show tooltip on Teleport buttons"
 L["hideActualSeason"] = "Hide Teleports from actual Season in " .. L["DungeonCompendium"]

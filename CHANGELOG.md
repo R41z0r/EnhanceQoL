@@ -1,7 +1,7 @@
 ## Added
 
-- Option to show a Mythic+ Rating window next to the group finder sorted by best->worst keylevel run
+- Option to hide teleports from specific expension and raids
 
 ## Changed
 
-- Show Mythic+ Rating on Tooltip now shows all keylevels for every dungeon
+- Changed some teleport names

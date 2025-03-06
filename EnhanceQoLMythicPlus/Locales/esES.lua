@@ -75,6 +75,7 @@ L["Teleports"] = "Teletransportes"
 L["teleportEnabled"] = "Habilitar marco de teletransporte"
 L["DungeonCompendium"] = "Compendio de Teletransporte"
 L["teleportsEnableCompendium"] = "Habilitar Compendio de Teletransporte"
+L["teleportCompendiumHeadline"] = "Ocultar teletransportes de expansiones específicas"
 
 L["teleportsHeadline"] = "Añade un marco con teletransportes de mazmorras a tu ventana JcE"
 L["portalHideMissing"] = "Ocultar teletransportes faltantes"

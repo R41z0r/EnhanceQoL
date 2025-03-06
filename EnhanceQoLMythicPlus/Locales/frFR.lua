@@ -75,6 +75,7 @@ L["Teleports"] = "Téléportations"
 L["teleportEnabled"] = "Activer le cadre de téléportation"
 L["DungeonCompendium"] = "Compendium de Téléportation"
 L["teleportsEnableCompendium"] = "Activer le Compendium de Téléportation"
+L["teleportCompendiumHeadline"] = "Masquer les téléportations de certaines extensions"
 
 L["teleportsHeadline"] = "Ajoute un cadre avec les téléportations de donjon à votre fenêtre JcE"
 L["portalHideMissing"] = "Masquer les téléportations manquantes"

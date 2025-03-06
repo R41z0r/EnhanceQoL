@@ -81,6 +81,7 @@ L["Teleports"] = "Teleporte"
 L["teleportEnabled"] = "Teleport-Fenster aktivieren"
 L["DungeonCompendium"] = "Teleport-Kompendium"
 L["teleportsEnableCompendium"] = "Teleport-Kompendium aktivieren"
+L["teleportCompendiumHeadline"] = "Teleportationen aus bestimmten Erweiterungen ausblenden"
 
 L["teleportsHeadline"] = "Dies fügt ein Fenster mit Dungeon-Teleporten zu deinem PVE-Fenster hinzu"
 L["portalHideMissing"] = "Fehlende Teleporte ausblenden"

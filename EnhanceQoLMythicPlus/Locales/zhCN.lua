@@ -76,6 +76,7 @@ L["Teleports"] = "传送"
 L["teleportEnabled"] = "启用传送框架"
 L["DungeonCompendium"] = "地下城传送手册"
 L["teleportsEnableCompendium"] = "启用地下城传送手册"
+L["teleportCompendiumHeadline"] = "隐藏特定资料片的传送"
 
 L["teleportsHeadline"] = "在PvE窗口中添加一个包含地下城传送的框架"
 L["portalHideMissing"] = "隐藏缺失的传送"

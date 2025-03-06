@@ -24,8 +24,8 @@ local portalCompendium = {
 			[445414] = { text = "DAWN", cId = { [505] = true } },
 			[445417] = { text = "ARAK", cId = { [503] = true } },
 			[467546] = { text = "FLOOD", cId = { [525] = true }, mapID = 2773 },
-			[445440] = { text = "MEAD", cId = { [506] = true }, mapID = 2661 },
-			[445444] = { text = "PRIO", cId = { [499] = true }, mapID = 2649 },
+			[445440] = { text = "BREW", cId = { [506] = true }, mapID = 2661 },
+			[445444] = { text = "PSF", cId = { [499] = true }, mapID = 2649 },
 			[445441] = { text = "DFC", cId = { [504] = true }, mapID = 2651 },
 			[445443] = { text = "ROOK", cId = { [500] = true }, mapID = 2648 },
 		},
@@ -42,9 +42,9 @@ local portalCompendium = {
 			[393279] = { text = "AV", cId = { [401] = true } },
 			[393283] = { text = "HOI", cId = { [406] = true } },
 			[393222] = { text = "ULD", cId = { [403] = true } },
-			[432254] = { text = "VOTI", cId = {} },
-			[432258] = { text = "AMIR", cId = {} },
-			[432257] = { text = "ASC", cId = {} },
+			[432254] = { text = "VOTI", cId = {}, isRaid = true },
+			[432258] = { text = "AMIR", cId = {}, isRaid = true },
+			[432257] = { text = "ASC", cId = {}, isRaid = true },
 		},
 	},
 	[3] = {
@@ -59,9 +59,9 @@ local portalCompendium = {
 			[354468] = { text = "DOS", cId = { [377] = true } },
 			[354469] = { text = "SD", cId = { [380] = true } },
 			[367416] = { text = "TAZA", cId = { [391] = true, [392] = true } },
-			[373190] = { text = "CN", cId = {} }, -- Raids
-			[373192] = { text = "SFO", cId = {} }, -- Raids
-			[373191] = { text = "SOD", cId = {} }, -- Raids
+			[373190] = { text = "CN", cId = {}, isRaid = true }, -- Raids
+			[373192] = { text = "SFO", cId = {}, isRaid = true }, -- Raids
+			[373191] = { text = "SOD", cId = {}, isRaid = true }, -- Raids
 		},
 	},
 	[4] = {
@@ -347,18 +347,20 @@ local function CreatePortalCompendium(frame, compendium)
 	-- Durchlaufe die Reihenfolge in `compendium`
 	for _, section in ipairs(compendium) do
 		local sortedSpells = {}
-		for spellID, data in pairs(section.spells) do
-			local known = IsSpellKnown(spellID)
-			if
-				(not data.faction or data.faction == faction)
-				and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
-				and (not addon.db["hideActualSeason"] or not portalSpells[spellID])
-			then
-				table.insert(sortedSpells, { spellID = spellID, text = data.text, iconID = data.iconID, isKnown = known })
+		if not addon.db["teleportsCompendiumHide" .. section.headline] then
+			for spellID, data in pairs(section.spells) do
+				local known = IsSpellKnown(spellID)
+				if
+					(not data.faction or data.faction == faction)
+					and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
+					and (not addon.db["hideActualSeason"] or not portalSpells[spellID])
+					and (not addon.db["teleportsCompendiumHideRAID"] or not data.isRaid)
+				then
+					table.insert(sortedSpells, { spellID = spellID, text = data.text, iconID = data.iconID, isKnown = known })
+				end
 			end
+			table.sort(sortedSpells, function(a, b) return a.text < b.text end)
 		end
-		table.sort(sortedSpells, function(a, b) return a.text < b.text end)
-
 		if #sortedSpells > 0 then
 			-- Überschrift (Headline)
 			local headline = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -539,6 +541,7 @@ local function CreateRioScore()
 			insets = { left = 4, right = 4, top = 4, bottom = 4 },
 		})
 		frameAnchorScore:SetBackdropColor(0, 0, 0, 0.8) -- Dunkler Hintergrund mit 80% Transparenz
+		frameAnchorScore:SetFrameStrata("TOOLTIP")
 
 		-- Überschrift hinzufügen
 		local titleScore = frameAnchorScore:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")

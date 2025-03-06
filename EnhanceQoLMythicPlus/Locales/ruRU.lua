@@ -82,6 +82,7 @@ L["Teleports"] = "Телепорты"
 L["teleportEnabled"] = "Включить окно телепортации"
 L["DungeonCompendium"] = "Справочник по телепортам"
 L["teleportsEnableCompendium"] = "Включить справочник по телепортам"
+L["teleportCompendiumHeadline"] = "Скрыть телепорты из определённых дополнений"
 
 L["teleportsHeadline"] = "Добавляет окно с телепортами в подземелья в ваше PvE-окно"
 L["portalHideMissing"] = "Скрыть отсутствующие телепорты"

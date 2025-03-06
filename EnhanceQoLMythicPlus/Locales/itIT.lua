@@ -76,6 +76,7 @@ L["Teleports"] = "Teletrasporti"
 L["teleportEnabled"] = "Abilita il pannello dei teletrasporti"
 L["DungeonCompendium"] = "Compendio dei Teletrasporti"
 L["teleportsEnableCompendium"] = "Abilita il Compendio dei Teletrasporti"
+L["teleportCompendiumHeadline"] = "Nascondi i teletrasporti di specifiche espansioni"
 
 L["teleportsHeadline"] = "Aggiunge un pannello con i teletrasporti ai dungeon nella finestra PvE"
 L["portalHideMissing"] = "Nascondi i teletrasporti mancanti"

@@ -76,6 +76,7 @@ L["Teleports"] = "Teleportes"
 L["teleportEnabled"] = "Habilitar painel de teleporte"
 L["DungeonCompendium"] = "Compêndio de Teleporte"
 L["teleportsEnableCompendium"] = "Habilitar Compêndio de Teleporte"
+L["teleportCompendiumHeadline"] = "Ocultar teletransportes de expansões específicas"
 
 L["teleportsHeadline"] = "Adiciona um painel com teleportes de masmorras à sua janela JxA"
 L["portalHideMissing"] = "Ocultar teleportes ausentes"

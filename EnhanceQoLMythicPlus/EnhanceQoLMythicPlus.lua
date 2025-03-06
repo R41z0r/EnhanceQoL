@@ -599,6 +599,12 @@ local function addTeleportFrame(container)
 			{
 				text = L["teleportsEnableCompendium"],
 				var = "teleportsEnableCompendium",
+				func = function(self, _, value)
+					addon.db["teleportsEnableCompendium"] = value
+					container:ReleaseChildren()
+					addTeleportFrame(container)
+					addon.MythicPlus.functions.toggleFrame()
+				end,
 			},
 			{
 				text = L["portalHideMissing"],
@@ -625,6 +631,32 @@ local function addTeleportFrame(container)
 			if cbData.func then uFunc = cbData.func end
 			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
 			groupCore:AddChild(cbElement)
+		end
+	end
+
+	if addon.db["teleportsEnableCompendium"] then
+		local groupCompendium = addon.functions.createContainer("InlineGroup", "List")
+		wrapper:AddChild(groupCompendium)
+		groupCompendium:SetTitle(L["teleportCompendiumHeadline"])
+		local data = { {
+			text = HIDE .. " " .. LFG_TYPE_RAID,
+			var = "teleportsCompendiumHideRAID",
+		} }
+		for i = 20, 3, -1 do
+			if _G["EXPANSION_NAME" .. i] then table.insert(data, {
+				text = HIDE .. " " .. _G["EXPANSION_NAME" .. i],
+				var = "teleportsCompendiumHide" .. _G["EXPANSION_NAME" .. i],
+			}) end
+		end
+
+		for _, cbData in ipairs(data) do
+			local uFunc = function(self, _, value)
+				addon.db[cbData.var] = value
+				addon.MythicPlus.functions.toggleFrame()
+			end
+			if cbData.func then uFunc = cbData.func end
+			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+			groupCompendium:AddChild(cbElement)
 		end
 	end
 end
