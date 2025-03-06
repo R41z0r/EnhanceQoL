@@ -67,7 +67,7 @@ local function checkAdditionalTooltip(tooltip)
 		end
 	end
 	if addon.db["TooltipShowMythicScore"] and UnitCanAttack("player", "mouseover") == false and addon.Tooltip.variables.maxLevel == UnitLevel("mouseover") then
-		local name, _, timeLimit
+		local _, _, timeLimit
 		local rating = C_PlayerInfo.GetPlayerMythicPlusRatingSummary("mouseover")
 		if rating then
 			local r, g, b
@@ -85,7 +85,7 @@ local function checkAdditionalTooltip(tooltip)
 				end
 
 				for _, key in pairs(C_ChallengeMode.GetMapTable()) do
-					name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(key)
+					_, _, timeLimit = C_ChallengeMode.GetMapUIInfo(key)
 					r, g, b = 0.5, 0.5, 0.5
 
 					local data = key
@@ -140,7 +140,7 @@ local function checkAdditionalTooltip(tooltip)
 					})
 				end
 				if bestDungeon and bestDungeon.mapScore > 0 then
-					name, _, timeLimit = C_ChallengeMode.GetMapUIInfo(bestDungeon.challengeModeID)
+					_, _, timeLimit = C_ChallengeMode.GetMapUIInfo(bestDungeon.challengeModeID)
 					r, g, b = 1, 1, 1
 					local stars = ""
 					local hexColor = string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
