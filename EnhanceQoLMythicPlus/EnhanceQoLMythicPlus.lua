@@ -616,10 +616,6 @@ local function addTeleportFrame(container)
 				var = "portalHideMissing",
 			},
 			{
-				text = L["hideActualSeason"],
-				var = "hideActualSeason",
-			},
-			{
 				text = L["portalShowTooltip"],
 				var = "portalShowTooltip",
 				func = function(self, _, value) addon.db["portalShowTooltip"] = value end,
@@ -644,6 +640,10 @@ local function addTeleportFrame(container)
 		wrapper:AddChild(groupCompendiumAddition)
 		groupCompendiumAddition:SetTitle(L["teleportCompendiumAdditionHeadline"])
 		local data = {
+			{
+				text = L["hideActualSeason"],
+				var = "hideActualSeason",
+			},
 			{
 				text = L["portalShowDungeonTeleports"],
 				var = "portalShowDungeonTeleports",
