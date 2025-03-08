@@ -683,7 +683,7 @@ local function addTeleportFrame(container)
 		local groupCompendium = addon.functions.createContainer("InlineGroup", "List")
 		wrapper:AddChild(groupCompendium)
 		groupCompendium:SetTitle(L["teleportCompendiumHeadline"])
-		local data = {}
+		data = {}
 
 		local sortedIndexes = {}
 		for key, _ in pairs(addon.MythicPlus.variables.portalCompendium) do
