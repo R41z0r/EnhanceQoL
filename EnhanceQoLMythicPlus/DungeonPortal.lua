@@ -11,116 +11,10 @@ local L = addon.LMythicPlus
 
 local cModeIDs
 local portalSpells = {}
+local allSpells = {} --  for Cooldown checking
 local mapInfo = {}
 local mapIDInfo = {}
 local selectedMapId
-
-local portalCompendium = {
-	[1] = {
-		headline = EXPANSION_NAME10,
-		spells = {
-			[445269] = { text = "SV", cId = { [501] = true } },
-			[445416] = { text = "COT", cId = { [502] = true } },
-			[445414] = { text = "DAWN", cId = { [505] = true } },
-			[445417] = { text = "ARAK", cId = { [503] = true } },
-			[467546] = { text = "FLOOD", cId = { [525] = true }, mapID = 2773 },
-			[445440] = { text = "BREW", cId = { [506] = true }, mapID = 2661 },
-			[445444] = { text = "PSF", cId = { [499] = true }, mapID = 2649 },
-			[445441] = { text = "DFC", cId = { [504] = true }, mapID = 2651 },
-			[445443] = { text = "ROOK", cId = { [500] = true }, mapID = 2648 },
-		},
-	},
-	[2] = {
-		headline = EXPANSION_NAME9,
-		spells = {
-			[424197] = { text = "DOTI", cId = { [463] = true, [464] = true } },
-			[393256] = { text = "RLP", cId = { [399] = true } },
-			[393262] = { text = "NO", cId = { [400] = true } },
-			[393267] = { text = "BH", cId = { [405] = true } },
-			[393273] = { text = "AA", cId = { [402] = true } },
-			[393276] = { text = "NELT", cId = { [404] = true } },
-			[393279] = { text = "AV", cId = { [401] = true } },
-			[393283] = { text = "HOI", cId = { [406] = true } },
-			[393222] = { text = "ULD", cId = { [403] = true } },
-			[432254] = { text = "VOTI", cId = {}, isRaid = true },
-			[432258] = { text = "AMIR", cId = {}, isRaid = true },
-			[432257] = { text = "ASC", cId = {}, isRaid = true },
-		},
-	},
-	[3] = {
-		headline = EXPANSION_NAME8,
-		spells = {
-			[354462] = { text = "NW", cId = { [376] = true } },
-			[354463] = { text = "PF", cId = { [379] = true } },
-			[354464] = { text = "MISTS", cId = { [375] = true } },
-			[354465] = { text = "HOA", cId = { [378] = true } },
-			[354466] = { text = "SOA", cId = { [381] = true } },
-			[354467] = { text = "TOP", cId = { [382] = true }, mapID = 2293 },
-			[354468] = { text = "DOS", cId = { [377] = true } },
-			[354469] = { text = "SD", cId = { [380] = true } },
-			[367416] = { text = "TAZA", cId = { [391] = true, [392] = true } },
-			[373190] = { text = "CN", cId = {}, isRaid = true }, -- Raids
-			[373192] = { text = "SFO", cId = {}, isRaid = true }, -- Raids
-			[373191] = { text = "SOD", cId = {}, isRaid = true }, -- Raids
-		},
-	},
-	[4] = {
-		headline = EXPANSION_NAME7,
-		spells = {
-			[410071] = { text = "FH", cId = { [245] = true } },
-			[410074] = { text = "UR", cId = { [251] = true } },
-			[373274] = { text = "WORK", cId = { [369] = true, [370] = true }, mapID = 2097 },
-			[424167] = { text = "WM", cId = { [248] = true } },
-			[424187] = { text = "AD", cId = { [244] = true } },
-			[445418] = { text = "SIEG", faction = FACTION_ALLIANCE, cId = { [353] = true } },
-			[464256] = { text = "SIEG", faction = FACTION_HORDE, cId = { [353] = true } },
-			[467553] = { text = "ML", faction = FACTION_ALLIANCE, cId = { [247] = true }, mapID = 1594 },
-			[467555] = { text = "ML", faction = FACTION_HORDE, cId = { [247] = true }, mapID = 1594 },
-		},
-	},
-	[5] = {
-		headline = EXPANSION_NAME6,
-		spells = {
-			[424153] = { text = "BRH", cId = { [199] = true } },
-			[393766] = { text = "COS", cId = { [210] = true } },
-			[424163] = { text = "DHT", cId = { [198] = true } },
-			[393764] = { text = "HOV", cId = { [200] = true } },
-			[410078] = { text = "NL", cId = { [206] = true } },
-			[373262] = { text = "KARA", cId = { [227] = true, [234] = true } },
-		},
-	},
-	[6] = {
-		headline = EXPANSION_NAME5,
-		spells = {
-			[159897] = { text = "AUCH", cId = { [164] = true } },
-			[159895] = { text = "BSM", cId = { [163] = true } },
-			[159901] = { text = "EB", cId = { [168] = true } },
-			[159900] = { text = "GD", cId = { [166] = true } },
-			[159896] = { text = "ID", cId = { [169] = true } },
-			[159899] = { text = "SBG", cId = { [165] = true } },
-			[159898] = { text = "SR", cId = { [161] = true } },
-			[159902] = { text = "UBRS", cId = { [167] = true } },
-		},
-	},
-	[7] = {
-		headline = EXPANSION_NAME4,
-		spells = {
-			[131225] = { text = "GSS", cId = { [57] = true } },
-			[131222] = { text = "MP", cId = { [60] = true } },
-			[131232] = { text = "SCHO", cId = { [76] = true } },
-			[131231] = { text = "SH", cId = { [77] = true } },
-			[131229] = { text = "SM", cId = { [78] = true } },
-			[131228] = { text = "SN", cId = { [59] = true } },
-			[131206] = { text = "SPM", cId = { [58] = true } },
-			[131205] = { text = "SB", cId = { [56] = true } },
-			[131204] = { text = "TJS", cId = { [2] = true } },
-		},
-	},
-	[8] = {
-		headline = EXPANSION_NAME3,
-		spells = { [445424] = { text = "GB", cId = { [507] = true } }, [424142] = { text = "TOTT", cId = { [456] = true } }, [410080] = { text = "VP", cId = { [438] = true } } },
-	},
-}
 
 local function getCurrentSeasonPortal()
 	local cModeIDs = C_ChallengeMode.GetMapTable()
@@ -133,7 +27,7 @@ local function getCurrentSeasonPortal()
 	local filteredMapInfo = {}
 	local filteredMapID = {}
 
-	for _, section in pairs(portalCompendium) do
+	for _, section in pairs(addon.MythicPlus.variables.portalCompendium) do
 		for spellID, data in pairs(section.spells) do
 			if data.cId then
 				for cId in pairs(data.cId) do
@@ -151,19 +45,13 @@ local function getCurrentSeasonPortal()
 					end
 				end
 			end
+			allSpells[spellID] = { isToy = data.isToy or false, toyID = data.toyID, isItem = data.isItem or false, itemID = data.itemID }
 		end
 	end
 	portalSpells = filteredPortalSpells
 	mapInfo = filteredMapInfo
 	mapIDInfo = filteredMapID
 end
--- for _, exp in pairs(portalCompendium) do
--- 	for spellId, data in pairs(exp.spells) do
--- 		cIdMap[spellId] = { text = data.text }
--- 		if data.faction then cIdMap[spellId].faction = data.faction end
--- 		for cId, _ in pairs(data.cId) do
--- 	end
--- end
 
 local isKnown = {}
 local faction = UnitFactionGroup("player")
@@ -285,7 +173,7 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 			icon:SetTexture(spellInfo.iconID or "Interface\\ICONS\\INV_Misc_QuestionMark")
 			button.icon = icon
 
-			-- Überprüfen, ob der Zauber bekannt ist
+			-- ���berprüfen, ob der Zauber bekannt ist
 			if not spellData.isKnown then
 				icon:SetDesaturated(true) -- Macht das Icon grau/schwarzweiß
 				icon:SetAlpha(0.5) -- Optional: Reduziert die Sichtbarkeit
@@ -327,7 +215,25 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 	end
 end
 
+local function isToyUsable(id)
+	if id and PlayerHasToy(id) then
+		for _, k in pairs(C_TooltipInfo.GetToyByItemID(id).lines) do
+			if k.type and k.type == 23 then
+				if k.leftColor.b == 1 and k.leftColor.g == 1 and k.leftColor.r == 1 then
+					return true
+				else
+					return false
+				end
+			end
+		end
+		-- no restriction so return true
+		return true
+	end
+	return false
+end
+
 local function CreatePortalCompendium(frame, compendium)
+	local hasEngineering = GetProfessionInfo(9) and true or false
 	-- Entferne alle bestehenden Elemente
 	for _, button in pairs(frame.buttons or {}) do
 		button:Hide()
@@ -344,22 +250,83 @@ local function CreatePortalCompendium(frame, compendium)
 	local currentYOffset = 0 - titleCompendium:GetStringHeight() - 20 -- Startabstand vom oberen Rand
 	local maxWidth = titleCompendium:GetStringWidth() + 20
 
-	-- Durchlaufe die Reihenfolge in `compendium`
-	for _, section in ipairs(compendium) do
+	local sortedIndexes = {}
+	for key, _ in pairs(compendium) do
+		table.insert(sortedIndexes, key)
+	end
+
+	table.sort(sortedIndexes, function(a, b) return a > b end)
+
+	for _, key in ipairs(sortedIndexes) do
+		local section = compendium[key]
+
 		local sortedSpells = {}
 		if not addon.db["teleportsCompendiumHide" .. section.headline] then
 			for spellID, data in pairs(section.spells) do
-				local known = IsSpellKnown(spellID)
+				local known = (IsSpellKnown(spellID) and not data.isToy)
+					or (hasEngineering and data.toyID and not data.isHearthstone and isToyUsable(data.toyID))
+					or (data.isItem and GetItemCount(data.itemID) > 0)
+					or (data.isHearthstone and isToyUsable(data.toyID))
 				if
 					(not data.faction or data.faction == faction)
 					and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
 					and (not addon.db["hideActualSeason"] or not portalSpells[spellID])
-					and (not addon.db["teleportsCompendiumHideRAID"] or not data.isRaid)
+					and (addon.db["portalShowRaidTeleports"] or not data.isRaid)
+					and (addon.db["portalShowToyHearthstones"] or not data.isHearthstone)
+					and (addon.db["portalShowEngineering"] or not data.isEngineering)
+					and ((addon.db["portalShowClassTeleport"] and (addon.variables.unitClass == data.isClassTP)) or not data.isClassTP)
+					and ((addon.db["portalShowClassTeleport"] and addon.variables.unitRace == data.isRaceTP) or not data.isRaceTP) -- Racial Dark Iron Dwarf
+					and ((addon.db["portalShowMagePortal"] and addon.variables.unitClass == "MAGE") or not data.isMagePortal)
+					and (addon.db["portalShowDungeonTeleports"] or not data.cId)
 				then
-					table.insert(sortedSpells, { spellID = spellID, text = data.text, iconID = data.iconID, isKnown = known })
+					table.insert(sortedSpells, {
+						spellID = spellID,
+						text = data.text,
+						iconID = data.iconID,
+						isKnown = known,
+						isToy = data.isToy or false,
+						toyID = data.toyID or false,
+						isItem = data.isItem or false,
+						itemID = data.itemID or false,
+						icon = data.icon or false,
+						isClassTP = data.isClassTP or false,
+						isMagePortal = data.isMagePortal or false,
+					})
 				end
 			end
-			table.sort(sortedSpells, function(a, b) return a.text < b.text end)
+			table.sort(sortedSpells, function(a, b)
+				-- Erst vergleichen wir den Text
+				if a.text < b.text then
+					return true
+				elseif a.text > b.text then
+					return false
+				else
+					-- Wenn der Text identisch ist: isMageTP vor isMagePortal
+					local aIsTP = a.isClassTP or false
+					local bIsTP = b.isClassTP or false
+					local aIsPortal = a.isMagePortal or false
+					local bIsPortal = b.isMagePortal or false
+					local aToyID = a.toyID or false
+					local bToyID = b.toyID or false
+					-- MageTP vor MagePortal
+					if aIsTP and not bIsTP then
+						return true
+					elseif bIsTP and not aIsTP then
+						return false
+					elseif aIsPortal and not bIsPortal then
+						-- Falls man Porter lieber später will, kann man hier return false machen
+						return false
+					elseif bIsPortal and not aIsPortal then
+						return true
+					elseif aToyID and bToyID then
+						return aToyID < bToyID
+					end
+
+					-- Falls beide gleich sind (beide TP, beide Portal oder keins davon),
+					-- dann ist die Reihenfolge egal:
+					return false
+				end
+			end)
 		end
 		if #sortedSpells > 0 then
 			-- Überschrift (Headline)
@@ -380,6 +347,13 @@ local function CreatePortalCompendium(frame, compendium)
 			local spellID = spellData.spellID
 			local spellInfo = C_Spell.GetSpellInfo(spellID)
 
+			if spellData.isToy then
+				local _, toyName, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
+				spellInfo.iconID = iconId
+				spellInfo.toyName = toyName
+			elseif spellData.isItem then
+				if spellData.icon then spellInfo.iconID = spellData.icon end
+			end
 			if spellInfo then
 				local row = math.floor(index / buttonsPerRow)
 				local col = index % buttonsPerRow
@@ -389,6 +363,13 @@ local function CreatePortalCompendium(frame, compendium)
 				button:SetSize(buttonSize, buttonSize)
 				button:SetPoint("TOPLEFT", frame, "TOPLEFT", 10 + col * (buttonSize + spacingCompendium), currentYOffset - row * (buttonSize + hSpacingCompendium))
 				button.spellID = spellID
+				if spellData.isToy then
+					button.isToy = spellData.isToy
+					button.toyID = spellData.toyID
+				elseif spellData.isItem then
+					button.isItem = spellData.isItem
+					button.itemID = spellData.itemID
+				end
 
 				-- Hintergrund
 				local bg = button:CreateTexture(nil, "BACKGROUND")
@@ -430,8 +411,20 @@ local function CreatePortalCompendium(frame, compendium)
 				button.cooldownFrame:SetAllPoints(button)
 
 				-- Sichere Aktion (CastSpell)
-				button:SetAttribute("type", "spell")
-				button:SetAttribute("spell", spellID)
+				if spellData.isToy then
+					if spellData.isKnown then
+						button:SetAttribute("type", "macro")
+						button:SetAttribute("macrotext", "/use " .. spellInfo.toyName)
+					end
+				elseif spellData.isItem then
+					if spellData.isKnown then
+						button:SetAttribute("type", "macro")
+						button:SetAttribute("macrotext", "/use item:" .. spellData.itemID)
+					end
+				else
+					button:SetAttribute("type", "spell")
+					button:SetAttribute("spell", spellID)
+				end
 				button:RegisterForClicks("AnyUp", "AnyDown")
 
 				-- Text und Tooltip
@@ -443,7 +436,13 @@ local function CreatePortalCompendium(frame, compendium)
 				button:SetScript("OnEnter", function(self)
 					if addon.db["portalShowTooltip"] then
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-						GameTooltip:SetSpellByID(spellID)
+						if spellData.isToy then
+							GameTooltip:SetToyByItemID(spellData.toyID)
+						elseif spellData.isItem then
+							GameTooltip:SetItemByID(spellData.itemID)
+						else
+							GameTooltip:SetSpellByID(spellID)
+						end
 						GameTooltip:Show()
 					end
 				end)
@@ -464,7 +463,7 @@ end
 
 local function checkCooldown()
 	CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
-	CreatePortalCompendium(frameAnchorCompendium, portalCompendium)
+	CreatePortalCompendium(frameAnchorCompendium, addon.MythicPlus.variables.portalCompendium)
 	for _, button in pairs(frameAnchor.buttons or {}) do
 		if isKnown[button.spellID] then
 			local cooldownData = C_Spell.GetSpellCooldown(button.spellID)
@@ -478,7 +477,31 @@ local function checkCooldown()
 
 	for _, button in pairs(frameAnchorCompendium.buttons or {}) do
 		if isKnown[button.spellID] then
-			local cooldownData = C_Spell.GetSpellCooldown(button.spellID)
+			local cooldownData
+			if button.isToy then
+				if button.toyID then
+					local startTime, duration, enable = GetItemCooldown(button.toyID)
+					cooldownData = {
+						startTime = startTime,
+						duration = duration,
+						modRate = 1,
+						isEnabled = enable,
+					}
+				end
+			elseif button.isItem then
+				if button.itemID then
+					local startTime, duration, enable = GetItemCooldown(button.itemID)
+					cooldownData = {
+						startTime = startTime,
+						duration = duration,
+						modRate = 1,
+						isEnabled = enable,
+					}
+				end
+			else
+				if FindSpellOverrideByID(button.spellID) and FindSpellOverrideByID(button.spellID) ~= button.spellID then button.spellID = FindSpellOverrideByID(button.spellID) end
+				cooldownData = C_Spell.GetSpellCooldown(button.spellID)
+			end
 			if cooldownData and cooldownData.isEnabled then
 				button.cooldownFrame:SetCooldown(cooldownData.startTime, cooldownData.duration, cooldownData.modRate)
 			else
@@ -490,7 +513,30 @@ end
 
 local function waitCooldown(arg3)
 	C_Timer.After(0.1, function()
-		local cooldownData = C_Spell.GetSpellCooldown(arg3)
+		local cooldownData
+		if allSpells[arg3].isToy then
+			if allSpells[arg3].toyID then
+				local startTime, duration, enable = GetItemCooldown(allSpells[arg3].toyID)
+				cooldownData = {
+					startTime = startTime,
+					duration = duration,
+					modRate = 1,
+					isEnabled = enable,
+				}
+			end
+		elseif allSpells[arg3].isItem then
+			if allSpells[arg3].itemID then
+				local startTime, duration, enable = GetItemCooldown(allSpells[arg3].itemID)
+				cooldownData = {
+					startTime = startTime,
+					duration = duration,
+					modRate = 1,
+					isEnabled = enable,
+				}
+			end
+		else
+			cooldownData = C_Spell.GetSpellCooldown(arg3)
+		end
 		if cooldownData.duration > 0 then
 			checkCooldown()
 		else
@@ -638,7 +684,7 @@ local function CreateRioScore()
 			end
 
 			local _, _, _, _, lp = lastElement:GetPoint()
-			frameAnchorScore:SetSize(max(nWidth + 20, 205), max(lp * -1 + 30, 170)) -- Breite x Höhe
+			frameAnchorScore:SetSize(max(nWidth + 20, 205), max(lp * -1 + 30, 170)) -- Breite x H���he
 		end
 	end
 end
@@ -654,7 +700,7 @@ function addon.MythicPlus.functions.toggleFrame()
 			CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
 			if addon.db["teleportsEnableCompendium"] then
 				if not frameAnchorCompendium:IsShown() then frameAnchorCompendium:Show() end
-				CreatePortalCompendium(frameAnchorCompendium, portalCompendium)
+				CreatePortalCompendium(frameAnchorCompendium, addon.MythicPlus.variables.portalCompendium)
 			else
 				frameAnchorCompendium:Hide()
 			end
@@ -694,7 +740,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 		else
 			if event == "ADDON_LOADED" and arg1 == addonName then
 				CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
-				CreatePortalCompendium(frameAnchorCompendium, portalCompendium)
+				CreatePortalCompendium(frameAnchorCompendium, addon.MythicPlus.variables.portalCompendium)
 				CreateRioScore()
 				frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 230, 0)
 				frameAnchor:Show()
@@ -705,7 +751,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 				end
 			elseif parentFrame:IsShown() then -- Only do stuff, when PVEFrame Open
 				if event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
-					if portalSpells[arg3] then waitCooldown(arg3) end
+					if allSpells[arg3] then waitCooldown(arg3) end
 				elseif event == "ENCOUNTER_END" and arg3 == 8 then
 					C_Timer.After(0.1, function() checkCooldown() end)
 				elseif event == "SPELL_DATA_LOAD_RESULT" and portalSpells[arg1] then

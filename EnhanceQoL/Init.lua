@@ -75,6 +75,7 @@ addon.itemBagFilterTypes = {
 }
 addon.variables.unitClass = select(2, UnitClass("player"))
 addon.variables.unitSpec = GetSpecialization()
+addon.variables.unitRace = select(2, UnitRace("player"))
 --@end-debug@
 
 addon.variables.requireReload = false

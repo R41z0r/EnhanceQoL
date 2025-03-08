@@ -578,8 +578,13 @@ local function addPotionTrackerFrame(container)
 end
 
 local function addTeleportFrame(container)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-	container:AddChild(wrapper)
+	scroll:AddChild(wrapper)
 
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
@@ -635,18 +640,64 @@ local function addTeleportFrame(container)
 	end
 
 	if addon.db["teleportsEnableCompendium"] then
+		local groupCompendiumAddition = addon.functions.createContainer("InlineGroup", "List")
+		wrapper:AddChild(groupCompendiumAddition)
+		groupCompendiumAddition:SetTitle(L["teleportCompendiumAdditionHeadline"])
+		local data = {
+			{
+				text = L["portalShowDungeonTeleports"],
+				var = "portalShowDungeonTeleports",
+			},
+			{
+				text = L["portalShowRaidTeleports"],
+				var = "portalShowRaidTeleports",
+			},
+			{
+				text = L["portalShowEngineering"],
+				var = "portalShowEngineering",
+			},
+			{
+				text = L["portalShowToyHearthstones"],
+				var = "portalShowToyHearthstones",
+			},
+			{
+				text = L["portalShowClassTeleport"],
+				var = "portalShowClassTeleport",
+			},
+			{
+				text = L["portalShowMagePortal"],
+				var = "portalShowMagePortal",
+			},
+		}
+
+		for _, cbData in ipairs(data) do
+			local uFunc = function(self, _, value)
+				addon.db[cbData.var] = value
+				addon.MythicPlus.functions.toggleFrame()
+			end
+			if cbData.func then uFunc = cbData.func end
+			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+			groupCompendiumAddition:AddChild(cbElement)
+		end
+
 		local groupCompendium = addon.functions.createContainer("InlineGroup", "List")
 		wrapper:AddChild(groupCompendium)
 		groupCompendium:SetTitle(L["teleportCompendiumHeadline"])
-		local data = { {
-			text = HIDE .. " " .. LFG_TYPE_RAID,
-			var = "teleportsCompendiumHideRAID",
-		} }
-		for i = 20, 3, -1 do
-			if _G["EXPANSION_NAME" .. i] then table.insert(data, {
-				text = HIDE .. " " .. _G["EXPANSION_NAME" .. i],
-				var = "teleportsCompendiumHide" .. _G["EXPANSION_NAME" .. i],
-			}) end
+		local data = {}
+
+		local sortedIndexes = {}
+		for key, _ in pairs(addon.MythicPlus.variables.portalCompendium) do
+			table.insert(sortedIndexes, key)
+		end
+
+		table.sort(sortedIndexes, function(a, b) return a > b end)
+
+		for _, key in ipairs(sortedIndexes) do
+			local v = addon.MythicPlus.variables.portalCompendium[key]
+			table.insert(data, {
+				text = HIDE .. " " .. v.headline,
+				var = "teleportsCompendiumHide" .. v.headline,
+			})
 		end
 
 		for _, cbData in ipairs(data) do
@@ -659,6 +710,9 @@ local function addTeleportFrame(container)
 			groupCompendium:AddChild(cbElement)
 		end
 	end
+
+	scroll:DoLayout()
+	wrapper:DoLayout()
 end
 
 local function addMiscFrame(container)
