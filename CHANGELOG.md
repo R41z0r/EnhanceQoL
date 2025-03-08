@@ -1,8 +1,4 @@
-## Changelog
-
-### Version 1.0.0
-
-#### Added
+## Added
 
 - **Complete Teleport Compendium Rework** with a more intuitive user interface.
 - **Additional Portal Options** section:
@@ -25,11 +21,11 @@
   - The Burning Crusade
   - Classic
 
-#### Changed
+## Changed
 
 - Reorganized settings to group teleport-related toggles under a single, unified panel.
 - Improved labels and descriptions for each option, making it clearer when and why to enable or hide certain teleports.
 
-#### Notes
+## Notes
 
 - You can now precisely control which teleports and portals are shown or hidden based on your class, profession, or expansion preferences.
