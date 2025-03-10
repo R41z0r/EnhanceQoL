@@ -124,7 +124,7 @@ addon.MythicPlus.variables.portalCompendium = {
 			[445416] = { text = "COT", cId = { [502] = true } },
 			[445414] = { text = "DAWN", cId = { [505] = true } },
 			[445417] = { text = "ARAK", cId = { [503] = true } },
-			[467546] = { text = "FLOOD", cId = { [525] = true }, mapID = 2773 },
+			[1216786] = { text = "FLOOD", cId = { [525] = true }, mapID = 2773 },
 			[445440] = { text = "BREW", cId = { [506] = true }, mapID = 2661 },
 			[445444] = { text = "PSF", cId = { [499] = true }, mapID = 2649 },
 			[445441] = { text = "DFC", cId = { [504] = true }, mapID = 2651 },
