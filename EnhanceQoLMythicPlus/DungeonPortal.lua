@@ -348,9 +348,8 @@ local function CreatePortalCompendium(frame, compendium)
 			local spellInfo = C_Spell.GetSpellInfo(spellID)
 
 			if spellData.isToy then
-				local _, toyName, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
+				local _, _, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
 				spellInfo.iconID = iconId
-				spellInfo.toyName = toyName
 			elseif spellData.isItem then
 				if spellData.icon then spellInfo.iconID = spellData.icon end
 			end
@@ -414,7 +413,7 @@ local function CreatePortalCompendium(frame, compendium)
 				if spellData.isToy then
 					if spellData.isKnown then
 						button:SetAttribute("type", "macro")
-						button:SetAttribute("macrotext", "/use " .. spellInfo.toyName)
+						button:SetAttribute("macrotext", "/use item:" .. spellData.toyID)
 					end
 				elseif spellData.isItem then
 					if spellData.isKnown then
