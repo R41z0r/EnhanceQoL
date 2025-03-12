@@ -55,7 +55,7 @@ L["Misc"] = "Divers"
 L["Quest"] = "Quête"
 
 L["hideBagsBar"] = "Masquer la barre des sacs"
-
+L["hideMicroMenu"] = "Masquer le micro-menu"
 -- Dungeon
 L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée lorsqu'il n'y a qu'une seule option"
 L["lfgSortByRio"] = "Trier les candidats aux donjons mythiques par score mythique"

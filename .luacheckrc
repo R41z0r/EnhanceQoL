@@ -116,6 +116,7 @@ globals = {
 	"InspectSecondaryHandSlot",
 	"InspectFrame",
 	"BagsBar",
+	"MicroMenu",
 	"TotemFrame",
 	"EssencePlayerFrame",
 	"PlayerFrame",

@@ -49,7 +49,7 @@ L["Misc"] = "Varie"
 L["Quest"] = "Missione"
 
 L["hideBagsBar"] = "Nascondi la barra delle borse"
-
+L["hideMicroMenu"] = "Nascondi micro menu"
 -- Dungeon
 L["autoChooseDelvePower"] = "Seleziona automaticamente il potere di immersione quando c'è solo 1 opzione"
 L["lfgSortByRio"] = "Ordina i candidati dei dungeon mitici per punteggio mitico"

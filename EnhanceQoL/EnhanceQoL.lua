@@ -1078,7 +1078,6 @@ local function addMiscFrame(container, d)
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["confirmTimerRemovalTrade"] = value end,
 		},
-
 		{
 			parent = "",
 			var = "hideBagsBar",
@@ -1086,6 +1085,15 @@ local function addMiscFrame(container, d)
 			callback = function(self, _, value)
 				addon.db["hideBagsBar"] = value
 				addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
+			end,
+		},
+		{
+			parent = "",
+			var = "hideMicroMenu",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideMicroMenu"] = value
+				addon.functions.toggleMicroMenu(addon.db["hideMicroMenu"])
 			end,
 		},
 		{
@@ -1471,6 +1479,7 @@ local function initMisc()
 	addon.functions.InitDBValue("hiddenLandingPages", {})
 	addon.functions.InitDBValue("hideMinimapButton", false)
 	addon.functions.InitDBValue("hideBagsBar", false)
+	addon.functions.InitDBValue("hideMicroMenu", false)
 	--@debug@
 	addon.functions.InitDBValue("automaticallyOpenContainer", false)
 	--@end-debug@
@@ -2026,7 +2035,15 @@ function loadMain()
 			BagsBar:Hide()
 		end
 	end
-	addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
+	addon.functions.toggleBagsBar(addon.db["hideMicroMenu"])
+	function addon.functions.toggleMicroMenu(value)
+		if value == false then
+			MicroMenu:Show()
+		else
+			MicroMenu:Hide()
+		end
+	end
+	addon.functions.toggleMicroMenu(addon.db["hideMicroMenu"])
 
 	local eventFrame = CreateFrame("Frame")
 	eventFrame:SetScript("OnUpdate", function(self)

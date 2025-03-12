@@ -49,7 +49,7 @@ L["Misc"] = "杂项"
 L["Quest"] = "任务"
 
 L["hideBagsBar"] = "隐藏背包栏"
-
+L["hideMicroMenu"] = "隐藏微型菜单"
 -- Dungeon
 L["autoChooseDelvePower"] = "仅有一个选项时自动选择探险力量"
 L["lfgSortByRio"] = "按史诗分数排序史诗地下城申请者"
