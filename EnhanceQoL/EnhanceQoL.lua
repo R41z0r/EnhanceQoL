@@ -2107,7 +2107,7 @@ function addon.functions.checkForContainer()
 	local itemsToOpen = {}
 	for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
 		for slot = 1, C_Container.GetContainerNumSlots(bag) do
-			containerInfo = C_Container.GetContainerItemInfo(bag, slot)
+			local containerInfo = C_Container.GetContainerItemInfo(bag, slot)
 			if containerInfo then
 				local eItem = Item:CreateFromBagAndSlot(bag, slot)
 				if eItem and not eItem:IsItemEmpty() then
@@ -2115,7 +2115,11 @@ function addon.functions.checkForContainer()
 						local tooltip = C_TooltipInfo.GetBagItem(bag, slot)
 						if tooltip then
 							for i, line in ipairs(tooltip.lines) do
-								if line.leftText == ITEM_OPENABLE then table.insert(itemsToOpen, { bag = bag, slot = slot }) end
+								if line.leftText == ITEM_COSMETIC_LEARN then
+									table.insert(itemsToOpen, { bag = bag, slot = slot })
+								elseif line.leftText == ITEM_OPENABLE then
+									table.insert(itemsToOpen, { bag = bag, slot = slot })
+								end
 							end
 						end
 					end)

@@ -113,6 +113,7 @@ globals = {
 	"InspectTrinket0Slot",
 	"InspectTrinket1Slot",
 	"InspectMainHandSlot",
+	"ITEM_COSMETIC_LEARN",
 	"InspectSecondaryHandSlot",
 	"InspectFrame",
 	"BagsBar",
