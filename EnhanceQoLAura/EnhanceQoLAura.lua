@@ -333,7 +333,10 @@ end
 -- Funktion zur Verarbeitung der Events
 local function eventHandler(self, event, unit, arg1, arg2, ...)
 	-- Nur für bestimmte Einheiten filtern
-	if not unit or (not string.match(unit, "^nameplate") and not string.match(unit, "^boss")) then return end
+	-- if not unit or (not string.match(unit, "^nameplate") and not string.match(unit, "^boss")) then return end
+	if unit ~= "player" then return end
+	print(unit, arg1, arg2, ...)
+
 	if event == "UNIT_SPELLCAST_START" then
 		addBar(unit)
 	elseif event == "UNIT_SPELLCAST_STOP" then

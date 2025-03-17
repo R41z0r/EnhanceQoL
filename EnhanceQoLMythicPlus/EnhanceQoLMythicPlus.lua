@@ -51,61 +51,40 @@ hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", functi
 	end
 end)
 
-local didApplyPatch = false
-local originalFunc = ScenarioObjectiveTracker.UpdateCriteria
-local patchedFunc = function(self, numCriteria)
-	if not self:ShouldShowCriteria() then return end
-	local objectivesBlock = self.ObjectivesBlock
-	for criteriaIndex = 1, numCriteria do
-		local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
-		if criteriaInfo then
-			local criteriaString = criteriaInfo.description
-			if not criteriaInfo.isWeightedProgress and not criteriaInfo.isFormatted then
-				criteriaString = string.format("%d/%d %s", criteriaInfo.quantity, criteriaInfo.totalQuantity, criteriaInfo.description)
-			end
-			local line
-			if criteriaInfo.completed then
-				local existingLine = objectivesBlock:GetExistingLine(criteriaIndex)
-				line = objectivesBlock:AddObjective(criteriaIndex, criteriaString, nil, nil, OBJECTIVE_DASH_STYLE_HIDE, OBJECTIVE_TRACKER_COLOR["Complete"])
-				line.Icon:Show()
-				line.Icon:SetAtlas("ui-questtracker-tracker-check", false)
-				if existingLine and (not line.state or line.state == ObjectiveTrackerAnimLineState.Present) then line:SetState(ObjectiveTrackerAnimLineState.Completing) end
-			else
-				line = objectivesBlock:AddObjective(criteriaIndex, criteriaString, nil, nil, OBJECTIVE_DASH_STYLE_HIDE)
-				line.Icon:Show()
-				line.Icon:SetAtlas("ui-questtracker-objective-nub", false)
-			end
-			-- progress bar
-			if criteriaInfo.isWeightedProgress and not criteriaInfo.completed then
-				local pb = objectivesBlock:AddProgressBar(criteriaIndex, self.progressBarLineSpacing)
+local function GetScenarioPercent(criteriaIndex)
+	local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(criteriaIndex)
+	if criteriaInfo and criteriaInfo.isWeightedProgress then
+		local sValue = criteriaInfo.quantity
+		if criteriaInfo.quantityString then
+			sValue = tonumber(string.sub(criteriaInfo.quantityString, 1, string.len(criteriaInfo.quantityString) - 1)) / criteriaInfo.totalQuantity * 100
+			sValue = math.floor(sValue * 100 + 0.5) / 100
+		end
+		return sValue
+	end
+	return nil
+end
 
-				--@modified function
-				local sValue = criteriaInfo.quantity
-				if criteriaInfo.quantityString then
-					sValue = tonumber(string.sub(criteriaInfo.quantityString, 1, string.len(criteriaInfo.quantityString) - 1)) / criteriaInfo.totalQuantity * 100
-					sValue = math.floor(sValue * 100 + 0.5) / 100
-				end
-				ScenarioObjectiveTracker.trueValue = sValue
-				local oFunc = ScenarioTrackerProgressBarMixin.SetValue
-				local pFunc = function(self, percentage, trueValue)
-					self.Bar:SetValue(percentage)
-					if trueValue then
-						self.Bar.Label:SetFormattedText(trueValue .. "%%")
-					else
-						self.Bar.Label:SetFormattedText(PERCENTAGE_STRING, percentage)
-					end
+hooksecurefunc(ScenarioTrackerProgressBarMixin, "SetValue", function(self, percentage)
+	if addon.db["mythicPlusTruePercent"] then
+		if not IsInInstance() or not self:IsVisible() then return end
+		local _, _, diff = GetInstanceInfo()
+		if diff ~= 8 then return end -- only in mythic challenge mode
+		local sData = C_ScenarioInfo.GetScenarioStepInfo()
+		if nil == sData then return end
+
+		local truePercent
+		if self.criteriaIndex then self.criteriaIndex = nil end
+		for criteriaIndex = 1, sData.numCriteria do
+			if nil == truePercent then
+				truePercent = GetScenarioPercent(criteriaIndex)
+				if truePercent then
+					self.Bar.Label:SetFormattedText(truePercent .. "%%")
 					self.percentage = percentage
 				end
-				pb.SetValue = pFunc
-				pb:SetValue(criteriaInfo.quantity, sValue)
-				--@modified function end
 			end
-
-			-- timer
-			if criteriaInfo.duration > 0 and criteriaInfo.elapsed <= criteriaInfo.duration then objectivesBlock:AddTimerBar(criteriaInfo.duration, GetTime() - criteriaInfo.elapsed) end
 		end
 	end
-end
+end)
 
 local point, relativeTo, relativePoint, xOfs, yOfs
 if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.SearchPanel.FilterButton and LFGListFrame.SearchPanel.FilterButton.ResetButton then
@@ -124,26 +103,6 @@ local function toggleLFGFilterPosition()
 	end
 end
 if addon.db["groupfinderMoveResetButton"] then toggleLFGFilterPosition() end
-
-local function toggleHookToPercentBar()
-	if addon.db["mythicPlusTruePercent"] then
-		if IsInInstance() == false then
-			if didApplyPatch then
-				ScenarioObjectiveTracker.UpdateCriteria = originalFunc
-				didApplyPatch = false
-			end
-			return
-		end
-		if didApplyPatch then return end
-		didApplyPatch = true
-		ScenarioObjectiveTracker.UpdateCriteria = patchedFunc
-	elseif didApplyPatch then
-		ScenarioObjectiveTracker.UpdateCriteria = originalFunc
-		didApplyPatch = false
-	end
-end
-
-ScenarioObjectiveTracker:HookScript("OnShow", function(self) toggleHookToPercentBar() end)
 
 local function checkKeyStone()
 	addon.MythicPlus.variables.handled = false -- reset handle on Keystoneframe open
@@ -250,7 +209,6 @@ frameLoad:RegisterEvent("RAID_TARGET_UPDATE")
 frameLoad:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 frameLoad:RegisterEvent("READY_CHECK")
 frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
-frameLoad:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 local function skipRolecheck()
 	local tank, healer, dps = false, false, false
@@ -364,8 +322,6 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	elseif event == "GROUP_ROSTER_UPDATE" and checkCondition() then
 		setActTank()
 		checkRaidMarker()
-	elseif event == "PLAYER_ENTERING_WORLD" then
-		toggleHookToPercentBar()
 	elseif event == "READY_CHECK" and checkCondition() then
 		setActTank()
 		checkRaidMarker()
@@ -450,12 +406,7 @@ local function addKeystoneFrame(container)
 		{
 			text = L["mythicPlusTruePercent"],
 			var = "mythicPlusTruePercent",
-			func = function(self, _, value)
-				addon.db["mythicPlusTruePercent"] = value
-				if value == true and didApplyPatch == false then
-				end
-				if ScenarioObjectiveTracker:IsShown() then toggleHookToPercentBar() end
-			end,
+			func = function(self, _, value) addon.db["mythicPlusTruePercent"] = value end,
 		},
 		{
 			text = L["mythicPlusChestTimer"],

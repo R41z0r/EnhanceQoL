@@ -15,6 +15,15 @@ addon.functions.InitDBValue("soundMutedSounds", {})
 
 addon.Sounds.soundFiles = {
 	["class"] = {
+		["class_general"] = {
+			["T33_Jackpot_Sound"] = { -- SoundID 283499
+				6421997,
+				6421999,
+				6422001,
+				6422003,
+				6422005,
+			},
+		},
 		["class_warlock"] = {
 			["class_warlock_summon_imp"] = {
 				-- 1255429,
@@ -49,31 +58,126 @@ addon.Sounds.soundFiles = {
 	["dungeon"] = {
 		["affix"] = {
 			["xalatath"] = {
-				5835214, -- And now you learn the true lesson of the void
-				5770084, -- your ascension
-				5834619, -- *laughing*
-				5770087, -- is complete
-				5834623, -- Oh he's alone
-				5835726, -- The void consumes everything
-				5835725, -- Inevitable
-
-				5854706, -- Haha
-				5835195, -- So Easily Overlooked
-				5835215, -- Only The Strongest Survive
 				2530811, -- Do You See It?
 				2530835, -- A Stone To Call Forth The Darkness
 				2530794, -- Open Your Mind To The Whispers
+				5835214, -- And now you learn the true lesson of the void
+				5770084, -- your ascension
+				5770087, -- is complete
+				5834619, -- *laughing*
+				5834623, -- Oh he's alone
 				5834632, -- Embrace Who You Truly Are
+				5835195, -- So Easily Overlooked
+				5835215, -- Only The Strongest Survive
+				5835725, -- Inevitable
+				5835726, -- The void consumes everything
+				-- 5835728, --? You know where to find me
+				5835729, --? Deeper in the Darkness
+				5854705, -- To late (when timer is over)
+				5854706, -- Haha
 			},
 		},
 		["tww"] = {
-			["stonevault"] = {
-				["dagran_thaurissan_ii"] = {
-					5835282, -- So here we are. High Speaker Eirich... or is it just Eirich now?
-					5835283, -- He's fled from the Hall of Awakening into the Stonevault
-					5835268, -- He's probably running like a frightened mouse. Wee, sleekit, cowering, timorous beastie!
-				},
+			["rookery_npc"] = {
+				-- Stormrider Vokmar
+				5858404,
+				5858470,
+				5858471,
+				5858472,
+				5858473,
+				5858474,
+				5858478,
+				5858481,
+				5858482,
+				5858485,
 			},
+			["priory_of_the_sacred_flame_npc"] = {
+				-- Sister Etna Blayze
+				5839837,
+				5839839,
+				5839840,
+				5839841,
+				5839846,
+				5839847,
+				5839853,
+				5839854,
+				5839855,
+				5839860,
+				5839861,
+			},
+			["cinderbrew_meadery_npc"] = {
+				5769388,
+				5769390,
+				5769391,
+				5769395,
+				5769396,
+				5769397,
+				5769400,
+				5779635,
+				5858873,
+				5858874,
+				5858875,
+				5858882,
+				5858888,
+				5858889,
+				5858890,
+				5858891,
+				5858892,
+				5858893,
+				5858894,
+				5858895,
+				5858896,
+				5858897,
+				5858898,
+			},
+			["mechagon_npc"] = {
+				-- Prince Erazmin
+				2931350,
+				2931351,
+				2931352,
+				2931353,
+				2931356, --
+				2931435, -- In order to stop my father, we need to infiltrate
+				2931438, -- Do not allow these bots to detect you
+				2931439, -- Remaining within their steam
+				2931441, -- You are no longer my father
+
+				-- Gazlowe
+				2931354,
+				2931355,
+
+				-- Tussle Tonks Announcer
+				2925336,
+				2925337,
+				2925338,
+				2925339,
+				2925340,
+				2925341,
+				2925342,
+				2925343,
+				2925345,
+				2925346,
+				2925347,
+				2925348,
+				2925351,
+				2925352,
+				2925353,
+				2925354,
+				2925355,
+				2925356,
+				2925357,
+				2925358,
+				2925359,
+				2925360,
+			},
+
+			-- ["stonevault"] = {
+			-- 	["dagran_thaurissan_ii"] = {
+			-- 		5835282, -- So here we are. High Speaker Eirich... or is it just Eirich now?
+			-- 		5835283, -- He's fled from the Hall of Awakening into the Stonevault
+			-- 		5835268, -- He's probably running like a frightened mouse. Wee, sleekit, cowering, timorous beastie!
+			-- 	},
+			-- },
 		},
 	},
 	["mounts"] = {
@@ -101,6 +205,7 @@ addon.Sounds.soundFiles = {
 			1593232, --You have show patience
 			1593233, --It is clear you embody
 			1593234, --Your skils are impressive
+			1593235, --Let us return to the wandering
 			1593236, --Where are we going today, Grandmaster
 		},
 		["grand_expedition_yak"] = {
@@ -161,6 +266,47 @@ addon.Sounds.soundFiles = {
 			595097,
 			595100,
 			595103,
+		},
+		["mount_the_dreadwake"] = {
+			-- Horn
+			566064,
+
+			-- Bell
+			1838477,
+
+			-- WaterSplash Dismount
+			2066773,
+			2066774,
+			2066775,
+			2066776,
+			2066777,
+
+			-- WaterSplash Mount
+			2066768,
+			2066769,
+			2066770,
+			2066771,
+			2066772,
+		},
+		["mount_storm_gryphon"] = {
+			-- Mount
+			5356559,
+			5356561,
+			5356563,
+			5356565,
+			5356567,
+			5356569,
+			5356571,
+
+			-- Thunder
+			3088094,
+
+			-- Mountspecial
+			5357752,
+			5357769,
+			5357771,
+			5357773,
+			5357775,
 		},
 	},
 	["spells"] = {

@@ -1,2 +1,3 @@
-## Added
-- Option to Hide the Micro Menu
+## Bugfix
+
+- Fixed a bug with EnhanceQoLMythicPlus which caused a LUA-Error after clicking on a quest
