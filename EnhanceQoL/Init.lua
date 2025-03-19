@@ -73,10 +73,11 @@ addon.itemBagFilterTypes = {
 	DEMONHUNTER = { "Leather" },
 	EVOKER = { "Mail" },
 }
+--@end-debug@
+
 addon.variables.unitClass = select(2, UnitClass("player"))
 addon.variables.unitSpec = GetSpecialization()
 addon.variables.unitRace = select(2, UnitRace("player"))
---@end-debug@
 
 addon.variables.requireReload = false
 addon.variables.catalystID = 3116 -- Change to get the actual cataclyst charges in char frame
