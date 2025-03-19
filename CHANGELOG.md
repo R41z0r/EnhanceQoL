@@ -1,3 +1,3 @@
 ## Bugfix
 
-- Class-Teleports were not showing because of a missing function
+- Mythic+ Rating Frame overlapped the Teleport Compendium in some cases

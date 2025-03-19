@@ -3,6 +3,8 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "Quick signup"
+L["skipSignUpDialogUseLFDRole"] = "Automatically apply to groups based on your selected role/roles in the Dungeon finder"
+
 L["Persist LFG signup note"] = "Persist LFG signup note"
 L["Select an option"] = "Select an option"
 L["Save"] = "Save"

@@ -601,6 +601,7 @@ local function CreateRioScore()
 
 		frameAnchorScore:SetSize(max(titleScore:GetStringWidth() + 20, 200), 170) -- Breite x Höhe
 		frameAnchorScore:SetPoint("TOPLEFT", DungeonTeleportFrame, "BOTTOMLEFT", 0, 0)
+		frameAnchor:SetSize(max(title:GetStringWidth() + 20, 205), 170) -- Breite x Höhe
 
 		local ratingInfo = {}
 
@@ -690,6 +691,7 @@ local function CreateRioScore()
 
 			local _, _, _, _, lp = lastElement:GetPoint()
 			frameAnchorScore:SetSize(max(nWidth + 20, 205), max(lp * -1 + 30, 170)) -- Breite x H���he
+			frameAnchor:SetSize(max(title:GetStringWidth() + 20, nWidth + 20, 205), 170) -- Breite x Höhe
 		end
 	end
 end

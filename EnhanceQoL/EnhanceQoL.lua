@@ -65,6 +65,17 @@ end
 LFGListApplicationDialog:HookScript("OnShow", function(self)
 	if not EnhanceQoLDB.skipSignUpDialog then return end
 
+	-- if EnhanceQoLDB.skipSignUpDialogUseLFDRole then
+	-- 	if LFDQueueFrameRoleButtonTank and LFDQueueFrameRoleButtonTank:IsEnabled() then
+	-- 		LFGListApplicationDialog.TankButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonTank.checkButton:GetChecked())
+	-- 	end
+	-- 	if LFDQueueFrameRoleButtonHealer and LFDQueueFrameRoleButtonHealer:IsEnabled() then
+	-- 		LFGListApplicationDialog.HealerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonHealer.checkButton:GetChecked())
+	-- 	end
+	-- 	if LFDQueueFrameRoleButtonDPS and LFDQueueFrameRoleButtonDPS:IsEnabled() then
+	-- 		LFGListApplicationDialog.DamagerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonDPS.checkButton:GetChecked())
+	-- 	end
+	-- end
 	if self.SignUpButton:IsEnabled() and not IsShiftKeyDown() then self.SignUpButton:Click() end
 end)
 
@@ -678,6 +689,13 @@ local function addDungeonFrame(container, d)
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["skipSignUpDialog"] = value end,
 		},
+		-- {
+		-- 	parent = DUNGEONS,
+		-- 	var = "skipSignUpDialogUseLFDRole",
+		-- 	text = L["skipSignUpDialogUseLFDRole"],
+		-- 	type = "CheckBox",
+		-- 	callback = function(self, _, value) addon.db["skipSignUpDialogUseLFDRole"] = value end,
+		-- },
 		{
 			parent = DUNGEONS,
 			var = "lfgSortByRio",
