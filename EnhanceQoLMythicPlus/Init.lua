@@ -209,7 +209,7 @@ addon.MythicPlus.variables.portalCompendium = {
 			[410078] = { text = "NL", cId = { [206] = true } },
 			[373262] = { text = "KARA", cId = { [227] = true, [234] = true } },
 			[250796] = { text = "ENGI", isToy = true, toyID = 151652, isEngineering = true },
-			[222695] = { text = "HS", isToy = true, toyID = 140192, isHearthstone = true },
+			[222695] = { text = "HS", isToy = true, toyID = 140192, isHearthstone = true, icon = 1444943 },
 			-- Dalaran (Broken Isles, Legion)
 			[224869] = { text = "DalB", isClassTP = "MAGE" },
 			[224871] = { text = "DalB", isMagePortal = true },
@@ -333,82 +333,71 @@ addon.MythicPlus.variables.portalCompendium = {
 	},
 }
 
+-- Pre-Stage all icon to have less calls to LUA API
 local hearthstoneID = {
-	6948, -- Default Hearthstone
-	54452, -- Ethereal Portal
-	64488, -- The Innkeeper's Daughter
-	93672, -- Dark Portal
-	--142542, -- Tome of Town Portal -- Cooldown is to long to be usable
-	162973, -- Greatfather Winter's Hearthstone
-	163045, -- Headless Horseman's Hearthstone
-	165669, -- Lunar Edler's Hearthstone
-	165670, -- Peddlefeet's Lovely Hearthstone
-	165802, -- Noble Gardener's Hearthstone
-	166746, -- Fire Eater's Hearthstone
-	166747, -- Brewfest Reveler's Hearthstone
-	168907, -- Holographic Digitalization Hearthstone
-	172179, -- Eternal Traveler's Hearthstone
-	188952, -- Dominated Hearthstone
-	190196, -- Enlightened Hearthstone
-	190237, -- Broker Translocation Matrix
-	193588, -- Timewalker's Hearthstone
-	200630, -- Ohn'ir Windsage's Hearthstone
-	206195, -- Path of the Naaru
-	208704, -- Deepdweller's Earth Hearthstone
-	209035, -- Hearthstone of the Flame
-	212337, -- Stone of the Hearth
-	228940, -- Notorious Thread's Hearthstone
-	236687, -- Explosive Hearthstone
+	{ isItem = true, icon = 134414, id = 6948, spellID = 8690 }, -- Default Hearthstone
+	{ isToy = true, icon = 236222, id = 54452, spellID = 75136 }, -- Ethereal Portal
+	{ isToy = true, icon = 458254, id = 64488, spellID = 94716 }, -- The Innkeeper's Daughter
+	{ isToy = true, icon = 255348, id = 93672, spellID = 136508 }, -- Dark Portal
+	-- { isToy = true, icon = 1529351, id = 142542, spellID = 231504 }, -- Tome of Town Portal -- Cooldown is to long to be usable
+	{ isToy = true, icon = 2124576, id = 162973, spellID = 278244 }, -- Greatfather Winter's Hearthstone
+	{ isToy = true, icon = 2124575, id = 163045, spellID = 278559 }, -- Headless Horseman's Hearthstone
+	{ isToy = true, icon = 2491049, id = 165669, spellID = 285362 }, -- Lunar Elder's Hearthstone
+	{ isToy = true, icon = 2491048, id = 165670, spellID = 285424 }, -- Peddlefeet's Lovely Hearthstone
+	{ isToy = true, icon = 2491065, id = 165802, spellID = 286031 }, -- Noble Gardener's Hearthstone
+	{ isToy = true, icon = 2491064, id = 166746, spellID = 286331 }, -- Fire Eater's Hearthstone
+	{ isToy = true, icon = 2491063, id = 166747, spellID = 286353 }, -- Brewfest Reveler's Hearthstone
+	{ isToy = true, icon = 2491049, id = 168907, spellID = 298068 }, -- Holographic Digitalization Hearthstone
+	{ isToy = true, icon = 3084684, id = 172179, spellID = 308742 }, -- Eternal Traveler's Hearthstone
+	{ isToy = true, icon = 3528303, id = 188952, spellID = 363799 }, -- Dominated Hearthstone
+	{ isToy = true, icon = 3950360, id = 190196, spellID = 366945 }, -- Enlightened Hearthstone
+	{ isToy = true, icon = 3954409, id = 190237, spellID = 367013 }, -- Broker Translocation Matrix
+	{ isToy = true, icon = 4571434, id = 193588, spellID = 375357 }, -- Timewalker's Hearthstone
+	{ isToy = true, icon = 4080564, id = 200630, spellID = 391042 }, -- Ohn'ir Windsage's Hearthstone
+	{ isToy = true, icon = 1708140, id = 206195, spellID = 412555 }, -- Path of the Naaru
+	{ isToy = true, icon = 5333528, id = 208704, spellID = 420418 }, -- Deepdweller's Earth Hearthstone
+	{ isToy = true, icon = 2491064, id = 209035, spellID = 422284 }, -- Hearthstone of the Flame
+	{ isToy = true, icon = 5524923, id = 212337, spellID = 401802 }, -- Stone of the Hearth
+	{ isToy = true, icon = 5891370, id = 228940, spellID = 463481 }, -- Notorious Thread's Hearthstone
+	{ isToy = true, icon = 6383489, id = 236687, spellID = 1220729 }, -- Explosive Hearthstone
 
 	-- Covenent Hearthstones
-	184353, -- Kyrian Hearthstone
-	183716, -- Venthyr Sinstone
-	180290, -- Night Fae Hearthstone
-	182773, -- Necrolord Hearthstone
+	{ isToy = true, icon = 3257748, id = 184353, spellID = 345393, achievementID = 15242 }, -- Kyrian Hearthstone
+	{ isToy = true, icon = 3514225, id = 183716, spellID = 342122, achievementID = 15245 }, -- Venthyr Sinstone
+	{ isToy = true, icon = 3489827, id = 180290, spellID = 326064, achievementID = 15244 }, -- Night Fae Hearthstone
+	{ isToy = true, icon = 3716927, id = 182773, spellID = 340200, achievementID = 15243 }, -- Necrolord Hearthstone
 }
 
 local availableHearthstones = {}
 
-for i, v in pairs(hearthstoneID) do
-	if v == 6948 then
-		if C_Item.GetItemCount(v) > 0 then table.insert(availableHearthstones, v) end
-	elseif v == 184353 and select(4, GetAchievementInfo(15242)) == true then
-		table.insert(availableHearthstones, v)
-	elseif v == 183716 and select(4, GetAchievementInfo(15245)) == true then
-		table.insert(availableHearthstones, v)
-	elseif v == 180290 and select(4, GetAchievementInfo(15244)) == true then
-		table.insert(availableHearthstones, v)
-	elseif v == 182773 and select(4, GetAchievementInfo(15243)) == true then
-		table.insert(availableHearthstones, v)
-	elseif PlayerHasToy(v) then
-		table.insert(availableHearthstones, v)
+local function setAvailableHearthstone()
+	availableHearthstones = {}
+	for _, v in pairs(hearthstoneID) do
+		local addIt = false
+		if v.isItem then
+			if C_Item.GetItemCount(v.id) > 0 then addIt = true end
+		elseif PlayerHasToy(v.id) then
+			if v.achievementID then
+				if select(4, GetAchievementInfo(v.achievementID)) then addIt = true end
+			else
+				addIt = true
+			end
+		end
+		if addIt then table.insert(availableHearthstones, v) end
 	end
 end
 
-local foundHearthstone = false
-
 function addon.MythicPlus.functions.setRandomHearthstone()
-	if foundHearthstone then return end
-	if #availableHearthstones == 0 then return nil end
+	if #availableHearthstones == 0 then
+		setAvailableHearthstone() -- recheck hearthstones
+		if #availableHearthstones == 0 then return nil end
+	end
 
 	local randomIndex = math.random(1, #availableHearthstones)
 
 	local hs = availableHearthstones[randomIndex]
-	if hs == 6948 then
-		if C_Item.GetItemCount(hs) > 0 then
-			foundHearthstone = true
-			addon.MythicPlus.variables.portalCompendium[11].spells = {
-				[1] = { text = "HS", isItem = true, itemID = hs, isHearthstone = true },
-			}
-		else
-			addon.MythicPlus.functions.setRandomHearthstone()
-		end
-	elseif PlayerHasToy(hs) then
-		foundHearthstone = true
-		addon.MythicPlus.variables.portalCompendium[11].spells = {
-			[1] = { text = "HS", isToy = true, toyID = hs, isHearthstone = true },
-		}
-	else
-		addon.MythicPlus.functions.setRandomHearthstone()
-	end
+	local hsSpellID = hs.spellID or 1
+	addon.MythicPlus.variables.portalCompendium[11].spells = {
+		[hsSpellID] = { text = "HS", isItem = false or hs.isItem, itemID = hs.id, isToy = false or hs.isToy, toyID = hs.id, isHearthstone = true, icon = hs.icon },
+	}
 end

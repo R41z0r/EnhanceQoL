@@ -349,8 +349,12 @@ local function CreatePortalCompendium(frame, compendium)
 			local spellInfo = C_Spell.GetSpellInfo(spellID)
 
 			if spellData.isToy then
-				local _, _, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
-				spellInfo.iconID = iconId
+				if spellData.icon then
+					spellInfo.iconID = spellData.icon
+				else
+					local _, _, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
+					spellInfo.iconID = iconId
+				end
 			elseif spellData.isItem then
 				if spellData.icon then spellInfo.iconID = spellData.icon end
 			end
@@ -463,7 +467,8 @@ end
 
 local function checkCooldown()
 	CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
-	CreatePortalCompendium(frameAnchorCompendium, addon.MythicPlus.variables.portalCompendium)
+
+	if addon.db["teleportsEnableCompendium"] then CreatePortalCompendium(frameAnchorCompendium, addon.MythicPlus.variables.portalCompendium) end
 	for _, button in pairs(frameAnchor.buttons or {}) do
 		if isKnown[button.spellID] then
 			local cooldownData = C_Spell.GetSpellCooldown(button.spellID)
@@ -697,10 +702,9 @@ function addon.MythicPlus.functions.toggleFrame()
 			doAfterCombat = false
 			if not frameAnchor:IsShown() then frameAnchor:Show() end
 			if #portalSpells == 0 then getCurrentSeasonPortal() end
-			CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
+			checkCooldown()
 			if addon.db["teleportsEnableCompendium"] then
 				if not frameAnchorCompendium:IsShown() then frameAnchorCompendium:Show() end
-				CreatePortalCompendium(frameAnchorCompendium, addon.MythicPlus.variables.portalCompendium)
 			else
 				frameAnchorCompendium:Hide()
 			end
@@ -717,7 +721,6 @@ function addon.MythicPlus.functions.toggleFrame()
 			else
 				frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
 			end
-			checkCooldown()
 		else
 			frameAnchor:Hide()
 		end
