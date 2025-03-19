@@ -55,8 +55,9 @@ L["autoChooseDelvePower"] = "옵션이 1개만 있을 때 델브 파워 자동 �
 L["lfgSortByRio"] = "신화 던전 지원자를 신화 점수로 정렬"
 
 -- Quest
-L["ignoreTrivialQuests"] = "사소한 퀘스트 무시"
-L["ignoreDailyQuests"] = "일일/주간 퀘스트 무시"
+L["ignoreTrivialQuests"] = "사소한 " .. QUESTS_LABEL .. "을(를) 자동으로 처리하지 않음"
+L["ignoreDailyQuests"] = "일일/주간 " .. QUESTS_LABEL .. "을(를) 자동으로 처리하지 않음"
+L["ignoreWarbandCompleted"] = "계정 완료된 " .. QUESTS_LABEL .. "을(를) 자동으로 처리하지 않음"
 
 L["autoQuickLoot"] = "빠른 전리품 획득"
 L["openCharframeOnUpgrade"] = "상인에게서 아이템을 강화할 때 캐릭터 창 열기"

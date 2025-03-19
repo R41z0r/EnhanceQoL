@@ -55,8 +55,9 @@ L["autoChooseDelvePower"] = "Seleziona automaticamente il potere di immersione q
 L["lfgSortByRio"] = "Ordina i candidati dei dungeon mitici per punteggio mitico"
 
 -- Quest
-L["ignoreTrivialQuests"] = "Ignora le missioni banali"
-L["ignoreDailyQuests"] = "Ignora missioni giornaliere/settimanali"
+L["ignoreTrivialQuests"] = "Non gestire automaticamente le " .. QUESTS_LABEL .. " di bassa importanza"
+L["ignoreDailyQuests"] = "Non gestire automaticamente le " .. QUESTS_LABEL .. " giornaliere/settimanali"
+L["ignoreWarbandCompleted"] = "Non gestire automaticamente le " .. QUESTS_LABEL .. " " .. ACCOUNT_COMPLETED_QUEST_LABEL
 
 L["autoQuickLoot"] = "Saccheggio rapido degli oggetti"
 L["openCharframeOnUpgrade"] = "Apri il riquadro del personaggio durante il potenziamento degli oggetti presso il mercante"

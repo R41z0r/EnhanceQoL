@@ -60,8 +60,9 @@ L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen, wenn nur 1 Opti
 L["lfgSortByRio"] = "Sortiere Bewerber für Mythisch+ Dungeons nach Mythisch-Wertung"
 
 -- Quest
-L["ignoreTrivialQuests"] = "Triviale Quests ignorieren"
-L["ignoreDailyQuests"] = "Tägliche/Wöchentliche Quests ignorieren"
+L["ignoreTrivialQuests"] = "Triviale " .. QUESTS_LABEL .. " nicht automatisch verwalten"
+L["ignoreDailyQuests"] = "Tägliche/wöchentliche " .. QUESTS_LABEL .. " nicht automatisch verwalten"
+L["ignoreWarbandCompleted"] = ACCOUNT_COMPLETED_QUEST_LABEL .. " " .. QUESTS_LABEL .. " nicht automatisch verwalten"
 
 L["autoQuickLoot"] = "Gegenstände schnell plündern"
 L["openCharframeOnUpgrade"] = "Charakterfenster beim Aufwerten von Gegenständen beim Händler öffnen"

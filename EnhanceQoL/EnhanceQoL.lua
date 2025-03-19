@@ -1177,6 +1177,12 @@ local function addQuestFrame(container, d)
 		},
 		{
 			parent = "",
+			var = "ignoreWarbandCompleted",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db[self.var] = value end,
+		},
+		{
+			parent = "",
 			var = "ignoreTrivialQuests",
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db[self.var] = value end,
@@ -2226,7 +2232,9 @@ local eventHandlers = {
 					if addon.db["ignoreTrivialQuests"] and quest.isTrivial then
 					-- ignore trivial
 					elseif addon.db["ignoreDailyQuests"] and (quest.frequency > 0) then
-					-- ignore daily/weekly
+						-- ignore daily/weekly
+					elseif addon.db["ignoreWarbandCompleted"] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(quest.questID) then
+						-- ignore warband completed
 					else
 						C_GossipInfo.SelectAvailableQuest(quest.questID)
 					end
@@ -2311,8 +2319,9 @@ local eventHandlers = {
 		if arg1 and addon.variables.acceptQuestID[arg1] and addon.db["autoChooseQuest"] then
 			if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then return end
 			if addon.db["ignoreDailyQuests"] and C_QuestLog.IsQuestRepeatableType(arg1) then return end
-
 			if addon.db["ignoreTrivialQuests"] and C_QuestLog.IsQuestTrivial(arg1) then return end
+			if addon.db["ignoreWarbandCompleted"] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(arg1) then return end
+
 			AcceptQuest()
 			if QuestFrame:IsShown() then QuestFrame:Hide() end -- Sometimes the frame is still stuck - hide it forcefully than
 		end

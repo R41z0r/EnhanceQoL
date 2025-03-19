@@ -327,4 +327,88 @@ addon.MythicPlus.variables.portalCompendium = {
 			[265225] = { text = "RACE", isRaceTP = "DarkIronDwarf" },
 		},
 	},
+	[11] = {
+		headline = HOME,
+		spells = {},
+	},
 }
+
+local hearthstoneID = {
+	6948, -- Default Hearthstone
+	54452, -- Ethereal Portal
+	64488, -- The Innkeeper's Daughter
+	93672, -- Dark Portal
+	--142542, -- Tome of Town Portal -- Cooldown is to long to be usable
+	162973, -- Greatfather Winter's Hearthstone
+	163045, -- Headless Horseman's Hearthstone
+	165669, -- Lunar Edler's Hearthstone
+	165670, -- Peddlefeet's Lovely Hearthstone
+	165802, -- Noble Gardener's Hearthstone
+	166746, -- Fire Eater's Hearthstone
+	166747, -- Brewfest Reveler's Hearthstone
+	168907, -- Holographic Digitalization Hearthstone
+	172179, -- Eternal Traveler's Hearthstone
+	188952, -- Dominated Hearthstone
+	190196, -- Enlightened Hearthstone
+	190237, -- Broker Translocation Matrix
+	193588, -- Timewalker's Hearthstone
+	200630, -- Ohn'ir Windsage's Hearthstone
+	206195, -- Path of the Naaru
+	208704, -- Deepdweller's Earth Hearthstone
+	209035, -- Hearthstone of the Flame
+	212337, -- Stone of the Hearth
+	228940, -- Notorious Thread's Hearthstone
+	236687, -- Explosive Hearthstone
+
+	-- Covenent Hearthstones
+	184353, -- Kyrian Hearthstone
+	183716, -- Venthyr Sinstone
+	180290, -- Night Fae Hearthstone
+	182773, -- Necrolord Hearthstone
+}
+
+local availableHearthstones = {}
+
+for i, v in pairs(hearthstoneID) do
+	if v == 6948 then
+		if C_Item.GetItemCount(v) > 0 then table.insert(availableHearthstones, v) end
+	elseif v == 184353 and select(4, GetAchievementInfo(15242)) == true then
+		table.insert(availableHearthstones, v)
+	elseif v == 183716 and select(4, GetAchievementInfo(15245)) == true then
+		table.insert(availableHearthstones, v)
+	elseif v == 180290 and select(4, GetAchievementInfo(15244)) == true then
+		table.insert(availableHearthstones, v)
+	elseif v == 182773 and select(4, GetAchievementInfo(15243)) == true then
+		table.insert(availableHearthstones, v)
+	elseif PlayerHasToy(v) then
+		table.insert(availableHearthstones, v)
+	end
+end
+
+local foundHearthstone = false
+
+function addon.MythicPlus.functions.setRandomHearthstone()
+	if foundHearthstone then return end
+	if #availableHearthstones == 0 then return nil end
+
+	local randomIndex = math.random(1, #availableHearthstones)
+
+	local hs = availableHearthstones[randomIndex]
+	if hs == 6948 then
+		if C_Item.GetItemCount(hs) > 0 then
+			foundHearthstone = true
+			addon.MythicPlus.variables.portalCompendium[11].spells = {
+				[1] = { text = "HS", isItem = true, itemID = hs, isHearthstone = true },
+			}
+		else
+			addon.MythicPlus.functions.setRandomHearthstone()
+		end
+	elseif PlayerHasToy(hs) then
+		foundHearthstone = true
+		addon.MythicPlus.variables.portalCompendium[11].spells = {
+			[1] = { text = "HS", isToy = true, toyID = hs, isHearthstone = true },
+		}
+	else
+		addon.MythicPlus.functions.setRandomHearthstone()
+	end
+end

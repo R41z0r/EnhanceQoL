@@ -118,6 +118,7 @@ globals = {
 	"InspectFrame",
 	"BagsBar",
 	"MicroMenu",
+	"ACCOUNT_COMPLETED_QUEST_LABEL",
 	"TotemFrame",
 	"EssencePlayerFrame",
 	"PlayerFrame",

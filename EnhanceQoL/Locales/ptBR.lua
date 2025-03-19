@@ -61,8 +61,9 @@ L["autoChooseDelvePower"] = "Selecionar automaticamente o poder de incursão qua
 L["lfgSortByRio"] = "Classificar candidatos de masmorras míticas pelo placar mítico"
 
 -- Quest
-L["ignoreTrivialQuests"] = "Ignorar missões triviais"
-L["ignoreDailyQuests"] = "Ignorar missões diárias/semanal"
+L["ignoreTrivialQuests"] = "Não tratar automaticamente as " .. QUESTS_LABEL .. " triviais"
+L["ignoreDailyQuests"] = "Não tratar automaticamente as " .. QUESTS_LABEL .. " diárias/semanais"
+L["ignoreWarbandCompleted"] = "Não tratar automaticamente as " .. QUESTS_LABEL .. " " .. ACCOUNT_COMPLETED_QUEST_LABEL
 
 L["autoQuickLoot"] = "Saque rápido de itens"
 L["openCharframeOnUpgrade"] = "Abrir painel de personagem ao melhorar itens com o vendedor"

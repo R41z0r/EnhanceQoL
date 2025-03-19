@@ -61,8 +61,9 @@ L["autoChooseDelvePower"] = "僅有一個選項時自動選擇探險力量"
 L["lfgSortByRio"] = "按史诗分数排序史诗地下城申请者"
 
 -- Quest
-L["ignoreTrivialQuests"] = "忽略瑣碎任務"
-L["ignoreDailyQuests"] = "忽略每日/每週任務"
+L["ignoreTrivialQuests"] = "不要自動處理等級較低的" .. QUESTS_LABEL
+L["ignoreDailyQuests"] = "不要自動處理每日/每週" .. QUESTS_LABEL
+L["ignoreWarbandCompleted"] = "不要自動處理" .. ACCOUNT_COMPLETED_QUEST_LABEL .. " " .. QUESTS_LABEL
 
 L["autoQuickLoot"] = "快速拾取物品"
 L["openCharframeOnUpgrade"] = "在商人處升級物品時打開角色窗口"

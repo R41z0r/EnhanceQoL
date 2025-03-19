@@ -61,8 +61,9 @@ L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée lo
 L["lfgSortByRio"] = "Trier les candidats aux donjons mythiques par score mythique"
 
 -- Quest
-L["ignoreTrivialQuests"] = "Ignorer les quêtes triviales"
-L["ignoreDailyQuests"] = "Ignorer les quêtes journalières/hebdomadaires"
+L["ignoreTrivialQuests"] = "Ne pas gérer automatiquement les " .. QUESTS_LABEL .. " triviales"
+L["ignoreDailyQuests"] = "Ne pas gérer automatiquement les " .. QUESTS_LABEL .. " journalières/hebdomadaires"
+L["ignoreWarbandCompleted"] = "Ne pas gérer automatiquement les " .. QUESTS_LABEL .. " " .. ACCOUNT_COMPLETED_QUEST_LABEL
 
 L["autoQuickLoot"] = "Butin rapide des objets"
 L["openCharframeOnUpgrade"] = "Ouvrir le cadre de personnage lors de l'amélioration d'objet chez le marchand"

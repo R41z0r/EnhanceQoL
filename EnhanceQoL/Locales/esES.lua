@@ -61,8 +61,9 @@ L["autoChooseDelvePower"] = "Seleccionar poder de incursión automáticamente  c
 L["lfgSortByRio"] = "Ordenar solicitantes de mazmorras míticas por puntuación mítica"
 
 -- Quest
-L["ignoreTrivialQuests"] = "Ignorar misiones triviales"
-L["ignoreDailyQuests"] = "Ignorar misiones diarias/semanales"
+L["ignoreTrivialQuests"] = "No gestionar automáticamente las " .. QUESTS_LABEL .. " triviales"
+L["ignoreDailyQuests"] = "No gestionar automáticamente las " .. QUESTS_LABEL .. " diarias/semanales"
+L["ignoreWarbandCompleted"] = "No gestionar automáticamente las " .. ACCOUNT_COMPLETED_QUEST_LABEL .. " " .. QUESTS_LABEL
 
 L["autoQuickLoot"] = "Saqueo rápido de objetos"
 L["openCharframeOnUpgrade"] = "Abrir el marco del personaje al mejorar objetos con el mercader"

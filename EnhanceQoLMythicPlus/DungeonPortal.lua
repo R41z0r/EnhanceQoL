@@ -234,6 +234,7 @@ end
 
 local function CreatePortalCompendium(frame, compendium)
 	local hasEngineering = GetProfessionInfo(9) and true or false
+	addon.MythicPlus.functions.setRandomHearthstone()
 	-- Entferne alle bestehenden Elemente
 	for _, button in pairs(frame.buttons or {}) do
 		button:Hide()

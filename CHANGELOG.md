@@ -1,3 +1,4 @@
-## Bugfix
+## Added
 
-- Fixed a bug with EnhanceQoLMythicPlus which caused a LUA-Error after clicking on a quest
+- Option to ignore autoaccept of Warband completed quests
+- DungeonTeleport now also adds a random available hearthstone (one pick per session) if you enable "Show Teleport Items and Toys"

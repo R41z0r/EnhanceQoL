@@ -59,8 +59,9 @@ L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option
 L["lfgSortByRio"] = "Sort Mythic Dungeon Applicants by Mythic Score"
 
 -- Quest
-L["ignoreTrivialQuests"] = "Ignore trivial quests"
-L["ignoreDailyQuests"] = "Ignore daily/weekly quests"
+L["ignoreTrivialQuests"] = "Don't automatically handle trivial " .. QUESTS_LABEL
+L["ignoreDailyQuests"] = "Don't automatically handle daily/weekly " .. QUESTS_LABEL
+L["ignoreWarbandCompleted"] = "Don't automatically handle " .. ACCOUNT_COMPLETED_QUEST_LABEL .. " " .. QUESTS_LABEL
 
 L["autoQuickLoot"] = "Quick loot items"
 L["openCharframeOnUpgrade"] = "Open the character frame when upgrading items at the vendor"
