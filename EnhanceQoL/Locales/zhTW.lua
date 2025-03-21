@@ -116,3 +116,8 @@ L["CVarOptions"] = {
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "顯示玩家的頭銜" },
 	["WholeChatWindowClickable"] = { description = "使整個聊天視窗可點擊", trueValue = "1", falseValue = "0" },
 }
+
+L["autoAcceptGroupInvite"] = "自動接受組隊邀請"
+L["autoAcceptGroupInviteGuildOnly"] = "僅限公會成員"
+L["autoAcceptGroupInviteFriendOnly"] = "僅限好友"
+L["autoAcceptGroupInviteOptions"] = "僅在以下情況下接受..."

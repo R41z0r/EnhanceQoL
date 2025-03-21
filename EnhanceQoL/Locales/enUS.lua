@@ -3,7 +3,6 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "Quick signup"
-L["skipSignUpDialogUseLFDRole"] = "Automatically apply to groups based on your selected role/roles in the Dungeon finder"
 
 L["Persist LFG signup note"] = "Persist LFG signup note"
 L["Select an option"] = "Select an option"
@@ -116,3 +115,8 @@ L["CVarOptions"] = {
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Show the Title on Players" },
 	["WholeChatWindowClickable"] = { description = "Make the entire chat window clickable", trueValue = "1", falseValue = "0" },
 }
+
+L["autoAcceptGroupInvite"] = "Automatically accept group invites"
+L["autoAcceptGroupInviteGuildOnly"] = "Guild members only"
+L["autoAcceptGroupInviteFriendOnly"] = "Friends only"
+L["autoAcceptGroupInviteOptions"] = "Only accept when..."

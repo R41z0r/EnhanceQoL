@@ -64,18 +64,6 @@ end
 
 LFGListApplicationDialog:HookScript("OnShow", function(self)
 	if not EnhanceQoLDB.skipSignUpDialog then return end
-
-	-- if EnhanceQoLDB.skipSignUpDialogUseLFDRole then
-	-- 	if LFDQueueFrameRoleButtonTank and LFDQueueFrameRoleButtonTank:IsEnabled() then
-	-- 		LFGListApplicationDialog.TankButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonTank.checkButton:GetChecked())
-	-- 	end
-	-- 	if LFDQueueFrameRoleButtonHealer and LFDQueueFrameRoleButtonHealer:IsEnabled() then
-	-- 		LFGListApplicationDialog.HealerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonHealer.checkButton:GetChecked())
-	-- 	end
-	-- 	if LFDQueueFrameRoleButtonDPS and LFDQueueFrameRoleButtonDPS:IsEnabled() then
-	-- 		LFGListApplicationDialog.DamagerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonDPS.checkButton:GetChecked())
-	-- 	end
-	-- end
 	if self.SignUpButton:IsEnabled() and not IsShiftKeyDown() then self.SignUpButton:Click() end
 end)
 
@@ -689,13 +677,6 @@ local function addDungeonFrame(container, d)
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["skipSignUpDialog"] = value end,
 		},
-		-- {
-		-- 	parent = DUNGEONS,
-		-- 	var = "skipSignUpDialogUseLFDRole",
-		-- 	text = L["skipSignUpDialogUseLFDRole"],
-		-- 	type = "CheckBox",
-		-- 	callback = function(self, _, value) addon.db["skipSignUpDialogUseLFDRole"] = value end,
-		-- },
 		{
 			parent = DUNGEONS,
 			var = "lfgSortByRio",
@@ -765,6 +746,38 @@ local function addCVarFrame(container, d)
 
 		groupCore:AddChild(cbElement)
 	end
+end
+
+local function addPartyFrame(container)
+	local data = {
+		{
+			parent = "",
+			var = "autoAcceptGroupInvite",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["autoAcceptGroupInvite"] = value
+				container:ReleaseChildren()
+				addPartyFrame(container)
+			end,
+		},
+	}
+
+	if addon.db["autoAcceptGroupInvite"] == true then
+		table.insert(data, {
+			parent = L["autoAcceptGroupInviteOptions"],
+			var = "autoAcceptGroupInviteGuildOnly",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["autoAcceptGroupInviteGuildOnly"] = value end,
+		})
+		table.insert(data, {
+			parent = L["autoAcceptGroupInviteOptions"],
+			var = "autoAcceptGroupInviteFriendOnly",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["autoAcceptGroupInviteFriendOnly"] = value end,
+		})
+	end
+
+	addon.functions.createWrapperData(data, container, L)
 end
 
 local function addCharacterFrame(container)
@@ -1484,6 +1497,12 @@ local function initDungeon()
 	addon.functions.InitDBValue("lfgSortByRio", false)
 end
 
+local function initParty()
+	addon.functions.InitDBValue("autoAcceptGroupInvite", false)
+	addon.functions.InitDBValue("autoAcceptGroupInviteFriendOnly", false)
+	addon.functions.InitDBValue("autoAcceptGroupInviteGuildOnly", false)
+end
+
 local function initQuest()
 	addon.functions.InitDBValue("autoChooseQuest", false)
 	addon.functions.InitDBValue("ignoreTrivialQuests", false)
@@ -1777,6 +1796,7 @@ local function CreateUI()
 		children = {
 			{ value = "character", text = L["Character"] },
 			{ value = "cvar", text = "CVar" },
+			{ value = "party", text = PARTY },
 			{ value = "dungeon", text = L["Dungeon"] },
 			{ value = "misc", text = L["Misc"] },
 			{ value = "quest", text = L["Quest"] },
@@ -1797,6 +1817,8 @@ local function CreateUI()
 			addDungeonFrame(container, true) -- Ruft die Funktion zum Hinzufügen der Dungeon-Optionen auf
 		elseif group == "general\001character" then
 			addCharacterFrame(container) -- Ruft die Funktion zum Hinzufügen der Character-Optionen auf
+		elseif group == "general\001party" then
+			addPartyFrame(container) -- Ruft die Funktion zum Hinzufügen der Party-Optionen auf
 		elseif string.match(group, "^tooltip") then
 			addon.Tooltip.functions.treeCallback(container, group)
 		elseif string.match(group, "^vendor") then
@@ -1819,7 +1841,7 @@ local function CreateUI()
 	-- Select the first group by default
 	addon.treeGroup:SelectByPath("general")
 
-	-- Datenobjekt für den Minimap-Button
+	-- Datenobjekt f�����r den Minimap-Button
 	local EnhanceQoLLDB = LDB:NewDataObject("EnhanceQoL", {
 		type = "launcher",
 		text = addonName,
@@ -1975,6 +1997,7 @@ local function setAllHooks()
 	initMisc()
 	initQuest()
 	initDungeon()
+	initParty()
 end
 
 function loadMain()
@@ -2286,6 +2309,42 @@ local eventHandlers = {
 	end,
 	["INSPECT_READY"] = function(arg1)
 		if addon.db["showInfoOnInspectFrame"] then onInspect(arg1) end
+	end,
+	["PARTY_INVITE_REQUEST"] = function(unitName, arg2, arg3, arg4, arg5, arg6, unitID, arg8)
+		if addon.db["autoAcceptGroupInvite"] then
+			if addon.db["autoAcceptGroupInviteGuildOnly"] then
+				local gMember = GetNumGuildMembers()
+				if gMember then
+					for i = 1, gMember do
+						local name = GetGuildRosterInfo(i)
+						if name == unitName then
+							AcceptGroup()
+							StaticPopup_Hide("PARTY_INVITE")
+							return
+						end
+					end
+				end
+			end
+			if addon.db["autoAcceptGroupInviteFriendOnly"] then
+				if C_BattleNet.GetGameAccountInfoByGUID(unitID) then
+					AcceptGroup()
+					StaticPopup_Hide("PARTY_INVITE")
+					return
+				end
+				for i = 1, C_FriendList.GetNumFriends() do
+					local friendInfo = C_FriendList.GetFriendInfoByIndex(i)
+					if friendInfo.guid == unitID then
+						AcceptGroup()
+						StaticPopup_Hide("PARTY_INVITE")
+						return
+					end
+				end
+			end
+			if not addon.db["autoAcceptGroupInviteGuildOnly"] and not addon.db["autoAcceptGroupInviteFriendOnly"] then
+				AcceptGroup()
+				StaticPopup_Hide("PARTY_INVITE")
+			end
+		end
 	end,
 	["PLAYERBANKSLOTS_CHANGED"] = function(arg1)
 		if not addon.db["showIlvlOnBankFrame"] then return end

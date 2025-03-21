@@ -55,9 +55,10 @@ L["potionTrackerOffhealing"] = "Acompanhar o uso de CD de cura secundária"
 
 L["DungeonBrowser"] = "Explorador de Masmorras"
 L["groupfinderAppText"] = 'Ocultar o texto do buscador de grupos "Seu grupo está se formando atualmente"'
-L["groupfinderSkipRolecheck"] = "Pular verificação de função e usar a função atual"
 L["groupfinderMoveResetButton"] = "Mova o botão de redefinição de filtro do Localizador de Masmorras para o lado esquerdo."
 L["groupfinderShowDungeonScoreFrame"] = "Exibir o quadro " .. DUNGEON_SCORE .. " ao lado do Localizador de Masmorras"
+L["groupfinderSkipRolecheck"] = "Ignorar a verificação de função e usar automaticamente a função da sua especialização atual (por ex. DK Sangue = tanque)."
+L["skipSignUpDialogUseLFDRole"] = "Usar as funções selecionadas na guia Localizador de Masmorras em vez da sua especialização atual."
 
 -- Misc Frame
 L["Misc"] = "Diversos"

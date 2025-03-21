@@ -110,3 +110,8 @@ L["CVarOptions"] = {
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "플레이어의 칭호 표시" },
 	["WholeChatWindowClickable"] = { description = "전체 채팅 창 클릭 가능하게 설정", trueValue = "1", falseValue = "0" },
 }
+
+L["autoAcceptGroupInvite"] = "그룹 초대 자동 수락"
+L["autoAcceptGroupInviteGuildOnly"] = "길드원만"
+L["autoAcceptGroupInviteFriendOnly"] = "친구만"
+L["autoAcceptGroupInviteOptions"] = "다음의 경우에만 수락..."

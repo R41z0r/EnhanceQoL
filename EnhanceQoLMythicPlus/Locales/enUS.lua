@@ -53,9 +53,10 @@ L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
 
 L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = 'Hide the group finder text "Your group is currently forming"'
-L["groupfinderSkipRolecheck"] = "Skip Role Check and use current role"
-L["groupfinderMoveResetButton"] = "Shift the 'Reset Filter' button in the Dungeon Browser to the left side."
+L["groupfinderMoveResetButton"] = "Shift the 'Reset Filter' button in the Dungeon Browser to the left side"
 L["groupfinderShowDungeonScoreFrame"] = "Show " .. DUNGEON_SCORE .. " frame next to the Dungeon Finder"
+L["groupfinderSkipRolecheck"] = "Skip the role check and automatically use your current specialization's role (e.g. Blood DK = Tank)"
+L["skipSignUpDialogUseLFDRole"] = "Use the roles you selected in the Dungeon Finder tab instead of your current specialization"
 
 -- Misc Frame
 L["Misc"] = "Misc."

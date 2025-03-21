@@ -55,9 +55,10 @@ L["potionTrackerOffhealing"] = "追踪次要治疗CD的使用"
 
 L["DungeonBrowser"] = "地下城浏览器"
 L["groupfinderAppText"] = '隐藏团队查找器文本 "你的团队目前正在形成"'
-L["groupfinderSkipRolecheck"] = "跳过角色检查并使用当前角色"
 L["groupfinderMoveResetButton"] = "將地城搜尋器的重置過濾按鈕移至左側。"
 L["groupfinderShowDungeonScoreFrame"] = "在地下城搜尋旁顯示 " .. DUNGEON_SCORE .. " 框架"
+L["groupfinderSkipRolecheck"] = "跳過角色檢查並自動使用你目前專精的角色（例如血魄死亡騎士 = 坦克）。"
+L["skipSignUpDialogUseLFDRole"] = "使用在地城搜尋器標籤中選擇的角色，而非你目前的專精。"
 
 -- Misc Frame
 L["Misc"] = "雜項"

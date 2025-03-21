@@ -54,9 +54,10 @@ L["potionTrackerOffhealing"] = "Suivi de l'utilisation des CD de soins secondair
 
 L["DungeonBrowser"] = "Explorateur de donjons"
 L["groupfinderAppText"] = 'Masquer le texte du recherche de groupe "Votre groupe est actuellement en formation"'
-L["groupfinderSkipRolecheck"] = "Ignorer la vérification de rôle et utiliser le rôle actuel"
 L["groupfinderMoveResetButton"] = "Déplacez le bouton de réinitialisation du navigateur de donjons sur le côté gauche."
 L["groupfinderShowDungeonScoreFrame"] = "Afficher le cadre " .. DUNGEON_SCORE .. " à côté du Recherche de donjon"
+L["groupfinderSkipRolecheck"] = "Ignorer la vérification du rôle et utiliser automatiquement le rôle de votre spécialisation actuelle (p. ex. DK Sang = tank)."
+L["skipSignUpDialogUseLFDRole"] = "Utiliser les rôles sélectionnés dans l'onglet Donjon plutôt que votre spécialisation actuelle."
 
 -- Misc Frame
 L["Misc"] = "Divers"

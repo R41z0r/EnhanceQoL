@@ -110,3 +110,8 @@ L["CVarOptions"] = {
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "显示玩家的头衔" },
 	["WholeChatWindowClickable"] = { description = "使整个聊天窗口可点击", trueValue = "1", falseValue = "0" },
 }
+
+L["autoAcceptGroupInvite"] = "自动接受组队邀请"
+L["autoAcceptGroupInviteGuildOnly"] = "仅限公会成员"
+L["autoAcceptGroupInviteFriendOnly"] = "仅限好友"
+L["autoAcceptGroupInviteOptions"] = "仅在以下情况接受..."

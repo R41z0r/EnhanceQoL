@@ -211,19 +211,31 @@ frameLoad:RegisterEvent("READY_CHECK")
 frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 local function skipRolecheck()
-	local tank, healer, dps = false, false, false
-	local role = UnitGroupRolesAssigned("player")
-	if role == "NONE" then role = GetSpecializationRole(GetSpecialization()) end
-	if role == "TANK" then
-		tank = true
-	elseif role == "DAMAGER" then
-		dps = true
-	elseif role == "HEALER" then
-		healer = true
+	if addon.db["skipSignUpDialogUseLFDRole"] then
+		if LFDQueueFrameRoleButtonTank and LFDQueueFrameRoleButtonTank:IsEnabled() then
+			LFGListApplicationDialog.TankButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonTank.checkButton:GetChecked())
+		end
+		if LFDQueueFrameRoleButtonHealer and LFDQueueFrameRoleButtonHealer:IsEnabled() then
+			LFGListApplicationDialog.HealerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonHealer.checkButton:GetChecked())
+		end
+		if LFDQueueFrameRoleButtonDPS and LFDQueueFrameRoleButtonDPS:IsEnabled() then
+			LFGListApplicationDialog.DamagerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonDPS.checkButton:GetChecked())
+		end
+	else
+		local tank, healer, dps = false, false, false
+		local role = UnitGroupRolesAssigned("player")
+		if role == "NONE" then role = GetSpecializationRole(GetSpecialization()) end
+		if role == "TANK" then
+			tank = true
+		elseif role == "DAMAGER" then
+			dps = true
+		elseif role == "HEALER" then
+			healer = true
+		end
+		if LFDRoleCheckPopupRoleButtonTank.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonTank.checkButton:SetChecked(tank) end
+		if LFDRoleCheckPopupRoleButtonHealer.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonHealer.checkButton:SetChecked(healer) end
+		if LFDRoleCheckPopupRoleButtonDPS.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonDPS.checkButton:SetChecked(dps) end
 	end
-	if LFDRoleCheckPopupRoleButtonTank.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonTank.checkButton:SetChecked(tank) end
-	if LFDRoleCheckPopupRoleButtonHealer.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonHealer.checkButton:SetChecked(healer) end
-	if LFDRoleCheckPopupRoleButtonDPS.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonDPS.checkButton:SetChecked(dps) end
 	LFDRoleCheckPopupAcceptButton:Enable()
 	LFDRoleCheckPopupAcceptButton:Click()
 end
@@ -348,7 +360,6 @@ local function addDungeonBrowserFrame(container)
 				toggleGroupApplication(value)
 			end,
 		},
-		{ text = L["groupfinderSkipRolecheck"], var = "groupfinderSkipRolecheck", func = function(self, _, value) addon.db["groupfinderSkipRolecheck"] = value end },
 		{
 			text = L["groupfinderMoveResetButton"],
 			var = "groupfinderMoveResetButton",
@@ -372,6 +383,34 @@ local function addDungeonBrowserFrame(container)
 	for _, cbData in ipairs(data) do
 		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func)
 		groupCore:AddChild(cbElement)
+	end
+
+	local data2 = {
+		{
+			text = L["groupfinderSkipRolecheck"],
+			var = "groupfinderSkipRolecheck",
+			func = function(self, _, value)
+				addon.db["groupfinderSkipRolecheck"] = value
+				container:ReleaseChildren()
+				addDungeonBrowserFrame(container)
+			end,
+		},
+	}
+
+	if addon.db["groupfinderSkipRolecheck"] then
+		table.insert(data2, {
+			text = L["skipSignUpDialogUseLFDRole"],
+			var = "skipSignUpDialogUseLFDRole",
+			func = function(self, _, value) addon.db["skipSignUpDialogUseLFDRole"] = value end,
+		})
+	end
+
+	local groupSkipRole = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupSkipRole)
+
+	for _, cbData in ipairs(data2) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func)
+		groupSkipRole:AddChild(cbElement)
 	end
 end
 

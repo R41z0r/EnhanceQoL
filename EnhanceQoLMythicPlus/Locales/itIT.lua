@@ -55,9 +55,10 @@ L["potionTrackerOffhealing"] = "Traccia l'uso di CD di cura secondaria"
 
 L["DungeonBrowser"] = "Esploratore di dungeon"
 L["groupfinderAppText"] = 'Nascondi il testo del cercatore di gruppi "Il tuo gruppo si sta formando attualmente"'
-L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo e utilizza il ruolo attuale"
 L["groupfinderMoveResetButton"] = "Sposta il pulsante di ripristino del filtro del Ricerca Spedizioni sul lato sinistro."
 L["groupfinderShowDungeonScoreFrame"] = "Mostra il riquadro " .. DUNGEON_SCORE .. " accanto al Ricerca delle spedizioni"
+L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo e utilizza automaticamente il ruolo della tua specializzazione attuale (es. DK Sangue = Tank)."
+L["skipSignUpDialogUseLFDRole"] = "Utilizza i ruoli selezionati nella scheda Ricerca Spedizioni al posto della tua specializzazione attuale."
 
 -- Misc Frame
 L["Misc"] = "Varie"

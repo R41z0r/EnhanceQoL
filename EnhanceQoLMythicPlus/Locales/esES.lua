@@ -54,9 +54,10 @@ L["potionTrackerOffhealing"] = "Rastrear uso de CD de sanación secundaria"
 
 L["DungeonBrowser"] = "Explorador de mazmorras"
 L["groupfinderAppText"] = 'Ocultar el texto del buscador de grupos "Tu grupo se está formando actualmente"'
-L["groupfinderSkipRolecheck"] = "Omitir la verificación de rol y usar el rol actual"
 L["groupfinderMoveResetButton"] = "Mueve el botón de restablecer filtro del buscador de mazmorras al lado izquierdo."
 L["groupfinderShowDungeonScoreFrame"] = "Mostrar el marco de " .. DUNGEON_SCORE .. " junto al Buscador de mazmorras"
+L["groupfinderSkipRolecheck"] = "Omitir la comprobación de rol y usar automáticamente el rol de tu especialización actual (p. ej., DK Sangre = tanque)."
+L["skipSignUpDialogUseLFDRole"] = "Usar los roles seleccionados en la pestaña de Buscador de mazmorras en lugar de tu especialización actual."
 
 -- Misc Frame
 L["Misc"] = "Misceláneo"

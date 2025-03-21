@@ -38,7 +38,7 @@ L["Drag me to position Cooldownbars"] = "Zieh mich"
 L["Potion Tracker"] = "Trank-Tracker"
 L["Toggle Anchor"] = "Anker umschalten"
 L["Save Anchor"] = "Anker speichern"
-L["potionTrackerHeadline"] = "Dies ermöglicht es dir, die Abklingzeit der Kampftränke deiner Gruppenmitglieder als verschiebbare Leiste zu verfolgen."
+L["potionTrackerHeadline"] = "Dies ermöglicht es dir, die Abklingzeit der Kampftränke deiner Gruppenmitglieder als verschiebbare Leiste zu verfolgen"
 L["potionTracker"] = "Trank-Abklingzeit-Tracker aktivieren"
 L["potionTrackerUpwardsBar"] = "Nach oben wachsen"
 L["potionTrackerClassColor"] = "Klassenfarben für Leisten verwenden"
@@ -54,9 +54,10 @@ L["potionTrackerOffhealing"] = "Verfolge Offheilung CD Nutzung"
 
 L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
-L["groupfinderSkipRolecheck"] = "Überspringe die Rollenauswahl und nutze die aktuelle Rolle"
-L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite."
+L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite"
 L["groupfinderShowDungeonScoreFrame"] = DUNGEON_SCORE .. "-Anzeige neben dem Dungeonbrowser anzeigen"
+L["groupfinderSkipRolecheck"] = "Überspringe die Rollenabfrage und verwende automatisch die Rolle deiner aktuellen Spezialisierung (z. B. Blut-DK = Tank)"
+L["skipSignUpDialogUseLFDRole"] = "Verwende die im Dungeonfinder-Reiter ausgewählten Rollen anstelle deiner aktuellen Spezialisierung"
 
 -- Misc Frame
 L["Misc"] = "Verschiedenes"

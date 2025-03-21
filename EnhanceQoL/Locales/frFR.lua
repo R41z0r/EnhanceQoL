@@ -116,3 +116,8 @@ L["CVarOptions"] = {
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Afficher le titre sur les joueurs" },
 	["WholeChatWindowClickable"] = { description = "Rendre toute la fenêtre de chat cliquable", trueValue = "1", falseValue = "0" },
 }
+
+L["autoAcceptGroupInvite"] = "Accepter automatiquement les invitations de groupe"
+L["autoAcceptGroupInviteGuildOnly"] = "Uniquement des membres de guilde"
+L["autoAcceptGroupInviteFriendOnly"] = "Uniquement des amis"
+L["autoAcceptGroupInviteOptions"] = "N'accepter que si..."
