@@ -9,6 +9,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "Clé de voûte"
+L["NoKeystone"] = "Aucune info"
 L["Automatically insert keystone"] = "Insérer automatiquement la clé de voûte"
 L["Mythic Plus"] = "Mythique+"
 L[addonName] = "Mythique+"
@@ -58,6 +59,7 @@ L["groupfinderMoveResetButton"] = "Déplacez le bouton de réinitialisation du n
 L["groupfinderShowDungeonScoreFrame"] = "Afficher le cadre " .. DUNGEON_SCORE .. " à côté du Recherche de donjon"
 L["groupfinderSkipRolecheck"] = "Ignorer la vérification du rôle et utiliser automatiquement le rôle de votre spécialisation actuelle (p. ex. DK Sang = tank)."
 L["skipSignUpDialogUseLFDRole"] = "Utiliser les rôles sélectionnés dans l'onglet Donjon plutôt que votre spécialisation actuelle."
+L["groupfinderShowPartyKeystone"] = "Afficher les informations de clé mythique de vos coéquipiers"
 
 -- Misc Frame
 L["Misc"] = "Divers"

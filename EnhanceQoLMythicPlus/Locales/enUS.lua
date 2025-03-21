@@ -8,6 +8,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "Keystone"
+L["NoKeystone"] = "No Info"
 L["Automatically insert keystone"] = "Automatically insert keystone"
 L["Mythic Plus"] = "Mythic+"
 L[addonName] = "Mythic+"
@@ -57,6 +58,7 @@ L["groupfinderMoveResetButton"] = "Shift the 'Reset Filter' button in the Dungeo
 L["groupfinderShowDungeonScoreFrame"] = "Show " .. DUNGEON_SCORE .. " frame next to the Dungeon Finder"
 L["groupfinderSkipRolecheck"] = "Skip the role check and automatically use your current specialization's role (e.g. Blood DK = Tank)"
 L["skipSignUpDialogUseLFDRole"] = "Use the roles you selected in the Dungeon Finder tab instead of your current specialization"
+L["groupfinderShowPartyKeystone"] = "Display your party members' Mythic+ Keystone info"
 
 -- Misc Frame
 L["Misc"] = "Misc."

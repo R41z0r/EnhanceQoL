@@ -9,6 +9,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "Schlüsselstein"
+L["NoKeystone"] = "Keine Info"
 L["Automatically insert keystone"] = "Schlüsselstein automatisch einsetzen"
 L["Mythic Plus"] = "Mythisch+"
 L[addonName] = "Mythisch+"
@@ -58,6 +59,7 @@ L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des
 L["groupfinderShowDungeonScoreFrame"] = DUNGEON_SCORE .. "-Anzeige neben dem Dungeonbrowser anzeigen"
 L["groupfinderSkipRolecheck"] = "Überspringe die Rollenabfrage und verwende automatisch die Rolle deiner aktuellen Spezialisierung (z. B. Blut-DK = Tank)"
 L["skipSignUpDialogUseLFDRole"] = "Verwende die im Dungeonfinder-Reiter ausgewählten Rollen anstelle deiner aktuellen Spezialisierung"
+L["groupfinderShowPartyKeystone"] = "Zeige die Mythic+-Schlüsselstein-Infos deiner Gruppenmitglieder"
 
 -- Misc Frame
 L["Misc"] = "Verschiedenes"

@@ -10,6 +10,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "쐐기돌"
+L["NoKeystone"] = "정보 없음"
 L["Automatically insert keystone"] = "쐐기돌 자동 삽입"
 L["Mythic Plus"] = "쐐기돌+"
 L[addonName] = "쐐기돌+"
@@ -59,6 +60,7 @@ L["groupfinderMoveResetButton"] = "던전 찾기의 필터 초기화 버튼을 �
 L["groupfinderShowDungeonScoreFrame"] = "던전 찾기 옆에 " .. DUNGEON_SCORE .. " 프레임 표시"
 L["groupfinderSkipRolecheck"] = "역할 확인을 건너뛰고 현재 전문화의 역할을 자동으로 사용합니다 (예: 혈기 죽기 = 탱커)."
 L["skipSignUpDialogUseLFDRole"] = "현재 전문화 대신 던전 찾기 탭에서 선택한 역할을 사용합니다."
+L["groupfinderShowPartyKeystone"] = "파티원의 쐐기돌 정보를 표시합니다"
 
 -- Misc Frame
 L["Misc"] = "기타"

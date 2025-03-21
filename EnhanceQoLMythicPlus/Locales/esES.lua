@@ -9,6 +9,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "Piedra angular"
+L["NoKeystone"] = "Sin info"
 L["Automatically insert keystone"] = "Insertar automáticamente la piedra angular"
 L["Mythic Plus"] = "Mítico+"
 L[addonName] = "Mítico+"
@@ -58,6 +59,7 @@ L["groupfinderMoveResetButton"] = "Mueve el botón de restablecer filtro del bus
 L["groupfinderShowDungeonScoreFrame"] = "Mostrar el marco de " .. DUNGEON_SCORE .. " junto al Buscador de mazmorras"
 L["groupfinderSkipRolecheck"] = "Omitir la comprobación de rol y usar automáticamente el rol de tu especialización actual (p. ej., DK Sangre = tanque)."
 L["skipSignUpDialogUseLFDRole"] = "Usar los roles seleccionados en la pestaña de Buscador de mazmorras en lugar de tu especialización actual."
+L["groupfinderShowPartyKeystone"] = "Mostrar la información de piedra angular de los miembros del grupo"
 
 -- Misc Frame
 L["Misc"] = "Misceláneo"

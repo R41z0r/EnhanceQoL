@@ -10,6 +10,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "Chiave di volta"
+L["NoKeystone"] = "Nessuna info"
 L["Automatically insert keystone"] = "Inserisci automaticamente la chiave"
 L["Mythic Plus"] = "Mitica+"
 L[addonName] = "Mitica+"
@@ -59,6 +60,7 @@ L["groupfinderMoveResetButton"] = "Sposta il pulsante di ripristino del filtro d
 L["groupfinderShowDungeonScoreFrame"] = "Mostra il riquadro " .. DUNGEON_SCORE .. " accanto al Ricerca delle spedizioni"
 L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo e utilizza automaticamente il ruolo della tua specializzazione attuale (es. DK Sangue = Tank)."
 L["skipSignUpDialogUseLFDRole"] = "Utilizza i ruoli selezionati nella scheda Ricerca Spedizioni al posto della tua specializzazione attuale."
+L["groupfinderShowPartyKeystone"] = "Mostra le informazioni della Chiave Mitica dei membri del gruppo"
 
 -- Misc Frame
 L["Misc"] = "Varie"

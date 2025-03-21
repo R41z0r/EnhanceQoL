@@ -132,6 +132,7 @@ addon.MythicPlus.variables.portalCompendium = {
 			[448126] = { text = "ENGI", isToy = true, toyID = 221966, isEngineering = true },
 			[446540] = { text = "DORN", isClassTP = "MAGE" },
 			[446534] = { text = "DORN", isMagePortal = true },
+			[1226482] = { text = "LOU", isRaid = true },
 		},
 	},
 	[110] = {

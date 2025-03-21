@@ -29,6 +29,8 @@ libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 libs\LibDBIcon-1.0\lib.xml
 libs\AceGUI-3.0\AceGUI-3.0.xml
+libs\LibDeflate\lib.xml
+libs\LibOpenRaid\lib.xml
 Bindings\Slider.xml
 General\functions.lua
 EnhanceQoL.lua

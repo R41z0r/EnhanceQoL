@@ -10,6 +10,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "鑰石"
+L["NoKeystone"] = "無資訊"
 L["Automatically insert keystone"] = "自動插入鑰石"
 L["Mythic Plus"] = "大秘境+"
 L[addonName] = "大秘境+"
@@ -59,6 +60,7 @@ L["groupfinderMoveResetButton"] = "將地城搜尋器的重置過濾按鈕移至
 L["groupfinderShowDungeonScoreFrame"] = "在地下城搜尋旁顯示 " .. DUNGEON_SCORE .. " 框架"
 L["groupfinderSkipRolecheck"] = "跳過角色檢查並自動使用你目前專精的角色（例如血魄死亡騎士 = 坦克）。"
 L["skipSignUpDialogUseLFDRole"] = "使用在地城搜尋器標籤中選擇的角色，而非你目前的專精。"
+L["groupfinderShowPartyKeystone"] = "顯示隊伍成員的傳奇鑰石資訊"
 
 -- Misc Frame
 L["Misc"] = "雜項"

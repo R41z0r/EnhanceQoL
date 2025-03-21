@@ -10,6 +10,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "Ключевой камень"
+L["NoKeystone"] = "Нет информации"
 L["Automatically insert keystone"] = "Автоматически вставлять ключ"
 L["Mythic Plus"] = "Мифик+"
 L[addonName] = "Мифик+"
@@ -62,6 +63,7 @@ L["groupfinderSkipRolecheck"] =
 	"Пропустить проверку роли и автоматически использовать роль текущей специализации (например, Рыцарь смерти «Кровь» = танк)."
 L["skipSignUpDialogUseLFDRole"] =
 	"Использовать роли, выбранные во вкладке поиска подземелий, вместо вашей текущей специализации."
+L["groupfinderShowPartyKeystone"] = "Показывать информацию о ключах Mythic+ у членов группы"
 
 -- Misc Frame
 L["Misc"] = "Разное"

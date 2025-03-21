@@ -376,6 +376,14 @@ local function addDungeonBrowserFrame(container)
 				addon.MythicPlus.functions.toggleFrame()
 			end,
 		},
+		{
+			text = L["groupfinderShowPartyKeystone"],
+			var = "groupfinderShowPartyKeystone",
+			func = function(self, _, value)
+				addon.db["groupfinderShowPartyKeystone"] = value
+				addon.MythicPlus.functions.togglePartyKeystone()
+			end,
+		},
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)

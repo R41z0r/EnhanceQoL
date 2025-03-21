@@ -10,6 +10,7 @@ end
 local L = addon.LMythicPlus
 
 L["Keystone"] = "Pedra-chave"
+L["NoKeystone"] = "Sem informação"
 L["Automatically insert keystone"] = "Inserir a chave automaticamente"
 L["Mythic Plus"] = "Mítica+"
 L[addonName] = "Mítica+"
@@ -59,6 +60,7 @@ L["groupfinderMoveResetButton"] = "Mova o botão de redefinição de filtro do L
 L["groupfinderShowDungeonScoreFrame"] = "Exibir o quadro " .. DUNGEON_SCORE .. " ao lado do Localizador de Masmorras"
 L["groupfinderSkipRolecheck"] = "Ignorar a verificação de função e usar automaticamente a função da sua especialização atual (por ex. DK Sangue = tanque)."
 L["skipSignUpDialogUseLFDRole"] = "Usar as funções selecionadas na guia Localizador de Masmorras em vez da sua especialização atual."
+L["groupfinderShowPartyKeystone"] = "Exibir as informações de pedra-chave Mítica dos membros do grupo"
 
 -- Misc Frame
 L["Misc"] = "Diversos"

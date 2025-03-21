@@ -78,6 +78,7 @@ addon.itemBagFilterTypes = {
 addon.variables.unitClass = select(2, UnitClass("player"))
 addon.variables.unitSpec = GetSpecialization()
 addon.variables.unitRace = select(2, UnitRace("player"))
+addon.variables.unitName = select(1, UnitName("player"))
 
 addon.variables.requireReload = false
 addon.variables.catalystID = 3116 -- Change to get the actual cataclyst charges in char frame
