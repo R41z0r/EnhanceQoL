@@ -318,6 +318,12 @@ addon.Sounds.soundFiles = {
 			568818, -- Timewarp
 			569126, -- Timewarp
 			568451, -- Timewarp
+			4567038, -- Timewarp
+			4567040, -- Timewarp
+			4567042, -- Timewarp
+			1416760, -- Timewarp
+			1416761, -- Timewarp
+			1416762, -- Timewarp
 			4558551,
 			4558553,
 			4558555,
