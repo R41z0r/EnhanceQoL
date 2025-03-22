@@ -15,6 +15,10 @@ exclude_files = {
 	"ThingsToMantain_Era.lua",
 	"ThingsToMantain_Cata.lua",
 	"ThingsToMantain_Dragonflight.lua",
+	"Deprecated.lua",
+	"Functions.lua",
+	"GetPlayerInformation",
+	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Wrath.lua"
 }
 ignore = {
 	"11./SLASH_.*", -- Setting an undefined (Slash handler) global variable
@@ -14774,6 +14778,7 @@ globals = {
 	"PUSHTOTALK_SOUND_TEXT",
 	"PUSH_TO_TALK",
 	"PVEFrame",
+	"PVEFrameTab4",
 	"PVP",
 	"PVPBATTLEGROUND_WINTERGRASPTIMER",
 	"PVPBATTLEGROUND_WINTERGRASPTIMER_CANNOT_QUEUE",
