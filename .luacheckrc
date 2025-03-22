@@ -9,16 +9,15 @@ exclude_files = {
 	"LibOpenRaid.lua",
 	"test.lua",
 	"LibStub.lua",
-	"ThingsToMantain_Wrath.lua",
-	"ThingsToMantain_WarWithin.lua",
-	"ThingsToMantain_Shadowlands.lua",
-	"ThingsToMantain_Era.lua",
-	"ThingsToMantain_Cata.lua",
-	"ThingsToMantain_Dragonflight.lua",
-	"Deprecated.lua",
-	"Functions.lua",
-	"GetPlayerInformation",
-	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Wrath.lua"
+	"EnhanceQoL/libs/LibOpenRaid/Deprecated.lua",
+	"EnhanceQoL/libs/LibOpenRaid/Functions.lua",
+	"EnhanceQoL/libs/LibOpenRaid/GetPlayerInformation.lua",
+	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Wrath.lua",
+	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_WarWithin.lua",
+	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Shadowlands.lua",
+	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Dragonflight.lua",
+	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Era.lua",
+	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Cata.lua",
 }
 ignore = {
 	"11./SLASH_.*", -- Setting an undefined (Slash handler) global variable
