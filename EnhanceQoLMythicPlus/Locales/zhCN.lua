@@ -58,8 +58,10 @@ L["DungeonBrowser"] = "地城瀏覽器"
 L["groupfinderAppText"] = '隱藏組隊搜尋器的文字 "您的隊伍目前正在組成中"'
 L["groupfinderMoveResetButton"] = "将地下城查找器的重置过滤按钮移动到左侧。"
 L["groupfinderShowDungeonScoreFrame"] = "在地下城搜索旁显示 " .. DUNGEON_SCORE .. " 框架"
-L["groupfinderSkipRolecheck"] = "跳过角色检查并自动使用你当前专精的角色（例如鲜血DK = 坦克）。"
-L["skipSignUpDialogUseLFDRole"] = "使用在地下城查找器标签中选择的角色，而不是你当前的专精。"
+L["groupfinderSkipRoleSelect"] = "跳过角色选择"
+L["groupfinderSkipRolecheckHeadline"] = "自动分配角色"
+L["groupfinderSkipRolecheckUseSpec"] = "使用当前专精的角色（如血死亡骑士 = 坦克）"
+L["groupfinderSkipRolecheckUseLFD"] = "使用地下城查找器中的角色"
 L["groupfinderShowPartyKeystone"] = "显示队伍成员的史诗钥石信息"
 
 -- Misc Frame
@@ -92,3 +94,10 @@ L["portalShowToyHearthstones"] = "显示传送物品及玩具（例如炉石）"
 L["portalShowEngineering"] = "显示工程学传送（需要工程学）"
 L["portalShowClassTeleport"] = "显示职业专属传送（仅当该职业拥有）"
 L["portalShowMagePortal"] = "显示法师传送门（仅限法师）"
+
+-- BR Tracker
+L["BRTracker"] = "战斗复活"
+L["brTrackerHeadline"] = "在史诗钥石地下城中添加战斗复活监视"
+L["mythicPlusBRTrackerEnabled"] = "启用战斗复活监视"
+L["mythicPlusBRTrackerLocked"] = "锁定监视器位置"
+L["mythicPlusBRButtonSizeHeadline"] = "按钮大小"

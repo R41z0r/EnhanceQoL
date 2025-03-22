@@ -34,7 +34,8 @@ addon.functions.InitDBValue("potionTrackerOffhealing", false)
 
 -- Dungeon Browser
 addon.functions.InitDBValue("groupfinderAppText", false)
-addon.functions.InitDBValue("groupfinderSkipRolecheck", false)
+addon.functions.InitDBValue("groupfinderSkipRoleSelect", false)
+addon.functions.InitDBValue("groupfinderSkipRoleSelectOption", 1)
 addon.functions.InitDBValue("groupfinderShowDungeonScoreFrame", false)
 
 -- Misc
@@ -44,6 +45,14 @@ addon.functions.InitDBValue("mythicPlusIgnoreMythic", true)
 addon.functions.InitDBValue("mythicPlusIgnoreHeroic", true)
 addon.functions.InitDBValue("mythicPlusIgnoreNormal", true)
 addon.functions.InitDBValue("mythicPlusIgnoreTimewalking", true)
+
+-- BR Tracker
+addon.functions.InitDBValue("mythicPlusBRTrackerEnabled", false)
+addon.functions.InitDBValue("mythicPlusBRTrackerLocked", false)
+addon.functions.InitDBValue("mythicPlusBRButtonSize", 50)
+addon.functions.InitDBValue("mythicPlusBRTrackerPoint", "CENTER")
+addon.functions.InitDBValue("mythicPlusBRTrackerX", 0)
+addon.functions.InitDBValue("mythicPlusBRTrackerY", 0)
 
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus

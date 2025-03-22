@@ -136,6 +136,6 @@ L["CVarOptions"] = {
 }
 
 L["autoAcceptGroupInvite"] = "Автоматически принимать приглашения в группу"
-L["autoAcceptGroupInviteGuildOnly"] = "Только от согильдийцев"
-L["autoAcceptGroupInviteFriendOnly"] = "Только от друзей"
-L["autoAcceptGroupInviteOptions"] = "Принимать только когда..."
+L["autoAcceptGroupInviteGuildOnly"] = "Члены гильдии"
+L["autoAcceptGroupInviteFriendOnly"] = "Друзья"
+L["autoAcceptGroupInviteOptions"] = "Принимать приглашения от..."

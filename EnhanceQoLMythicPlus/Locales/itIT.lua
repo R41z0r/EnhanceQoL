@@ -58,8 +58,10 @@ L["DungeonBrowser"] = "Esploratore di dungeon"
 L["groupfinderAppText"] = 'Nascondi il testo del cercatore di gruppi "Il tuo gruppo si sta formando attualmente"'
 L["groupfinderMoveResetButton"] = "Sposta il pulsante di ripristino del filtro del Ricerca Spedizioni sul lato sinistro."
 L["groupfinderShowDungeonScoreFrame"] = "Mostra il riquadro " .. DUNGEON_SCORE .. " accanto al Ricerca delle spedizioni"
-L["groupfinderSkipRolecheck"] = "Salta il controllo del ruolo e utilizza automaticamente il ruolo della tua specializzazione attuale (es. DK Sangue = Tank)."
-L["skipSignUpDialogUseLFDRole"] = "Utilizza i ruoli selezionati nella scheda Ricerca Spedizioni al posto della tua specializzazione attuale."
+L["groupfinderSkipRoleSelect"] = "Salta la selezione del ruolo"
+L["groupfinderSkipRolecheckHeadline"] = "Assegnazione automatica del ruolo"
+L["groupfinderSkipRolecheckUseSpec"] = "Usa il ruolo della tua specializzazione (es. Cavaliere della Morte (Sangue) = Tank)"
+L["groupfinderSkipRolecheckUseLFD"] = "Usa i ruoli dal Ricerca Dungeon"
 L["groupfinderShowPartyKeystone"] = "Mostra le informazioni della Chiave Mitica dei membri del gruppo"
 
 -- Misc Frame
@@ -92,3 +94,10 @@ L["portalShowToyHearthstones"] = "Mostra oggetti e giocattoli di teletrasporto (
 L["portalShowEngineering"] = "Mostra teletrasporti d'Ingegneria (richiede Ingegneria)"
 L["portalShowClassTeleport"] = "Mostra teletrasporti specifici di classe (solo se disponibili)"
 L["portalShowMagePortal"] = "Mostra portali del Mago (solo Mago)"
+
+-- BR Tracker
+L["BRTracker"] = "Resurrezione in combattimento"
+L["brTrackerHeadline"] = "Aggiunge un tracker per la resurrezione in combattimento nei dungeon Mitici+"
+L["mythicPlusBRTrackerEnabled"] = "Abilita il tracker di resurrezione in combattimento"
+L["mythicPlusBRTrackerLocked"] = "Blocca la posizione del tracker"
+L["mythicPlusBRButtonSizeHeadline"] = "Dimensione del pulsante"

@@ -57,8 +57,10 @@ L["DungeonBrowser"] = "Explorador de mazmorras"
 L["groupfinderAppText"] = 'Ocultar el texto del buscador de grupos "Tu grupo se está formando actualmente"'
 L["groupfinderMoveResetButton"] = "Mueve el botón de restablecer filtro del buscador de mazmorras al lado izquierdo."
 L["groupfinderShowDungeonScoreFrame"] = "Mostrar el marco de " .. DUNGEON_SCORE .. " junto al Buscador de mazmorras"
-L["groupfinderSkipRolecheck"] = "Omitir la comprobación de rol y usar automáticamente el rol de tu especialización actual (p. ej., DK Sangre = tanque)."
-L["skipSignUpDialogUseLFDRole"] = "Usar los roles seleccionados en la pestaña de Buscador de mazmorras en lugar de tu especialización actual."
+L["groupfinderSkipRoleSelect"] = "Omitir selección de rol"
+L["groupfinderSkipRolecheckHeadline"] = "Asignación automática de rol"
+L["groupfinderSkipRolecheckUseSpec"] = "Usar el rol de tu especialización actual (p. ej. Caballero de la Muerte (Sangre) = Tanque)"
+L["groupfinderSkipRolecheckUseLFD"] = "Usar los roles seleccionados en el buscador"
 L["groupfinderShowPartyKeystone"] = "Mostrar la información de piedra angular de los miembros del grupo"
 
 -- Misc Frame
@@ -91,3 +93,10 @@ L["portalShowToyHearthstones"] = "Mostrar ítems y juguetes de teletransporte (p
 L["portalShowEngineering"] = "Mostrar teletransportes de Ingeniería (requiere Ingeniería)"
 L["portalShowClassTeleport"] = "Mostrar teletransportes específicos de la clase (solo si la clase los tiene)"
 L["portalShowMagePortal"] = "Mostrar portales de mago (solo para magos)"
+
+-- BR Tracker
+L["BRTracker"] = "Resurrección en combate"
+L["brTrackerHeadline"] = "Agrega un rastreador de resurrección en combate en mazmorras Mythic+"
+L["mythicPlusBRTrackerEnabled"] = "Activar rastreador de resurrección en combate"
+L["mythicPlusBRTrackerLocked"] = "Bloquear la posición del rastreador"
+L["mythicPlusBRButtonSizeHeadline"] = "Tamaño del botón"

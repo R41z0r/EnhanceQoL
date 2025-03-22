@@ -111,7 +111,7 @@ L["CVarOptions"] = {
 	["WholeChatWindowClickable"] = { description = "전체 채팅 창 클릭 가능하게 설정", trueValue = "1", falseValue = "0" },
 }
 
-L["autoAcceptGroupInvite"] = "그룹 초대 자동 수락"
-L["autoAcceptGroupInviteGuildOnly"] = "길드원만"
-L["autoAcceptGroupInviteFriendOnly"] = "친구만"
-L["autoAcceptGroupInviteOptions"] = "다음의 경우에만 수락..."
+L["autoAcceptGroupInvite"] = "파티 초대를 자동으로 수락"
+L["autoAcceptGroupInviteGuildOnly"] = "길드원"
+L["autoAcceptGroupInviteFriendOnly"] = "친구"
+L["autoAcceptGroupInviteOptions"] = "다음 대상의 초대를 수락..."

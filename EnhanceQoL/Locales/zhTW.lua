@@ -118,6 +118,6 @@ L["CVarOptions"] = {
 }
 
 L["autoAcceptGroupInvite"] = "自動接受組隊邀請"
-L["autoAcceptGroupInviteGuildOnly"] = "僅限公會成員"
-L["autoAcceptGroupInviteFriendOnly"] = "僅限好友"
-L["autoAcceptGroupInviteOptions"] = "僅在以下情況下接受..."
+L["autoAcceptGroupInviteGuildOnly"] = "公會成員"
+L["autoAcceptGroupInviteFriendOnly"] = "好友"
+L["autoAcceptGroupInviteOptions"] = "接受來自...的邀請"

@@ -58,8 +58,10 @@ L["DungeonBrowser"] = "地下城浏览器"
 L["groupfinderAppText"] = '隐藏团队查找器文本 "你的团队目前正在形成"'
 L["groupfinderMoveResetButton"] = "將地城搜尋器的重置過濾按鈕移至左側。"
 L["groupfinderShowDungeonScoreFrame"] = "在地下城搜尋旁顯示 " .. DUNGEON_SCORE .. " 框架"
-L["groupfinderSkipRolecheck"] = "跳過角色檢查並自動使用你目前專精的角色（例如血魄死亡騎士 = 坦克）。"
-L["skipSignUpDialogUseLFDRole"] = "使用在地城搜尋器標籤中選擇的角色，而非你目前的專精。"
+L["groupfinderSkipRoleSelect"] = "跳過角色選擇"
+L["groupfinderSkipRolecheckHeadline"] = "自動角色分配"
+L["groupfinderSkipRolecheckUseSpec"] = "使用當前專精的角色（如血死亡騎士 = 坦克）"
+L["groupfinderSkipRolecheckUseLFD"] = "使用地城搜尋器中的角色"
 L["groupfinderShowPartyKeystone"] = "顯示隊伍成員的傳奇鑰石資訊"
 
 -- Misc Frame
@@ -92,3 +94,10 @@ L["portalShowToyHearthstones"] = "顯示傳送物品及玩具（例如爐石）"
 L["portalShowEngineering"] = "顯示工程學傳送（需要工程學）"
 L["portalShowClassTeleport"] = "顯示職業專屬傳送（僅當該職業擁有）"
 L["portalShowMagePortal"] = "顯示法師傳送門（僅限法師）"
+
+-- BR Tracker
+L["BRTracker"] = "戰鬥復活"
+L["brTrackerHeadline"] = "在傳奇鑰石地城中添加戰鬥復活監視"
+L["mythicPlusBRTrackerEnabled"] = "啟用戰鬥復活監視"
+L["mythicPlusBRTrackerLocked"] = "鎖定監視器位置"
+L["mythicPlusBRButtonSizeHeadline"] = "按鈕大小"

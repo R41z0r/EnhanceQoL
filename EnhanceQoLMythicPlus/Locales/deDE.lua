@@ -57,8 +57,10 @@ L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
 L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite"
 L["groupfinderShowDungeonScoreFrame"] = DUNGEON_SCORE .. "-Anzeige neben dem Dungeonbrowser anzeigen"
-L["groupfinderSkipRolecheck"] = "Überspringe die Rollenabfrage und verwende automatisch die Rolle deiner aktuellen Spezialisierung (z. B. Blut-DK = Tank)"
-L["skipSignUpDialogUseLFDRole"] = "Verwende die im Dungeonfinder-Reiter ausgewählten Rollen anstelle deiner aktuellen Spezialisierung"
+L["groupfinderSkipRoleSelect"] = "Rollen-Auswahl überspringen"
+L["groupfinderSkipRolecheckHeadline"] = "Automatische Rollenzuweisung"
+L["groupfinderSkipRolecheckUseSpec"] = "Verwende die Rolle deiner aktuellen Spezialisierung (z.B. Blut-Todesritter = Tank)"
+L["groupfinderSkipRolecheckUseLFD"] = "Verwende die Rollen aus dem Dungeonbrowser"
 L["groupfinderShowPartyKeystone"] = "Zeige die Mythic+-Schlüsselstein-Infos deiner Gruppenmitglieder"
 
 -- Misc Frame
@@ -97,3 +99,10 @@ L["portalShowToyHearthstones"] = "Teleport-Gegenstände und Spielzeuge anzeigen 
 L["portalShowEngineering"] = "Ingenieurs-Teleports anzeigen (benötigt Ingenieurskunst)"
 L["portalShowClassTeleport"] = "Klassenspezifische Teleports anzeigen (nur falls vorhanden)"
 L["portalShowMagePortal"] = "Magierportale anzeigen (nur für Magier)"
+
+-- BR Tracker
+L["BRTracker"] = "Kampfwiederbelebung"
+L["brTrackerHeadline"] = "Fügt einen Kampfwiederbelebungs-Tracker in Mythic+ Dungeons hinzu"
+L["mythicPlusBRTrackerEnabled"] = "Kampfwiederbelebungs-Tracker aktivieren"
+L["mythicPlusBRTrackerLocked"] = "Position des Trackers sperren"
+L["mythicPlusBRButtonSizeHeadline"] = "Button-Größe"

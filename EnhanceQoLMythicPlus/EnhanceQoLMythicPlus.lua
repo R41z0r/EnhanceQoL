@@ -11,7 +11,115 @@ local L = addon.LMythicPlus
 
 local frameLoad = CreateFrame("Frame")
 
+local brButton
+local defaultButtonSize = 60
+local defaultFontSize = 16
+
+local function removeBRFrame()
+	if brButton then
+		brButton:Hide()
+		brButton:SetParent(nil)
+		brButton:SetScript("OnClick", nil)
+		brButton:SetScript("OnEnter", nil)
+		brButton:SetScript("OnLeave", nil)
+		brButton:SetScript("OnUpdate", nil)
+		brButton:SetScript("OnEvent", nil)
+		brButton:SetScript("OnDragStart", nil)
+		brButton:SetScript("OnDragStop", nil)
+		brButton:UnregisterAllEvents()
+		brButton:ClearAllPoints()
+		brButton = nil
+	end
+end
+
+local function createBRFrame()
+	removeBRFrame()
+	if not addon.db["mythicPlusBRTrackerEnabled"] then return end
+	brButton = CreateFrame("Button", nil, UIParent, "SecureActionButtonTemplate")
+	brButton:SetSize(addon.db["mythicPlusBRButtonSize"], addon.db["mythicPlusBRButtonSize"])
+
+	brButton:SetPoint(addon.db["mythicPlusBRTrackerPoint"], UIParent, addon.db["mythicPlusBRTrackerPoint"], addon.db["mythicPlusBRTrackerX"], addon.db["mythicPlusBRTrackerY"])
+
+	if addon.db["mythicPlusBRTrackerLocked"] == false then
+		brButton:SetMovable(true)
+		brButton:EnableMouse(true)
+		brButton:RegisterForDrag("LeftButton")
+
+		brButton:SetScript("OnDragStart", brButton.StartMoving)
+		brButton:SetScript("OnDragStop", function(self)
+			self:StopMovingOrSizing()
+			local point, _, _, xOfs, yOfs = self:GetPoint()
+			addon.db["mythicPlusBRTrackerPoint"] = point
+			addon.db["mythicPlusBRTrackerX"] = xOfs
+			addon.db["mythicPlusBRTrackerY"] = yOfs
+		end)
+	end
+
+	local bg = brButton:CreateTexture(nil, "BACKGROUND")
+	bg:SetAllPoints(brButton)
+	bg:SetColorTexture(0, 0, 0, 0.8)
+
+	local icon = brButton:CreateTexture(nil, "ARTWORK")
+	icon:SetAllPoints(brButton)
+	icon:SetTexture(136080)
+	brButton.icon = icon
+
+	local scaleFactor = addon.db["mythicPlusBRButtonSize"] / defaultButtonSize
+	local newFontSize = math.floor(defaultFontSize * scaleFactor + 0.5)
+
+	brButton.cooldownFrame = CreateFrame("Cooldown", nil, brButton, "CooldownFrameTemplate")
+	brButton.cooldownFrame:SetAllPoints(brButton)
+	brButton.cooldownFrame.cooldownSet = false
+	brButton.cooldownFrame:SetSwipeColor(0, 0, 0, 0.3)
+	brButton.cooldownFrame:SetCountdownAbbrevThreshold(600)
+	brButton.cooldownFrame:SetScale(scaleFactor)
+
+	brButton.charges = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+	brButton.charges:SetPoint("BOTTOMRIGHT", brButton, "BOTTOMRIGHT", -3, 3)
+	brButton.charges:SetFont("Fonts\\FRIZQT__.TTF", newFontSize, "OUTLINE")
+end
+
+local function setBRInfo(info)
+	if brButton and brButton.cooldownFrame and info then
+		local current = info.currentCharges
+		local max = info.maxCharges
+
+		if current < max then
+			if brButton.cooldownFrame.charges ~= current or brButton.cooldownFrame.startTime ~= info.cooldownStartTime then
+				brButton.cooldownFrame:SetCooldown(info.cooldownStartTime, info.cooldownDuration, info.chargeModRate)
+				brButton.cooldownFrame.startTime = info.cooldownStartTime
+				brButton.cooldownFrame.charges = current
+
+				if current > 0 then
+					brButton.charges:SetTextColor(0, 1, 0)
+					brButton.icon:SetDesaturated(false)
+					brButton.cooldownFrame:SetSwipeColor(0, 0, 0, 0.3)
+					brButton.charges:Show()
+				else
+					brButton.cooldownFrame:SetSwipeColor(0, 0, 0, 1)
+					brButton.icon:SetDesaturated(true)
+					brButton.charges:SetTextColor(1, 0, 0)
+					brButton.charges:Hide()
+				end
+			end
+		else
+			brButton.cooldownFrame:Clear()
+			brButton.charges:SetTextColor(0, 1, 0)
+		end
+		brButton.charges:SetText(current)
+	end
+end
+
 hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", function(self, elapsedTime)
+	if addon.db["mythicPlusBRTrackerEnabled"] then
+		if not brButton or not brButton.cooldownFrame or not brButton.cooldownFrame.cooldownSet then
+			createBRFrame()
+			brButton.cooldownFrame.cooldownSet = true
+			local info = C_Spell.GetSpellCharges(20484)
+			setBRInfo(info)
+		end
+	end
+
 	if addon.db["mythicPlusChestTimer"] then
 		local timeLeft = math.max(0, self.timeLimit - elapsedTime)
 		local chest3Time = self.timeLimit * 0.4
@@ -209,19 +317,10 @@ frameLoad:RegisterEvent("RAID_TARGET_UPDATE")
 frameLoad:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 frameLoad:RegisterEvent("READY_CHECK")
 frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
+frameLoad:RegisterEvent("SPELL_UPDATE_CHARGES")
 
 local function skipRolecheck()
-	if addon.db["skipSignUpDialogUseLFDRole"] then
-		if LFDQueueFrameRoleButtonTank and LFDQueueFrameRoleButtonTank:IsEnabled() then
-			LFGListApplicationDialog.TankButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonTank.checkButton:GetChecked())
-		end
-		if LFDQueueFrameRoleButtonHealer and LFDQueueFrameRoleButtonHealer:IsEnabled() then
-			LFGListApplicationDialog.HealerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonHealer.checkButton:GetChecked())
-		end
-		if LFDQueueFrameRoleButtonDPS and LFDQueueFrameRoleButtonDPS:IsEnabled() then
-			LFGListApplicationDialog.DamagerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonDPS.checkButton:GetChecked())
-		end
-	else
+	if addon.db["groupfinderSkipRoleSelectOption"] == 1 then
 		local tank, healer, dps = false, false, false
 		local role = UnitGroupRolesAssigned("player")
 		if role == "NONE" then role = GetSpecializationRole(GetSpecialization()) end
@@ -235,7 +334,20 @@ local function skipRolecheck()
 		if LFDRoleCheckPopupRoleButtonTank.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonTank.checkButton:SetChecked(tank) end
 		if LFDRoleCheckPopupRoleButtonHealer.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonHealer.checkButton:SetChecked(healer) end
 		if LFDRoleCheckPopupRoleButtonDPS.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonDPS.checkButton:SetChecked(dps) end
+	elseif addon.db["groupfinderSkipRoleSelectOption"] == 2 then
+		if LFDQueueFrameRoleButtonTank and LFDQueueFrameRoleButtonTank:IsEnabled() then
+			LFGListApplicationDialog.TankButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonTank.checkButton:GetChecked())
+		end
+		if LFDQueueFrameRoleButtonHealer and LFDQueueFrameRoleButtonHealer:IsEnabled() then
+			LFGListApplicationDialog.HealerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonHealer.checkButton:GetChecked())
+		end
+		if LFDQueueFrameRoleButtonDPS and LFDQueueFrameRoleButtonDPS:IsEnabled() then
+			LFGListApplicationDialog.DamagerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonDPS.checkButton:GetChecked())
+		end
+	else
+		return
 	end
+
 	LFDRoleCheckPopupAcceptButton:Enable()
 	LFDRoleCheckPopupAcceptButton:Click()
 end
@@ -324,7 +436,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	elseif event == "LFG_LIST_APPLICANT_LIST_UPDATED" and addon.db["groupfinderAppText"] then
 		if InCombatLockdown() then return end
 		toggleGroupApplication(true)
-	elseif event == "LFG_ROLE_CHECK_SHOW" and addon.db["groupfinderSkipRolecheck"] and UnitInParty("player") then
+	elseif event == "LFG_ROLE_CHECK_SHOW" and addon.db["groupfinderSkipRoleSelect"] and UnitInParty("player") then
 		skipRolecheck()
 	elseif event == "RAID_TARGET_UPDATE" and checkCondition() then
 		C_Timer.After(0.5, function() checkRaidMarker() end)
@@ -337,6 +449,14 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	elseif event == "READY_CHECK" and checkCondition() then
 		setActTank()
 		checkRaidMarker()
+	elseif event == "SPELL_UPDATE_CHARGES" then
+		if IsInInstance() and select(3, GetInstanceInfo()) == 8 then
+			if not brButton or not brButton.cooldownFrame then createBRFrame() end
+			local info = C_Spell.GetSpellCharges(20484)
+			setBRInfo(info)
+		else
+			removeBRFrame()
+		end
 	end
 end
 
@@ -384,6 +504,15 @@ local function addDungeonBrowserFrame(container)
 				addon.MythicPlus.functions.togglePartyKeystone()
 			end,
 		},
+		{
+			text = L["groupfinderSkipRoleSelect"],
+			var = "groupfinderSkipRoleSelect",
+			func = function(self, _, value)
+				addon.db["groupfinderSkipRoleSelect"] = value
+				container:ReleaseChildren()
+				addDungeonBrowserFrame(container)
+			end,
+		},
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)
@@ -393,32 +522,16 @@ local function addDungeonBrowserFrame(container)
 		groupCore:AddChild(cbElement)
 	end
 
-	local data2 = {
-		{
-			text = L["groupfinderSkipRolecheck"],
-			var = "groupfinderSkipRolecheck",
-			func = function(self, _, value)
-				addon.db["groupfinderSkipRolecheck"] = value
-				container:ReleaseChildren()
-				addDungeonBrowserFrame(container)
-			end,
-		},
-	}
+	if addon.db["groupfinderSkipRoleSelect"] then
+		local list, order = addon.functions.prepareListForDropdown({ [1] = L["groupfinderSkipRolecheckUseSpec"], [2] = L["groupfinderSkipRolecheckUseLFD"] }, true)
 
-	if addon.db["groupfinderSkipRolecheck"] then
-		table.insert(data2, {
-			text = L["skipSignUpDialogUseLFDRole"],
-			var = "skipSignUpDialogUseLFDRole",
-			func = function(self, _, value) addon.db["skipSignUpDialogUseLFDRole"] = value end,
-		})
-	end
+		local dropRoleSelect = addon.functions.createDropdownAce("", list, order, function(self, _, value) addon.db["groupfinderSkipRoleSelectOption"] = value end)
+		dropRoleSelect:SetValue(addon.db["groupfinderSkipRoleSelectOption"])
 
-	local groupSkipRole = addon.functions.createContainer("InlineGroup", "List")
-	wrapper:AddChild(groupSkipRole)
-
-	for _, cbData in ipairs(data2) do
-		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func)
-		groupSkipRole:AddChild(cbElement)
+		local groupSkipRole = addon.functions.createContainer("InlineGroup", "List")
+		wrapper:AddChild(groupSkipRole)
+		groupSkipRole:SetTitle(L["groupfinderSkipRolecheckHeadline"])
+		groupSkipRole:AddChild(dropRoleSelect)
 	end
 end
 
@@ -572,6 +685,67 @@ local function addPotionTrackerFrame(container)
 			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
 			groupCore:AddChild(cbElement)
 		end
+	end
+end
+
+local function addBRFrame(container)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+	groupCore:SetTitle(L["brTrackerHeadline"])
+
+	local cbBREnabled = addon.functions.createCheckboxAce(L["mythicPlusBRTrackerEnabled"], addon.db["mythicPlusBRTrackerEnabled"], function(self, _, value)
+		addon.db["mythicPlusBRTrackerEnabled"] = value
+		createBRFrame()
+		container:ReleaseChildren()
+		addBRFrame(container)
+	end)
+	groupCore:AddChild(cbBREnabled)
+
+	if addon.db["mythicPlusBRTrackerEnabled"] then
+		local data = {
+			{
+				text = L["mythicPlusBRTrackerLocked"],
+				var = "mythicPlusBRTrackerLocked",
+				func = function(self, _, value)
+					addon.db["mythicPlusBRTrackerLocked"] = value
+					createBRFrame()
+				end,
+			},
+		}
+
+		table.sort(data, function(a, b) return a.text < b.text end)
+
+		for _, cbData in ipairs(data) do
+			local uFunc = function(self, _, value)
+				addon.db[cbData.var] = value
+				addon.MythicPlus.functions.toggleFrame()
+			end
+			if cbData.func then uFunc = cbData.func end
+			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+			groupCore:AddChild(cbElement)
+		end
+
+		local sButtonSize = addon.functions.createSliderAce(
+			L["mythicPlusBRButtonSizeHeadline"] .. ": " .. addon.db["mythicPlusBRButtonSize"],
+			addon.db["mythicPlusBRButtonSize"],
+			20,
+			100,
+			1,
+			function(self, _, value2)
+				addon.db["mythicPlusBRButtonSize"] = value2
+				createBRFrame()
+				self:SetLabel(L["mythicPlusBRButtonSizeHeadline"] .. ": " .. value2)
+			end
+		)
+		groupCore:AddChild(sButtonSize)
 	end
 end
 
@@ -785,6 +959,7 @@ addon.functions.addToTree(nil, {
 		{ value = "misc", text = L["Misc"] },
 		{ value = "potiontracker", text = L["Potion Tracker"] },
 		{ value = "teleports", text = L["Teleports"] },
+		{ value = "brtracker", text = L["BRTracker"] },
 	},
 })
 
@@ -801,5 +976,7 @@ function addon.MythicPlus.functions.treeCallback(container, group)
 		addMiscFrame(container)
 	elseif group == "mythicplus\001teleports" then
 		addTeleportFrame(container)
+	elseif group == "mythicplus\001brtracker" then
+		addBRFrame(container)
 	end
 end

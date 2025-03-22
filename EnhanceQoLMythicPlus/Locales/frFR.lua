@@ -57,8 +57,10 @@ L["DungeonBrowser"] = "Explorateur de donjons"
 L["groupfinderAppText"] = 'Masquer le texte du recherche de groupe "Votre groupe est actuellement en formation"'
 L["groupfinderMoveResetButton"] = "Déplacez le bouton de réinitialisation du navigateur de donjons sur le côté gauche."
 L["groupfinderShowDungeonScoreFrame"] = "Afficher le cadre " .. DUNGEON_SCORE .. " à côté du Recherche de donjon"
-L["groupfinderSkipRolecheck"] = "Ignorer la vérification du rôle et utiliser automatiquement le rôle de votre spécialisation actuelle (p. ex. DK Sang = tank)."
-L["skipSignUpDialogUseLFDRole"] = "Utiliser les rôles sélectionnés dans l'onglet Donjon plutôt que votre spécialisation actuelle."
+L["groupfinderSkipRoleSelect"] = "Ignorer la sélection de rôle"
+L["groupfinderSkipRolecheckHeadline"] = "Affectation automatique de rôle"
+L["groupfinderSkipRolecheckUseSpec"] = "Utiliser le rôle de votre spécialisation actuelle (ex. Chevalier de la mort (Sang) = Tank)"
+L["groupfinderSkipRolecheckUseLFD"] = "Utiliser les rôles de l’outil Donjons"
 L["groupfinderShowPartyKeystone"] = "Afficher les informations de clé mythique de vos coéquipiers"
 
 -- Misc Frame
@@ -91,3 +93,10 @@ L["portalShowToyHearthstones"] = "Afficher les objets et jouets de téléportati
 L["portalShowEngineering"] = "Afficher les téléports d’ingénierie (nécessite Ingénierie)"
 L["portalShowClassTeleport"] = "Afficher les téléports spécifiques à la classe (uniquement si la classe en dispose)"
 L["portalShowMagePortal"] = "Afficher les portails de mage (uniquement pour les mages)"
+
+-- BR Tracker
+L["BRTracker"] = "Résurrection en combat"
+L["brTrackerHeadline"] = "Ajoute un suivi de résurrection en combat dans les donjons Mythic+"
+L["mythicPlusBRTrackerEnabled"] = "Activer le suivi de résurrection en combat"
+L["mythicPlusBRTrackerLocked"] = "Verrouiller la position du suivi"
+L["mythicPlusBRButtonSizeHeadline"] = "Taille du bouton"

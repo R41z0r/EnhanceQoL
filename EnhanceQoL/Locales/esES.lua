@@ -117,7 +117,7 @@ L["CVarOptions"] = {
 	["WholeChatWindowClickable"] = { description = "Hacer que toda la ventana de chat sea clicable", trueValue = "1", falseValue = "0" },
 }
 
-L["autoAcceptGroupInvite"] = "Aceptar automáticamente invitaciones de grupo"
-L["autoAcceptGroupInviteGuildOnly"] = "Solo miembros de la hermandad"
-L["autoAcceptGroupInviteFriendOnly"] = "Solo amigos"
-L["autoAcceptGroupInviteOptions"] = "Aceptar solo cuando..."
+L["autoAcceptGroupInvite"] = "Aceptar automáticamente las invitaciones de grupo"
+L["autoAcceptGroupInviteGuildOnly"] = "Miembros de la hermandad"
+L["autoAcceptGroupInviteFriendOnly"] = "Amigos"
+L["autoAcceptGroupInviteOptions"] = "Aceptar invitaciones de..."

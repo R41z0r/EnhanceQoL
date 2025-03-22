@@ -56,8 +56,10 @@ L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = 'Hide the group finder text "Your group is currently forming"'
 L["groupfinderMoveResetButton"] = "Shift the 'Reset Filter' button in the Dungeon Browser to the left side"
 L["groupfinderShowDungeonScoreFrame"] = "Show " .. DUNGEON_SCORE .. " frame next to the Dungeon Finder"
-L["groupfinderSkipRolecheck"] = "Skip the role check and automatically use your current specialization's role (e.g. Blood DK = Tank)"
-L["skipSignUpDialogUseLFDRole"] = "Use the roles you selected in the Dungeon Finder tab instead of your current specialization"
+L["groupfinderSkipRoleSelect"] = "Skip role selection"
+L["groupfinderSkipRolecheckHeadline"] = "Automatic role assignment"
+L["groupfinderSkipRolecheckUseSpec"] = "Use your current spec's role (e.g. Blood Death Knight = Tank)"
+L["groupfinderSkipRolecheckUseLFD"] = "Use roles from Dungeon Finder"
 L["groupfinderShowPartyKeystone"] = "Display your party members' Mythic+ Keystone info"
 
 -- Misc Frame
@@ -91,3 +93,10 @@ L["portalShowToyHearthstones"] = "Show Teleport Items and Toys (e.g. Hearthstone
 L["portalShowEngineering"] = "Show Engineering Teleports (Requires Engineering)"
 L["portalShowClassTeleport"] = "Show Class-Specific Teleports (Only if this class has any)"
 L["portalShowMagePortal"] = "Show Mage Portals (Mage only)"
+
+-- BR Tracker
+L["BRTracker"] = "Combat Resurrection"
+L["brTrackerHeadline"] = "Adds a Combat Resurrection tracker in Mythic+ dungeons"
+L["mythicPlusBRTrackerEnabled"] = "Enable Combat Resurrection tracker"
+L["mythicPlusBRTrackerLocked"] = "Lock the tracker's position"
+L["mythicPlusBRButtonSizeHeadline"] = "Button Size"

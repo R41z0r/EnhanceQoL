@@ -58,8 +58,10 @@ L["DungeonBrowser"] = "던전 브라우저"
 L["groupfinderAppText"] = '그룹 찾기 텍스트 "당신의 그룹이 현재 형성 중입니다" 숨기기'
 L["groupfinderMoveResetButton"] = "던전 찾기의 필터 초기화 버튼을 왼쪽으로 이동합니다."
 L["groupfinderShowDungeonScoreFrame"] = "던전 찾기 옆에 " .. DUNGEON_SCORE .. " 프레임 표시"
-L["groupfinderSkipRolecheck"] = "역할 확인을 건너뛰고 현재 전문화의 역할을 자동으로 사용합니다 (예: 혈기 죽기 = 탱커)."
-L["skipSignUpDialogUseLFDRole"] = "현재 전문화 대신 던전 찾기 탭에서 선택한 역할을 사용합니다."
+L["groupfinderSkipRoleSelect"] = "역할 선택 건너뛰기"
+L["groupfinderSkipRolecheckHeadline"] = "자동 역할 설정"
+L["groupfinderSkipRolecheckUseSpec"] = "현재 전문화의 역할 사용 (예: 죽음의 기사 (혈기) = 탱커)"
+L["groupfinderSkipRolecheckUseLFD"] = "던전 찾기에 설정된 역할 사용"
 L["groupfinderShowPartyKeystone"] = "파티원의 쐐기돌 정보를 표시합니다"
 
 -- Misc Frame
@@ -96,3 +98,10 @@ L["portalShowToyHearthstones"] = "순간이동 아이템 및 장난감 표시 (�
 L["portalShowEngineering"] = "기계공학 순간이동 표시 (기계공학 필요)"
 L["portalShowClassTeleport"] = "직업별 순간이동 표시 (해당 직업만 사용 가능)"
 L["portalShowMagePortal"] = "마법사 차원문 표시 (마법사 전용)"
+
+-- BR Tracker
+L["BRTracker"] = "전투 부활"
+L["brTrackerHeadline"] = "Mythic+ 던전에서 전투 부활 추적기를 추가합니다."
+L["mythicPlusBRTrackerEnabled"] = "전투 부활 추적기 사용"
+L["mythicPlusBRTrackerLocked"] = "추적기 위치 잠금"
+L["mythicPlusBRButtonSizeHeadline"] = "버튼 크기"

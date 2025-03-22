@@ -58,8 +58,10 @@ L["DungeonBrowser"] = "Explorador de Masmorras"
 L["groupfinderAppText"] = 'Ocultar o texto do buscador de grupos "Seu grupo está se formando atualmente"'
 L["groupfinderMoveResetButton"] = "Mova o botão de redefinição de filtro do Localizador de Masmorras para o lado esquerdo."
 L["groupfinderShowDungeonScoreFrame"] = "Exibir o quadro " .. DUNGEON_SCORE .. " ao lado do Localizador de Masmorras"
-L["groupfinderSkipRolecheck"] = "Ignorar a verificação de função e usar automaticamente a função da sua especialização atual (por ex. DK Sangue = tanque)."
-L["skipSignUpDialogUseLFDRole"] = "Usar as funções selecionadas na guia Localizador de Masmorras em vez da sua especialização atual."
+L["groupfinderSkipRoleSelect"] = "Pular seleção de função"
+L["groupfinderSkipRolecheckHeadline"] = "Atribuição automática de função"
+L["groupfinderSkipRolecheckUseSpec"] = "Use a função da sua especialização (ex. Cavaleiro da Morte (Sangue) = Tanque)"
+L["groupfinderSkipRolecheckUseLFD"] = "Use as funções do Localizador de Masmorras"
 L["groupfinderShowPartyKeystone"] = "Exibir as informações de pedra-chave Mítica dos membros do grupo"
 
 -- Misc Frame
@@ -92,3 +94,10 @@ L["portalShowToyHearthstones"] = "Mostrar itens e brinquedos de teletransporte (
 L["portalShowEngineering"] = "Mostrar teletransportes de Engenharia (requer Engenharia)"
 L["portalShowClassTeleport"] = "Mostrar teletransportes específicos de classe (apenas se a classe possuir)"
 L["portalShowMagePortal"] = "Mostrar portais de Mago (apenas para Magos)"
+
+-- BR Tracker
+L["BRTracker"] = "Ressurreição em combate"
+L["brTrackerHeadline"] = "Adiciona um rastreador de ressurreição em combate em masmorras Míticas+"
+L["mythicPlusBRTrackerEnabled"] = "Habilitar rastreador de ressurreição em combate"
+L["mythicPlusBRTrackerLocked"] = "Travar a posição do rastreador"
+L["mythicPlusBRButtonSizeHeadline"] = "Tamanho do botão"
