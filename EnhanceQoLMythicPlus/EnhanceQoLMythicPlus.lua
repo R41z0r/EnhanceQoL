@@ -318,6 +318,7 @@ frameLoad:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 frameLoad:RegisterEvent("READY_CHECK")
 frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
 frameLoad:RegisterEvent("SPELL_UPDATE_CHARGES")
+frameLoad:RegisterEvent("ENCOUNTER_END")
 
 local function skipRolecheck()
 	if addon.db["groupfinderSkipRoleSelectOption"] == 1 then
@@ -457,6 +458,8 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 		else
 			removeBRFrame()
 		end
+	elseif event == "ENCOUNTER_END" then
+		removeBRFrame()
 	end
 end
 
