@@ -6,6 +6,15 @@ exclude_files = {
 	"LibStub.lua",
 	"CallbackHandler-1.0.lua",
 	"EnhanceQoLAura.lua",
+	"LibOpenRaid.lua",
+	"test.lua",
+	"LibStub.lua",
+	"ThingsToMantain_Wrath.lua",
+	"ThingsToMantain_WarWithin.lua",
+	"ThingsToMantain_Shadowlands.lua",
+	"ThingsToMantain_Era.lua",
+	"ThingsToMantain_Cata.lua",
+	"ThingsToMantain_Dragonflight.lua",
 }
 ignore = {
 	"11./SLASH_.*", -- Setting an undefined (Slash handler) global variable

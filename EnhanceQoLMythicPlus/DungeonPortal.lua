@@ -704,7 +704,6 @@ local function CreateRioScore()
 	end
 end
 
-local knownData = {}
 local keyStoneFrame
 local measureFontString
 local function calculateMaxWidth(dataTable)
@@ -716,13 +715,15 @@ local function calculateMaxWidth(dataTable)
 				local mapData = mapInfo[data.challengeMapID]
 				if not mapData then mapData = { mapName = L["NoKeystone"] } end
 				measureFontString:SetText(mapData.mapName or "")
-				widthMap = measureFontString:GetStringWidth() + 20 + buttonSize
+				widthMap = measureFontString:GetStringWidth() + 25 + buttonSize
 			else
 				measureFontString:SetText(L["NoKeystone"] or "")
-				widthMap = measureFontString:GetStringWidth() + 20 + buttonSize
+				widthMap = measureFontString:GetStringWidth() + 25 + buttonSize
 			end
-			measureFontString:SetText(data.charName or "")
-			local widthCharName = measureFontString:GetStringWidth() + 20 + buttonSize
+			local uName = UnitName(key)
+
+			measureFontString:SetText(uName or "")
+			local widthCharName = measureFontString:GetStringWidth() + 25 + buttonSize
 			local width = max(widthCharName, widthMap)
 			if width > maxWidth then maxWidth = width end
 		end
@@ -746,124 +747,113 @@ local function updateKeystoneInfo()
 		end
 		keyStoneFrame:SetPoint("TOPRIGHT", parentFrame, "BOTTOMRIGHT", 0, minHightOffset)
 		if #portalSpells == 0 then getCurrentSeasonPortal() end
-		local maxWidthKeystone = calculateMaxWidth(knownData)
+		local keystoneData = openRaidLib.GetAllKeystonesInfo()
 
-		local index = 0
-		for key, data in pairs(knownData) do
-			if UnitInParty(key) or key == addon.variables.unitName then
-				local mapData
-				if data.challengeMapID and data.challengeMapID > 0 then
-					mapData = mapInfo[data.challengeMapID]
-					if not mapData then mapData = {
-						mapName = L["NoKeystone"],
-					} end
-				else
-					mapData = {
-						mapName = L["NoKeystone"],
-					}
+		if keystoneData then
+			local unitsAdded = {}
+			local isOnline = true
+
+			local maxWidthKeystone = calculateMaxWidth(keystoneData)
+
+			local index = 0
+			for key, data in pairs(keystoneData) do
+				local uName, uRealm = UnitName(key)
+				data.charName = uName
+				data.classColor = RAID_CLASS_COLORS[select(2, UnitClass(key))] or { r = 1, g = 1, b = 1 }
+
+				if UnitInParty(key) or key == addon.variables.unitName then
+					local mapData
+					if data.challengeMapID and data.challengeMapID > 0 then
+						mapData = mapInfo[data.challengeMapID]
+						if not mapData then mapData = {
+							mapName = L["NoKeystone"],
+						} end
+					else
+						mapData = {
+							mapName = L["NoKeystone"],
+						}
+					end
+					local frame = CreateFrame("Frame", nil, keyStoneFrame, "BackdropTemplate")
+					frame:SetSize(maxWidthKeystone, 50) -- Passe die Größe nach Bedarf an
+					frame:SetPoint("TOPRIGHT", keyStoneFrame, "TOPRIGHT", 0, -50 * index)
+					frame:SetBackdrop({
+						bgFile = "Interface\\Buttons\\WHITE8x8", -- Hintergrund
+						edgeFile = nil, -- Rahmen
+						edgeSize = 16,
+						insets = { left = 4, right = 4, top = 1, bottom = 0 },
+					})
+					frame:SetBackdropColor(0, 0, 0, 0.8) -- Dunkler Hintergrund mit 80% Transparenz
+					frame:Show()
+
+					-- Button erstellen
+					local button = CreateFrame("Button", nil, frame, "SecureActionButtonTemplate")
+					button:SetSize(buttonSize, buttonSize)
+					button:SetPoint("LEFT", frame, "LEFT", 10, 0)
+					if mapData.spellId then button.spellID = mapData.spellId end
+
+					-- Dungeonname (zum Beispiel rechtsbündig)
+					local dungeonText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+					dungeonText:SetPoint("TOPLEFT", button, "TOPRIGHT", 5, 0)
+					dungeonText:SetText(mapData.mapName or "Unknown Dungeon")
+
+					-- Hintergrund
+					local bg = button:CreateTexture(nil, "BACKGROUND")
+					bg:SetAllPoints(button)
+					bg:SetColorTexture(0, 0, 0, 0.8)
+
+					-- Rahmen
+					local border = button:CreateTexture(nil, "BORDER")
+					border:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1)
+					border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
+					border:SetColorTexture(1, 1, 1, 1)
+
+					-- Highlight/Glow-Effekt
+					local highlight = button:CreateTexture(nil, "HIGHLIGHT")
+					highlight:SetAllPoints(button)
+					highlight:SetColorTexture(1, 1, 0, 0.4)
+					button:SetHighlightTexture(highlight)
+
+					-- Icon
+					local icon = button:CreateTexture(nil, "ARTWORK")
+					icon:SetAllPoints(button)
+					icon:SetTexture(mapData.texture or "Interface\\ICONS\\INV_Misc_QuestionMark")
+					button.icon = icon
+
+					-- Überprüfen, ob der Zauber bekannt ist
+					if mapData.spellId and IsSpellKnown(mapData.spellId) then
+						button:EnableMouse(true) -- Aktiviert Klicks
+
+						-- Cooldown-Spirale
+						button:SetAttribute("type", "spell")
+						button:SetAttribute("spell", mapData.spellId)
+						button:RegisterForClicks("AnyUp", "AnyDown")
+					else
+						button:EnableMouse(false) -- Deaktiviert Klicks auf den Button
+					end
+
+					if data.level and data.level > 0 then
+						-- Key-Level als Text
+						local levelText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+						levelText:SetPoint("CENTER", button, "CENTER", 0, 0)
+						levelText:SetText((data.level or "0"))
+						levelText:SetTextColor(1, 1, 1)
+					end
+					-- Spielername in Klassenfarbe
+					local playerNameText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+					playerNameText:SetPoint("BOTTOMLEFT", button, "BOTTOMRIGHT", 5, 0)
+
+					local classColor = data.classColor
+					playerNameText:SetText(data.charName)
+					playerNameText:SetTextColor(classColor.r, classColor.g, classColor.b)
+					index = index + 1
 				end
-				local frame = CreateFrame("Frame", nil, keyStoneFrame, "BackdropTemplate")
-				frame:SetSize(maxWidthKeystone, 50) -- Passe die Größe nach Bedarf an
-				frame:SetPoint("TOPRIGHT", keyStoneFrame, "TOPRIGHT", 0, -50 * index)
-				frame:SetBackdrop({
-					bgFile = "Interface\\Buttons\\WHITE8x8", -- Hintergrund
-					edgeFile = nil, -- Rahmen
-					edgeSize = 16,
-					insets = { left = 4, right = 4, top = 1, bottom = 0 },
-				})
-				frame:SetBackdropColor(0, 0, 0, 0.8) -- Dunkler Hintergrund mit 80% Transparenz
-				frame:Show()
-
-				-- Button erstellen
-				local button = CreateFrame("Button", nil, frame, "SecureActionButtonTemplate")
-				button:SetSize(buttonSize, buttonSize)
-				button:SetPoint("LEFT", frame, "LEFT", 10, 0)
-				if mapData.spellId then button.spellID = mapData.spellId end
-
-				-- Dungeonname (zum Beispiel rechtsbündig)
-				local dungeonText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-				dungeonText:SetPoint("TOPLEFT", button, "TOPRIGHT", 5, 0)
-				dungeonText:SetText(mapData.mapName or "Unknown Dungeon")
-
-				-- Hintergrund
-				local bg = button:CreateTexture(nil, "BACKGROUND")
-				bg:SetAllPoints(button)
-				bg:SetColorTexture(0, 0, 0, 0.8)
-
-				-- Rahmen
-				local border = button:CreateTexture(nil, "BORDER")
-				border:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1)
-				border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
-				border:SetColorTexture(1, 1, 1, 1)
-
-				-- Highlight/Glow-Effekt
-				local highlight = button:CreateTexture(nil, "HIGHLIGHT")
-				highlight:SetAllPoints(button)
-				highlight:SetColorTexture(1, 1, 0, 0.4)
-				button:SetHighlightTexture(highlight)
-
-				-- Icon
-				local icon = button:CreateTexture(nil, "ARTWORK")
-				icon:SetAllPoints(button)
-				icon:SetTexture(mapData.texture or "Interface\\ICONS\\INV_Misc_QuestionMark")
-				button.icon = icon
-
-				-- Überprüfen, ob der Zauber bekannt ist
-				if mapData.spellId and IsSpellKnown(mapData.spellId) then
-					button:EnableMouse(true) -- Aktiviert Klicks
-
-					-- Cooldown-Spirale
-					button:SetAttribute("type", "spell")
-					button:SetAttribute("spell", mapData.spellId)
-					button:RegisterForClicks("AnyUp", "AnyDown")
-				else
-					button:EnableMouse(false) -- Deaktiviert Klicks auf den Button
-				end
-
-				if data.level and data.level > 0 then
-					-- Key-Level als Text
-					local levelText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-					levelText:SetPoint("CENTER", button, "CENTER", 0, 0)
-					levelText:SetText((data.level or "0"))
-					levelText:SetTextColor(1, 1, 1)
-				end
-				-- Spielername in Klassenfarbe
-				local playerNameText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-				playerNameText:SetPoint("BOTTOMLEFT", button, "BOTTOMRIGHT", 5, 0)
-
-				local classColor = data.classColor
-				playerNameText:SetText(data.charName)
-				playerNameText:SetTextColor(classColor.r, classColor.g, classColor.b)
-				index = index + 1
-			else
-				knownData[key] = nil
 			end
 		end
 	end
 end
 
 function addon.MythicPlus.onKeystoneUpdate(unitName, keystoneInfo, keystoneData)
-	if (UnitInParty(unitName) or UnitName("player") == unitName) and UnitLevel(unitName) >= addon.variables.maxLevel then
-		local updateUI = false
-		local uName, uRealm = UnitName(unitName)
-		local kInfo = {
-			charName = uName,
-			level = keystoneInfo.level,
-			challengeMapID = keystoneInfo.challengeMapID,
-			classColor = RAID_CLASS_COLORS[select(2, UnitClass(unitName))] or { r = 1, g = 1, b = 1 },
-		}
-		if knownData[unitName] then
-			if knownData[unitName].challengeMapID ~= kInfo.challengeMapID or knownData[unitName].level ~= kInfo.level then
-				print("Edit Key")
-				knownData[unitName] = kInfo -- Update UI View
-				updateUI = true
-			end
-		else
-			knownData[unitName] = kInfo
-			updateUI = true
-		end
-		if updateUI then updateKeystoneInfo() end
-	end
+	if parentFrame:IsShown() then updateKeystoneInfo() end
 end
 
 function addon.MythicPlus.functions.togglePartyKeystone()
@@ -871,11 +861,9 @@ function addon.MythicPlus.functions.togglePartyKeystone()
 		measureFontString = UIParent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 		measureFontString:Hide()
 		openRaidLib.RegisterCallback(addon.MythicPlus, "KeystoneUpdate", "onKeystoneUpdate")
-		openRaidLib.WipeKeystoneData()
 		openRaidLib.RequestKeystoneDataFromParty()
 	else
 		measureFontString = nil
-		knownData = {}
 		keyStoneFrame:Hide()
 		keyStoneFrame:SetParent(nil)
 		keyStoneFrame = nil
@@ -931,6 +919,7 @@ frameAnchor:RegisterEvent("ADDON_LOADED")
 frameAnchor:RegisterEvent("SPELL_DATA_LOAD_RESULT")
 frameAnchor:RegisterEvent("PLAYER_REGEN_ENABLED")
 frameAnchor:RegisterEvent("GROUP_ROSTER_UPDATE")
+frameAnchor:RegisterEvent("GROUP_LEFT")
 
 local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	if addon.db["teleportFrame"] then
@@ -949,7 +938,10 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 					frameAnchorCompendium:Hide()
 				end
 			elseif event == "GROUP_ROSTER_UPDATE" then
-				updateKeystoneInfo()
+				-- addon.MythicPlus.triggerRequest()
+				-- updateKeystoneInfo()
+			elseif event == "GROUP_LEFT" then
+				openRaidLib.WipeKeystoneData() -- After Group left - WipeKeystoneData
 			elseif parentFrame:IsShown() then -- Only do stuff, when PVEFrame Open
 				if event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
 					if allSpells[arg3] then waitCooldown(arg3) end
