@@ -2082,7 +2082,7 @@ function loadMain()
 			BagsBar:Hide()
 		end
 	end
-	addon.functions.toggleBagsBar(addon.db["hideMicroMenu"])
+	addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
 	function addon.functions.toggleMicroMenu(value)
 		if value == false then
 			MicroMenu:Show()

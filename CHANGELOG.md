@@ -17,3 +17,7 @@
 
 - **Text Updates**
   - Several text strings were refined for improved clarity and consistency.
+
+## Bugfix
+
+- The Bags bar was shown sometimes
