@@ -126,3 +126,9 @@ L["autoAcceptGroupInviteFriendOnly"] = "好友"
 L["autoAcceptGroupInviteOptions"] = "接受来自...的邀请"
 
 L["showLeaderIconRaidFrame"] = "在团队风格的队伍框体上显示队长图标"
+
+L["ActionbarHideExplain"] = "将动作条设置为隐藏，仅在鼠标悬停时显示。只有当你的动作条在编辑模式中设置为“"
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
+	.. "”和“"
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
+	.. "”时，此功能才会生效。"

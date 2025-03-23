@@ -164,6 +164,42 @@ local function removeLeaderIcon()
 	end
 end
 
+-- Action Bars
+local function UpdateActionBarMouseover(barName, enable)
+	local bar = _G[barName]
+	if not bar then return end
+
+	local btnPrefix
+	if barName == "MainMenuBar" then
+		btnPrefix = "ActionButton"
+	elseif barName == "PetActionBar" then
+		btnPrefix = "PetActionButton"
+	else
+		btnPrefix = barName .. "Button"
+	end
+
+	if enable then
+		bar:SetAlpha(0)
+		for i = 1, 12 do
+			local button = _G[btnPrefix .. i]
+			if button then
+				button:EnableMouse(true)
+				button:SetScript("OnEnter", function() bar:SetAlpha(1) end)
+				button:SetScript("OnLeave", function() bar:SetAlpha(0) end)
+			end
+		end
+	else
+		bar:SetAlpha(1)
+		for i = 1, 12 do
+			local button = _G[btnPrefix .. i]
+			if button then
+				button:SetScript("OnEnter", nil)
+				button:SetScript("OnLeave", nil)
+			end
+		end
+	end
+end
+
 local doneHook = false
 local inspectDone = {}
 local inspectUnit = nil
@@ -725,6 +761,37 @@ local function setCharFrame()
 	if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
 	for key, value in pairs(addon.variables.itemSlots) do
 		setIlvlText(value, key)
+	end
+end
+
+local function addActionBarFrame(container, d)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local labelHeadline = addon.functions.createLabelAce(L["ActionbarHideExplain"], nil, nil, 14)
+	labelHeadline:SetFullWidth(true)
+	groupCore:AddChild(labelHeadline)
+	
+	groupCore:AddChild(addon.functions.createSpacerAce())
+
+	for _, cbData in ipairs(addon.variables.actionBarNames) do
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value)
+			if cbData.var and cbData.name then
+				addon.db[cbData.var] = value
+				UpdateActionBarMouseover(cbData.name, value)
+			end
+		end, desc)
+		groupCore:AddChild(cbElement)
 	end
 end
 
@@ -1651,6 +1718,14 @@ local function initDungeon()
 	if addon.db["groupfinderMoveResetButton"] then toggleLFGFilterPosition() end
 end
 
+local function initActionBars()
+	for _, cbData in ipairs(addon.variables.actionBarNames) do
+		if cbData.var and cbData.name then
+			if addon.db[cbData.var] then UpdateActionBarMouseover(cbData.name, addon.db[cbData.var]) end
+		end
+	end
+end
+
 local function initParty()
 	addon.functions.InitDBValue("autoAcceptGroupInvite", false)
 	addon.functions.InitDBValue("autoAcceptGroupInviteFriendOnly", false)
@@ -1968,6 +2043,7 @@ local function CreateUI()
 			{ value = "dungeon", text = L["Dungeon"] },
 			{ value = "misc", text = L["Misc"] },
 			{ value = "quest", text = L["Quest"] },
+			{ value = "actionbar", text = ACTIONBARS_LABEL },
 		},
 	})
 	addon.treeGroup:SetLayout("Fill")
@@ -1981,6 +2057,8 @@ local function CreateUI()
 			addQuestFrame(container, true) -- Ruft die Funktion zum Hinzufügen der Quest-Optionen auf
 		elseif group == "general\001cvar" then
 			addCVarFrame(container, true) -- Ruft die Funktion zum Hinzufügen der CVar-Optionen auf
+		elseif group == "general\001actionbar" then
+			addActionBarFrame(container)
 		elseif group == "general\001dungeon" then
 			addDungeonFrame(container, true) -- Ruft die Funktion zum Hinzufügen der Dungeon-Optionen auf
 		elseif group == "general\001character" then
@@ -2166,6 +2244,7 @@ local function setAllHooks()
 	initQuest()
 	initDungeon()
 	initParty()
+	initActionBars()
 end
 
 function loadMain()

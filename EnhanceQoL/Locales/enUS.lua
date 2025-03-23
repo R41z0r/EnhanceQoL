@@ -131,3 +131,11 @@ L["autoAcceptGroupInviteFriendOnly"] = "Friends"
 L["autoAcceptGroupInviteOptions"] = "Accept invites from..."
 
 L["showLeaderIconRaidFrame"] = "Show leader icon on raid-style party frames"
+
+L["ActionbarHideExplain"] = 'Set the action bar to hidden and show on mouseover. This works only when your Action Bar is set to "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
+	.. '" and "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
+	.. '" in '
+	.. _G["HUD_EDIT_MODE_MENU"]
+	.. "."

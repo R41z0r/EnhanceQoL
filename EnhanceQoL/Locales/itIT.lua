@@ -126,3 +126,11 @@ L["autoAcceptGroupInviteFriendOnly"] = "Amici"
 L["autoAcceptGroupInviteOptions"] = "Accetta inviti da..."
 
 L["showLeaderIconRaidFrame"] = "Mostra l’icona del capogruppo sui frame di gruppo in stile incursione"
+
+L["ActionbarHideExplain"] = 'Imposta la barra delle azioni come nascosta e visibile al passaggio del mouse. Funziona solo se la barra è impostata su "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
+	.. '" e "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
+	.. '" in '
+	.. _G["HUD_EDIT_MODE_MENU"]
+	.. "."

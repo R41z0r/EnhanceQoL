@@ -197,3 +197,18 @@ addon.variables.allowedEquipSlotsBagIlvl = {
 	["INVTYPE_PROFESSION_TOOL"] = true,
 	["INVTYPE_PROFESSION_GEAR"] = true,
 }
+
+-- Actionbars
+addon.variables.actionBarNames = {
+	{ name = "MainMenuBar", var = "mouseoverActionBar1", text = BINDING_HEADER_ACTIONBAR },
+	{ name = "MultiBarBottomLeft", var = "mouseoverActionBar2", text = BINDING_HEADER_ACTIONBAR2 },
+	{ name = "MultiBarBottomRight", var = "mouseoverActionBar3", text = BINDING_HEADER_ACTIONBAR3 },
+	{ name = "MultiBarRight", var = "mouseoverActionBar4", text = BINDING_HEADER_ACTIONBAR4 },
+	{ name = "MultiBarLeft", var = "mouseoverActionBar5", text = BINDING_HEADER_ACTIONBAR5 },
+	{ name = "MultiBar5", var = "mouseoverActionBar6", text = BINDING_HEADER_ACTIONBAR6 },
+	{ name = "MultiBar6", var = "mouseoverActionBar7", text = BINDING_HEADER_ACTIONBAR7 },
+	{ name = "MultiBar7", var = "mouseoverActionBar8", text = BINDING_HEADER_ACTIONBAR8 },
+	{ name = "PetActionBar", var = "mouseoverActionBarPet", text = TUTORIAL_TITLE61_HUNTER },
+}
+
+table.sort(addon.variables.actionBarNames, function(a, b) return a.text < b.text end)

@@ -132,3 +132,11 @@ L["autoAcceptGroupInviteFriendOnly"] = "Amigos"
 L["autoAcceptGroupInviteOptions"] = "Aceptar invitaciones de..."
 
 L["showLeaderIconRaidFrame"] = "Mostrar el icono de líder en los marcos de grupo con estilo de banda"
+
+L["ActionbarHideExplain"] = 'Configura la barra de acción para que esté oculta y se muestre al pasar el ratón. Esto solo funciona si tu barra de acción está configurada en "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
+	.. '" y "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
+	.. '" en '
+	.. _G["HUD_EDIT_MODE_MENU"]
+	.. "."

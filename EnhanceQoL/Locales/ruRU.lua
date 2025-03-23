@@ -150,3 +150,11 @@ L["autoAcceptGroupInviteFriendOnly"] = "Друзья"
 L["autoAcceptGroupInviteOptions"] = "Принимать приглашения от..."
 
 L["showLeaderIconRaidFrame"] = "Показывать значок лидера в рейдовых групповых фреймах"
+
+L["ActionbarHideExplain"] = 'Сделайте панель команд скрытой и показываемой при наведении мыши. Это работает только если ваша панель настроена на "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
+	.. '" и "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
+	.. '" в '
+	.. _G["HUD_EDIT_MODE_MENU"]
+	.. "."

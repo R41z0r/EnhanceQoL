@@ -132,3 +132,11 @@ L["autoAcceptGroupInviteFriendOnly"] = "Amis"
 L["autoAcceptGroupInviteOptions"] = "Accepter les invitations de..."
 
 L["showLeaderIconRaidFrame"] = "Afficher l’icône de chef sur les cadres de groupe en mode raid"
+
+L["ActionbarHideExplain"] = 'Définissez la barre d’actions comme masquée et visible au survol. Cela ne fonctionne que si votre barre d’actions est réglée sur "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
+	.. '" et "'
+	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
+	.. '" dans '
+	.. _G["HUD_EDIT_MODE_MENU"]
+	.. "."
