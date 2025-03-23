@@ -148,3 +148,5 @@ L["autoAcceptGroupInvite"] = "Автоматически принимать пр
 L["autoAcceptGroupInviteGuildOnly"] = "Члены гильдии"
 L["autoAcceptGroupInviteFriendOnly"] = "Друзья"
 L["autoAcceptGroupInviteOptions"] = "Принимать приглашения от..."
+
+L["showLeaderIconRaidFrame"] = "Показывать значок лидера в рейдовых групповых фреймах"

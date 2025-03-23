@@ -129,3 +129,5 @@ L["autoAcceptGroupInvite"] = "Gruppeneinladungen automatisch annehmen"
 L["autoAcceptGroupInviteGuildOnly"] = "Gildenmitglieder"
 L["autoAcceptGroupInviteFriendOnly"] = "Freunde"
 L["autoAcceptGroupInviteOptions"] = "Einladungen annehmen von..."
+
+L["showLeaderIconRaidFrame"] = "Zeige das Anführersymbol in gruppierten Schlachtzugsfenstern"

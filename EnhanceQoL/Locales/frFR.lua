@@ -130,3 +130,5 @@ L["autoAcceptGroupInvite"] = "Accepter automatiquement les invitations de groupe
 L["autoAcceptGroupInviteGuildOnly"] = "Membres de la guilde"
 L["autoAcceptGroupInviteFriendOnly"] = "Amis"
 L["autoAcceptGroupInviteOptions"] = "Accepter les invitations de..."
+
+L["showLeaderIconRaidFrame"] = "Afficher l’icône de chef sur les cadres de groupe en mode raid"

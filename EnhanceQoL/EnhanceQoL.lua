@@ -108,25 +108,6 @@ local function toggleLFGFilterPosition()
 		end
 	end
 end
--- local function UpdateTargetSpellbarShieldColor()
--- 	local castBar = TargetFrameSpellBar
--- 	if not castBar or not castBar.BorderShield then return end
-
--- 	local _, _, _, _, _, _, _, notInterruptible = UnitCastingInfo("target")
--- 	if notInterruptible then
--- 		castBar:SetStatusBarColor(0, 0, 1, 1) -- Blau (RGB: 0, 0, 1)
--- 	else
--- 		castBar:SetStatusBarColor(0, 1, 0, 1) -- Grün (RGB: 0, 1, 0)
--- 	end
--- end
-
--- -- Hook, um die Farbe bei Änderungen zu aktualisieren
--- TargetFrameSpellBar:HookScript("OnEvent", function(self, event)
--- 	if event == "UNIT_SPELLCAST_START" then UpdateTargetSpellbarShieldColor() end
--- end)
-
--- -- Initiales Update, falls das Frame bereits sichtbar ist
--- UpdateTargetSpellbarShieldColor()
 
 LFGListApplicationDialog:HookScript("OnShow", function(self)
 	if not EnhanceQoLDB.skipSignUpDialog then return end
@@ -154,6 +135,32 @@ function EQOL.PersistSignUpNote()
 	elseif didApplyPatch then
 		-- restore previously overwritten function
 		LFGListApplicationDialog_Show = originalFunc
+	end
+end
+
+local function setLeaderIcon()
+	for i = 1, 5 do
+		if _G["CompactPartyFrameMember" .. i] and _G["CompactPartyFrameMember" .. i]:IsShown() and _G["CompactPartyFrameMember" .. i].unit then
+			if UnitIsGroupLeader(_G["CompactPartyFrameMember" .. i].unit) then
+				if not addon.variables.leaderFrame then
+					addon.variables.leaderFrame = CreateFrame("Frame", nil, CompactPartyFrame)
+					addon.variables.leaderFrame.leaderIcon = addon.variables.leaderFrame:CreateTexture(nil, "OVERLAY")
+					addon.variables.leaderFrame.leaderIcon:SetTexture("Interface\\GroupFrame\\UI-Group-LeaderIcon")
+					addon.variables.leaderFrame.leaderIcon:SetSize(16, 16)
+				end
+				addon.variables.leaderFrame.leaderIcon:ClearAllPoints()
+				addon.variables.leaderFrame.leaderIcon:SetPoint("TOPRIGHT", _G["CompactPartyFrameMember" .. i], "TOPRIGHT", 5, 6)
+				return
+			end
+		end
+	end
+end
+
+local function removeLeaderIcon()
+	if addon.variables.leaderFrame then
+		addon.variables.leaderFrame:SetParent(nil)
+		addon.variables.leaderFrame:Hide()
+		addon.variables.leaderFrame = nil
 	end
 end
 
@@ -883,6 +890,19 @@ local function addPartyFrame(container)
 				addon.db["autoAcceptGroupInvite"] = value
 				container:ReleaseChildren()
 				addPartyFrame(container)
+			end,
+		},
+		{
+			parent = "",
+			var = "showLeaderIconRaidFrame",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showLeaderIconRaidFrame"] = value
+				if value == true then
+					setLeaderIcon()
+				else
+					removeLeaderIcon()
+				end
 			end,
 		},
 	}
@@ -1635,6 +1655,20 @@ local function initParty()
 	addon.functions.InitDBValue("autoAcceptGroupInvite", false)
 	addon.functions.InitDBValue("autoAcceptGroupInviteFriendOnly", false)
 	addon.functions.InitDBValue("autoAcceptGroupInviteGuildOnly", false)
+	addon.functions.InitDBValue("showLeaderIconRaidFrame", false)
+
+	if CompactUnitFrame_SetUnit then
+		hooksecurefunc("CompactUnitFrame_SetUnit", function(s, type)
+			if addon.db["showLeaderIconRaidFrame"] then
+				if type then
+					if _G["CompactPartyFrame"]:IsShown() and strmatch(type, "party%d") then
+						if UnitInParty("player") and not UnitInRaid("player") then setLeaderIcon() end
+					end
+				end
+			end
+		end)
+	end
+	-- if addon.db["showLeaderIconRaidFrame"] then setLeaderIcon() end
 end
 
 local function initQuest()

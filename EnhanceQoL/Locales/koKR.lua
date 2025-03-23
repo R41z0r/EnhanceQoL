@@ -124,3 +124,5 @@ L["autoAcceptGroupInvite"] = "파티 초대를 자동으로 수락"
 L["autoAcceptGroupInviteGuildOnly"] = "길드원"
 L["autoAcceptGroupInviteFriendOnly"] = "친구"
 L["autoAcceptGroupInviteOptions"] = "다음 대상의 초대를 수락..."
+
+L["showLeaderIconRaidFrame"] = "공격대 스타일 파티 프레임에 파티장 아이콘 표시"

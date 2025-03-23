@@ -130,3 +130,5 @@ L["autoAcceptGroupInvite"] = "自動接受組隊邀請"
 L["autoAcceptGroupInviteGuildOnly"] = "公會成員"
 L["autoAcceptGroupInviteFriendOnly"] = "好友"
 L["autoAcceptGroupInviteOptions"] = "接受來自...的邀請"
+
+L["showLeaderIconRaidFrame"] = "在團隊風格的隊伍框架上顯示隊長圖示"

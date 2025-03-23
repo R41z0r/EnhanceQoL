@@ -124,3 +124,5 @@ L["autoAcceptGroupInvite"] = "Accetta automaticamente gli inviti al gruppo"
 L["autoAcceptGroupInviteGuildOnly"] = "Membri di gilda"
 L["autoAcceptGroupInviteFriendOnly"] = "Amici"
 L["autoAcceptGroupInviteOptions"] = "Accetta inviti da..."
+
+L["showLeaderIconRaidFrame"] = "Mostra l’icona del capogruppo sui frame di gruppo in stile incursione"

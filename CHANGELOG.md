@@ -6,6 +6,10 @@
   - Added a setting to only accept invites from Friends.
   - Added a setting to only accept invites from Guild members.
 
+- **Show leader icon in party-raid-frames**
+
+  - Option to show the leader icon in raid-style party frames
+
 - **Combat Resurrection Tracker**
 
   - Added an Option to track the available Combat Res and a timer when the next will be available
