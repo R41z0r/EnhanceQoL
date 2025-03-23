@@ -164,6 +164,22 @@ local function removeLeaderIcon()
 	end
 end
 
+local function GameTooltipActionButton(button)
+	button:HookScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_NONE")
+		GameTooltip_SetDefaultAnchor(GameTooltip, UIParent) -- Use default positioning
+		GameTooltip.default = 1
+
+		if self.action then
+			GameTooltip:SetAction(self.action) -- Displays the action of the button (spell, item, etc.)
+		else
+			GameTooltip:Hide() -- Hide the tooltip if no action is assigned
+		end
+
+		GameTooltip:Show()
+	end)
+	button:HookScript("OnLeave", function(self) GameTooltip:Hide() end)
+end
 -- Action Bars
 local function UpdateActionBarMouseover(barName, enable)
 	local bar = _G[barName]
@@ -180,12 +196,17 @@ local function UpdateActionBarMouseover(barName, enable)
 
 	if enable then
 		bar:SetAlpha(0)
+		bar:EnableMouse(true)
 		for i = 1, 12 do
 			local button = _G[btnPrefix .. i]
 			if button then
 				button:EnableMouse(true)
-				button:SetScript("OnEnter", function() bar:SetAlpha(1) end)
-				button:SetScript("OnLeave", function() bar:SetAlpha(0) end)
+				button:SetScript("OnEnter", function(self) bar:SetAlpha(1) end)
+				button:SetScript("OnLeave", function(self)
+					bar:SetAlpha(0)
+					GameTooltip:Hide()
+				end)
+				GameTooltipActionButton(button)
 			end
 		end
 	else
@@ -193,8 +214,10 @@ local function UpdateActionBarMouseover(barName, enable)
 		for i = 1, 12 do
 			local button = _G[btnPrefix .. i]
 			if button then
+				button:EnableMouse(true)
 				button:SetScript("OnEnter", nil)
 				button:SetScript("OnLeave", nil)
+				GameTooltipActionButton(button)
 			end
 		end
 	end
