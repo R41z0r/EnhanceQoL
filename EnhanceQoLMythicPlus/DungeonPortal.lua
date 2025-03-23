@@ -826,12 +826,17 @@ local function updateKeystoneInfo()
 
 					-- Überprüfen, ob der Zauber bekannt ist
 					if mapData.spellId and IsSpellKnown(mapData.spellId) then
-						button:EnableMouse(true) -- Aktiviert Klicks
+						local cooldownData = C_Spell.GetSpellCooldown(mapData.spellId)
+						if cooldownData and not cooldownData.isEnabled then
+							button:EnableMouse(true) -- Aktiviert Klicks
 
-						-- Cooldown-Spirale
-						button:SetAttribute("type", "spell")
-						button:SetAttribute("spell", mapData.spellId)
-						button:RegisterForClicks("AnyUp", "AnyDown")
+							-- Cooldown-Spirale
+							button:SetAttribute("type", "spell")
+							button:SetAttribute("spell", mapData.spellId)
+							button:RegisterForClicks("AnyUp", "AnyDown")
+						else
+							button:EnableMouse(false)
+						end
 					else
 						button:EnableMouse(false) -- Deaktiviert Klicks auf den Button
 					end

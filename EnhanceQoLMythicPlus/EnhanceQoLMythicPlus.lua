@@ -35,48 +35,50 @@ end
 local function createBRFrame()
 	removeBRFrame()
 	if not addon.db["mythicPlusBRTrackerEnabled"] then return end
-	brButton = CreateFrame("Button", nil, UIParent)
-	brButton:SetSize(addon.db["mythicPlusBRButtonSize"], addon.db["mythicPlusBRButtonSize"])
+	if UnitInParty("player") and IsInInstance() and select(3, GetInstanceInfo()) == 8 then
+		brButton = CreateFrame("Button", nil, UIParent)
+		brButton:SetSize(addon.db["mythicPlusBRButtonSize"], addon.db["mythicPlusBRButtonSize"])
 
-	brButton:SetPoint(addon.db["mythicPlusBRTrackerPoint"], UIParent, addon.db["mythicPlusBRTrackerPoint"], addon.db["mythicPlusBRTrackerX"], addon.db["mythicPlusBRTrackerY"])
+		brButton:SetPoint(addon.db["mythicPlusBRTrackerPoint"], UIParent, addon.db["mythicPlusBRTrackerPoint"], addon.db["mythicPlusBRTrackerX"], addon.db["mythicPlusBRTrackerY"])
 
-	if addon.db["mythicPlusBRTrackerLocked"] == false then
-		brButton:SetMovable(true)
-		brButton:EnableMouse(true)
-		brButton:RegisterForDrag("LeftButton")
+		if addon.db["mythicPlusBRTrackerLocked"] == false then
+			brButton:SetMovable(true)
+			brButton:EnableMouse(true)
+			brButton:RegisterForDrag("LeftButton")
 
-		brButton:SetScript("OnDragStart", brButton.StartMoving)
-		brButton:SetScript("OnDragStop", function(self)
-			self:StopMovingOrSizing()
-			local point, _, _, xOfs, yOfs = self:GetPoint()
-			addon.db["mythicPlusBRTrackerPoint"] = point
-			addon.db["mythicPlusBRTrackerX"] = xOfs
-			addon.db["mythicPlusBRTrackerY"] = yOfs
-		end)
+			brButton:SetScript("OnDragStart", brButton.StartMoving)
+			brButton:SetScript("OnDragStop", function(self)
+				self:StopMovingOrSizing()
+				local point, _, _, xOfs, yOfs = self:GetPoint()
+				addon.db["mythicPlusBRTrackerPoint"] = point
+				addon.db["mythicPlusBRTrackerX"] = xOfs
+				addon.db["mythicPlusBRTrackerY"] = yOfs
+			end)
+		end
+
+		local bg = brButton:CreateTexture(nil, "BACKGROUND")
+		bg:SetAllPoints(brButton)
+		bg:SetColorTexture(0, 0, 0, 0.8)
+
+		local icon = brButton:CreateTexture(nil, "ARTWORK")
+		icon:SetAllPoints(brButton)
+		icon:SetTexture(136080)
+		brButton.icon = icon
+
+		local scaleFactor = addon.db["mythicPlusBRButtonSize"] / defaultButtonSize
+		local newFontSize = math.floor(defaultFontSize * scaleFactor + 0.5)
+
+		brButton.cooldownFrame = CreateFrame("Cooldown", nil, brButton, "CooldownFrameTemplate")
+		brButton.cooldownFrame:SetAllPoints(brButton)
+		brButton.cooldownFrame.cooldownSet = false
+		brButton.cooldownFrame:SetSwipeColor(0, 0, 0, 0.3)
+		brButton.cooldownFrame:SetCountdownAbbrevThreshold(600)
+		brButton.cooldownFrame:SetScale(scaleFactor)
+
+		brButton.charges = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+		brButton.charges:SetPoint("BOTTOMRIGHT", brButton, "BOTTOMRIGHT", -3, 3)
+		brButton.charges:SetFont("Fonts\\FRIZQT__.TTF", newFontSize, "OUTLINE")
 	end
-
-	local bg = brButton:CreateTexture(nil, "BACKGROUND")
-	bg:SetAllPoints(brButton)
-	bg:SetColorTexture(0, 0, 0, 0.8)
-
-	local icon = brButton:CreateTexture(nil, "ARTWORK")
-	icon:SetAllPoints(brButton)
-	icon:SetTexture(136080)
-	brButton.icon = icon
-
-	local scaleFactor = addon.db["mythicPlusBRButtonSize"] / defaultButtonSize
-	local newFontSize = math.floor(defaultFontSize * scaleFactor + 0.5)
-
-	brButton.cooldownFrame = CreateFrame("Cooldown", nil, brButton, "CooldownFrameTemplate")
-	brButton.cooldownFrame:SetAllPoints(brButton)
-	brButton.cooldownFrame.cooldownSet = false
-	brButton.cooldownFrame:SetSwipeColor(0, 0, 0, 0.3)
-	brButton.cooldownFrame:SetCountdownAbbrevThreshold(600)
-	brButton.cooldownFrame:SetScale(scaleFactor)
-
-	brButton.charges = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-	brButton.charges:SetPoint("BOTTOMRIGHT", brButton, "BOTTOMRIGHT", -3, 3)
-	brButton.charges:SetFont("Fonts\\FRIZQT__.TTF", newFontSize, "OUTLINE")
 end
 
 local function setBRInfo(info)
