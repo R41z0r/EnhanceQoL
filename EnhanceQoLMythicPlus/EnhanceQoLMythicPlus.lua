@@ -79,11 +79,6 @@ local function createBRFrame()
 	brButton.charges:SetFont("Fonts\\FRIZQT__.TTF", newFontSize, "OUTLINE")
 end
 
-function addon.MythicPlus.functions.testFrame()
-	print("Recreated")
-	createBRFrame()
-end
-
 local function setBRInfo(info)
 	if brButton and brButton.cooldownFrame and info then
 		local current = info.currentCharges
