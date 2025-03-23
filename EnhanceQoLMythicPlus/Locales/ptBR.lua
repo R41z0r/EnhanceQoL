@@ -28,6 +28,7 @@ L["Stating"] = "Iniciando..."
 L["autoKeyStart"] = "Iniciar a chave automaticamente após o cronômetro de pull"
 L["mythicPlusTruePercent"] = "Mostrar o valor decimal das Forças Inimigas"
 L["mythicPlusChestTimer"] = "Mostrar os temporizadores de baús"
+L["interruptWithShift"] = "Mantenha Shift pressionado para interromper esse recurso"
 
 L["None"] = "Nenhum cronômetro de pull"
 L["Blizzard Pull Timer"] = "Cronômetro de pull da Blizzard"
@@ -52,20 +53,9 @@ L["potionTrackerShowTooltip"] = "Mostrar tooltip no ícone"
 L["HealingPotion"] = "Cura"
 L["potionTrackerHealingPotions"] = "Rastrear CD de poção de cura"
 L["potionTrackerOffhealing"] = "Acompanhar o uso de CD de cura secundária"
--- Ferramentas LFG
 
-L["DungeonBrowser"] = "Explorador de Masmorras"
-L["groupfinderAppText"] = 'Ocultar o texto do buscador de grupos "Seu grupo está se formando atualmente"'
-L["groupfinderMoveResetButton"] = "Mova o botão de redefinição de filtro do Localizador de Masmorras para o lado esquerdo."
-L["groupfinderShowDungeonScoreFrame"] = "Exibir o quadro " .. DUNGEON_SCORE .. " ao lado do Localizador de Masmorras"
-L["groupfinderSkipRoleSelect"] = "Pular seleção de função"
-L["groupfinderSkipRolecheckHeadline"] = "Atribuição automática de função"
-L["groupfinderSkipRolecheckUseSpec"] = "Use a função da sua especialização (ex. Cavaleiro da Morte (Sangue) = Tanque)"
-L["groupfinderSkipRolecheckUseLFD"] = "Use as funções do Localizador de Masmorras"
-L["groupfinderShowPartyKeystone"] = "Exibir as informações de pedra-chave Mítica dos membros do grupo"
-
--- Misc Frame
-L["Misc"] = "Diversos"
+-- AutoMark Frame
+L["AutoMark"] = "Marcador de tanque"
 L["autoMarkTankInDungeon"] = "Marcar automaticamente o " .. TANK .. " em masmorras"
 L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
 L["Disabled"] = "Desativado"

@@ -5,6 +5,8 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "Inscrição rápida"
+L["interruptWithShift"] = "Mantenha Shift pressionado para interromper esse recurso"
+
 L["Persist LFG signup note"] = "Persistir nota de inscrição LFG"
 L["Select an option"] = "Selecione uma opção"
 L["Save"] = "Salvar"
@@ -36,7 +38,7 @@ L["showCatalystChargesOnCharframe"] = "Mostrar cargas do catalisador no quadro d
 L["showIlvlOnBagItems"] = "Exibir o nível de item no equipamento em todas as bolsas"
 L["showDurabilityOnCharframe"] = "Exibir durabilidade no quadro de equipamento do personagem"
 L["hideOrderHallBar"] = "Ocultar barra de comando do Salão da Ordem"
-L["showInfoOnInspectFrame"] = "Mostrar informações adicionais na janela de inspeção (Experimental)"
+L["showInfoOnInspectFrame"] = "Mostrar informações adicionais na janela de inspeção"
 L["MissingEnchant"] = "Encantamento"
 L["hideHitIndicatorPlayer"] = "隱藏角色頭上的浮動戰鬥文字（傷害和治療）"
 L["hideHitIndicatorPet"] = "隱藏寵物頭上的浮動戰鬥文字（傷害和治療）"
@@ -59,6 +61,15 @@ L["hideMicroMenu"] = "Ocultar micro menu"
 -- Dungeon
 L["autoChooseDelvePower"] = "Selecionar automaticamente o poder de incursão quando houver apenas 1 opção"
 L["lfgSortByRio"] = "Classificar candidatos de masmorras míticas pelo placar mítico"
+L["DungeonBrowser"] = "Explorador de Masmorras"
+L["groupfinderAppText"] = 'Ocultar o texto do buscador de grupos "Seu grupo está se formando atualmente"'
+L["groupfinderMoveResetButton"] = "Mova o botão de redefinição de filtro do Localizador de Masmorras para o lado esquerdo."
+L["groupfinderShowDungeonScoreFrame"] = "Exibir o quadro " .. DUNGEON_SCORE .. " ao lado do Localizador de Masmorras"
+L["groupfinderSkipRoleSelect"] = "Pular seleção de função"
+L["groupfinderSkipRolecheckHeadline"] = "Atribuição automática de função"
+L["groupfinderSkipRolecheckUseSpec"] = "Use a função da sua especialização (ex. Cavaleiro da Morte (Sangue) = Tanque)"
+L["groupfinderSkipRolecheckUseLFD"] = "Use as funções do Localizador de Masmorras"
+L["groupfinderShowPartyKeystone"] = "Exibir as informações de pedra-chave Mítica dos membros do grupo"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Não tratar automaticamente as " .. QUESTS_LABEL .. " triviais"

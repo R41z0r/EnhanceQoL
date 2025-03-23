@@ -28,6 +28,7 @@ L["Stating"] = "Inizio..."
 L["autoKeyStart"] = "Avvia automaticamente la chiave dopo il timer di pull"
 L["mythicPlusTruePercent"] = "Mostra il valore decimale delle Forze nemiche"
 L["mythicPlusChestTimer"] = "Mostra i timer delle casse"
+L["interruptWithShift"] = "Tieni premuto Shift per interrompere questa funzione"
 
 L["None"] = "Nessun timer di pull"
 L["Blizzard Pull Timer"] = "Timer di pull Blizzard"
@@ -52,20 +53,9 @@ L["potionTrackerShowTooltip"] = "Mostra tooltip sull'icona"
 L["HealingPotion"] = "Cura"
 L["potionTrackerHealingPotions"] = "Traccia CD pozione di cura"
 L["potionTrackerOffhealing"] = "Traccia l'uso di CD di cura secondaria"
--- Strumenti LFG
 
-L["DungeonBrowser"] = "Esploratore di dungeon"
-L["groupfinderAppText"] = 'Nascondi il testo del cercatore di gruppi "Il tuo gruppo si sta formando attualmente"'
-L["groupfinderMoveResetButton"] = "Sposta il pulsante di ripristino del filtro del Ricerca Spedizioni sul lato sinistro."
-L["groupfinderShowDungeonScoreFrame"] = "Mostra il riquadro " .. DUNGEON_SCORE .. " accanto al Ricerca delle spedizioni"
-L["groupfinderSkipRoleSelect"] = "Salta la selezione del ruolo"
-L["groupfinderSkipRolecheckHeadline"] = "Assegnazione automatica del ruolo"
-L["groupfinderSkipRolecheckUseSpec"] = "Usa il ruolo della tua specializzazione (es. Cavaliere della Morte (Sangue) = Tank)"
-L["groupfinderSkipRolecheckUseLFD"] = "Usa i ruoli dal Ricerca Dungeon"
-L["groupfinderShowPartyKeystone"] = "Mostra le informazioni della Chiave Mitica dei membri del gruppo"
-
--- Misc Frame
-L["Misc"] = "Varie"
+-- AutoMark Frame
+L["AutoMark"] = "Segnalatore del tank"
 L["autoMarkTankInDungeon"] = "Marca automaticamente il " .. TANK .. " nei dungeon"
 L["autoMarkTankInDungeonMarker"] = "Segnalatore del tank"
 L["Disabled"] = "Disabilitato"

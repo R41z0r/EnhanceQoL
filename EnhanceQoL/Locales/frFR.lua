@@ -5,6 +5,8 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "Inscription rapide"
+L["interruptWithShift"] = "Maintenez la touche Maj enfoncée pour interrompre cette fonctionnalité"
+
 L["Persist LFG signup note"] = "Conserver la note d'inscription LFG"
 L["Select an option"] = "Sélectionner une option"
 L["Save"] = "Enregistrer"
@@ -36,7 +38,7 @@ L["showCatalystChargesOnCharframe"] = "Afficher les charges du Catalyseur dans l
 L["showIlvlOnBagItems"] = "Afficher le niveau d'objet sur l'équipement dans tous les sacs"
 L["showDurabilityOnCharframe"] = "Afficher la durabilité sur la fenêtre d'équipement du personnage"
 L["hideOrderHallBar"] = "Masquer la barre de commande de domaine"
-L["showInfoOnInspectFrame"] = "Afficher des informations supplémentaires dans la fenêtre d'inspection (Expérimental)"
+L["showInfoOnInspectFrame"] = "Afficher des informations supplémentaires dans la fenêtre d'inspection"
 L["MissingEnchant"] = "Enchantement"
 L["hideHitIndicatorPlayer"] = "Masquer le texte flottant de combat (dégâts et soins) au-dessus de votre personnage"
 L["hideHitIndicatorPet"] = "Masquer le texte flottant de combat (dégâts et soins) au-dessus de votre familier"
@@ -59,6 +61,15 @@ L["hideMicroMenu"] = "Masquer le micro-menu"
 -- Dungeon
 L["autoChooseDelvePower"] = "Choisir automatiquement la puissance de plongée lorsqu'il n'y a qu'une seule option"
 L["lfgSortByRio"] = "Trier les candidats aux donjons mythiques par score mythique"
+L["DungeonBrowser"] = "Explorateur de donjons"
+L["groupfinderAppText"] = 'Masquer le texte du recherche de groupe "Votre groupe est actuellement en formation"'
+L["groupfinderMoveResetButton"] = "Déplacez le bouton de réinitialisation du navigateur de donjons sur le côté gauche."
+L["groupfinderShowDungeonScoreFrame"] = "Afficher le cadre " .. DUNGEON_SCORE .. " à côté du Recherche de donjon"
+L["groupfinderSkipRoleSelect"] = "Ignorer la sélection de rôle"
+L["groupfinderSkipRolecheckHeadline"] = "Affectation automatique de rôle"
+L["groupfinderSkipRolecheckUseSpec"] = "Utiliser le rôle de votre spécialisation actuelle (ex. Chevalier de la mort (Sang) = Tank)"
+L["groupfinderSkipRolecheckUseLFD"] = "Utiliser les rôles de l’outil Donjons"
+L["groupfinderShowPartyKeystone"] = "Afficher les informations de clé mythique de vos coéquipiers"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ne pas gérer automatiquement les " .. QUESTS_LABEL .. " triviales"

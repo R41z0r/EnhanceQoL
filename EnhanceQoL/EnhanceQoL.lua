@@ -42,6 +42,72 @@ local function checkBagIgnoreJunk()
 	end
 end
 
+local function toggleGroupApplication(value)
+	if value then
+		-- Hide overlay and text label
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Label:Hide()
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Background:Hide()
+		-- Hide the 3 animated texture icons
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot1:Hide()
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot2:Hide()
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot3:Hide()
+	else
+		-- Hide overlay and text label
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Label:Show()
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Background:Show()
+		-- Hide the 3 animated texture icons
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot1:Show()
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot2:Show()
+		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot3:Show()
+	end
+end
+
+local function skipRolecheck()
+	if addon.db["groupfinderSkipRoleSelectOption"] == 1 then
+		local tank, healer, dps = false, false, false
+		local role = UnitGroupRolesAssigned("player")
+		if role == "NONE" then role = GetSpecializationRole(GetSpecialization()) end
+		if role == "TANK" then
+			tank = true
+		elseif role == "DAMAGER" then
+			dps = true
+		elseif role == "HEALER" then
+			healer = true
+		end
+		if LFDRoleCheckPopupRoleButtonTank.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonTank.checkButton:SetChecked(tank) end
+		if LFDRoleCheckPopupRoleButtonHealer.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonHealer.checkButton:SetChecked(healer) end
+		if LFDRoleCheckPopupRoleButtonDPS.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonDPS.checkButton:SetChecked(dps) end
+	elseif addon.db["groupfinderSkipRoleSelectOption"] == 2 then
+		if LFDQueueFrameRoleButtonTank and LFDQueueFrameRoleButtonTank:IsEnabled() then
+			LFGListApplicationDialog.TankButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonTank.checkButton:GetChecked())
+		end
+		if LFDQueueFrameRoleButtonHealer and LFDQueueFrameRoleButtonHealer:IsEnabled() then
+			LFGListApplicationDialog.HealerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonHealer.checkButton:GetChecked())
+		end
+		if LFDQueueFrameRoleButtonDPS and LFDQueueFrameRoleButtonDPS:IsEnabled() then
+			LFGListApplicationDialog.DamagerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonDPS.checkButton:GetChecked())
+		end
+	else
+		return
+	end
+
+	LFDRoleCheckPopupAcceptButton:Enable()
+	LFDRoleCheckPopupAcceptButton:Click()
+end
+
+local lfgPoint, lfgRelativeTo, lfgRelativePoint, lfgXOfs, lfgYOfs
+
+local function toggleLFGFilterPosition()
+	if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.SearchPanel.FilterButton and LFGListFrame.SearchPanel.FilterButton.ResetButton then
+		if addon.db["groupfinderMoveResetButton"] then
+			LFGListFrame.SearchPanel.FilterButton.ResetButton:ClearAllPoints()
+			LFGListFrame.SearchPanel.FilterButton.ResetButton:SetPoint("TOPLEFT", LFGListFrame.SearchPanel.FilterButton, "TOPLEFT", -7, 13)
+		else
+			LFGListFrame.SearchPanel.FilterButton.ResetButton:ClearAllPoints()
+			LFGListFrame.SearchPanel.FilterButton.ResetButton:SetPoint(lfgPoint, lfgRelativeTo, lfgRelativePoint, lfgXOfs, lfgYOfs)
+		end
+	end
+end
 -- local function UpdateTargetSpellbarShieldColor()
 -- 	local castBar = TargetFrameSpellBar
 -- 	if not castBar or not castBar.BorderShield then return end
@@ -656,35 +722,94 @@ local function setCharFrame()
 end
 
 local function addDungeonFrame(container, d)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
 	local data = {
+		{
+			text = L["groupfinderAppText"],
+			var = "groupfinderAppText",
+			func = function(self, _, value)
+				addon.db["groupfinderAppText"] = value
+				toggleGroupApplication(value)
+			end,
+		},
+		{
+			text = L["groupfinderMoveResetButton"],
+			var = "groupfinderMoveResetButton",
+			func = function(self, _, value)
+				addon.db["groupfinderMoveResetButton"] = value
+				toggleLFGFilterPosition()
+			end,
+		},
+		{
+			text = L["groupfinderSkipRoleSelect"],
+			var = "groupfinderSkipRoleSelect",
+			func = function(self, _, value)
+				addon.db["groupfinderSkipRoleSelect"] = value
+				container:ReleaseChildren()
+				addDungeonFrame(container)
+			end,
+			desc = L["interruptWithShift"],
+		},
 		{
 			parent = DELVES_LABEL,
 			var = "autoChooseDelvePower",
+			text = L["autoChooseDelvePower"],
 			type = "CheckBox",
-			callback = function(self, _, value) addon.db["autoChooseDelvePower"] = value end,
+			func = function(self, _, value) addon.db["autoChooseDelvePower"] = value end,
 		},
 		{
 			parent = DUNGEONS,
 			var = "persistSignUpNote",
 			text = L["Persist LFG signup note"],
 			type = "CheckBox",
-			callback = function(self, _, value) addon.db["persistSignUpNote"] = value end,
+			func = function(self, _, value) addon.db["persistSignUpNote"] = value end,
 		},
 		{
 			parent = DUNGEONS,
 			var = "skipSignUpDialog",
 			text = L["Quick signup"],
 			type = "CheckBox",
-			callback = function(self, _, value) addon.db["skipSignUpDialog"] = value end,
+			func = function(self, _, value) addon.db["skipSignUpDialog"] = value end,
 		},
 		{
 			parent = DUNGEONS,
 			var = "lfgSortByRio",
+			text = L["lfgSortByRio"],
 			type = "CheckBox",
-			callback = function(self, _, value) addon.db["lfgSortByRio"] = value end,
+			func = function(self, _, value) addon.db["lfgSortByRio"] = value end,
 		},
 	}
-	addon.functions.createWrapperData(data, container, L)
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func, desc)
+		groupCore:AddChild(cbElement)
+	end
+
+	if addon.db["groupfinderSkipRoleSelect"] then
+		local list, order = addon.functions.prepareListForDropdown({ [1] = L["groupfinderSkipRolecheckUseSpec"], [2] = L["groupfinderSkipRolecheckUseLFD"] }, true)
+
+		local dropRoleSelect = addon.functions.createDropdownAce("", list, order, function(self, _, value) addon.db["groupfinderSkipRoleSelectOption"] = value end)
+		dropRoleSelect:SetValue(addon.db["groupfinderSkipRoleSelectOption"])
+
+		local groupSkipRole = addon.functions.createContainer("InlineGroup", "List")
+		wrapper:AddChild(groupSkipRole)
+		groupSkipRole:SetTitle(L["groupfinderSkipRolecheckHeadline"])
+		groupSkipRole:AddChild(dropRoleSelect)
+	end
 end
 
 local function addTotemHideToggle(dbValue, data)
@@ -1199,6 +1324,7 @@ local function addQuestFrame(container, d)
 			var = "autoChooseQuest",
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db[self.var] = value end,
+			desc = L["interruptWithShift"],
 		},
 		{
 			parent = "",
@@ -1235,7 +1361,9 @@ local function addQuestFrame(container, d)
 		return textA < textB
 	end)
 	for _, checkboxData in ipairs(groupData) do
-		local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], function(self, _, value) addon.db[checkboxData.var] = value end)
+		local desc
+		if checkboxData.desc then desc = checkboxData.desc end
+		local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], function(self, _, value) addon.db[checkboxData.var] = value end, desc)
 		groupCore:AddChild(cbautoChooseQuest)
 	end
 
@@ -1495,6 +1623,12 @@ end
 local function initDungeon()
 	addon.functions.InitDBValue("autoChooseDelvePower", false)
 	addon.functions.InitDBValue("lfgSortByRio", false)
+	addon.functions.InitDBValue("groupfinderSkipRoleSelect", false)
+
+	if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.SearchPanel.FilterButton and LFGListFrame.SearchPanel.FilterButton.ResetButton then
+		lfgPoint, lfgRelativeTo, lfgRelativePoint, lfgXOfs, lfgYOfs = LFGListFrame.SearchPanel.FilterButton.ResetButton:GetPoint()
+	end
+	if addon.db["groupfinderMoveResetButton"] then toggleLFGFilterPosition() end
 end
 
 local function initParty()
@@ -2299,6 +2433,8 @@ local eventHandlers = {
 	end,
 	["LFG_LIST_APPLICANT_UPDATED"] = function()
 		if PVEFrame:IsShown() and addon.db["lfgSortByRio"] then C_LFGList.RefreshApplicants() end
+		if InCombatLockdown() then return end
+		if addon.db["groupfinderAppText"] then toggleGroupApplication(true) end
 	end,
 	["LOOT_READY"] = function()
 		if addon.db["autoQuickLoot"] and not IsShiftKeyDown() then

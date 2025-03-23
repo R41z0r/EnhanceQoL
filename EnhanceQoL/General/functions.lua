@@ -80,13 +80,14 @@ function addon.functions.createContainer(type, layout)
 	return element
 end
 
-function addon.functions.createCheckboxAce(text, value, callBack)
+function addon.functions.createCheckboxAce(text, value, callBack, description)
 	local checkbox = AceGUI:Create("CheckBox")
 
 	checkbox:SetLabel(text)
 	checkbox:SetValue(value)
 	checkbox:SetCallback("OnValueChanged", callBack)
 	checkbox:SetFullWidth(true)
+	if description then checkbox:SetDescription(string.format("|cffffd700" .. description .. "|r ")) end
 
 	return checkbox
 end
@@ -120,8 +121,8 @@ function addon.functions.createSpacerAce()
 end
 
 function addon.functions.getHeightOffset(element)
-    local _, _, _, _, headerY = element:GetPoint()
-    return headerY - element:GetHeight()
+	local _, _, _, _, headerY = element:GetPoint()
+	return headerY - element:GetHeight()
 end
 
 function addon.functions.createLabelAce(text, color, font, fontSize)

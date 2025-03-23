@@ -5,6 +5,8 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "Iscrizione veloce"
+L["interruptWithShift"] = "Tieni premuto Shift per interrompere questa funzione"
+
 L["Persist LFG signup note"] = "Mantieni nota di iscrizione LFG"
 L["Select an option"] = "Seleziona un'opzione"
 L["Save"] = "Salva"
@@ -30,7 +32,7 @@ L["showCatalystChargesOnCharframe"] = "Mostra le cariche del Catalizzatore nel r
 L["showIlvlOnBagItems"] = "Mostra il livello dell'oggetto sull'equipaggiamento in tutte le borse"
 L["showDurabilityOnCharframe"] = "Mostra la durabilità sulla finestra dell'equipaggiamento del personaggio"
 L["hideOrderHallBar"] = "Nascondi barra dei comandi della Enclave"
-L["showInfoOnInspectFrame"] = "Mostra informazioni aggiuntive nella finestra di ispezione (Sperimentale)"
+L["showInfoOnInspectFrame"] = "Mostra informazioni aggiuntive nella finestra di ispezione"
 L["MissingEnchant"] = "Incantamento"
 L["hideHitIndicatorPlayer"] = "Nascondi il testo di combattimento fluttuante (danni e cure) sopra il tuo personaggio"
 L["hideHitIndicatorPet"] = "Nascondi il testo di combattimento fluttuante (danni e cure) sopra il tuo famiglio"
@@ -53,6 +55,15 @@ L["hideMicroMenu"] = "Nascondi micro menu"
 -- Dungeon
 L["autoChooseDelvePower"] = "Seleziona automaticamente il potere di immersione quando c'è solo 1 opzione"
 L["lfgSortByRio"] = "Ordina i candidati dei dungeon mitici per punteggio mitico"
+L["DungeonBrowser"] = "Esploratore di dungeon"
+L["groupfinderAppText"] = 'Nascondi il testo del cercatore di gruppi "Il tuo gruppo si sta formando attualmente"'
+L["groupfinderMoveResetButton"] = "Sposta il pulsante di ripristino del filtro del Ricerca Spedizioni sul lato sinistro."
+L["groupfinderShowDungeonScoreFrame"] = "Mostra il riquadro " .. DUNGEON_SCORE .. " accanto al Ricerca delle spedizioni"
+L["groupfinderSkipRoleSelect"] = "Salta la selezione del ruolo"
+L["groupfinderSkipRolecheckHeadline"] = "Assegnazione automatica del ruolo"
+L["groupfinderSkipRolecheckUseSpec"] = "Usa il ruolo della tua specializzazione (es. Cavaliere della Morte (Sangue) = Tank)"
+L["groupfinderSkipRolecheckUseLFD"] = "Usa i ruoli dal Ricerca Dungeon"
+L["groupfinderShowPartyKeystone"] = "Mostra le informazioni della Chiave Mitica dei membri del gruppo"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Non gestire automaticamente le " .. QUESTS_LABEL .. " di bassa importanza"

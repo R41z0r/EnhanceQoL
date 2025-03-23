@@ -5,6 +5,8 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "快速報名"
+L["interruptWithShift"] = "按住 Shift 鍵可中斷此功能"
+
 L["Persist LFG signup note"] = "保留LFG報名備註"
 L["Select an option"] = "選擇一個選項"
 L["Save"] = "保存"
@@ -36,7 +38,7 @@ L["showCatalystChargesOnCharframe"] = "在角色裝備介面顯示催化劑次�
 L["showIlvlOnBagItems"] = "在所有背包的裝備上顯示物品等級"
 L["showDurabilityOnCharframe"] = "在角色裝備框架上顯示耐久度"
 L["hideOrderHallBar"] = "隐藏职业大厅指挥栏"
-L["showInfoOnInspectFrame"] = "在檢查框架中顯示額外資訊（實驗性功能"
+L["showInfoOnInspectFrame"] = "在檢查框架中顯示額外資訊"
 L["MissingEnchant"] = "附魔"
 L["hideHitIndicatorPlayer"] = "隱藏角色頭上的浮動戰鬥文字（傷害和治療）"
 L["hideHitIndicatorPet"] = "隱藏寵物頭上的浮動戰鬥文字（傷害和治療）"
@@ -59,6 +61,15 @@ L["hideMicroMenu"] = "隱藏微型選單"
 -- Dungeon
 L["autoChooseDelvePower"] = "僅有一個選項時自動選擇探險力量"
 L["lfgSortByRio"] = "按史诗分数排序史诗地下城申请者"
+L["DungeonBrowser"] = "地下城浏览器"
+L["groupfinderAppText"] = '隐藏团队查找器文本 "你的团队目前正在形成"'
+L["groupfinderMoveResetButton"] = "將地城搜尋器的重置過濾按鈕移至左側。"
+L["groupfinderShowDungeonScoreFrame"] = "在地下城搜尋旁顯示 " .. DUNGEON_SCORE .. " 框架"
+L["groupfinderSkipRoleSelect"] = "跳過角色選擇"
+L["groupfinderSkipRolecheckHeadline"] = "自動角色分配"
+L["groupfinderSkipRolecheckUseSpec"] = "使用當前專精的角色（如血死亡騎士 = 坦克）"
+L["groupfinderSkipRolecheckUseLFD"] = "使用地城搜尋器中的角色"
+L["groupfinderShowPartyKeystone"] = "顯示隊伍成員的傳奇鑰石資訊"
 
 -- Quest
 L["ignoreTrivialQuests"] = "不要自動處理等級較低的" .. QUESTS_LABEL

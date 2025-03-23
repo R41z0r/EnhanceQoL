@@ -5,6 +5,8 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "Inscripción rápida"
+L["interruptWithShift"] = "Mantén presionada la tecla Shift para interrumpir esta función"
+
 L["Persist LFG signup note"] = "Persistir nota de inscripción LFG"
 L["Select an option"] = "Seleccionar una opción"
 L["Save"] = "Guardar"
@@ -36,7 +38,7 @@ L["showCatalystChargesOnCharframe"] = "Mostrar cargas del catalizador en el marc
 L["showIlvlOnBagItems"] = "Mostrar el nivel de objeto en el equipo en todas las bolsas"
 L["showDurabilityOnCharframe"] = "Mostrar durabilidad en el marco de equipo del personaje"
 L["hideOrderHallBar"] = "Ocultar barra de comandos de la sede"
-L["showInfoOnInspectFrame"] = "Mostrar información adicional en el marco de inspección (Experimental)"
+L["showInfoOnInspectFrame"] = "Mostrar información adicional en el marco de inspección"
 L["MissingEnchant"] = "Encantamiento"
 L["hideHitIndicatorPlayer"] = "Ocultar el texto flotante de combate (daño y curación) sobre tu personaje"
 L["hideHitIndicatorPet"] = "Ocultar el texto flotante de combate (daño y curación) sobre tu mascota"
@@ -59,6 +61,15 @@ L["hideMicroMenu"] = "Ocultar micromenú"
 -- Dungeon
 L["autoChooseDelvePower"] = "Seleccionar poder de incursión automáticamente  cuando solo hay 1 opción"
 L["lfgSortByRio"] = "Ordenar solicitantes de mazmorras míticas por puntuación mítica"
+L["DungeonBrowser"] = "Explorador de mazmorras"
+L["groupfinderAppText"] = 'Ocultar el texto del buscador de grupos "Tu grupo se está formando actualmente"'
+L["groupfinderMoveResetButton"] = "Mueve el botón de restablecer filtro del buscador de mazmorras al lado izquierdo."
+L["groupfinderShowDungeonScoreFrame"] = "Mostrar el marco de " .. DUNGEON_SCORE .. " junto al Buscador de mazmorras"
+L["groupfinderSkipRoleSelect"] = "Omitir selección de rol"
+L["groupfinderSkipRolecheckHeadline"] = "Asignación automática de rol"
+L["groupfinderSkipRolecheckUseSpec"] = "Usar el rol de tu especialización actual (p. ej. Caballero de la Muerte (Sangre) = Tanque)"
+L["groupfinderSkipRolecheckUseLFD"] = "Usar los roles seleccionados en el buscador"
+L["groupfinderShowPartyKeystone"] = "Mostrar la información de piedra angular de los miembros del grupo"
 
 -- Quest
 L["ignoreTrivialQuests"] = "No gestionar automáticamente las " .. QUESTS_LABEL .. " triviales"

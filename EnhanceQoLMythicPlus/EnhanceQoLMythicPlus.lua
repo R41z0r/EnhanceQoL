@@ -38,7 +38,6 @@ local function createBRFrame()
 	if UnitInParty("player") and IsInInstance() and select(3, GetInstanceInfo()) == 8 then
 		brButton = CreateFrame("Button", nil, UIParent)
 		brButton:SetSize(addon.db["mythicPlusBRButtonSize"], addon.db["mythicPlusBRButtonSize"])
-
 		brButton:SetPoint(addon.db["mythicPlusBRTrackerPoint"], UIParent, addon.db["mythicPlusBRTrackerPoint"], addon.db["mythicPlusBRTrackerX"], addon.db["mythicPlusBRTrackerY"])
 
 		if addon.db["mythicPlusBRTrackerLocked"] == false then
@@ -74,6 +73,7 @@ local function createBRFrame()
 		brButton.cooldownFrame:SetSwipeColor(0, 0, 0, 0.3)
 		brButton.cooldownFrame:SetCountdownAbbrevThreshold(600)
 		brButton.cooldownFrame:SetScale(scaleFactor)
+		brButton.cooldownFrame:SetDrawEdge(false)
 
 		brButton.charges = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		brButton.charges:SetPoint("BOTTOMRIGHT", brButton, "BOTTOMRIGHT", -3, 3)
@@ -196,24 +196,6 @@ hooksecurefunc(ScenarioTrackerProgressBarMixin, "SetValue", function(self, perce
 	end
 end)
 
-local point, relativeTo, relativePoint, xOfs, yOfs
-if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.SearchPanel.FilterButton and LFGListFrame.SearchPanel.FilterButton.ResetButton then
-	point, relativeTo, relativePoint, xOfs, yOfs = LFGListFrame.SearchPanel.FilterButton.ResetButton:GetPoint()
-end
-
-local function toggleLFGFilterPosition()
-	if LFGListFrame and LFGListFrame.SearchPanel and LFGListFrame.SearchPanel.FilterButton and LFGListFrame.SearchPanel.FilterButton.ResetButton then
-		if addon.db["groupfinderMoveResetButton"] then
-			LFGListFrame.SearchPanel.FilterButton.ResetButton:ClearAllPoints()
-			LFGListFrame.SearchPanel.FilterButton.ResetButton:SetPoint("TOPLEFT", LFGListFrame.SearchPanel.FilterButton, "TOPLEFT", -7, 13)
-		else
-			LFGListFrame.SearchPanel.FilterButton.ResetButton:ClearAllPoints()
-			LFGListFrame.SearchPanel.FilterButton.ResetButton:SetPoint(point, relativeTo, relativePoint, xOfs, yOfs)
-		end
-	end
-end
-if addon.db["groupfinderMoveResetButton"] then toggleLFGFilterPosition() end
-
 local function checkKeyStone()
 	addon.MythicPlus.variables.handled = false -- reset handle on Keystoneframe open
 	addon.MythicPlus.functions.removeExistingButton()
@@ -312,7 +294,6 @@ end
 
 -- Registriere das Event
 frameLoad:RegisterEvent("CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN")
-frameLoad:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED")
 frameLoad:RegisterEvent("READY_CHECK_FINISHED")
 frameLoad:RegisterEvent("LFG_ROLE_CHECK_SHOW")
 frameLoad:RegisterEvent("RAID_TARGET_UPDATE")
@@ -321,59 +302,6 @@ frameLoad:RegisterEvent("READY_CHECK")
 frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
 frameLoad:RegisterEvent("SPELL_UPDATE_CHARGES")
 frameLoad:RegisterEvent("ENCOUNTER_END")
-
-local function skipRolecheck()
-	if addon.db["groupfinderSkipRoleSelectOption"] == 1 then
-		local tank, healer, dps = false, false, false
-		local role = UnitGroupRolesAssigned("player")
-		if role == "NONE" then role = GetSpecializationRole(GetSpecialization()) end
-		if role == "TANK" then
-			tank = true
-		elseif role == "DAMAGER" then
-			dps = true
-		elseif role == "HEALER" then
-			healer = true
-		end
-		if LFDRoleCheckPopupRoleButtonTank.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonTank.checkButton:SetChecked(tank) end
-		if LFDRoleCheckPopupRoleButtonHealer.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonHealer.checkButton:SetChecked(healer) end
-		if LFDRoleCheckPopupRoleButtonDPS.checkButton:IsEnabled() then LFDRoleCheckPopupRoleButtonDPS.checkButton:SetChecked(dps) end
-	elseif addon.db["groupfinderSkipRoleSelectOption"] == 2 then
-		if LFDQueueFrameRoleButtonTank and LFDQueueFrameRoleButtonTank:IsEnabled() then
-			LFGListApplicationDialog.TankButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonTank.checkButton:GetChecked())
-		end
-		if LFDQueueFrameRoleButtonHealer and LFDQueueFrameRoleButtonHealer:IsEnabled() then
-			LFGListApplicationDialog.HealerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonHealer.checkButton:GetChecked())
-		end
-		if LFDQueueFrameRoleButtonDPS and LFDQueueFrameRoleButtonDPS:IsEnabled() then
-			LFGListApplicationDialog.DamagerButton.CheckButton:SetChecked(LFDQueueFrameRoleButtonDPS.checkButton:GetChecked())
-		end
-	else
-		return
-	end
-
-	LFDRoleCheckPopupAcceptButton:Enable()
-	LFDRoleCheckPopupAcceptButton:Click()
-end
-
-local function toggleGroupApplication(value)
-	if value then
-		-- Hide overlay and text label
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Label:Hide()
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Background:Hide()
-		-- Hide the 3 animated texture icons
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot1:Hide()
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot2:Hide()
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot3:Hide()
-	else
-		-- Hide overlay and text label
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Label:Show()
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Background:Show()
-		-- Hide the 3 animated texture icons
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot1:Show()
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot2:Show()
-		_G.LFGListFrame.ApplicationViewer.UnempoweredCover.Waitdot3:Show()
-	end
-end
 
 local function setActTank()
 	if UnitGroupRolesAssigned("player") == "TANK" then
@@ -436,9 +364,6 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 		checkKeyStone()
 	elseif event == "READY_CHECK_FINISHED" and ChallengesKeystoneFrame and addon.MythicPlus.Buttons["ReadyCheck"] then
 		addon.MythicPlus.Buttons["ReadyCheck"]:SetText(L["ReadyCheck"])
-	elseif event == "LFG_LIST_APPLICANT_LIST_UPDATED" and addon.db["groupfinderAppText"] then
-		if InCombatLockdown() then return end
-		toggleGroupApplication(true)
 	elseif event == "LFG_ROLE_CHECK_SHOW" and addon.db["groupfinderSkipRoleSelect"] and UnitInParty("player") then
 		skipRolecheck()
 	elseif event == "RAID_TARGET_UPDATE" and checkCondition() then
@@ -468,77 +393,7 @@ end
 -- Setze den Event-Handler
 frameLoad:SetScript("OnEvent", eventHandler)
 
-local function addDungeonBrowserFrame(container)
-	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-	container:AddChild(wrapper)
-
-	local groupCore = addon.functions.createContainer("InlineGroup", "List")
-	wrapper:AddChild(groupCore)
-	local list, order = addon.functions.prepareListForDropdown({ [1] = L["None"], [2] = L["Enemies"], [3] = L["Friendly"], [4] = L["Both"] })
-
-	local data = {
-		{
-			text = L["groupfinderAppText"],
-			var = "groupfinderAppText",
-			func = function(self, _, value)
-				addon.db["groupfinderAppText"] = value
-				toggleGroupApplication(value)
-			end,
-		},
-		{
-			text = L["groupfinderMoveResetButton"],
-			var = "groupfinderMoveResetButton",
-			func = function(self, _, value)
-				addon.db["groupfinderMoveResetButton"] = value
-				toggleLFGFilterPosition()
-			end,
-		},
-		{
-			text = L["groupfinderShowDungeonScoreFrame"],
-			var = "groupfinderShowDungeonScoreFrame",
-			func = function(self, _, value)
-				addon.db["groupfinderShowDungeonScoreFrame"] = value
-				addon.MythicPlus.functions.toggleFrame()
-			end,
-		},
-		{
-			text = L["groupfinderShowPartyKeystone"],
-			var = "groupfinderShowPartyKeystone",
-			func = function(self, _, value)
-				addon.db["groupfinderShowPartyKeystone"] = value
-				addon.MythicPlus.functions.togglePartyKeystone()
-			end,
-		},
-		{
-			text = L["groupfinderSkipRoleSelect"],
-			var = "groupfinderSkipRoleSelect",
-			func = function(self, _, value)
-				addon.db["groupfinderSkipRoleSelect"] = value
-				container:ReleaseChildren()
-				addDungeonBrowserFrame(container)
-			end,
-		},
-	}
-
-	table.sort(data, function(a, b) return a.text < b.text end)
-
-	for _, cbData in ipairs(data) do
-		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func)
-		groupCore:AddChild(cbElement)
-	end
-
-	if addon.db["groupfinderSkipRoleSelect"] then
-		local list, order = addon.functions.prepareListForDropdown({ [1] = L["groupfinderSkipRolecheckUseSpec"], [2] = L["groupfinderSkipRolecheckUseLFD"] }, true)
-
-		local dropRoleSelect = addon.functions.createDropdownAce("", list, order, function(self, _, value) addon.db["groupfinderSkipRoleSelectOption"] = value end)
-		dropRoleSelect:SetValue(addon.db["groupfinderSkipRoleSelectOption"])
-
-		local groupSkipRole = addon.functions.createContainer("InlineGroup", "List")
-		wrapper:AddChild(groupSkipRole)
-		groupSkipRole:SetTitle(L["groupfinderSkipRolecheckHeadline"])
-		groupSkipRole:AddChild(dropRoleSelect)
-	end
-end
+local function addDungeonBrowserFrame(container) end
 
 local function addKeystoneFrame(container)
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
@@ -576,6 +431,15 @@ local function addKeystoneFrame(container)
 		{
 			text = L["mythicPlusChestTimer"],
 			var = "mythicPlusChestTimer",
+		},
+		{
+			text = L["groupfinderShowPartyKeystone"],
+			var = "groupfinderShowPartyKeystone",
+			func = function(self, _, value)
+				addon.db["groupfinderShowPartyKeystone"] = value
+				addon.MythicPlus.functions.togglePartyKeystone()
+			end,
+			desc = L["groupfinderShowPartyKeystoneDesc"],
 		},
 	}
 
@@ -892,7 +756,7 @@ local function addTeleportFrame(container)
 	wrapper:DoLayout()
 end
 
-local function addMiscFrame(container)
+local function addAutoMarkFrame(container)
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 	container:AddChild(wrapper)
 
@@ -906,7 +770,7 @@ local function addMiscFrame(container)
 			checkRaidMarker()
 		end
 		container:ReleaseChildren()
-		addMiscFrame(container)
+		addAutoMarkFrame(container)
 	end)
 	groupCore:AddChild(cbAutoMarkTank)
 
@@ -954,34 +818,60 @@ local function addMiscFrame(container)
 	groupCore:AddChild(labelExplanation)
 end
 
+local function addRatingFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			text = L["groupfinderShowDungeonScoreFrame"],
+			var = "groupfinderShowDungeonScoreFrame",
+			func = function(self, _, value)
+				addon.db["groupfinderShowDungeonScoreFrame"] = value
+				addon.MythicPlus.functions.toggleFrame()
+			end,
+		},
+	}
+
+	for _, cbData in ipairs(data) do
+		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
+		if cbData.func then uFunc = cbData.func end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+		groupCore:AddChild(cbElement)
+	end
+end
+
 addon.variables.statusTable.groups["mythicplus"] = true
 addon.functions.addToTree(nil, {
 	value = "mythicplus",
 	text = L["Mythic Plus"],
 	children = {
-		{ value = "dungeonbrowser", text = L["DungeonBrowser"] },
 		{ value = "keystone", text = L["Keystone"] },
-		{ value = "misc", text = L["Misc"] },
+		{ value = "automark", text = L["AutoMark"] },
 		{ value = "potiontracker", text = L["Potion Tracker"] },
 		{ value = "teleports", text = L["Teleports"] },
 		{ value = "brtracker", text = L["BRTracker"] },
+		{ value = "rating", text = DUNGEON_SCORE },
 	},
 })
 
 function addon.MythicPlus.functions.treeCallback(container, group)
 	container:ReleaseChildren() -- Entfernt vorherige Inhalte
 	-- Prüfen, welche Gruppe ausgewählt wurde
-	if group == "mythicplus\001dungeonbrowser" then
-		addDungeonBrowserFrame(container)
-	elseif group == "mythicplus\001keystone" then
+	if group == "mythicplus\001keystone" then
 		addKeystoneFrame(container)
 	elseif group == "mythicplus\001potiontracker" then
 		addPotionTrackerFrame(container)
-	elseif group == "mythicplus\001misc" then
-		addMiscFrame(container)
+	elseif group == "mythicplus\001automark" then
+		addAutoMarkFrame(container)
 	elseif group == "mythicplus\001teleports" then
 		addTeleportFrame(container)
 	elseif group == "mythicplus\001brtracker" then
 		addBRFrame(container)
+	elseif group == "mythicplus\001rating" then
+		addRatingFrame(container)
 	end
 end

@@ -27,6 +27,7 @@ L["Stating"] = "Starten..."
 L["autoKeyStart"] = "Starte den Schlüsselstein automatisch nach Ablauf des Pull Timers"
 L["mythicPlusTruePercent"] = "Dezimalwert der Gegnerstärke anzeigen"
 L["mythicPlusChestTimer"] = "Truhen-Timer anzeigen"
+L["interruptWithShift"] = "Halte die Umschalttaste gedrückt, um diese Funktion zu unterbrechen"
 
 L["None"] = "Kein Pull Timer"
 L["Blizzard Pull Timer"] = "Blizzard Pull Timer"
@@ -51,20 +52,9 @@ L["potionTrackerShowTooltip"] = "Tooltip auf dem Icon anzeigen"
 L["HealingPotion"] = "Heilung"
 L["potionTrackerHealingPotions"] = "Gesundheitstrank-CD verfolgen"
 L["potionTrackerOffhealing"] = "Verfolge Offheilung CD Nutzung"
--- LFG Tools
 
-L["DungeonBrowser"] = "Dungeonbrowser"
-L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
-L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite"
-L["groupfinderShowDungeonScoreFrame"] = DUNGEON_SCORE .. "-Anzeige neben dem Dungeonbrowser anzeigen"
-L["groupfinderSkipRoleSelect"] = "Rollen-Auswahl überspringen"
-L["groupfinderSkipRolecheckHeadline"] = "Automatische Rollenzuweisung"
-L["groupfinderSkipRolecheckUseSpec"] = "Verwende die Rolle deiner aktuellen Spezialisierung (z.B. Blut-Todesritter = Tank)"
-L["groupfinderSkipRolecheckUseLFD"] = "Verwende die Rollen aus dem Dungeonbrowser"
-L["groupfinderShowPartyKeystone"] = "Zeige die Mythic+-Schlüsselstein-Infos deiner Gruppenmitglieder"
-
--- Misc Frame
-L["Misc"] = "Verschiedenes"
+-- AutoMark Frame
+L["AutoMark"] = "Tank-Marker"
 L["autoMarkTankInDungeon"] = "Markiere automatisch den " .. TANK .. " in Dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank-Marker"
 L["Disabled"] = "Deaktiviert"

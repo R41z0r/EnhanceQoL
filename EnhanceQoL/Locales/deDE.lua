@@ -4,6 +4,8 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "Schnellanmeldung für Dungeon-Such-Tool"
+L["interruptWithShift"] = "Halte die Umschalttaste gedrückt, um diese Funktion zu unterbrechen"
+
 L["Persist LFG signup note"] = "Dungeon-Such-Tool Notiz wiederverwenden"
 L["Select an option"] = "Bitte auswählen"
 L["Save"] = "Speichern"
@@ -35,7 +37,7 @@ L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstu
 L["showIlvlOnBagItems"] = "Zeige das Itemlevel auf Ausrüstung in allen Taschen"
 L["showDurabilityOnCharframe"] = "Zeige Haltbarkeit auf dem Charakterausrüstungsfenster"
 L["hideOrderHallBar"] = "Ordenshallen-Kommandoleiste ausblenden"
-L["showInfoOnInspectFrame"] = "Zeige zusätzliche Informationen im Betrachten-Fenster an (Experimentell)"
+L["showInfoOnInspectFrame"] = "Zeige zusätzliche Informationen im Betrachten-Fenster an"
 L["MissingEnchant"] = "Verzauberung"
 L["hideHitIndicatorPlayer"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Charakter ausblenden"
 L["hideHitIndicatorPet"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Begleiter ausblenden"
@@ -58,6 +60,15 @@ L["hideMicroMenu"] = "Mikromenü ausblenden"
 -- Dungeon
 L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen, wenn nur 1 Option verfügbar ist"
 L["lfgSortByRio"] = "Sortiere Bewerber für Mythisch+ Dungeons nach Mythisch-Wertung"
+L["DungeonBrowser"] = "Dungeonbrowser"
+L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
+L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite"
+L["groupfinderShowDungeonScoreFrame"] = DUNGEON_SCORE .. "-Anzeige neben dem Dungeonbrowser anzeigen"
+L["groupfinderSkipRoleSelect"] = "Rollen-Auswahl überspringen"
+L["groupfinderSkipRolecheckHeadline"] = "Automatische Rollenzuweisung"
+L["groupfinderSkipRolecheckUseSpec"] = "Verwende die Rolle deiner aktuellen Spezialisierung (z.B. Blut-Todesritter = Tank)"
+L["groupfinderSkipRolecheckUseLFD"] = "Verwende die Rollen aus dem Dungeonbrowser"
+L["groupfinderShowPartyKeystone"] = "Zeige die Mythic+-Schlüsselstein-Infos deiner Gruppenmitglieder"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Triviale " .. QUESTS_LABEL .. " nicht automatisch verwalten"

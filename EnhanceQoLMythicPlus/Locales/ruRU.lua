@@ -28,6 +28,7 @@ L["Stating"] = "Запуск..."
 L["autoKeyStart"] = "Автоматически запускать ключ после таймера начала боя"
 L["mythicPlusTruePercent"] = "Показывать десятичное значение вражеских сил"
 L["mythicPlusChestTimer"] = "Показывать таймеры сундуков"
+L["interruptWithShift"] = "Удерживайте Shift, чтобы прервать эту функцию"
 
 L["None"] = "Нет таймера начала боя"
 L["Blizzard Pull Timer"] = "Таймер начала боя Blizzard"
@@ -53,20 +54,9 @@ L["potionTrackerShowTooltip"] = "Показать подсказку на зна
 L["HealingPotion"] = "Лечение"
 L["potionTrackerHealingPotions"] = "Отслеживать КД зелья здоровья"
 L["potionTrackerOffhealing"] = "Отслеживать использование CD второстепенного исцеления"
--- Инструменты LFG
 
-L["DungeonBrowser"] = "Поиск подземелий"
-L["groupfinderAppText"] = 'Скрыть текст поиска группы "Ваша группа в настоящее время формируется"'
-L["groupfinderMoveResetButton"] = "Переместите кнопку сброса фильтра в окне поиска подземелий на левую сторону."
-L["groupfinderShowDungeonScoreFrame"] = "Показать рамку " .. DUNGEON_SCORE .. " рядом с Поиском подземелий"
-L["groupfinderSkipRoleSelect"] = "Пропустить выбор роли"
-L["groupfinderSkipRolecheckHeadline"] = "Автоматический выбор роли"
-L["groupfinderSkipRolecheckUseSpec"] = "Использовать роль текущей специализации (напр. Рыцарь смерти (Кровь) = танк)"
-L["groupfinderSkipRolecheckUseLFD"] = "Использовать роли из поиска подземелий"
-L["groupfinderShowPartyKeystone"] = "Показывать информацию о ключах Mythic+ у членов группы"
-
--- Misc Frame
-L["Misc"] = "Разное"
+-- AutoMark Frame
+L["AutoMark"] = "Метка танка"
 L["autoMarkTankInDungeon"] = "Автоматически отмечать " .. TANK .. " в подземельях"
 L["autoMarkTankInDungeonMarker"] = "Метка танка"
 L["Disabled"] = "Отключено"

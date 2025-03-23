@@ -26,6 +26,7 @@ L["Stating"] = "Starting..."
 L["autoKeyStart"] = "Start key automatically after Pull Timer"
 L["mythicPlusTruePercent"] = "Show decimal value of Enemy Forces"
 L["mythicPlusChestTimer"] = "Show chest timers"
+L["interruptWithShift"] = "Hold shift to interrupt that feature"
 
 L["None"] = "No Pull Timer"
 L["Blizzard Pull Timer"] = "Blizzard Pull Timer"
@@ -50,20 +51,9 @@ L["potionTrackerShowTooltip"] = "Show tooltip on icon"
 L["HealingPotion"] = "Heal"
 L["potionTrackerHealingPotions"] = "Track health pot CD"
 L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
--- LFG Tools
 
-L["DungeonBrowser"] = "Dungeonbrowser"
-L["groupfinderAppText"] = 'Hide the group finder text "Your group is currently forming"'
-L["groupfinderMoveResetButton"] = "Shift the 'Reset Filter' button in the Dungeon Browser to the left side"
-L["groupfinderShowDungeonScoreFrame"] = "Show " .. DUNGEON_SCORE .. " frame next to the Dungeon Finder"
-L["groupfinderSkipRoleSelect"] = "Skip role selection"
-L["groupfinderSkipRolecheckHeadline"] = "Automatic role assignment"
-L["groupfinderSkipRolecheckUseSpec"] = "Use your current spec's role (e.g. Blood Death Knight = Tank)"
-L["groupfinderSkipRolecheckUseLFD"] = "Use roles from Dungeon Finder"
-L["groupfinderShowPartyKeystone"] = "Display your party members' Mythic+ Keystone info"
-
--- Misc Frame
-L["Misc"] = "Misc."
+-- Automark Frame
+L["AutoMark"] = "Tank marker"
 L["autoMarkTankInDungeon"] = "Automatically mark the " .. TANK .. " in dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank marker"
 L["Disabled"] = "Disabled"

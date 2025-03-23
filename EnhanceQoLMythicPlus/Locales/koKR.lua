@@ -28,6 +28,7 @@ L["Stating"] = "시작 중..."
 L["autoKeyStart"] = "풀 타이머 후 자동으로 쐐기돌 시작"
 L["mythicPlusTruePercent"] = "적군 세력의 소수점 값을 표시"
 L["mythicPlusChestTimer"] = "상자 타이머 표시"
+L["interruptWithShift"] = "해당 기능을 중단하려면 Shift를 누르고 계세요"
 
 L["None"] = "풀 타이머 없음"
 L["Blizzard Pull Timer"] = "블리자드 풀 타이머"
@@ -52,20 +53,9 @@ L["potionTrackerShowTooltip"] = "아이콘에 툴팁 표시"
 L["HealingPotion"] = "치유"
 L["potionTrackerHealingPotions"] = "치유 물약 CD 추적"
 L["potionTrackerOffhealing"] = "보조 치유 CD 사용 추적"
--- LFG 도구
 
-L["DungeonBrowser"] = "던전 브라우저"
-L["groupfinderAppText"] = '그룹 찾기 텍스트 "당신의 그룹이 현재 형성 중입니다" 숨기기'
-L["groupfinderMoveResetButton"] = "던전 찾기의 필터 초기화 버튼을 왼쪽으로 이동합니다."
-L["groupfinderShowDungeonScoreFrame"] = "던전 찾기 옆에 " .. DUNGEON_SCORE .. " 프레임 표시"
-L["groupfinderSkipRoleSelect"] = "역할 선택 건너뛰기"
-L["groupfinderSkipRolecheckHeadline"] = "자동 역할 설정"
-L["groupfinderSkipRolecheckUseSpec"] = "현재 전문화의 역할 사용 (예: 죽음의 기사 (혈기) = 탱커)"
-L["groupfinderSkipRolecheckUseLFD"] = "던전 찾기에 설정된 역할 사용"
-L["groupfinderShowPartyKeystone"] = "파티원의 쐐기돌 정보를 표시합니다"
-
--- Misc Frame
-L["Misc"] = "기타"
+-- AutoMark Frame
+L["AutoMark"] = "탱커 징표"
 L["autoMarkTankInDungeon"] = "던전에서 " .. TANK .. " 자동 표시"
 L["autoMarkTankInDungeonMarker"] = "탱커 징표"
 L["Disabled"] = "비활성화됨"

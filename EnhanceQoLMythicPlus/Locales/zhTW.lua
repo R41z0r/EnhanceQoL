@@ -28,6 +28,7 @@ L["Stating"] = "開始中..."
 L["autoKeyStart"] = "開怪計時器後自動開始鑰石"
 L["mythicPlusTruePercent"] = "显示敌军力量的小数值"
 L["mythicPlusChestTimer"] = "显示箱子计时器"
+L["interruptWithShift"] = "按住 Shift 鍵可中斷此功能"
 
 L["None"] = "沒有開怪計時器"
 L["Blizzard Pull Timer"] = "暴雪開怪計時器"
@@ -52,20 +53,9 @@ L["potionTrackerShowTooltip"] = "在圖標上顯示提示"
 L["HealingPotion"] = "治療"
 L["potionTrackerHealingPotions"] = "追踪治疗药水CD"
 L["potionTrackerOffhealing"] = "追踪次要治疗CD的使用"
--- LFG 工具
 
-L["DungeonBrowser"] = "地下城浏览器"
-L["groupfinderAppText"] = '隐藏团队查找器文本 "你的团队目前正在形成"'
-L["groupfinderMoveResetButton"] = "將地城搜尋器的重置過濾按鈕移至左側。"
-L["groupfinderShowDungeonScoreFrame"] = "在地下城搜尋旁顯示 " .. DUNGEON_SCORE .. " 框架"
-L["groupfinderSkipRoleSelect"] = "跳過角色選擇"
-L["groupfinderSkipRolecheckHeadline"] = "自動角色分配"
-L["groupfinderSkipRolecheckUseSpec"] = "使用當前專精的角色（如血死亡騎士 = 坦克）"
-L["groupfinderSkipRolecheckUseLFD"] = "使用地城搜尋器中的角色"
-L["groupfinderShowPartyKeystone"] = "顯示隊伍成員的傳奇鑰石資訊"
-
--- Misc Frame
-L["Misc"] = "雜項"
+-- AutoMark Frame
+L["AutoMark"] = "坦克標記"
 L["autoMarkTankInDungeon"] = "在地下城自動標記" .. TANK
 L["autoMarkTankInDungeonMarker"] = "坦克標記"
 L["Disabled"] = "已停用"

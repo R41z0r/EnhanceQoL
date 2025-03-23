@@ -827,7 +827,7 @@ local function updateKeystoneInfo()
 					-- Überprüfen, ob der Zauber bekannt ist
 					if mapData.spellId and IsSpellKnown(mapData.spellId) then
 						local cooldownData = C_Spell.GetSpellCooldown(mapData.spellId)
-						if cooldownData and not cooldownData.isEnabled then
+						if cooldownData and cooldownData.isEnabled then
 							button:EnableMouse(true) -- Aktiviert Klicks
 
 							-- Cooldown-Spirale

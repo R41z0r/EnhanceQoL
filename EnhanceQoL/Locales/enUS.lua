@@ -3,6 +3,7 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "Quick signup"
+L["interruptWithShift"] = "Hold shift to interrupt that feature"
 
 L["Persist LFG signup note"] = "Persist LFG signup note"
 L["Select an option"] = "Select an option"
@@ -35,7 +36,7 @@ L["showCatalystChargesOnCharframe"] = "Display Catalyst charges on Character Equ
 L["showIlvlOnBagItems"] = "Display ilvl on equipment in all bags"
 L["showDurabilityOnCharframe"] = "Display Durability on Character Equipment Frame"
 L["hideOrderHallBar"] = "Hide Order Hall Command Bar"
-L["showInfoOnInspectFrame"] = "Show additional information on the Inspect Frame (Experimental)"
+L["showInfoOnInspectFrame"] = "Show additional information on the Inspect Frame"
 L["MissingEnchant"] = "Enchant"
 L["hideHitIndicatorPlayer"] = "Hide floating combat text (damage and healing) over your character"
 L["hideHitIndicatorPet"] = "Hide floating combat text (damage and healing) over your pet"
@@ -55,9 +56,20 @@ L["Quest"] = "Quest"
 
 L["hideBagsBar"] = "Hide Bagsbar"
 L["hideMicroMenu"] = "Hide Micro Menu"
+
 -- Dungeon
 L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option"
 L["lfgSortByRio"] = "Sort Mythic Dungeon Applicants by Mythic Score"
+L["DungeonBrowser"] = "Dungeonbrowser"
+L["groupfinderAppText"] = 'Hide the group finder text "Your group is currently forming"'
+L["groupfinderMoveResetButton"] = "Shift the 'Reset Filter' button in the Dungeon Browser to the left side"
+L["groupfinderShowDungeonScoreFrame"] = "Show " .. DUNGEON_SCORE .. " frame next to the Dungeon Finder"
+L["groupfinderSkipRoleSelect"] = "Skip role selection"
+L["groupfinderSkipRolecheckHeadline"] = "Automatic role assignment"
+L["groupfinderSkipRolecheckUseSpec"] = "Use your current spec's role (e.g. Blood Death Knight = Tank)"
+L["groupfinderSkipRolecheckUseLFD"] = "Use roles from Dungeon Finder"
+L["groupfinderShowPartyKeystone"] = "Display your party members Mythic+ Keystone info"
+L["groupfinderShowPartyKeystoneDesc"] = "Allows you to click on the keyinfo icon to teleport to that dungeon"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Don't automatically handle trivial " .. QUESTS_LABEL

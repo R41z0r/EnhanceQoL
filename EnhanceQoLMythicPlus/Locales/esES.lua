@@ -27,6 +27,7 @@ L["Stating"] = "Iniciando..."
 L["autoKeyStart"] = "Iniciar la piedra angular automáticamente después del temporizador de pull"
 L["mythicPlusTruePercent"] = "Mostrar el valor decimal de las fuerzas enemigas"
 L["mythicPlusChestTimer"] = "Mostrar temporizadores de cofres"
+L["interruptWithShift"] = "Mantén presionada la tecla Shift para interrumpir esta función"
 
 L["None"] = "Sin temporizador de pull"
 L["Blizzard Pull Timer"] = "Temporizador de pull de Blizzard"
@@ -51,20 +52,9 @@ L["potionTrackerShowTooltip"] = "Mostrar información en el icono"
 L["HealingPotion"] = "Curación"
 L["potionTrackerHealingPotions"] = "Rastrear CD de poción de salud"
 L["potionTrackerOffhealing"] = "Rastrear uso de CD de sanación secundaria"
--- Herramientas de Buscador de Mazmorras
 
-L["DungeonBrowser"] = "Explorador de mazmorras"
-L["groupfinderAppText"] = 'Ocultar el texto del buscador de grupos "Tu grupo se está formando actualmente"'
-L["groupfinderMoveResetButton"] = "Mueve el botón de restablecer filtro del buscador de mazmorras al lado izquierdo."
-L["groupfinderShowDungeonScoreFrame"] = "Mostrar el marco de " .. DUNGEON_SCORE .. " junto al Buscador de mazmorras"
-L["groupfinderSkipRoleSelect"] = "Omitir selección de rol"
-L["groupfinderSkipRolecheckHeadline"] = "Asignación automática de rol"
-L["groupfinderSkipRolecheckUseSpec"] = "Usar el rol de tu especialización actual (p. ej. Caballero de la Muerte (Sangre) = Tanque)"
-L["groupfinderSkipRolecheckUseLFD"] = "Usar los roles seleccionados en el buscador"
-L["groupfinderShowPartyKeystone"] = "Mostrar la información de piedra angular de los miembros del grupo"
-
--- Misc Frame
-L["Misc"] = "Misceláneo"
+-- AutoMark Frame
+L["AutoMark"] = "Marcador de tanque"
 L["autoMarkTankInDungeon"] = "Marcar automáticamente al " .. TANK .. " en mazmorras"
 L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
 L["Disabled"] = "Desactivado"

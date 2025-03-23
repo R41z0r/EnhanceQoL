@@ -5,6 +5,8 @@ local addonName, addon = ...
 local L = addon.L
 
 L["Quick signup"] = "빠른 가입"
+L["interruptWithShift"] = "해당 기능을 중단하려면 Shift를 누르고 계세요"
+
 L["Persist LFG signup note"] = "LFG 가입 메모 유지"
 L["Select an option"] = "옵션 선택"
 L["Save"] = "저장"
@@ -30,7 +32,7 @@ L["showCatalystChargesOnCharframe"] = "캐릭터 장비 창에 촉매 충전 표
 L["showIlvlOnBagItems"] = "모든 가방의 장비에 아이템 레벨 표시"
 L["showDurabilityOnCharframe"] = "캐릭터 장비 프레임에 내구도를 표시합니다"
 L["hideOrderHallBar"] = "사령부 명령 바 숨기기"
-L["showInfoOnInspectFrame"] = "검사 창에 추가 정보를 표시합니다 (실험적 기능)"
+L["showInfoOnInspectFrame"] = "검사 창에 추가 정보를 표시합니다"
 L["MissingEnchant"] = "마법부여"
 L["hideHitIndicatorPlayer"] = "캐릭터 위에 뜨는 전투 텍스트(피해 및 치유) 숨기기"
 L["hideHitIndicatorPet"] = "소환수 위에 뜨는 전투 텍스트(피해 및 치유) 숨기기"
@@ -53,6 +55,15 @@ L["hideMicroMenu"] = "마이크로 메뉴 숨기기"
 -- Dungeon
 L["autoChooseDelvePower"] = "옵션이 1개만 있을 때 델브 파워 자동 선택"
 L["lfgSortByRio"] = "신화 던전 지원자를 신화 점수로 정렬"
+L["DungeonBrowser"] = "던전 브라우저"
+L["groupfinderAppText"] = '그룹 찾기 텍스트 "당신의 그룹이 현재 형성 중입니다" 숨기기'
+L["groupfinderMoveResetButton"] = "던전 찾기의 필터 초기화 버튼을 왼쪽으로 이동합니다."
+L["groupfinderShowDungeonScoreFrame"] = "던전 찾기 옆에 " .. DUNGEON_SCORE .. " 프레임 표시"
+L["groupfinderSkipRoleSelect"] = "역할 선택 건너뛰기"
+L["groupfinderSkipRolecheckHeadline"] = "자동 역할 설정"
+L["groupfinderSkipRolecheckUseSpec"] = "현재 전문화의 역할 사용 (예: 죽음의 기사 (혈기) = 탱커)"
+L["groupfinderSkipRolecheckUseLFD"] = "던전 찾기에 설정된 역할 사용"
+L["groupfinderShowPartyKeystone"] = "파티원의 쐐기돌 정보를 표시합니다"
 
 -- Quest
 L["ignoreTrivialQuests"] = "사소한 " .. QUESTS_LABEL .. "을(를) 자동으로 처리하지 않음"
