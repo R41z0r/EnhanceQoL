@@ -35,7 +35,7 @@ end
 local function createBRFrame()
 	removeBRFrame()
 	if not addon.db["mythicPlusBRTrackerEnabled"] then return end
-	brButton = CreateFrame("Button", nil, UIParent, "SecureActionButtonTemplate")
+	brButton = CreateFrame("Button", nil, UIParent)
 	brButton:SetSize(addon.db["mythicPlusBRButtonSize"], addon.db["mythicPlusBRButtonSize"])
 
 	brButton:SetPoint(addon.db["mythicPlusBRTrackerPoint"], UIParent, addon.db["mythicPlusBRTrackerPoint"], addon.db["mythicPlusBRTrackerX"], addon.db["mythicPlusBRTrackerY"])
@@ -77,6 +77,11 @@ local function createBRFrame()
 	brButton.charges = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	brButton.charges:SetPoint("BOTTOMRIGHT", brButton, "BOTTOMRIGHT", -3, 3)
 	brButton.charges:SetFont("Fonts\\FRIZQT__.TTF", newFontSize, "OUTLINE")
+end
+
+function addon.MythicPlus.functions.testFrame()
+	print("Recreated")
+	createBRFrame()
 end
 
 local function setBRInfo(info)

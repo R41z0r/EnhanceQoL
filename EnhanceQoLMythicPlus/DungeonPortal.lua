@@ -732,6 +732,10 @@ local function calculateMaxWidth(dataTable)
 end
 
 local function updateKeystoneInfo()
+	if InCombatLockdown() then
+		doAfterCombat = true
+		return
+	end
 	if parentFrame:IsShown() then
 		local minHightOffset = 0
 		if PVEFrameTab4:IsVisible() then minHightOffset = 0 - PVEFrameTab4:GetHeight() end
@@ -745,6 +749,7 @@ local function updateKeystoneInfo()
 				child:SetParent(nil)
 			end
 		end
+		if IsInRaid() then return end
 		keyStoneFrame:SetPoint("TOPRIGHT", parentFrame, "BOTTOMRIGHT", 0, minHightOffset)
 		if #portalSpells == 0 then getCurrentSeasonPortal() end
 		local keystoneData = openRaidLib.GetAllKeystonesInfo()
@@ -856,33 +861,44 @@ function addon.MythicPlus.onKeystoneUpdate(unitName, keystoneInfo, keystoneData)
 	if parentFrame:IsShown() then updateKeystoneInfo() end
 end
 
+local isRegistered = false
 function addon.MythicPlus.functions.togglePartyKeystone()
-	if addon.db["groupfinderShowPartyKeystone"] then
-		measureFontString = UIParent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-		measureFontString:Hide()
-		openRaidLib.RegisterCallback(addon.MythicPlus, "KeystoneUpdate", "onKeystoneUpdate")
-		openRaidLib.RequestKeystoneDataFromParty()
+	if InCombatLockdown() then
+		doAfterCombat = true
 	else
-		measureFontString = nil
-		keyStoneFrame:Hide()
-		keyStoneFrame:SetParent(nil)
-		keyStoneFrame = nil
-		openRaidLib.UnregisterCallback(addon.MythicPlus, "KeystoneUpdate", "onKeystoneUpdate")
+		if addon.db["groupfinderShowPartyKeystone"] and not IsInRaid() then
+			if not isRegistered then
+				isRegistered = true
+				measureFontString = UIParent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+				measureFontString:Hide()
+				openRaidLib.RegisterCallback(addon.MythicPlus, "KeystoneUpdate", "onKeystoneUpdate")
+				openRaidLib.RequestKeystoneDataFromParty()
+			end
+		else
+			isRegistered = false
+			measureFontString = nil
+			if keyStoneFrame then
+				keyStoneFrame:Hide()
+				keyStoneFrame:SetParent(nil)
+				keyStoneFrame = nil
+			end
+			openRaidLib.UnregisterCallback(addon.MythicPlus, "KeystoneUpdate", "onKeystoneUpdate")
+			openRaidLib.WipeKeystoneData()
+		end
 	end
 end
 if addon.db["groupfinderShowPartyKeystone"] then addon.MythicPlus.functions.togglePartyKeystone() end
 
-function addon.MythicPlus.triggerRequest() openRaidLib.RequestKeystoneDataFromParty() end
+function addon.MythicPlus.triggerRequest()
+	if not IsInRaid() then openRaidLib.RequestKeystoneDataFromParty() end
+end
 
 function addon.MythicPlus.functions.toggleFrame()
 	if InCombatLockdown() then
 		doAfterCombat = true
 	else
+		doAfterCombat = false
 		if addon.db["teleportFrame"] == true then
-			addon.MythicPlus.triggerRequest()
-			updateKeystoneInfo() -- precall to check if we have all information already
-			doAfterCombat = false
-
 			if not frameAnchor:IsShown() then frameAnchor:Show() end
 			if #portalSpells == 0 then getCurrentSeasonPortal() end
 			checkCooldown()
@@ -907,6 +923,10 @@ function addon.MythicPlus.functions.toggleFrame()
 		else
 			frameAnchor:Hide()
 		end
+		if addon.db["groupfinderShowPartyKeystone"] then
+			addon.MythicPlus.triggerRequest()
+			updateKeystoneInfo() -- precall to check if we have all information already
+		end
 		CreateRioScore()
 	end
 end
@@ -919,8 +939,7 @@ frameAnchor:RegisterEvent("ADDON_LOADED")
 frameAnchor:RegisterEvent("SPELL_DATA_LOAD_RESULT")
 frameAnchor:RegisterEvent("PLAYER_REGEN_ENABLED")
 frameAnchor:RegisterEvent("GROUP_ROSTER_UPDATE")
-frameAnchor:RegisterEvent("GROUP_LEFT")
-
+frameAnchor:RegisterEvent("GROUP_JOINED")
 local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	if addon.db["teleportFrame"] then
 		if InCombatLockdown() then
@@ -937,11 +956,12 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 				else
 					frameAnchorCompendium:Hide()
 				end
+			elseif event == "GROUP_JOINED" then
+				if PVEFrame:IsShown() then
+					addon.MythicPlus.triggerRequest() -- because I won't get the information from the people already in party otherwise
+				end
 			elseif event == "GROUP_ROSTER_UPDATE" then
-				-- addon.MythicPlus.triggerRequest()
-				-- updateKeystoneInfo()
-			elseif event == "GROUP_LEFT" then
-				openRaidLib.WipeKeystoneData() -- After Group left - WipeKeystoneData
+				if (IsInRaid() and isRegistered) or (not IsInRaid() and not isRegistered) then addon.MythicPlus.functions.togglePartyKeystone() end
 			elseif parentFrame:IsShown() then -- Only do stuff, when PVEFrame Open
 				if event == "UNIT_SPELLCAST_SUCCEEDED" and arg1 == "player" then
 					if allSpells[arg3] then waitCooldown(arg3) end
@@ -950,7 +970,10 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 				elseif event == "SPELL_DATA_LOAD_RESULT" and portalSpells[arg1] then
 					print("Loaded", portalSpells[arg1].text)
 				elseif event == "PLAYER_REGEN_ENABLED" then
-					if doAfterCombat then addon.MythicPlus.functions.toggleFrame() end
+					if doAfterCombat then
+						if (IsInRaid() and isRegistered) or (not IsInRaid() and not isRegistered) then addon.MythicPlus.functions.togglePartyKeystone() end
+						addon.MythicPlus.functions.toggleFrame()
+					end
 				end
 			end
 		end

@@ -16,9 +16,6 @@
 
 - **Dungeon Finder Role Options**
 
-  - Option to use the roles selected in the Dungeon Finder tab instead of your current specialization.
-
-- **Automatic role selection**
   - Added an option to use the Dungeon Finder roles for automatic selection
 
 ## Changed
