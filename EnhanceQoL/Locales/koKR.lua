@@ -58,12 +58,10 @@ L["lfgSortByRio"] = "신화 던전 지원자를 신화 점수로 정렬"
 L["DungeonBrowser"] = "던전 브라우저"
 L["groupfinderAppText"] = '그룹 찾기 텍스트 "당신의 그룹이 현재 형성 중입니다" 숨기기'
 L["groupfinderMoveResetButton"] = "던전 찾기의 필터 초기화 버튼을 왼쪽으로 이동합니다."
-L["groupfinderShowDungeonScoreFrame"] = "던전 찾기 옆에 " .. DUNGEON_SCORE .. " 프레임 표시"
 L["groupfinderSkipRoleSelect"] = "역할 선택 건너뛰기"
 L["groupfinderSkipRolecheckHeadline"] = "자동 역할 설정"
 L["groupfinderSkipRolecheckUseSpec"] = "현재 전문화의 역할 사용 (예: 죽음의 기사 (혈기) = 탱커)"
 L["groupfinderSkipRolecheckUseLFD"] = "던전 찾기에 설정된 역할 사용"
-L["groupfinderShowPartyKeystone"] = "파티원의 쐐기돌 정보를 표시합니다"
 
 -- Quest
 L["ignoreTrivialQuests"] = "사소한 " .. QUESTS_LABEL .. "을(를) 자동으로 처리하지 않음"

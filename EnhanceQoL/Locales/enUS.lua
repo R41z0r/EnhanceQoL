@@ -63,13 +63,10 @@ L["lfgSortByRio"] = "Sort Mythic Dungeon Applicants by Mythic Score"
 L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = 'Hide the group finder text "Your group is currently forming"'
 L["groupfinderMoveResetButton"] = "Shift the 'Reset Filter' button in the Dungeon Browser to the left side"
-L["groupfinderShowDungeonScoreFrame"] = "Show " .. DUNGEON_SCORE .. " frame next to the Dungeon Finder"
 L["groupfinderSkipRoleSelect"] = "Skip role selection"
 L["groupfinderSkipRolecheckHeadline"] = "Automatic role assignment"
 L["groupfinderSkipRolecheckUseSpec"] = "Use your current spec's role (e.g. Blood Death Knight = Tank)"
 L["groupfinderSkipRolecheckUseLFD"] = "Use roles from Dungeon Finder"
-L["groupfinderShowPartyKeystone"] = "Display your party members Mythic+ Keystone info"
-L["groupfinderShowPartyKeystoneDesc"] = "Allows you to click on the keyinfo icon to teleport to that dungeon"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Don't automatically handle trivial " .. QUESTS_LABEL

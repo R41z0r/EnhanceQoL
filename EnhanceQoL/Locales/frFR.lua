@@ -64,12 +64,10 @@ L["lfgSortByRio"] = "Trier les candidats aux donjons mythiques par score mythiqu
 L["DungeonBrowser"] = "Explorateur de donjons"
 L["groupfinderAppText"] = 'Masquer le texte du recherche de groupe "Votre groupe est actuellement en formation"'
 L["groupfinderMoveResetButton"] = "Déplacez le bouton de réinitialisation du navigateur de donjons sur le côté gauche."
-L["groupfinderShowDungeonScoreFrame"] = "Afficher le cadre " .. DUNGEON_SCORE .. " à côté du Recherche de donjon"
 L["groupfinderSkipRoleSelect"] = "Ignorer la sélection de rôle"
 L["groupfinderSkipRolecheckHeadline"] = "Affectation automatique de rôle"
 L["groupfinderSkipRolecheckUseSpec"] = "Utiliser le rôle de votre spécialisation actuelle (ex. Chevalier de la mort (Sang) = Tank)"
 L["groupfinderSkipRolecheckUseLFD"] = "Utiliser les rôles de l’outil Donjons"
-L["groupfinderShowPartyKeystone"] = "Afficher les informations de clé mythique de vos coéquipiers"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Ne pas gérer automatiquement les " .. QUESTS_LABEL .. " triviales"

@@ -64,12 +64,10 @@ L["lfgSortByRio"] = "按史诗分数排序史诗地下城申请者"
 L["DungeonBrowser"] = "地下城浏览器"
 L["groupfinderAppText"] = '隐藏团队查找器文本 "你的团队目前正在形成"'
 L["groupfinderMoveResetButton"] = "將地城搜尋器的重置過濾按鈕移至左側。"
-L["groupfinderShowDungeonScoreFrame"] = "在地下城搜尋旁顯示 " .. DUNGEON_SCORE .. " 框架"
 L["groupfinderSkipRoleSelect"] = "跳過角色選擇"
 L["groupfinderSkipRolecheckHeadline"] = "自動角色分配"
 L["groupfinderSkipRolecheckUseSpec"] = "使用當前專精的角色（如血死亡騎士 = 坦克）"
 L["groupfinderSkipRolecheckUseLFD"] = "使用地城搜尋器中的角色"
-L["groupfinderShowPartyKeystone"] = "顯示隊伍成員的傳奇鑰石資訊"
 
 -- Quest
 L["ignoreTrivialQuests"] = "不要自動處理等級較低的" .. QUESTS_LABEL

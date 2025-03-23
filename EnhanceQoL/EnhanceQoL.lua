@@ -2431,6 +2431,9 @@ local eventHandlers = {
 	["GUILDBANK_UPDATE_MONEY"] = function()
 		if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
 	end,
+	["LFG_ROLE_CHECK_SHOW"] = function()
+		if addon.db["groupfinderSkipRoleSelect"] and UnitInParty("player") then skipRolecheck() end
+	end,
 	["LFG_LIST_APPLICANT_UPDATED"] = function()
 		if PVEFrame:IsShown() and addon.db["lfgSortByRio"] then C_LFGList.RefreshApplicants() end
 		if InCombatLockdown() then return end

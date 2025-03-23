@@ -63,12 +63,10 @@ L["lfgSortByRio"] = "Sortiere Bewerber für Mythisch+ Dungeons nach Mythisch-Wer
 L["DungeonBrowser"] = "Dungeonbrowser"
 L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
 L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite"
-L["groupfinderShowDungeonScoreFrame"] = DUNGEON_SCORE .. "-Anzeige neben dem Dungeonbrowser anzeigen"
 L["groupfinderSkipRoleSelect"] = "Rollen-Auswahl überspringen"
 L["groupfinderSkipRolecheckHeadline"] = "Automatische Rollenzuweisung"
 L["groupfinderSkipRolecheckUseSpec"] = "Verwende die Rolle deiner aktuellen Spezialisierung (z.B. Blut-Todesritter = Tank)"
 L["groupfinderSkipRolecheckUseLFD"] = "Verwende die Rollen aus dem Dungeonbrowser"
-L["groupfinderShowPartyKeystone"] = "Zeige die Mythic+-Schlüsselstein-Infos deiner Gruppenmitglieder"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Triviale " .. QUESTS_LABEL .. " nicht automatisch verwalten"

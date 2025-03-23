@@ -35,6 +35,11 @@ L["DBM / BigWigs Pull Timer"] = "Minuteur de pull DBM / BigWigs"
 L["Both"] = "Blizzard et DBM / BigWigs"
 L["Pull Timer Type"] = "Type de minuteur de pull"
 
+L["groupfinderShowDungeonScoreFrame"] = "Afficher le cadre " .. DUNGEON_SCORE .. " à côté du Recherche de donjon"
+-- Keystone
+L["groupfinderShowPartyKeystone"] = "Afficher les informations de clé mythique de vos coéquipiers"
+L["groupfinderShowPartyKeystoneDesc"] = "Vous permet de cliquer sur l’icône d’info de la clé pour vous téléporter dans ce donjon"
+
 -- Potion Tracker
 L["Drag me to position Cooldownbars"] = "Faites glisser"
 L["Potion Tracker"] = "Suivi des potions"

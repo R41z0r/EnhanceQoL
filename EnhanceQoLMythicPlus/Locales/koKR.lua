@@ -36,6 +36,11 @@ L["DBM / BigWigs Pull Timer"] = "DBM / BigWigs 풀 타이머"
 L["Both"] = "블리자드 및 DBM / BigWigs"
 L["Pull Timer Type"] = "풀 타이머 유형"
 
+L["groupfinderShowDungeonScoreFrame"] = "던전 찾기 옆에 " .. DUNGEON_SCORE .. " 프레임 표시"
+-- Keystone
+L["groupfinderShowPartyKeystone"] = "파티원의 쐐기돌 정보를 표시합니다"
+L["groupfinderShowPartyKeystoneDesc"] = "해당 던전으로 순간이동하기 위해 키 정보 아이콘을 클릭할 수 있습니다"
+
 -- Potion Tracker
 L["Drag me to position Cooldownbars"] = "쿨다운바 위치 조정"
 L["Potion Tracker"] = "물약 추적기"

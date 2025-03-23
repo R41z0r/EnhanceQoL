@@ -34,6 +34,11 @@ L["DBM / BigWigs Pull Timer"] = "DBM / BigWigs Pull Timer"
 L["Both"] = "Blizzard and DBM / BigWigs"
 L["Pull Timer Type"] = "Pull Timer Type"
 
+L["groupfinderShowDungeonScoreFrame"] = "Show " .. DUNGEON_SCORE .. " frame next to the Dungeon Finder"
+-- Keystone
+L["groupfinderShowPartyKeystone"] = "Display your party members Mythic+ Keystone info"
+L["groupfinderShowPartyKeystoneDesc"] = "Allows you to click on the keyinfo icon to teleport to that dungeon"
+
 -- Potion Tracker
 L["Drag me to position Cooldownbars"] = "Drag me to position Cooldownbars"
 L["Potion Tracker"] = "Potion tracker"

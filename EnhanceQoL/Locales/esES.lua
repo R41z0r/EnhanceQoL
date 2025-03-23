@@ -64,12 +64,10 @@ L["lfgSortByRio"] = "Ordenar solicitantes de mazmorras míticas por puntuación 
 L["DungeonBrowser"] = "Explorador de mazmorras"
 L["groupfinderAppText"] = 'Ocultar el texto del buscador de grupos "Tu grupo se está formando actualmente"'
 L["groupfinderMoveResetButton"] = "Mueve el botón de restablecer filtro del buscador de mazmorras al lado izquierdo."
-L["groupfinderShowDungeonScoreFrame"] = "Mostrar el marco de " .. DUNGEON_SCORE .. " junto al Buscador de mazmorras"
 L["groupfinderSkipRoleSelect"] = "Omitir selección de rol"
 L["groupfinderSkipRolecheckHeadline"] = "Asignación automática de rol"
 L["groupfinderSkipRolecheckUseSpec"] = "Usar el rol de tu especialización actual (p. ej. Caballero de la Muerte (Sangre) = Tanque)"
 L["groupfinderSkipRolecheckUseLFD"] = "Usar los roles seleccionados en el buscador"
-L["groupfinderShowPartyKeystone"] = "Mostrar la información de piedra angular de los miembros del grupo"
 
 -- Quest
 L["ignoreTrivialQuests"] = "No gestionar automáticamente las " .. QUESTS_LABEL .. " triviales"

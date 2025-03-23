@@ -36,6 +36,11 @@ L["DBM / BigWigs Pull Timer"] = "Таймер начала боя DBM / BigWigs"
 L["Both"] = "Blizzard и DBM / BigWigs"
 L["Pull Timer Type"] = "Тип таймера начала боя"
 
+L["groupfinderShowDungeonScoreFrame"] = "Показать рамку " .. DUNGEON_SCORE .. " рядом с Поиском подземелий"
+-- Keystone
+L["groupfinderShowPartyKeystone"] = "Показывать информацию о ключах Mythic+ у членов группы"
+L["groupfinderShowPartyKeystoneDesc"] = "Позволяет нажать на иконку ключа, чтобы телепортироваться в это подземелье"
+
 -- Potion Tracker
 L["Drag me to position Cooldownbars"] = "Перетащи меня"
 L["Potion Tracker"] = "Отслеживание зелий"

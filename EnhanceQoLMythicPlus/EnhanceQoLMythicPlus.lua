@@ -366,8 +366,6 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 		checkKeyStone()
 	elseif event == "READY_CHECK_FINISHED" and ChallengesKeystoneFrame and addon.MythicPlus.Buttons["ReadyCheck"] then
 		addon.MythicPlus.Buttons["ReadyCheck"]:SetText(L["ReadyCheck"])
-	elseif event == "LFG_ROLE_CHECK_SHOW" and addon.db["groupfinderSkipRoleSelect"] and UnitInParty("player") then
-		skipRolecheck()
 	elseif event == "RAID_TARGET_UPDATE" and checkCondition() then
 		C_Timer.After(0.5, function() checkRaidMarker() end)
 	elseif event == "PLAYER_ROLES_ASSIGNED" and checkCondition() then

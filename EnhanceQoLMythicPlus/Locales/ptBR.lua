@@ -36,6 +36,11 @@ L["DBM / BigWigs Pull Timer"] = "Cronômetro de pull do DBM / BigWigs"
 L["Both"] = "Blizzard e DBM / BigWigs"
 L["Pull Timer Type"] = "Tipo de cronômetro de pull"
 
+L["groupfinderShowDungeonScoreFrame"] = "Exibir o quadro " .. DUNGEON_SCORE .. " ao lado do Localizador de Masmorras"
+-- Keystone
+L["groupfinderShowPartyKeystone"] = "Exibir as informações de pedra-chave Mítica dos membros do grupo"
+L["groupfinderShowPartyKeystoneDesc"] = "Permite que você clique no ícone de informações da chave para se teletransportar para aquela masmorra"
+
 -- Potion Tracker
 L["Drag me to position Cooldownbars"] = "Arraste-me"
 L["Potion Tracker"] = "Rastreador de Poções"

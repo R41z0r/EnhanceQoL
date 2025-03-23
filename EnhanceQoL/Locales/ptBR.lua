@@ -64,12 +64,10 @@ L["lfgSortByRio"] = "Classificar candidatos de masmorras míticas pelo placar m�
 L["DungeonBrowser"] = "Explorador de Masmorras"
 L["groupfinderAppText"] = 'Ocultar o texto do buscador de grupos "Seu grupo está se formando atualmente"'
 L["groupfinderMoveResetButton"] = "Mova o botão de redefinição de filtro do Localizador de Masmorras para o lado esquerdo."
-L["groupfinderShowDungeonScoreFrame"] = "Exibir o quadro " .. DUNGEON_SCORE .. " ao lado do Localizador de Masmorras"
 L["groupfinderSkipRoleSelect"] = "Pular seleção de função"
 L["groupfinderSkipRolecheckHeadline"] = "Atribuição automática de função"
 L["groupfinderSkipRolecheckUseSpec"] = "Use a função da sua especialização (ex. Cavaleiro da Morte (Sangue) = Tanque)"
 L["groupfinderSkipRolecheckUseLFD"] = "Use as funções do Localizador de Masmorras"
-L["groupfinderShowPartyKeystone"] = "Exibir as informações de pedra-chave Mítica dos membros do grupo"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Não tratar automaticamente as " .. QUESTS_LABEL .. " triviais"

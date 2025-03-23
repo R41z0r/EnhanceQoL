@@ -36,6 +36,11 @@ L["DBM / BigWigs Pull Timer"] = "DBM / BigWigs 開怪計時器"
 L["Both"] = "暴雪和 DBM / BigWigs"
 L["Pull Timer Type"] = "開怪計時器類型"
 
+L["groupfinderShowDungeonScoreFrame"] = "在地下城搜尋旁顯示 " .. DUNGEON_SCORE .. " 框架"
+-- Keystone
+L["groupfinderShowPartyKeystone"] = "顯示隊伍成員的傳奇鑰石資訊"
+L["groupfinderShowPartyKeystoneDesc"] = "允許你點擊鑰石資訊圖示以傳送至該地城"
+
 -- Potion Tracker
 L["Drag me to position Cooldownbars"] = "拖動我"
 L["Potion Tracker"] = "藥水追蹤器"

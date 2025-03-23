@@ -58,12 +58,10 @@ L["lfgSortByRio"] = "Ordina i candidati dei dungeon mitici per punteggio mitico"
 L["DungeonBrowser"] = "Esploratore di dungeon"
 L["groupfinderAppText"] = 'Nascondi il testo del cercatore di gruppi "Il tuo gruppo si sta formando attualmente"'
 L["groupfinderMoveResetButton"] = "Sposta il pulsante di ripristino del filtro del Ricerca Spedizioni sul lato sinistro."
-L["groupfinderShowDungeonScoreFrame"] = "Mostra il riquadro " .. DUNGEON_SCORE .. " accanto al Ricerca delle spedizioni"
 L["groupfinderSkipRoleSelect"] = "Salta la selezione del ruolo"
 L["groupfinderSkipRolecheckHeadline"] = "Assegnazione automatica del ruolo"
 L["groupfinderSkipRolecheckUseSpec"] = "Usa il ruolo della tua specializzazione (es. Cavaliere della Morte (Sangue) = Tank)"
 L["groupfinderSkipRolecheckUseLFD"] = "Usa i ruoli dal Ricerca Dungeon"
-L["groupfinderShowPartyKeystone"] = "Mostra le informazioni della Chiave Mitica dei membri del gruppo"
 
 -- Quest
 L["ignoreTrivialQuests"] = "Non gestire automaticamente le " .. QUESTS_LABEL .. " di bassa importanza"
