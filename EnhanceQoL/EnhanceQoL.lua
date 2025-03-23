@@ -779,7 +779,7 @@ local function addActionBarFrame(container, d)
 	local labelHeadline = addon.functions.createLabelAce(L["ActionbarHideExplain"], nil, nil, 14)
 	labelHeadline:SetFullWidth(true)
 	groupCore:AddChild(labelHeadline)
-	
+
 	groupCore:AddChild(addon.functions.createSpacerAce())
 
 	for _, cbData in ipairs(addon.variables.actionBarNames) do
