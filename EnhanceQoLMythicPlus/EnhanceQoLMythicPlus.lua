@@ -116,9 +116,11 @@ hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", functi
 	if addon.db["mythicPlusBRTrackerEnabled"] then
 		if not brButton or not brButton.cooldownFrame or not brButton.cooldownFrame.cooldownSet then
 			createBRFrame()
-			brButton.cooldownFrame.cooldownSet = true
-			local info = C_Spell.GetSpellCharges(20484)
-			setBRInfo(info)
+			if brButton and brButton.cooldownFrame then
+				brButton.cooldownFrame.cooldownSet = true
+				local info = C_Spell.GetSpellCharges(20484)
+				setBRInfo(info)
+			end
 		end
 	end
 
