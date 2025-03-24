@@ -34,3 +34,4 @@
 ## Bugfix
 
 - The Bags bar was shown sometimes
+- Hiding the item tooltip disabled the enchant information on character frame

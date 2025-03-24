@@ -493,43 +493,25 @@ local function onInspect(arg1)
 								end
 								element.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
 							end
-							local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
-							tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-							tooltip:SetHyperlink(itemLink)
+							local data = C_TooltipInfo.GetHyperlink(itemLink)
 							local foundEnchant = false
-							local foundIcon = false
-							for i = 1, tooltip:NumLines() do
-								local line = _G["ScanTooltipTextLeft" .. i]:GetText()
-								if line then
-									local enchant = strmatch(line, addon.variables.enchantString)
-									if enchant then
-										local color1, color2 = strmatch(enchant, "(|cn.-:).-(|r)")
-										local text = strmatch(gsub(gsub(gsub(line, "%s?|A.-|a", ""), "|cn.-:(.-)|r", "%1"), "[&+] ?", ""), addon.variables.enchantString)
+							local foundIcon = nil
+							for i, v in pairs(data.lines) do
+								if v.type == 15 then
+									foundEnchant = true
+									local r, g, b = v.leftColor:GetRGB()
+									local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 
-										local icons = {}
-										line:gsub("(|A.-|a)", function(iconString) table.insert(icons, iconString) end)
-										-- Wir gehen davon aus, dass nur eins da ist:
-										if #icons > 0 then foundIcon = icons[1] end
-
-										foundEnchant = true
-
-										local enchantText = text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", "") -- Entferne den Text vor dem Enchant
-										enchantText = enchantText:gsub("(%d+)", "%1")
-										enchantText = enchantText:gsub("(%a%a%a)%a+", "%1")
-
-										-- local shortAbbrev = gsub(enchantText, '(%w%w%w)%w+', '%1')
-										local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
-										local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
-
-										enchantText = enchantText:gsub("%%", "%%%%")
-										if foundIcon then enchantText = enchantText .. foundIcon end
-										if color1 or color2 then
-											element.enchant:SetFormattedText(format("%s%s%s", color1 or "", string.utf8sub(enchantText, 1, 20), color2 or ""))
-										else
-											element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
-										end
-										break
-									end
+									local text = strmatch(gsub(gsub(gsub(v.leftText, "%s?|A.-|a", ""), "|cn.-:(.-)|r", "%1"), "[&+] ?", ""), addon.variables.enchantString)
+									local icons = {}
+									v.leftText:gsub("(|A.-|a)", function(iconString) table.insert(icons, iconString) end)
+									if #icons > 0 then foundIcon = icons[1] end
+									foundEnchant = true
+									local enchantText = text:gsub("(%d+)", "%1")
+									enchantText = enchantText:gsub("(%a%a%a)%a+", "%1")
+									enchantText = enchantText:gsub("%%", "%%%%")
+									if foundIcon then enchantText = enchantText .. foundIcon end
+									element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
 								end
 							end
 
@@ -548,7 +530,6 @@ local function onInspect(arg1)
 									end
 								end
 							end
-							tooltip:Hide()
 						else
 							if element.borderGradient then element.borderGradient:Hide() end
 							element.enchant:SetText("")
@@ -638,46 +619,26 @@ local function setIlvlText(element, slot)
 				end
 
 				if addon.db["showEnchantOnCharframe"] then
-					local tooltip = CreateFrame("GameTooltip", "ScanTooltip", nil, "GameTooltipTemplate")
-					tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-					tooltip:SetHyperlink(link)
+					local data = C_TooltipInfo.GetHyperlink(link)
+
 					local foundEnchant = false
 					local foundIcon = nil
-					for i = 1, tooltip:NumLines() do
-						local line = _G["ScanTooltipTextLeft" .. i]:GetText()
-						if line then
-							local enchant = strmatch(line, addon.variables.enchantString)
-							if enchant then
-								local color1, color2 = strmatch(enchant, "(|cn.-:).-(|r)")
-								local text = strmatch(gsub(gsub(gsub(line, "%s?|A.-|a", ""), "|cn.-:(.-)|r", "%1"), "[&+] ?", ""), addon.variables.enchantString)
+					for i, v in pairs(data.lines) do
+						if v.type == 15 then
+							foundEnchant = true
+							local r, g, b = v.leftColor:GetRGB()
+							local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 
-								local icons = {}
-								line:gsub("(|A.-|a)", function(iconString) table.insert(icons, iconString) end)
-								-- Wir gehen davon aus, dass nur eins da ist:
-								if #icons > 0 then foundIcon = icons[1] end
-
-								foundEnchant = true
-
-								-- local enchantText = gsub(text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", ""),
-								--     '(%w%w%w)%w+', '%1')
-								local enchantText = text:gsub(".*" .. ENCHANTED_TOOLTIP_LINE .. ": ", "") -- Entferne den Text vor dem Enchant
-								enchantText = enchantText:gsub("(%d+)", "%1")
-								enchantText = enchantText:gsub("(%a%a%a)%a+", "%1")
-
-								-- local shortAbbrev = gsub(enchantText, '(%w%w%w)%w+', '%1')
-								local r, g, b = _G["ScanTooltipTextLeft" .. i]:GetTextColor()
-								local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
-
-								enchantText = enchantText:gsub("%%", "%%%%")
-								if foundIcon then enchantText = enchantText .. foundIcon end
-
-								if color1 or color2 then
-									element.enchant:SetFormattedText(format("%s%s%s", color1 or "", string.utf8sub(enchantText, 1, 20), color2 or ""))
-								else
-									element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
-								end
-								break
-							end
+							local text = strmatch(gsub(gsub(gsub(v.leftText, "%s?|A.-|a", ""), "|cn.-:(.-)|r", "%1"), "[&+] ?", ""), addon.variables.enchantString)
+							local icons = {}
+							v.leftText:gsub("(|A.-|a)", function(iconString) table.insert(icons, iconString) end)
+							if #icons > 0 then foundIcon = icons[1] end
+							foundEnchant = true
+							local enchantText = text:gsub("(%d+)", "%1")
+							enchantText = enchantText:gsub("(%a%a%a)%a+", "%1")
+							enchantText = enchantText:gsub("%%", "%%%%")
+							if foundIcon then enchantText = enchantText .. foundIcon end
+							element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
 						end
 					end
 
@@ -696,7 +657,6 @@ local function setIlvlText(element, slot)
 							end
 						end
 					end
-					tooltip:Hide()
 				else
 					element.enchant:SetText("")
 				end
@@ -799,7 +759,7 @@ local function addActionBarFrame(container, d)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local labelHeadline = addon.functions.createLabelAce(L["ActionbarHideExplain"], nil, nil, 14)
+	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["ActionbarHideExplain"] .. "|r", nil, nil, 14)
 	labelHeadline:SetFullWidth(true)
 	groupCore:AddChild(labelHeadline)
 
