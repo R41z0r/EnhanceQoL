@@ -640,41 +640,41 @@ local function addTeleportFrame(container)
 	end)
 	groupCore:AddChild(cbTeleportsEnabled)
 
-	if addon.db["teleportFrame"] then
-		local data = {
-			{
-				text = L["teleportsEnableCompendium"],
-				var = "teleportsEnableCompendium",
-				func = function(self, _, value)
-					addon.db["teleportsEnableCompendium"] = value
-					container:ReleaseChildren()
-					addTeleportFrame(container)
-					addon.MythicPlus.functions.toggleFrame()
-				end,
-			},
-			{
-				text = L["portalHideMissing"],
-				var = "portalHideMissing",
-			},
-			{
-				text = L["portalShowTooltip"],
-				var = "portalShowTooltip",
-				func = function(self, _, value) addon.db["portalShowTooltip"] = value end,
-			},
-		}
-
-		table.sort(data, function(a, b) return a.text < b.text end)
-
-		for _, cbData in ipairs(data) do
-			local uFunc = function(self, _, value)
-				addon.db[cbData.var] = value
+	-- if addon.db["teleportFrame"] then
+	local data = {
+		{
+			text = L["teleportsEnableCompendium"],
+			var = "teleportsEnableCompendium",
+			func = function(self, _, value)
+				addon.db["teleportsEnableCompendium"] = value
+				container:ReleaseChildren()
+				addTeleportFrame(container)
 				addon.MythicPlus.functions.toggleFrame()
-			end
-			if cbData.func then uFunc = cbData.func end
-			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
-			groupCore:AddChild(cbElement)
+			end,
+		},
+		{
+			text = L["portalHideMissing"],
+			var = "portalHideMissing",
+		},
+		{
+			text = L["portalShowTooltip"],
+			var = "portalShowTooltip",
+			func = function(self, _, value) addon.db["portalShowTooltip"] = value end,
+		},
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local uFunc = function(self, _, value)
+			addon.db[cbData.var] = value
+			addon.MythicPlus.functions.toggleFrame()
 		end
+		if cbData.func then uFunc = cbData.func end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+		groupCore:AddChild(cbElement)
 	end
+	-- end
 
 	if addon.db["teleportsEnableCompendium"] then
 		local groupCompendiumAddition = addon.functions.createContainer("InlineGroup", "List")

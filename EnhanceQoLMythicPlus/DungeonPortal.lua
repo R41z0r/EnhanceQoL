@@ -17,6 +17,7 @@ local allSpells = {} --  for Cooldown checking
 local mapInfo = {}
 local mapIDInfo = {}
 local selectedMapId
+local faction = UnitFactionGroup("player")
 
 local function getCurrentSeasonPortal()
 	local cModeIDs = C_ChallengeMode.GetMapTable()
@@ -40,15 +41,27 @@ local function getCurrentSeasonPortal()
 							text = data.text,
 							iconID = data.iconID,
 						}
-						filteredMapInfo[cId] = {
-							text = data.text,
-							spellId = spellID,
-							mapName = mapName,
-							texture = texture,
-							background = backgroundTexture,
-						}
+						if data.faction then
+							filteredPortalSpells[spellID].faction = data.faction
+							if data.faction == faction then
+								filteredMapInfo[cId] = {
+									text = data.text,
+									spellId = spellID,
+									mapName = mapName,
+									texture = texture,
+									background = backgroundTexture,
+								}
+							end
+						else
+							filteredMapInfo[cId] = {
+								text = data.text,
+								spellId = spellID,
+								mapName = mapName,
+								texture = texture,
+								background = backgroundTexture,
+							}
+						end
 						if data.mapID then filteredMapID[data.mapID] = cId end
-						if data.faction then filteredPortalSpells[spellID].faction = data.faction end
 						break
 					end
 				end
@@ -62,7 +75,6 @@ local function getCurrentSeasonPortal()
 end
 
 local isKnown = {}
-local faction = UnitFactionGroup("player")
 local parentFrame = PVEFrame
 local doAfterCombat = false
 
@@ -83,7 +95,7 @@ title:SetFormattedText(string.gsub(mSeasonTitle, "%s*%b()", ""))
 frameAnchor:SetSize(title:GetStringWidth() + 20, 170) -- Breite x Höhe
 
 -- Compendium
-local frameAnchorCompendium = CreateFrame("Frame", "DungeonTeleportFrameCompendium", DungeonTeleportFrame, "BackdropTemplate")
+local frameAnchorCompendium = CreateFrame("Frame", "DungeonTeleportFrameCompendium", parentFrame, "BackdropTemplate")
 frameAnchorCompendium:SetBackdrop({
 	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", -- Hintergrund
 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", -- Rahmen
@@ -278,6 +290,7 @@ local function CreatePortalCompendium(frame, compendium)
 					or (data.isHearthstone and isToyUsable(data.toyID))
 				if
 					(not data.faction or data.faction == faction)
+					and (not data.map or (data.map == C_Map.GetBestMapForUnit("player")))
 					and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
 					and (not addon.db["hideActualSeason"] or not portalSpells[spellID])
 					and (addon.db["portalShowRaidTeleports"] or not data.isRaid)
@@ -474,7 +487,7 @@ local function CreatePortalCompendium(frame, compendium)
 end
 
 local function checkCooldown()
-	CreatePortalButtonsWithCooldown(frameAnchor, portalSpells)
+	if addon.db["teleportFrame"] then CreatePortalButtonsWithCooldown(frameAnchor, portalSpells) end
 
 	if addon.db["teleportsEnableCompendium"] then CreatePortalCompendium(frameAnchorCompendium, addon.MythicPlus.variables.portalCompendium) end
 	for _, button in pairs(frameAnchor.buttons or {}) do
@@ -795,7 +808,6 @@ local function updateKeystoneInfo()
 					button:SetSize(buttonSize, buttonSize)
 					button:SetPoint("LEFT", frame, "LEFT", 10, 0)
 					if mapData.spellId then button.spellID = mapData.spellId end
-
 					-- Dungeonname (zum Beispiel rechtsbündig)
 					local dungeonText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 					dungeonText:SetPoint("TOPLEFT", button, "TOPRIGHT", 5, 0)
@@ -903,15 +915,11 @@ function addon.MythicPlus.functions.toggleFrame()
 		doAfterCombat = true
 	else
 		doAfterCombat = false
-		if addon.db["teleportFrame"] == true then
-			if not frameAnchor:IsShown() then frameAnchor:Show() end
+		if addon.db["teleportFrame"] or addon.db["teleportsEnableCompendium"] then
 			if #portalSpells == 0 then getCurrentSeasonPortal() end
 			checkCooldown()
-			if addon.db["teleportsEnableCompendium"] then
-				if not frameAnchorCompendium:IsShown() then frameAnchorCompendium:Show() end
-			else
-				frameAnchorCompendium:Hide()
-			end
+
+			frameAnchorCompendium:ClearAllPoints()
 			-- Based on RaiderIO Client place the Frame
 			if nil ~= RaiderIO_ProfileTooltip then
 				C_Timer.After(0.1, function()
@@ -920,13 +928,36 @@ function addon.MythicPlus.functions.toggleFrame()
 					else
 						local offsetX = RaiderIO_ProfileTooltip:GetSize()
 						frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+						if not addon.db["teleportFrame"] then
+							frameAnchorCompendium:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+						else
+							frameAnchorCompendium:SetPoint("TOPLEFT", frameAnchor, "TOPRIGHT", 0, 0)
+						end
 					end
 				end)
 			else
 				frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
+				if not addon.db["teleportFrame"] then
+					frameAnchorCompendium:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
+				else
+					frameAnchorCompendium:SetPoint("TOPLEFT", frameAnchor, "TOPRIGHT", 0, 0)
+				end
+			end
+
+			-- Set Visibility
+			if addon.db["teleportFrame"] == true then
+				if not frameAnchor:IsShown() then frameAnchor:Show() end
+			else
+				frameAnchor:Hide()
+			end
+			if addon.db["teleportsEnableCompendium"] then
+				if not frameAnchorCompendium:IsShown() then frameAnchorCompendium:Show() end
+			else
+				frameAnchorCompendium:Hide()
 			end
 		else
 			frameAnchor:Hide()
+			frameAnchorCompendium:Hide()
 		end
 		if addon.db["groupfinderShowPartyKeystone"] then
 			addon.MythicPlus.triggerRequest()

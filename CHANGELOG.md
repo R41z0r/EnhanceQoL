@@ -26,6 +26,10 @@
 
   - Option to show the leader icon in raid-style party frames
 
+- **Galagio Loyalty Rewards Card: Silver**
+
+  - Added the RAID-Hearthstone to RAID-Teleports. Only visible while in Undermine RAID
+
 ## Changed
 
 - **Text Updates**
