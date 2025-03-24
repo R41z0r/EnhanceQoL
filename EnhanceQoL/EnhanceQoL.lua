@@ -197,6 +197,8 @@ local function UpdateActionBarMouseover(barName, enable)
 	if enable then
 		bar:SetAlpha(0)
 		bar:EnableMouse(true)
+		bar:SetScript("OnEnter", function(self) bar:SetAlpha(1) end)
+		bar:SetScript("OnLeave", function(self) bar:SetAlpha(0) end)
 		for i = 1, 12 do
 			local button = _G[btnPrefix .. i]
 			if button then
@@ -211,6 +213,9 @@ local function UpdateActionBarMouseover(barName, enable)
 		end
 	else
 		bar:SetAlpha(1)
+		bar:EnableMouse(true)
+		bar:SetScript("OnEnter", nil)
+		bar:SetScript("OnLeave", nil)
 		for i = 1, 12 do
 			local button = _G[btnPrefix .. i]
 			if button then
