@@ -843,6 +843,90 @@ local function addRatingFrame(container)
 		groupCore:AddChild(cbElement)
 	end
 end
+local function addTalentFrame(container)
+	addon.MythicPlus.functions.getAllLoadouts()
+
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			text = "talentReminderEnabled",
+			var = "talentReminderEnabled",
+			func = function(self, _, value)
+				addon.db["talentReminderEnabled"] = value
+				container:ReleaseChildren()
+				addTalentFrame(container)
+			end,
+		},
+	}
+
+	if addon.db["talentReminderEnabled"] then
+		table.insert(data, {
+			text = "talentReminderLoadOnEnter",
+			var = "talentReminderLoadOnEnter",
+			func = function(self, _, value) addon.db["talentReminderLoadOnEnter"] = value end,
+		})
+		table.insert(data, {
+			text = "talentReminderLoadOnReadyCheck",
+			var = "talentReminderLoadOnReadyCheck",
+			func = function(self, _, value) addon.db["talentReminderLoadOnReadyCheck"] = value end,
+		})
+	end
+
+	for _, cbData in ipairs(data) do
+		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
+		if cbData.func then uFunc = cbData.func end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+		groupCore:AddChild(cbElement)
+	end
+
+	if addon.db["talentReminderEnabled"] then
+		local groupTalent = addon.functions.createContainer("TabGroup", "List")
+		groupTalent:SetTabs(addon.MythicPlus.variables.specNames)
+		groupTalent:SetCallback("OnGroupSelected", function(tabContainer, event, group)
+			tabContainer:ReleaseChildren()
+			if not addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID] then addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID] = {} end
+			if not addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group] then addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group] = {} end
+
+			print(group == addon.MythicPlus.variables.currentSpecID)
+			for _, cbData in pairs(addon.MythicPlus.variables.seasonMapInfo) do
+				local list, order = addon.functions.prepareListForDropdown(addon.MythicPlus.variables.knownLoadout[group])
+
+				local dropPullTimerType = addon.functions.createDropdownAce(
+					cbData.name,
+					list,
+					order,
+					function(self, _, value) addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] = value end
+				)
+				if addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] then
+					dropPullTimerType:SetValue(addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id])
+				else
+					dropPullTimerType:SetValue(0)
+				end
+				dropPullTimerType:SetFullWidth(false)
+				dropPullTimerType:SetWidth(200)
+				tabContainer:AddChild(dropPullTimerType)
+				tabContainer:AddChild(addon.functions.createSpacerAce())
+			end
+			C_Timer.After(0.1, function()
+				scroll:DoLayout()
+				wrapper:DoLayout()
+			end)
+		end)
+		if addon.MythicPlus.variables.currentSpecID then groupTalent:SelectTab(addon.MythicPlus.variables.currentSpecID) end
+
+		wrapper:AddChild(groupTalent)
+	end
+end
 
 addon.variables.statusTable.groups["mythicplus"] = true
 addon.functions.addToTree(nil, {
@@ -855,6 +939,7 @@ addon.functions.addToTree(nil, {
 		{ value = "teleports", text = L["Teleports"] },
 		{ value = "brtracker", text = L["BRTracker"] },
 		{ value = "rating", text = DUNGEON_SCORE },
+		{ value = "talents", text = L["TalentReminder"] },
 	},
 })
 
@@ -873,5 +958,7 @@ function addon.MythicPlus.functions.treeCallback(container, group)
 		addBRFrame(container)
 	elseif group == "mythicplus\001rating" then
 		addRatingFrame(container)
+	elseif group == "mythicplus\001talents" then
+		addTalentFrame(container)
 	end
 end

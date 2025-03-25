@@ -54,6 +54,10 @@ addon.functions.InitDBValue("mythicPlusBRTrackerPoint", "CENTER")
 addon.functions.InitDBValue("mythicPlusBRTrackerX", 0)
 addon.functions.InitDBValue("mythicPlusBRTrackerY", 0)
 
+-- Talent Reminder
+addon.functions.InitDBValue("talentReminderEnabled", false)
+addon.functions.InitDBValue("talentReminderSettings", {})
+
 addon.MythicPlus = {}
 addon.LMythicPlus = {} -- Locales for MythicPlus
 addon.MythicPlus.functions = {}
