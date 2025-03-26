@@ -105,3 +105,5 @@ L["talentReminderSoundOnDifference"] = "Play a sound if talents differ from the 
 L["WrongTalents"] = "Wrong Talents"
 L["ActualTalents"] = "Current Talents"
 L["RequiredTalents"] = "Required Talents"
+L["DeletedLoadout"] = "Deleted Talent Loadout"
+L["MissingTalentLoadout"] = "Some Talent Loadouts used by Talent Reminder\nhave been removed and can no longer be used:"

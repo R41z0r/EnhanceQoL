@@ -123,14 +123,14 @@ local function showPopup(actTalent, requiredTalent)
 		if InCombatLockdown() then return end
 		local talentIndex = GetIndexForConfigID(requiredTalent)
 		if talentIndex then ClassTalentHelper.SwitchToLoadoutByIndex(talentIndex) end
-		deleteFrame(reloadFrame)
+		deleteFrame(ChangeTalentUIPopup)
 	end)
 
 	local cancelButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
 	cancelButton:SetSize(120, 30)
 	cancelButton:SetPoint("BOTTOMRIGHT", reloadFrame, "BOTTOMRIGHT", -10, 10)
 	cancelButton:SetText(CLOSE)
-	cancelButton:SetScript("OnClick", function() deleteFrame(reloadFrame) end)
+	cancelButton:SetScript("OnClick", function() deleteFrame(ChangeTalentUIPopup) end)
 
 	if addon.db["talentReminderSoundOnDifference"] then PlaySound(11466, "Master") end
 	reloadFrame:Show()
@@ -142,6 +142,48 @@ local function showPopup(actTalent, requiredTalent)
 		minButton
 	)
 
+	reloadFrame:SetSize(maxWidth + 20, max(120, (maxHeight + 50)))
+end
+
+local function showWarning(info)
+	if ChangeTalentUIWarning and ChangeTalentUIWarning:IsShown() then deleteFrame(ChangeTalentUIWarning) end
+
+	local reloadFrame = CreateFrame("Frame", "ChangeTalentUIWarning", UIParent, "BasicFrameTemplateWithInset")
+	reloadFrame:SetSize(500, 200)
+	reloadFrame:SetPoint("TOP", UIParent, "TOP", 0, -200)
+	reloadFrame:SetFrameStrata("DIALOG")
+
+	reloadFrame.title = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	reloadFrame.title:SetPoint("TOP", reloadFrame, "TOP", 0, -6)
+	reloadFrame.title:SetText(L["DeletedLoadout"])
+
+	reloadFrame.curTalentHeadling = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+	reloadFrame.curTalentHeadling:SetPoint("TOP", reloadFrame, "TOP", 0, -30)
+	reloadFrame.curTalentHeadling:SetText(L["MissingTalentLoadout"])
+
+	reloadFrame.curTalent = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	reloadFrame.curTalent:SetPoint("TOP", reloadFrame, "TOP", 0, addon.functions.getHeightOffset(reloadFrame.curTalentHeadling) - 5)
+	reloadFrame.curTalent:SetText(info)
+
+	local cancelButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
+	cancelButton:SetSize(120, 30)
+	cancelButton:SetPoint("BOTTOM", reloadFrame, "BOTTOM", -10, 10)
+	cancelButton:SetText(ACCEPT)
+	cancelButton:SetScript("OnClick", function()
+		addon.MythicPlus.functions.checkRemovedLoadout(true)
+		reloadFrame:Hide()
+		reloadFrame:SetScript("OnShow", nil)
+		reloadFrame:SetScript("OnHide", nil)
+		reloadFrame:SetParent(nil)
+		reloadFrame = nil
+		ChangeTalentUIWarning = nil
+	end)
+
+	reloadFrame:Show()
+	local maxHeight = addon.functions.getHeightOffset(reloadFrame.curTalent) * -1
+
+	local minButton = cancelButton:GetWidth() + 40
+	local maxWidth = max(max(reloadFrame.curTalentHeadling:GetStringWidth(), reloadFrame.curTalent:GetStringWidth()), minButton) + 50
 	reloadFrame:SetSize(maxWidth + 20, max(120, (maxHeight + 50)))
 end
 
@@ -179,28 +221,72 @@ local function checkLoadout(isReadycheck)
 				deleteFrame(ChangeTalentUIPopup)
 			end
 		end
-	elseif ChangeTalentUIPopup and ChangeTalentUIPopup:IsVisible() then
+	elseif (ChangeTalentUIPopup and ChangeTalentUIPopup:IsVisible()) or (ChangeTalentUIWarning and ChangeTalentUIWarning:IsVisible()) then
 		deleteFrame(ChangeTalentUIPopup)
 	end
 end
 
 function addon.MythicPlus.functions.checkLoadout() checkLoadout() end
 function addon.MythicPlus.functions.createSeasonInfo() createSeasonInfo() end
+function addon.MythicPlus.functions.checkRemovedLoadout(clear)
+	local tRemoved = {}
+	for _, cbData in pairs(addon.MythicPlus.variables.seasonMapInfo) do
+		for i = 1, GetNumSpecializationsForClassID(addon.variables.unitClassID) do
+			local specID, specName = GetSpecializationInfoForClassID(addon.variables.unitClassID, i)
+			if
+				addon.db["talentReminderSettings"]
+				and addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID]
+				and addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][specID]
+			then
+				if
+					addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][specID]
+					and addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][specID][cbData.id]
+					and not addon.MythicPlus.variables.knownLoadout[specID][addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][specID][cbData.id]]
+				then
+					if clear then
+						addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][specID][cbData.id] = nil
+					else
+						table.insert(tRemoved, { spec = specName, dungeon = cbData.name })
+					end
+				end
+			end
+		end
+	end
+
+	if #tRemoved > 0 then
+		local specGroups = {}
+		for _, data in ipairs(tRemoved) do
+			if not specGroups[data.spec] then specGroups[data.spec] = {} end
+			table.insert(specGroups[data.spec], data.dungeon)
+		end
+
+		local fullMsg = {}
+		for spec, dungeons in pairs(specGroups) do
+			local list = spec .. ": " .. #dungeons .. " " .. DUNGEONS
+			table.insert(fullMsg, list)
+		end
+		if #fullMsg then showWarning(table.concat(fullMsg, "\n")) end
+	end
+end
 
 local firstLoad = true
 local eventHandlers = {
 	["TRAIT_CONFIG_CREATED"] = function()
 		addon.MythicPlus.functions.getAllLoadouts()
 		checkLoadout()
+		addon.MythicPlus.functions.refreshTalentFrameIfOpen()
 	end,
-	["TRAIT_CONFIG_DELETED"] = function()
+	["TRAIT_CONFIG_DELETED"] = function(arg1)
 		addon.MythicPlus.functions.getAllLoadouts()
 		checkLoadout()
+		addon.MythicPlus.functions.checkRemovedLoadout()
+		addon.MythicPlus.functions.refreshTalentFrameIfOpen()
 	end,
 	["TRAIT_CONFIG_UPDATED"] = function()
 		C_Timer.After(0.2, function()
 			addon.MythicPlus.functions.getAllLoadouts()
 			checkLoadout()
+			addon.MythicPlus.functions.refreshTalentFrameIfOpen()
 		end)
 	end,
 	["READY_CHECK"] = function()
@@ -210,7 +296,11 @@ local eventHandlers = {
 	["PLAYER_ENTERING_WORLD"] = function() -- just used for when you are already in an mythic instance to check for talents
 		if firstLoad then
 			firstLoad = false
-			checkLoadout()
+			C_Timer.After(1, function()
+				addon.MythicPlus.functions.getAllLoadouts()
+				addon.MythicPlus.functions.checkRemovedLoadout()
+				checkLoadout()
+			end)
 		end
 	end,
 }
@@ -221,7 +311,9 @@ local function registerEvents(frame)
 	end
 end
 local function eventHandler(self, event, ...)
-	if eventHandlers[event] then eventHandlers[event](...) end
+	if addon.db["talentReminderEnabled"] then
+		if eventHandlers[event] then eventHandlers[event](...) end
+	end
 end
 registerEvents(frameLoad)
 frameLoad:SetScript("OnEvent", eventHandler)

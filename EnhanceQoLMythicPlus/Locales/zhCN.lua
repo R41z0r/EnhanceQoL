@@ -106,3 +106,5 @@ L["talentReminderSoundOnDifference"] = "若天赋与保存的配置不同则播�
 L["WrongTalents"] = "错误的天赋"
 L["ActualTalents"] = "当前天赋"
 L["RequiredTalents"] = "所需天赋"
+L["DeletedLoadout"] = "已删除的天赋配置"
+L["MissingTalentLoadout"] = "天赋提醒中使用的一些天赋配置已被删除，无法再使用："

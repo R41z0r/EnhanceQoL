@@ -106,9 +106,15 @@ L["mythicPlusBRButtonSizeHeadline"] = "Размер кнопки"
 -- Talent Reminder
 L["TalentReminder"] = "Напоминание о талантах"
 L["talentReminderEnabled"] = "Включить напоминание о талантах"
-L["talentReminderEnabledDesc"] = "Проверяет только на уровне сложности " .. _G["PLAYER_DIFFICULTY6"] .. ", чтобы подготовиться к " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"]
+L["talentReminderEnabledDesc"] = "Проверяет только на уровне сложности "
+	.. _G["PLAYER_DIFFICULTY6"]
+	.. ", чтобы подготовиться к "
+	.. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"]
 L["talentReminderLoadOnReadyCheck"] = "Проверять таланты только во время " .. _G["READY_CHECK"]
 L["talentReminderSoundOnDifference"] = "Воспроизвести звук, если таланты отличаются от сохраненной настройки"
 L["WrongTalents"] = "Неправильные таланты"
 L["ActualTalents"] = "Текущие таланты"
 L["RequiredTalents"] = "Требуемые таланты"
+L["DeletedLoadout"] = "Удаленный набор талантов"
+L["MissingTalentLoadout"] =
+	"Некоторые наборы талантов, использованные в Напомин��нии о талантах,\nбыли удалены и больше не доступны:"

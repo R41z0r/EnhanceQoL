@@ -110,3 +110,5 @@ L["talentReminderSoundOnDifference"] = "저장된 설정과 특성이 다를 경
 L["WrongTalents"] = "잘못된 특성"
 L["ActualTalents"] = "현재 특성"
 L["RequiredTalents"] = "필요한 특성"
+L["DeletedLoadout"] = "삭제된 특성 구성"
+L["MissingTalentLoadout"] = "특성 알림에서 사용된 일부 특성 구성이 삭제되어\n더 이상 사용할 수 없습니다:"

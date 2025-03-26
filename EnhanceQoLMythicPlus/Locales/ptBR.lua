@@ -106,3 +106,5 @@ L["talentReminderSoundOnDifference"] = "Tocar som se os talentos forem diferente
 L["WrongTalents"] = "Talentos errados"
 L["ActualTalents"] = "Talentos atuais"
 L["RequiredTalents"] = "Talentos necessários"
+L["DeletedLoadout"] = "Conjunto de talentos excluído"
+L["MissingTalentLoadout"] = "Alguns conjuntos de talentos usados pelo Lembrete de Talentos\nforam removidos e não podem mais ser usados:"

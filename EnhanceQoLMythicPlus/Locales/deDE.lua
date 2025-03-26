@@ -111,3 +111,5 @@ L["talentReminderSoundOnDifference"] = "Ton abspielen, wenn Talente vom gespeich
 L["WrongTalents"] = "Falsche Talente"
 L["ActualTalents"] = "Aktuelle Talente"
 L["RequiredTalents"] = "Benötigte Talente"
+L["DeletedLoadout"] = "Gelöschte Talentvorlage"
+L["MissingTalentLoadout"] = "Einige verwendete Talentvorlagen für die Talent-Erinnerung\nwurden gelöscht und können nicht mehr genutzt werden:"

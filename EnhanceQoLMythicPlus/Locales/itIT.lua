@@ -106,3 +106,5 @@ L["talentReminderSoundOnDifference"] = "Riproduci un suono se i talenti differis
 L["WrongTalents"] = "Talenti errati"
 L["ActualTalents"] = "Talenti attuali"
 L["RequiredTalents"] = "Talenti richiesti"
+L["DeletedLoadout"] = "Configurazione talenti eliminata"
+L["MissingTalentLoadout"] = "Alcune configurazioni talenti per il Promemoria Talenti\nsono state eliminate e non possono più essere usate:"

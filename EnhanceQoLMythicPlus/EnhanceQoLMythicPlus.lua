@@ -843,7 +843,11 @@ local function addRatingFrame(container)
 		groupCore:AddChild(cbElement)
 	end
 end
+
+local activeTalentContainer
 local function addTalentFrame(container)
+	activeTalentContainer = container
+
 	addon.MythicPlus.functions.getAllLoadouts()
 
 	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
@@ -917,9 +921,7 @@ local function addTalentFrame(container)
 					addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] = value
 					C_Timer.After(0.2, function() addon.MythicPlus.functions.checkLoadout() end)
 				end)
-				if dropPullTimerType.label and dropPullTimerType.label.SetFont then
-					dropPullTimerType.label:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
-				end
+				if dropPullTimerType.label and dropPullTimerType.label.SetFont then dropPullTimerType.label:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") end
 				if addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] then
 					dropPullTimerType:SetValue(addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id])
 				else
@@ -941,6 +943,12 @@ local function addTalentFrame(container)
 		if addon.MythicPlus.variables.currentSpecID then groupTalent:SelectTab(addon.MythicPlus.variables.currentSpecID) end
 
 		wrapper:AddChild(groupTalent)
+	end
+end
+function addon.MythicPlus.functions.refreshTalentFrameIfOpen()
+	if activeTalentContainer and addon.variables.statusTable.selected == "mythicplus\001talents" then
+		activeTalentContainer:ReleaseChildren()
+		addTalentFrame(activeTalentContainer)
 	end
 end
 
