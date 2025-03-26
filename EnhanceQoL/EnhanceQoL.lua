@@ -907,6 +907,7 @@ local function addCVarFrame(container, d)
 			description = optionData.description,
 			trueValue = optionData.trueValue,
 			falseValue = optionData.falseValue,
+			register = optionData.register or nil,
 		})
 	end
 
@@ -917,6 +918,8 @@ local function addCVarFrame(container, d)
 		local cvarDesc = entry.description
 		local cvarTrue = entry.trueValue
 		local cvarFalse = entry.falseValue
+
+		if entry.register and nil == GetCVar(cvarKey) then C_CVar.RegisterCVar(cvarKey, cvarTrue) end
 
 		local actValue = (GetCVar(cvarKey) == cvarTrue)
 

@@ -123,6 +123,7 @@ L["CVarOptions"] = {
 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Show the Guild on Players" },
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Show the Title on Players" },
 	["WholeChatWindowClickable"] = { description = "Make the entire chat window clickable", trueValue = "1", falseValue = "0" },
+	["addonProfilerEnabled"] = { description = "Enable the Blizzard Addon Profiler (consumes much CPU)", trueValue = "1", falseValue = "0", register = true },
 }
 
 L["autoAcceptGroupInvite"] = "Automatically accept group invites"
