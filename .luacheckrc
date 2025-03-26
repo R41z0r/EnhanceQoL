@@ -4594,6 +4594,7 @@ globals = {
 	"CLASS_SORT_ORDER",
 	"ClassTalentHelper",
 	"ChangeTalentUIPopup",
+	"ChangeTalentUIWarning",
 	"MAX_CLASSES",
 	"LOCALIZED_CLASS_NAMES_MALE",
 	"LOCALIZED_CLASS_NAMES_FEMALE",
