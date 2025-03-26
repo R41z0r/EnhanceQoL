@@ -98,3 +98,10 @@ L["mythicPlusBRButtonSizeHeadline"] = "Button Size"
 
 -- Talent Reminder
 L["TalentReminder"] = "Talent Reminder"
+L["talentReminderEnabled"] = "Enable Talent Reminder"
+L["talentReminderEnabledDesc"] = "Only checks in " .. _G["PLAYER_DIFFICULTY6"] .. " difficulty in preparation for " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"]
+L["talentReminderLoadOnReadyCheck"] = "Only check talents on " .. _G["READY_CHECK"]
+L["talentReminderSoundOnDifference"] = "Play a sound if talents differ from the saved setup"
+L["WrongTalents"] = "Wrong Talents"
+L["ActualTalents"] = "Current Talents"
+L["RequiredTalents"] = "Required Talents"

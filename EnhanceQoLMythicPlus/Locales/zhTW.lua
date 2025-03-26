@@ -96,3 +96,13 @@ L["brTrackerHeadline"] = "在傳奇鑰石地城中添加戰鬥復活監視"
 L["mythicPlusBRTrackerEnabled"] = "啟用戰鬥復活監視"
 L["mythicPlusBRTrackerLocked"] = "鎖定監視器位置"
 L["mythicPlusBRButtonSizeHeadline"] = "按鈕大小"
+
+-- Talent Reminder
+L["TalentReminder"] = "天賦提醒"
+L["talentReminderEnabled"] = "啟用天賦提醒"
+L["talentReminderEnabledDesc"] = "僅於 " .. _G["PLAYER_DIFFICULTY6"] .. " 難度進行檢查，以便為 " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"] .. " 做準備"
+L["talentReminderLoadOnReadyCheck"] = "僅在" .. _G["READY_CHECK"] .. "時檢查天賦"
+L["talentReminderSoundOnDifference"] = "若天賦與保存的配置不同則播放提示音"
+L["WrongTalents"] = "錯誤的天賦"
+L["ActualTalents"] = "當前天賦"
+L["RequiredTalents"] = "所需天賦"

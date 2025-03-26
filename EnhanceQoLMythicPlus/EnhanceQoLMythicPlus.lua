@@ -859,54 +859,67 @@ local function addTalentFrame(container)
 
 	local data = {
 		{
-			text = "talentReminderEnabled",
+			text = L["talentReminderEnabled"],
 			var = "talentReminderEnabled",
 			func = function(self, _, value)
 				addon.db["talentReminderEnabled"] = value
 				container:ReleaseChildren()
 				addTalentFrame(container)
+				addon.MythicPlus.functions.checkLoadout()
 			end,
+			desc = L["talentReminderEnabledDesc"],
 		},
 	}
 
 	if addon.db["talentReminderEnabled"] then
 		table.insert(data, {
-			text = "talentReminderLoadOnEnter",
-			var = "talentReminderLoadOnEnter",
-			func = function(self, _, value) addon.db["talentReminderLoadOnEnter"] = value end,
+			text = L["talentReminderLoadOnReadyCheck"],
+			var = "talentReminderLoadOnReadyCheck",
+			func = function(self, _, value)
+				addon.db["talentReminderLoadOnReadyCheck"] = value
+				addon.MythicPlus.functions.checkLoadout()
+			end,
 		})
 		table.insert(data, {
-			text = "talentReminderLoadOnReadyCheck",
-			var = "talentReminderLoadOnReadyCheck",
-			func = function(self, _, value) addon.db["talentReminderLoadOnReadyCheck"] = value end,
+			text = L["talentReminderSoundOnDifference"],
+			var = "talentReminderSoundOnDifference",
+			func = function(self, _, value)
+				addon.db["talentReminderSoundOnDifference"] = value
+				addon.MythicPlus.functions.checkLoadout()
+			end,
 		})
 	end
 
 	for _, cbData in ipairs(data) do
 		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
 		if cbData.func then uFunc = cbData.func end
-		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc, desc)
 		groupCore:AddChild(cbElement)
 	end
 
 	if addon.db["talentReminderEnabled"] then
-		local groupTalent = addon.functions.createContainer("TabGroup", "List")
+		local groupTalent = addon.functions.createContainer("TabGroup", "Flow")
+
+		groupTalent:SetFullWidth(true) -- Nimmt die volle Breite des Parents
+
 		groupTalent:SetTabs(addon.MythicPlus.variables.specNames)
 		groupTalent:SetCallback("OnGroupSelected", function(tabContainer, event, group)
 			tabContainer:ReleaseChildren()
 			if not addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID] then addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID] = {} end
 			if not addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group] then addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group] = {} end
 
-			print(group == addon.MythicPlus.variables.currentSpecID)
 			for _, cbData in pairs(addon.MythicPlus.variables.seasonMapInfo) do
 				local list, order = addon.functions.prepareListForDropdown(addon.MythicPlus.variables.knownLoadout[group])
 
-				local dropPullTimerType = addon.functions.createDropdownAce(
-					cbData.name,
-					list,
-					order,
-					function(self, _, value) addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] = value end
-				)
+				local dropPullTimerType = addon.functions.createDropdownAce(cbData.name, list, order, function(self, _, value)
+					addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] = value
+					C_Timer.After(0.2, function() addon.MythicPlus.functions.checkLoadout() end)
+				end)
+				if dropPullTimerType.label and dropPullTimerType.label.SetFont then
+					dropPullTimerType.label:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+				end
 				if addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] then
 					dropPullTimerType:SetValue(addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id])
 				else
@@ -915,7 +928,10 @@ local function addTalentFrame(container)
 				dropPullTimerType:SetFullWidth(false)
 				dropPullTimerType:SetWidth(200)
 				tabContainer:AddChild(dropPullTimerType)
-				tabContainer:AddChild(addon.functions.createSpacerAce())
+				local spacer = addon.AceGUI:Create("Label")
+				spacer:SetWidth(20) -- 20 Pixel Freiraum
+				spacer:SetText("") -- Leer
+				tabContainer:AddChild(spacer)
 			end
 			C_Timer.After(0.1, function()
 				scroll:DoLayout()

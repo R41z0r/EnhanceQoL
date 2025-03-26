@@ -95,3 +95,13 @@ L["brTrackerHeadline"] = "Agrega un rastreador de resurrección en combate en ma
 L["mythicPlusBRTrackerEnabled"] = "Activar rastreador de resurrección en combate"
 L["mythicPlusBRTrackerLocked"] = "Bloquear la posición del rastreador"
 L["mythicPlusBRButtonSizeHeadline"] = "Tamaño del botón"
+
+-- Talent Reminder
+L["TalentReminder"] = "Recordatorio de talentos"
+L["talentReminderEnabled"] = "Activar recordatorio de talentos"
+L["talentReminderEnabledDesc"] = "Solo se verifica en la dificultad " .. _G["PLAYER_DIFFICULTY6"] .. " en preparación para " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"]
+L["talentReminderLoadOnReadyCheck"] = "Solo comprobar talentos durante " .. _G["READY_CHECK"]
+L["talentReminderSoundOnDifference"] = "Reproducir un sonido si los talentos difieren de la configuración guardada"
+L["WrongTalents"] = "Talentos equivocados"
+L["ActualTalents"] = "Talentos actuales"
+L["RequiredTalents"] = "Talentos requeridos"

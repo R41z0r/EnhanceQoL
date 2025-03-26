@@ -100,3 +100,13 @@ L["brTrackerHeadline"] = "Mythic+ 던전에서 전투 부활 추적기를 추가
 L["mythicPlusBRTrackerEnabled"] = "전투 부활 추적기 사용"
 L["mythicPlusBRTrackerLocked"] = "추적기 위치 잠금"
 L["mythicPlusBRButtonSizeHeadline"] = "버튼 크기"
+
+-- Talent Reminder
+L["TalentReminder"] = "특성 알림"
+L["talentReminderEnabled"] = "특성 알림 활성화"
+L["talentReminderEnabledDesc"] = _G["PLAYER_DIFFICULTY6"] .. " 난이도에서만 확인하여 " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"] .. " 대비"
+L["talentReminderLoadOnReadyCheck"] = _G["READY_CHECK"] .. " 시에만 특성을 확인"
+L["talentReminderSoundOnDifference"] = "저장된 설정과 특성이 다를 경우 소리 재생"
+L["WrongTalents"] = "잘못된 특성"
+L["ActualTalents"] = "현재 특성"
+L["RequiredTalents"] = "필요한 특성"

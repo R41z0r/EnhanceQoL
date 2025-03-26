@@ -96,3 +96,13 @@ L["brTrackerHeadline"] = "在史诗钥石地下城中添加战斗复活监视"
 L["mythicPlusBRTrackerEnabled"] = "启用战斗复活监视"
 L["mythicPlusBRTrackerLocked"] = "锁定监视器位置"
 L["mythicPlusBRButtonSizeHeadline"] = "按钮大小"
+
+-- Talent Reminder
+L["TalentReminder"] = "天赋提醒"
+L["talentReminderEnabled"] = "启用天赋提醒"
+L["talentReminderEnabledDesc"] = "仅在 " .. _G["PLAYER_DIFFICULTY6"] .. " 难度检查，以便为 " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"] .. " 做准备"
+L["talentReminderLoadOnReadyCheck"] = "仅在" .. _G["READY_CHECK"] .. "时检查天赋"
+L["talentReminderSoundOnDifference"] = "若天赋与保存的配置不同则播放提示音"
+L["WrongTalents"] = "错误的天赋"
+L["ActualTalents"] = "当前天赋"
+L["RequiredTalents"] = "所需天赋"

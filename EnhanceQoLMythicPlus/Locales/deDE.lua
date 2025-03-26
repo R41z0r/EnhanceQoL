@@ -101,3 +101,13 @@ L["brTrackerHeadline"] = "Fügt einen Kampfwiederbelebungs-Tracker in Mythic+ Du
 L["mythicPlusBRTrackerEnabled"] = "Kampfwiederbelebungs-Tracker aktivieren"
 L["mythicPlusBRTrackerLocked"] = "Position des Trackers sperren"
 L["mythicPlusBRButtonSizeHeadline"] = "Button-Größe"
+
+-- Talent Reminder
+L["TalentReminder"] = "Talent-Erinnerung"
+L["talentReminderEnabled"] = "Talent-Erinnerung aktivieren"
+L["talentReminderEnabledDesc"] = "Nur aktiv in " .. _G["PLAYER_DIFFICULTY6"] .. "-Schwierigkeitsgrad, um sich auf " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"] .. " vorzubereiten"
+L["talentReminderLoadOnReadyCheck"] = "Nur bei einem " .. _G["READY_CHECK"] .. " Talente prüfen"
+L["talentReminderSoundOnDifference"] = "Ton abspielen, wenn Talente vom gespeicherten Setup abweichen"
+L["WrongTalents"] = "Falsche Talente"
+L["ActualTalents"] = "Aktuelle Talente"
+L["RequiredTalents"] = "Benötigte Talente"

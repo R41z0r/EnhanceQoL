@@ -95,3 +95,13 @@ L["brTrackerHeadline"] = "Ajoute un suivi de résurrection en combat dans les do
 L["mythicPlusBRTrackerEnabled"] = "Activer le suivi de résurrection en combat"
 L["mythicPlusBRTrackerLocked"] = "Verrouiller la position du suivi"
 L["mythicPlusBRButtonSizeHeadline"] = "Taille du bouton"
+
+-- Talent Reminder
+L["TalentReminder"] = "Rappel de talents"
+L["talentReminderEnabled"] = "Activer le rappel de talents"
+L["talentReminderEnabledDesc"] = "Ne vérifie que la difficulté " .. _G["PLAYER_DIFFICULTY6"] .. " en préparation pour " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"]
+L["talentReminderLoadOnReadyCheck"] = "Ne vérifier les talents qu’au " .. _G["READY_CHECK"]
+L["talentReminderSoundOnDifference"] = "Jouer un son si les talents diffèrent du profil enregistré"
+L["WrongTalents"] = "Talents incorrects"
+L["ActualTalents"] = "Talents actuels"
+L["RequiredTalents"] = "Talents requis"
