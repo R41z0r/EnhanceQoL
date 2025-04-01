@@ -141,3 +141,10 @@ L["ActionbarHideExplain"] = 'Définissez la barre d’actions comme masquée et 
 	.. '" dans '
 	.. _G["HUD_EDIT_MODE_MENU"]
 	.. "."
+
+L["enableMinimapButtonBin"] = "Activer la collecte de boutons de la minicarte"
+L["enableMinimapButtonBinDesc"] = "Regroupe tous les boutons de la minicarte en un seul bouton"
+L["ignoreMinimapSinkHole"] = "Ignorer les boutons de la minicarte suivants pour la collecte..."
+L["useMinimapButtonBinIcon"] = "Utiliser un bouton de minicarte pour la collecte"
+L["useMinimapButtonBinMouseover"] = "Afficher un cadre déplaçable pour la collecte au survol de la souris"
+L["lockMinimapButtonBin"] = "Verrouiller le cadre de collecte"

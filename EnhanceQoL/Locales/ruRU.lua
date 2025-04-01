@@ -164,3 +164,10 @@ L["ActionbarHideExplain"] = 'Сделайте панель команд скры
 	.. '" в '
 	.. _G["HUD_EDIT_MODE_MENU"]
 	.. "."
+
+L["enableMinimapButtonBin"] = "Включить сборщик кнопок мини-карты"
+L["enableMinimapButtonBinDesc"] = "Собирает все кнопки мини-карты в одну кнопку"
+L["ignoreMinimapSinkHole"] = "Игнорировать следующие кнопки мини-карты при сборе..."
+L["useMinimapButtonBinIcon"] = "Использовать кнопку на мини-карте для сборщика"
+L["useMinimapButtonBinMouseover"] = "Показать перемещаемое окно при наведении для сборщика"
+L["lockMinimapButtonBin"] = "Зафиксировать окно сборщика"

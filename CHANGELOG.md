@@ -1,10 +1,10 @@
 ## Added
 
-- **Mythic Plus**
+- **Minimap Button Cleanup**
 
-  - **Talent Reminder**
-    - Add an option to set your prefered Talent Loadout for each spec and Mythic Plus Dungeon to be reminded when it's wrong
+  - Option to add a minimap sinkhole to cluster all minimap buttons inside one button or frame
+    - You can exclude buttons
 
-- **New CVar Option**
-  - **Blizzard Addon Profiling**
-    - Option to disable the Blizzard Addon Profiling, which has some heavy CPU-Load
+## Bugfix
+
+- Some adjustments to Talent Reminder

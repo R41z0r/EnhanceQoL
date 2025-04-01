@@ -133,3 +133,10 @@ L["ActionbarHideExplain"] = "将动作条设置为隐藏，仅在鼠标悬停时
 	.. "”和“"
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
 	.. "”时，此功能才会生效。"
+
+L["enableMinimapButtonBin"] = "启用小地图按钮收集"
+L["enableMinimapButtonBinDesc"] = "将所有小地图按钮集中到单个按钮中"
+L["ignoreMinimapSinkHole"] = "忽略以下小地图按钮..."
+L["useMinimapButtonBinIcon"] = "使用小地图按钮作为收集器"
+L["useMinimapButtonBinMouseover"] = "将按钮收集器显示为可移动框体（鼠标悬停时）"
+L["lockMinimapButtonBin"] = "锁定收集器框体"

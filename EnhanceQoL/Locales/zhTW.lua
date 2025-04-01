@@ -139,3 +139,10 @@ L["ActionbarHideExplain"] = "將快捷列設置為隱藏，僅在滑鼠懸停時
 	.. "」和「"
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
 	.. "」時，此功能才會生效。"
+
+L["enableMinimapButtonBin"] = "啟用小地圖按鈕收集"
+L["enableMinimapButtonBinDesc"] = "將所有小地圖按鈕整合到單一按鈕中"
+L["ignoreMinimapSinkHole"] = "忽略以下小地圖按鈕..."
+L["useMinimapButtonBinIcon"] = "使用小地圖按鈕作為收集器"
+L["useMinimapButtonBinMouseover"] = "以滑鼠懸停方式顯示可移動的按鈕收集框架"
+L["lockMinimapButtonBin"] = "鎖定收集器框架"

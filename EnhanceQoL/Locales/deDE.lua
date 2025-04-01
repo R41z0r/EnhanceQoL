@@ -140,3 +140,10 @@ L["ActionbarHideExplain"] = 'Setze die Aktionsleiste auf versteckt und nur bei M
 	.. '" eingestellt ist in '
 	.. _G["HUD_EDIT_MODE_MENU"]
 	.. "."
+
+L["enableMinimapButtonBin"] = "Minimap-Button-Sammelstelle aktivieren"
+L["enableMinimapButtonBinDesc"] = "Fasst alle Minimap-Buttons in einem einzelnen Button zusammen"
+L["ignoreMinimapSinkHole"] = "Folgende Minimap-Buttons vom Sammel-Button ausnehmen..."
+L["useMinimapButtonBinIcon"] = "Minimap-Button für die Sammelstelle verwenden"
+L["useMinimapButtonBinMouseover"] = "Zeige ein verschiebbares Frame für die Sammelstelle bei Mouseover"
+L["lockMinimapButtonBin"] = "Frame der Sammelstelle fixieren"

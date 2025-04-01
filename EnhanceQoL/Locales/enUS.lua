@@ -140,3 +140,10 @@ L["ActionbarHideExplain"] = 'Set the action bar to hidden and show on mouseover.
 	.. '" in '
 	.. _G["HUD_EDIT_MODE_MENU"]
 	.. "."
+
+L["enableMinimapButtonBin"] = "Enable Minimap Button Sink"
+L["enableMinimapButtonBinDesc"] = "Collect all minimap buttons in a single button"
+L["ignoreMinimapSinkHole"] = "Ignore the following minimap button from the sinkhole..."
+L["useMinimapButtonBinIcon"] = "Use a Minimap button for the sink"
+L["useMinimapButtonBinMouseover"] = "Show a movable frame for the button sink with mouseover"
+L["lockMinimapButtonBin"] = "Lock the button sink frame"

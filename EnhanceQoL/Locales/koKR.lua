@@ -133,3 +133,10 @@ L["ActionbarHideExplain"] = '행동 단축바를 숨김 처리하고 마우스 �
 	.. '" 및 "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
 	.. '"로 설정되어 있을 때만 작동합니다.'
+
+L["enableMinimapButtonBin"] = "미니맵 버튼 모음 활성화"
+L["enableMinimapButtonBinDesc"] = "모든 미니맵 버튼을 하나의 버튼으로 모읍니다"
+L["ignoreMinimapSinkHole"] = "다음 미니맵 버튼을 모음에서 제외하기..."
+L["useMinimapButtonBinIcon"] = "미니맵 버튼을 모음을 위해 사용"
+L["useMinimapButtonBinMouseover"] = "마우스오버 시 이동 가능한 모음 프레임 표시"
+L["lockMinimapButtonBin"] = "모음 프레임 고정"

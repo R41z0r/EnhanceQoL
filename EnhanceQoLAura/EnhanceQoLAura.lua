@@ -89,6 +89,14 @@ local function UpdateSpellList(spellList)
 	end
 end
 
+local function getPowerBarColor(type)
+	-- Konvertiere 'Mana' zu 'MANA'
+	local powerKey = string.upper(type)
+	local color = PowerBarColor[powerKey]
+	if color then return color.r, color.g, color.b end
+	return 1, 1, 1
+end
+
 local function addDrinkFrame(container)
 	local mainGroup = AceGUI:Create("InlineGroup")
 	mainGroup:SetTitle("Zone und AuraTracker")
@@ -181,6 +189,117 @@ function addon.Aura.functions.updateBars()
 			yOffset = yOffset + bar:GetHeight() + 1 -- 5px Abstand
 		end
 	end
+end
+
+local healthBar
+local function updateHealthBar()
+	if healthBar and healthBar:IsVisible() then
+		local maxHealth = UnitHealthMax("player")
+		local curHealth = UnitHealth("player")
+		local absorb = UnitGetTotalAbsorbs("player") or 0
+
+		local percent = (curHealth / maxHealth) * 100
+		local percentStr = percent
+		-- if percent ~= 100 then percentStr = string.format("%.0f", percent) end
+		percentStr = string.format("%.0f", percent)
+		healthBar:SetMinMaxValues(0, maxHealth)
+		healthBar:SetValue(curHealth)
+		if healthBar.text then healthBar.text:SetText(percentStr) end
+		if percent >= 60 then
+			healthBar:SetStatusBarColor(0, 0.7, 0)
+		elseif percent >= 40 then
+			healthBar:SetStatusBarColor(0.7, 0.7, 0)
+		else
+			healthBar:SetStatusBarColor(0.7, 0, 0)
+		end
+
+		-- 2) Absorb-Bar
+		local combined = absorb
+		if combined > maxHealth then combined = maxHealth end
+		healthBar.absorbBar:SetMinMaxValues(0, maxHealth)
+		healthBar.absorbBar:SetValue(combined)
+	end
+end
+local function createHealthBar(anchor)
+	healthBar = CreateFrame("StatusBar", "EQOLHealthBar", UIParent, "BackdropTemplate")
+	healthBar:SetSize(405, 20) -- Größe des Balkens
+	healthBar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
+	if anchor then
+		healthBar:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, 0)
+	else
+		healthBar:SetPoint("TOPLEFT", frameAnchor, "BOTTOMLEFT", 0, 0)
+	end
+	healthBar:SetBackdrop({
+		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+		edgeSize = 3,
+		insets = { left = 0, right = 0, top = 0, bottom = 0 },
+	})
+	healthBar:SetBackdropColor(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 50% Transparenz
+	healthBar.text = healthBar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	healthBar.text:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+	healthBar.text:SetPoint("CENTER", healthBar, "CENTER", 3, 0)
+
+	local absorbBar = CreateFrame("StatusBar", "EQOLAbsorbBar", healthBar)
+	absorbBar:SetAllPoints(healthBar) -- gleicht Größe/Position an
+	absorbBar:SetFrameLevel(healthBar:GetFrameLevel() + 1) -- über healthBar
+	absorbBar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
+	absorbBar:SetStatusBarColor(0.8, 0.8, 0.8, 0.8)
+	healthBar.absorbBar = absorbBar
+
+	updateHealthBar()
+end
+
+local powerbar = {}
+local powerfrequent = {
+	"ENERGY",
+}
+local function updatePowerBar(type)
+	if powerbar[type] and powerbar[type]:IsVisible() then
+		local pType = type:sub(1, 1):upper() .. type:sub(2):lower()
+
+		local maxPower = UnitPowerMax("player", Enum.PowerType[pType])
+		local curPower = UnitPower("player", Enum.PowerType[pType])
+
+		local percent = (curPower / maxPower) * 100
+		local percentStr = percent
+		percentStr = string.format("%.0f", percent)
+		local bar = powerbar[type]
+		bar:SetMinMaxValues(0, maxPower)
+		bar:SetValue(curPower)
+		if bar.text then bar.text:SetText(percentStr) end
+	end
+end
+local function createPowerBar(type, anchor)
+	if powerbar[type] then
+		powerbar[type]:Hide()
+		powerbar[type]:SetParent(nil)
+		powerbar[type] = nil
+	end
+
+	local bar = CreateFrame("StatusBar", "EQOL" .. type .. "Bar", UIParent, "BackdropTemplate")
+	bar:SetSize(405, 20) -- Größe des Balkens
+	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
+	if anchor then
+		bar:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, 0)
+	else
+		bar:SetPoint("TOPLEFT", frameAnchor, "TOPLEFT", 0, -40)
+	end
+	bar:SetBackdrop({
+		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+		edgeSize = 3,
+		insets = { left = 0, right = 0, top = 0, bottom = 0 },
+	})
+	bar:SetBackdropColor(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 50% Transparenz
+	bar.text = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	bar.text:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+	bar.text:SetPoint("CENTER", bar, "CENTER", 3, 0)
+	bar:SetStatusBarColor(getPowerBarColor(type))
+
+	powerbar[type] = bar
+	bar:Show()
+	updatePowerBar(type)
 end
 
 local function createCooldownBar(unit)
@@ -305,14 +424,6 @@ local function createBar(arg1, arg3)
 end
 
 -- Liste der Standard-Events
-local eventsToRegister = {
-	"UNIT_SPELLCAST_START",
-	"UNIT_SPELLCAST_STOP",
-	"UNIT_SPELLCAST_CHANNEL_START",
-	"UNIT_SPELLCAST_CHANNEL_STOP",
-	"NAME_PLATE_UNIT_ADDED",
-	"NAME_PLATE_UNIT_REMOVED",
-}
 
 local function addBar(unit)
 	local bar = createCooldownBar(unit)
@@ -330,24 +441,50 @@ local function removeBar(unit)
 	end
 end
 
+local eventsToRegister = {
+	-- "UNIT_SPELLCAST_START",
+	-- "UNIT_SPELLCAST_STOP",
+	-- "UNIT_SPELLCAST_CHANNEL_START",
+	-- "UNIT_SPELLCAST_CHANNEL_STOP",
+	-- "NAME_PLATE_UNIT_ADDED",
+	-- "NAME_PLATE_UNIT_REMOVED",
+	"UNIT_HEALTH",
+	"UNIT_MAXHEALTH",
+	"UNIT_ABSORB_AMOUNT_CHANGED",
+	"UNIT_POWER_UPDATE",
+	"UNIT_POWER_FREQUENT",
+	"PLAYER_ENTERING_WORLD",
+}
+local firstStart = true
 -- Funktion zur Verarbeitung der Events
 local function eventHandler(self, event, unit, arg1, arg2, ...)
 	-- Nur für bestimmte Einheiten filtern
 	-- if not unit or (not string.match(unit, "^nameplate") and not string.match(unit, "^boss")) then return end
-	if unit ~= "player" then return end
-	print(unit, arg1, arg2, ...)
 
-	if event == "UNIT_SPELLCAST_START" then
-		addBar(unit)
-	elseif event == "UNIT_SPELLCAST_STOP" then
-		removeBar(unit)
-	elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
-		addBar(unit)
-	elseif event == "UNIT_SPELLCAST_CHANNEL_STOP" then
-		removeBar(unit)
-	elseif event == "NAME_PLATE_UNIT_ADDED" then
-	elseif event == "NAME_PLATE_UNIT_REMOVED" then
-		removeBar(unit)
+	if firstStart and event == "PLAYER_ENTERING_WORLD" then
+		firstStart = false
+		createHealthBar(MultiBar5)
+		createPowerBar("MANA", EQOLHealthBar)
+		createPowerBar("ENERGY", powerbar["MANA"])
+	end
+	if unit ~= "player" then return end
+	-- print(event, unit, arg1, arg2, ...)
+	-- 	addBar(unit)
+	-- elseif event == "UNIT_SPELLCAST_STOP" then
+	-- 	removeBar(unit)
+	-- elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
+	-- 	addBar(unit)
+	-- elseif event == "UNIT_SPELLCAST_CHANNEL_STOP" then
+	-- 	removeBar(unit)
+	-- elseif event == "NAME_PLATE_UNIT_ADDED" then
+	-- elseif event == "NAME_PLATE_UNIT_REMOVED" then
+	-- 	removeBar(unit)
+	if event == "UNIT_MAXHEALTH" or event == "UNIT_HEALTH" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
+		updateHealthBar()
+	elseif event == "UNIT_POWER_UPDATE" and powerbar[arg1] and not powerfrequent[arg1] then
+		updatePowerBar(arg1)
+	elseif event == "UNIT_POWER_FREQUENT" and powerbar[arg1] and powerfrequent[arg1] then
+		updatePowerBar(arg1)
 	end
 end
 

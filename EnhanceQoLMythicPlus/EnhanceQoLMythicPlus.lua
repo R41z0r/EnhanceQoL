@@ -919,7 +919,7 @@ local function addTalentFrame(container)
 
 				local dropPullTimerType = addon.functions.createDropdownAce(cbData.name, list, order, function(self, _, value)
 					addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] = value
-					C_Timer.After(0.2, function() addon.MythicPlus.functions.checkLoadout() end)
+					C_Timer.After(1, function() addon.MythicPlus.functions.checkLoadout() end)
 				end)
 				if dropPullTimerType.label and dropPullTimerType.label.SetFont then dropPullTimerType.label:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") end
 				if addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] then

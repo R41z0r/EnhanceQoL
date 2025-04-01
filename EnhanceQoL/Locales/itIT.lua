@@ -135,3 +135,10 @@ L["ActionbarHideExplain"] = 'Imposta la barra delle azioni come nascosta e visib
 	.. '" in '
 	.. _G["HUD_EDIT_MODE_MENU"]
 	.. "."
+
+L["enableMinimapButtonBin"] = "Abilita la raccolta di pulsanti minimappa"
+L["enableMinimapButtonBinDesc"] = "Raggruppa tutti i pulsanti della minimappa in un singolo pulsante"
+L["ignoreMinimapSinkHole"] = "Ignora i seguenti pulsanti della minimappa nella raccolta..."
+L["useMinimapButtonBinIcon"] = "Usa un pulsante sulla minimappa per la raccolta"
+L["useMinimapButtonBinMouseover"] = "Mostra un riquadro spostabile per la raccolta con mouseover"
+L["lockMinimapButtonBin"] = "Blocca il riquadro di raccolta"

@@ -141,3 +141,10 @@ L["ActionbarHideExplain"] = 'Configura la barra de acción para que esté oculta
 	.. '" en '
 	.. _G["HUD_EDIT_MODE_MENU"]
 	.. "."
+
+L["enableMinimapButtonBin"] = "Habilitar recopilador de botones del minimapa"
+L["enableMinimapButtonBinDesc"] = "Reúne todos los botones del minimapa en un solo botón"
+L["ignoreMinimapSinkHole"] = "Ignorar los siguientes botones del minimapa en el recopilador..."
+L["useMinimapButtonBinIcon"] = "Usar un botón en el minimapa para el recopilador"
+L["useMinimapButtonBinMouseover"] = "Mostrar un marco desplazable para el recopilador con mouseover"
+L["lockMinimapButtonBin"] = "Bloquear el marco del recopilador"
