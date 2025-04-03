@@ -147,3 +147,8 @@ L["ignoreMinimapSinkHole"] = "Ignore the following minimap button from the sinkh
 L["useMinimapButtonBinIcon"] = "Use a Minimap button for the sink"
 L["useMinimapButtonBinMouseover"] = "Show a movable frame for the button sink with mouseover"
 L["lockMinimapButtonBin"] = "Lock the button sink frame"
+
+L["UnitFrameHideExplain"] = "Hide the element and only show it on mouseover"
+L["chatFrameFadeEnabled"] = "Enable chat fading"
+L["chatFrameFadeTimeVisibleText"] = "Text remains visible for"
+L["chatFrameFadeDurationText"] = "Fade animation duration"

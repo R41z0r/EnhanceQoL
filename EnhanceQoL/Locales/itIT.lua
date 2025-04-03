@@ -142,3 +142,8 @@ L["ignoreMinimapSinkHole"] = "Ignora i seguenti pulsanti della minimappa nella r
 L["useMinimapButtonBinIcon"] = "Usa un pulsante sulla minimappa per la raccolta"
 L["useMinimapButtonBinMouseover"] = "Mostra un riquadro spostabile per la raccolta con mouseover"
 L["lockMinimapButtonBin"] = "Blocca il riquadro di raccolta"
+
+L["UnitFrameHideExplain"] = "Nascondi l’elemento e mostralo solo al passaggio del mouse"
+L["chatFrameFadeEnabled"] = "Abilita lo sbiadimento della chat"
+L["chatFrameFadeTimeVisibleText"] = "Il testo rimane visibile per"
+L["chatFrameFadeDurationText"] = "Durata dell’animazione di sbiadimento"

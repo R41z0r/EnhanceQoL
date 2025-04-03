@@ -140,3 +140,8 @@ L["ignoreMinimapSinkHole"] = "忽略以下小地图按钮..."
 L["useMinimapButtonBinIcon"] = "使用小地图按钮作为收集器"
 L["useMinimapButtonBinMouseover"] = "将按钮收集器显示为可移动框体（鼠标悬停时）"
 L["lockMinimapButtonBin"] = "锁定收集器框体"
+
+L["UnitFrameHideExplain"] = "隐藏元素，仅在鼠标悬停时显示"
+L["chatFrameFadeEnabled"] = "启用聊天渐隐"
+L["chatFrameFadeTimeVisibleText"] = "文字保持可见时间"
+L["chatFrameFadeDurationText"] = "渐隐动画的持续时间"

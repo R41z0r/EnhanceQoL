@@ -147,3 +147,8 @@ L["ignoreMinimapSinkHole"] = "Folgende Minimap-Buttons vom Sammel-Button ausnehm
 L["useMinimapButtonBinIcon"] = "Minimap-Button für die Sammelstelle verwenden"
 L["useMinimapButtonBinMouseover"] = "Zeige ein verschiebbares Frame für die Sammelstelle bei Mouseover"
 L["lockMinimapButtonBin"] = "Frame der Sammelstelle fixieren"
+
+L["UnitFrameHideExplain"] = "Element ausblenden und nur bei Mouseover anzeigen"
+L["chatFrameFadeEnabled"] = "Chat-Verblassen aktivieren"
+L["chatFrameFadeTimeVisibleText"] = "Text bleibt sichtbar für"
+L["chatFrameFadeDurationText"] = "Dauer der Verblass-Animation"

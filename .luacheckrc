@@ -240,6 +240,7 @@ globals = {
 	"C_Timer",
 	"C_EditMode",
 	"ChatFrame_AddMessageEventFilter",
+	"ChatFrame1",
 	"Clamp",
 	"COMBAT_TEXT_SCROLL_FUNCTION",
 	"CombatLogGetCurrentEventInfo",

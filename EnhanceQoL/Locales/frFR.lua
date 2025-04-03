@@ -148,3 +148,8 @@ L["ignoreMinimapSinkHole"] = "Ignorer les boutons de la minicarte suivants pour 
 L["useMinimapButtonBinIcon"] = "Utiliser un bouton de minicarte pour la collecte"
 L["useMinimapButtonBinMouseover"] = "Afficher un cadre déplaçable pour la collecte au survol de la souris"
 L["lockMinimapButtonBin"] = "Verrouiller le cadre de collecte"
+
+L["UnitFrameHideExplain"] = "Masquer l’élément et ne l’afficher qu’au survol de la souris"
+L["chatFrameFadeEnabled"] = "Activer l’estompage du chat"
+L["chatFrameFadeTimeVisibleText"] = "Le texte reste visible pendant"
+L["chatFrameFadeDurationText"] = "Durée de l’animation d’estompage"

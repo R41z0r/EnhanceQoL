@@ -140,3 +140,8 @@ L["ignoreMinimapSinkHole"] = "다음 미니맵 버튼을 모음에서 제외하�
 L["useMinimapButtonBinIcon"] = "미니맵 버튼을 모음을 위해 사용"
 L["useMinimapButtonBinMouseover"] = "마우스오버 시 이동 가능한 모음 프레임 표시"
 L["lockMinimapButtonBin"] = "모음 프레임 고정"
+
+L["UnitFrameHideExplain"] = "요소를 숨기고 마우스오버 시에만 표시"
+L["chatFrameFadeEnabled"] = "채팅 창 페이드 사용"
+L["chatFrameFadeTimeVisibleText"] = "텍스트가 표시되는 시간"
+L["chatFrameFadeDurationText"] = "페이드 애니메이션 지속 시간"

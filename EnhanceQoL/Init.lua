@@ -211,6 +211,12 @@ addon.variables.actionBarNames = {
 	{ name = "MultiBar6", var = "mouseoverActionBar7", text = BINDING_HEADER_ACTIONBAR7 },
 	{ name = "MultiBar7", var = "mouseoverActionBar8", text = BINDING_HEADER_ACTIONBAR8 },
 	{ name = "PetActionBar", var = "mouseoverActionBarPet", text = TUTORIAL_TITLE61_HUNTER },
+	{ name = "StanceBar", var = "mouseoverActionBarStanceBar", text = HUD_EDIT_MODE_STANCE_BAR_LABEL },
+}
+
+addon.variables.unitFrameNames = {
+	{ name = "PlayerFrame", var = "unitframeSettingPlayerFrame", text = HUD_EDIT_MODE_PLAYER_FRAME_LABEL },
+	{ name = "BossTargetFrameContainer", var = "unitframeSettingBossTargetFrame", text = HUD_EDIT_MODE_BOSS_FRAMES_LABEL },
 }
 
 table.sort(addon.variables.actionBarNames, function(a, b) return a.text < b.text end)

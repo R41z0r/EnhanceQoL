@@ -148,3 +148,8 @@ L["ignoreMinimapSinkHole"] = "Ignorar los siguientes botones del minimapa en el 
 L["useMinimapButtonBinIcon"] = "Usar un botón en el minimapa para el recopilador"
 L["useMinimapButtonBinMouseover"] = "Mostrar un marco desplazable para el recopilador con mouseover"
 L["lockMinimapButtonBin"] = "Bloquear el marco del recopilador"
+
+L["UnitFrameHideExplain"] = "Ocultar el elemento y mostrarlo solo al pasar el ratón"
+L["chatFrameFadeEnabled"] = "Habilitar desvanecimiento del chat"
+L["chatFrameFadeTimeVisibleText"] = "El texto permanece visible durante"
+L["chatFrameFadeDurationText"] = "Duración de la animación de desvanecimiento"

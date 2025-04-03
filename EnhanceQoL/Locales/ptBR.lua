@@ -148,3 +148,8 @@ L["ignoreMinimapSinkHole"] = "Ignorar os seguintes botões do minimapa no coleto
 L["useMinimapButtonBinIcon"] = "Usar um botão do minimapa para o coletor"
 L["useMinimapButtonBinMouseover"] = "Exibir um quadro móvel para o coletor ao passar o mouse"
 L["lockMinimapButtonBin"] = "Travar o quadro do coletor"
+
+L["UnitFrameHideExplain"] = "Ocultar o elemento e exibi-lo apenas ao passar o mouse"
+L["chatFrameFadeEnabled"] = "Ativar desvanecimento do chat"
+L["chatFrameFadeTimeVisibleText"] = "O texto permanece visível por"
+L["chatFrameFadeDurationText"] = "Duração da animação de desvanecimento"

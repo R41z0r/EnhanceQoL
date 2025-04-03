@@ -180,8 +180,104 @@ local function GameTooltipActionButton(button)
 	end)
 	button:HookScript("OnLeave", function(self) GameTooltip:Hide() end)
 end
+
+local function genericHoverOutCheck(frame, cbData)
+	if frame and frame:IsVisible() then
+		if not MouseIsOver(frame) then
+			frame:SetAlpha(0)
+			if cbData.children then
+				for _, v in pairs(cbData.children) do
+					v:SetAlpha(0)
+				end
+			end
+			if cbData.hideChildren then
+				for _, v in pairs(cbData.hideChildren) do
+					v:Hide()
+				end
+			end
+		else
+			C_Timer.After(0.3, function() genericHoverOutCheck(frame, cbData) end)
+		end
+	end
+end
+
+local hookedUnitFrames = {}
+local function UpdateUnitFrameMouseover(barName, cbData)
+	local enable = addon.db[cbData.var]
+
+	local uf = _G[barName]
+
+	if enable then
+		if not hookedUnitFrames[uf] then
+			if uf.OnEnter then
+				uf:HookScript("OnEnter", function(self)
+					self:SetAlpha(1)
+					if cbData.children then
+						for _, v in pairs(cbData.children) do
+							v:SetAlpha(1)
+						end
+					end
+					if cbData.hideChildren then
+						for _, v in pairs(cbData.hideChildren) do
+							v:Show()
+						end
+					end
+				end)
+				hookedUnitFrames[uf] = true
+			else
+				uf:SetScript("OnEnter", function(self)
+					self:SetAlpha(1)
+					if cbData.children then
+						for _, v in pairs(cbData.children) do
+							v:SetAlpha(1)
+						end
+					end
+					if cbData.hideChildren then
+						for _, v in pairs(cbData.hideChildren) do
+							v:Show()
+						end
+					end
+				end)
+			end
+			if uf.OnLeave then
+				uf:HookScript("OnLeave", function(self) genericHoverOutCheck(self, cbData) end)
+			else
+				uf:SetScript("OnLeave", function(self) genericHoverOutCheck(self, cbData) end)
+			end
+			uf:SetAlpha(0)
+			if cbData.children then
+				for _, v in pairs(cbData.children) do
+					v:SetAlpha(0)
+				end
+			end
+			if cbData.hideChildren then
+				for _, v in pairs(cbData.hideChildren) do
+					v:Hide()
+				end
+			end
+		end
+	else
+		if not hookedUnitFrames[uf] then
+			uf:SetScript("OnEnter", nil)
+			uf:SetScript("OnLeave", nil)
+		end
+		uf:SetAlpha(1)
+		if cbData.children then
+			for _, v in pairs(cbData.children) do
+				v:SetAlpha(1)
+			end
+		end
+		if cbData.hideChildren then
+			for _, v in pairs(cbData.hideChildren) do
+				v:Show()
+			end
+		end
+	end
+end
+
+local hookedButtons = {}
 -- Action Bars
-local function UpdateActionBarMouseover(barName, enable)
+local function UpdateActionBarMouseover(barName, enable, variable)
 	local bar = _G[barName]
 	if not bar then return end
 
@@ -190,36 +286,52 @@ local function UpdateActionBarMouseover(barName, enable)
 		btnPrefix = "ActionButton"
 	elseif barName == "PetActionBar" then
 		btnPrefix = "PetActionButton"
+	elseif barName == "StanceBar" then
+		btnPrefix = "StanceButton"
 	else
 		btnPrefix = barName .. "Button"
 	end
 
 	if enable then
 		bar:SetAlpha(0)
-		bar:EnableMouse(true)
+		-- bar:EnableMouse(true)
 		bar:SetScript("OnEnter", function(self) bar:SetAlpha(1) end)
 		bar:SetScript("OnLeave", function(self) bar:SetAlpha(0) end)
 		for i = 1, 12 do
 			local button = _G[btnPrefix .. i]
-			if button then
-				button:EnableMouse(true)
-				button:SetScript("OnEnter", function(self) bar:SetAlpha(1) end)
-				button:SetScript("OnLeave", function(self)
-					bar:SetAlpha(0)
-					GameTooltip:Hide()
-				end)
-				GameTooltipActionButton(button)
+			if button and not hookedButtons[button] then
+				if button.OnEnter then
+					button:HookScript("OnEnter", function(self)
+						if addon.db[variable] then bar:SetAlpha(1) end
+					end)
+					hookedButtons[button] = true
+				else
+					-- button:EnableMouse(true)
+					button:SetScript("OnEnter", function(self) bar:SetAlpha(1) end)
+				end
+				if button.OnLeave then
+					button:HookScript("OnLeave", function(self)
+						if addon.db[variable] then bar:SetAlpha(0) end
+					end)
+				else
+					button:EnableMouse(true)
+					button:SetScript("OnLeave", function(self)
+						bar:SetAlpha(0)
+						GameTooltip:Hide()
+					end)
+				end
+				if not hookedButtons[button] then GameTooltipActionButton(button) end
 			end
 		end
 	else
 		bar:SetAlpha(1)
-		bar:EnableMouse(true)
+		-- bar:EnableMouse(true)
 		bar:SetScript("OnEnter", nil)
 		bar:SetScript("OnLeave", nil)
 		for i = 1, 12 do
 			local button = _G[btnPrefix .. i]
-			if button then
-				button:EnableMouse(true)
+			if button and not hookedButtons[button] then
+				-- button:EnableMouse(true)
 				button:SetScript("OnEnter", nil)
 				button:SetScript("OnLeave", nil)
 				GameTooltipActionButton(button)
@@ -752,6 +864,146 @@ local function setCharFrame()
 	end
 end
 
+local function addChatFrame(container)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			var = "chatFrameFadeEnabled",
+			text = L["chatFrameFadeEnabled"],
+			type = "CheckBox",
+			func = function(self, _, value)
+				addon.db["chatFrameFadeEnabled"] = value
+				if ChatFrame1 then ChatFrame1:SetFading(value) end
+				container:ReleaseChildren()
+				addChatFrame(container)
+			end,
+		},
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func, desc)
+		groupCore:AddChild(cbElement)
+	end
+
+	if addon.db["chatFrameFadeEnabled"] then
+		local groupCoreSetting = addon.functions.createContainer("InlineGroup", "List")
+		wrapper:AddChild(groupCoreSetting)
+
+		local sliderTimeVisible = addon.functions.createSliderAce(
+			L["chatFrameFadeTimeVisibleText"] .. ": " .. addon.db["chatFrameFadeTimeVisible"] .. "s",
+			addon.db["chatFrameFadeTimeVisible"],
+			1,
+			300,
+			1,
+			function(self, _, value2)
+				addon.db["chatFrameFadeTimeVisible"] = value2
+				if ChatFrame1 then ChatFrame1:SetTimeVisible(value2) end
+				self:SetLabel(L["chatFrameFadeTimeVisibleText"] .. ": " .. value2 .. "s")
+			end
+		)
+		groupCoreSetting:AddChild(sliderTimeVisible)
+
+		groupCoreSetting:AddChild(addon.functions.createSpacerAce())
+
+		local sliderFadeDuration = addon.functions.createSliderAce(
+			L["chatFrameFadeDurationText"] .. ": " .. addon.db["chatFrameFadeDuration"] .. "s",
+			addon.db["chatFrameFadeDuration"],
+			1,
+			60,
+			1,
+			function(self, _, value2)
+				addon.db["chatFrameFadeDuration"] = value2
+				if ChatFrame1 then ChatFrame1:SetFadeDuration(value2) end
+				self:SetLabel(L["chatFrameFadeDurationText"] .. ": " .. value2 .. "s")
+			end
+		)
+		groupCoreSetting:AddChild(sliderFadeDuration)
+	end
+end
+
+local function addUnitFrame(container)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupHitIndicator = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupHitIndicator)
+	groupHitIndicator:SetTitle(COMBAT_TEXT_LABEL)
+
+	local data = {
+		{
+			var = "hideHitIndicatorPlayer",
+			text = L["hideHitIndicatorPlayer"],
+			type = "CheckBox",
+			func = function(self, _, value)
+				addon.db["hideHitIndicatorPlayer"] = value
+				if value then
+					PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide()
+				else
+					PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Show()
+				end
+			end,
+		},
+		{
+			text = L["hideHitIndicatorPet"],
+			var = "hideHitIndicatorPet",
+			type = "CheckBox",
+			func = function(self, _, value)
+				addon.db["hideHitIndicatorPet"] = value
+				if value and PetHitIndicator then PetHitIndicator:Hide() end
+			end,
+		},
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func, desc)
+		groupHitIndicator:AddChild(cbElement)
+	end
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["UnitFrameHideExplain"] .. "|r", nil, nil, 14)
+	labelHeadline:SetFullWidth(true)
+	groupCore:AddChild(labelHeadline)
+
+	groupCore:AddChild(addon.functions.createSpacerAce())
+
+	for _, cbData in ipairs(addon.variables.unitFrameNames) do
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value)
+			if cbData.var and cbData.name then
+				addon.db[cbData.var] = value
+				UpdateUnitFrameMouseover(cbData.name, cbData)
+			end
+		end, desc)
+		groupCore:AddChild(cbElement)
+	end
+end
+
 local function addActionBarFrame(container, d)
 	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
 	scroll:SetFullWidth(true)
@@ -776,7 +1028,7 @@ local function addActionBarFrame(container, d)
 		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value)
 			if cbData.var and cbData.name then
 				addon.db[cbData.var] = value
-				UpdateActionBarMouseover(cbData.name, value)
+				UpdateActionBarMouseover(cbData.name, value, cbData.var)
 			end
 		end, desc)
 		groupCore:AddChild(cbElement)
@@ -1267,28 +1519,6 @@ local function addCharacterFrame(container)
 					if frame:IsShown() then addon.functions.updateBags(frame) end
 				end
 				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
-			end,
-		},
-		{
-			parent = L["UnitFrame"],
-			var = "hideHitIndicatorPlayer",
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["hideHitIndicatorPlayer"] = value
-				if value then
-					PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide()
-				else
-					PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Show()
-				end
-			end,
-		},
-		{
-			parent = L["UnitFrame"],
-			var = "hideHitIndicatorPet",
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["hideHitIndicatorPet"] = value
-				if value and PetHitIndicator then PetHitIndicator:Hide() end
 			end,
 		},
 	}
@@ -1795,7 +2025,7 @@ end
 local function initActionBars()
 	for _, cbData in ipairs(addon.variables.actionBarNames) do
 		if cbData.var and cbData.name then
-			if addon.db[cbData.var] then UpdateActionBarMouseover(cbData.name, addon.db[cbData.var]) end
+			if addon.db[cbData.var] then UpdateActionBarMouseover(cbData.name, addon.db[cbData.var], cbData.var) end
 		end
 	end
 end
@@ -1887,6 +2117,38 @@ local function initMisc()
 		local id = addon.variables.landingPageReverse[self.title]
 		if addon.db["hiddenLandingPages"][id] then self:Hide() end
 	end)
+end
+
+local function initUnitFrame()
+	addon.functions.InitDBValue("hideHitIndicatorPlayer", false)
+	addon.functions.InitDBValue("hideHitIndicatorPet", false)
+	if addon.db["hideHitIndicatorPlayer"] then PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide() end
+
+	if PetHitIndicator then hooksecurefunc(PetHitIndicator, "Show", function(self)
+		if addon.db["hideHitIndicatorPet"] then PetHitIndicator:Hide() end
+	end) end
+
+	for _, cbData in ipairs(addon.variables.unitFrameNames) do
+		if cbData.var and cbData.name then
+			if addon.db[cbData.var] then UpdateUnitFrameMouseover(cbData.name, cbData) end
+		end
+	end
+end
+
+local function initChatFrame()
+	if ChatFrame1 then
+		addon.functions.InitDBValue("chatFrameFadeEnabled", ChatFrame1:GetFading())
+		addon.functions.InitDBValue("chatFrameFadeTimeVisible", ChatFrame1:GetTimeVisible())
+		addon.functions.InitDBValue("chatFrameFadeDuration", ChatFrame1:GetFadeDuration())
+
+		ChatFrame1:SetFading(addon.db["chatFrameFadeEnabled"])
+		ChatFrame1:SetTimeVisible(addon.db["chatFrameFadeTimeVisible"])
+		ChatFrame1:SetFadeDuration(addon.db["chatFrameFadeDuration"])
+	else
+		addon.functions.InitDBValue("chatFrameFadeEnabled", true)
+		addon.functions.InitDBValue("chatFrameFadeTimeVisible", 120)
+		addon.functions.InitDBValue("chatFrameFadeDuration", 3)
+	end
 end
 
 local function initUI()
@@ -2228,14 +2490,6 @@ local function initCharacter()
 	addon.functions.InitDBValue("showGemsTooltipOnCharframe", false)
 	addon.functions.InitDBValue("showEnchantOnCharframe", false)
 	addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
-	addon.functions.InitDBValue("hideHitIndicatorPlayer", false)
-	addon.functions.InitDBValue("hideHitIndicatorPet", false)
-
-	if addon.db["hideHitIndicatorPlayer"] then PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide() end
-
-	if PetHitIndicator then hooksecurefunc(PetHitIndicator, "Show", function(self)
-		if addon.db["hideHitIndicatorPet"] then PetHitIndicator:Hide() end
-	end) end
 
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
@@ -2446,8 +2700,15 @@ local function CreateUI()
 			{ value = "dungeon", text = L["Dungeon"] },
 			{ value = "misc", text = L["Misc"] },
 			{ value = "quest", text = L["Quest"] },
-			{ value = "actionbar", text = ACTIONBARS_LABEL },
-			{ value = "ui", text = BUG_CATEGORY5 },
+			{
+				value = "ui",
+				text = BUG_CATEGORY5,
+				children = {
+					{ value = "actionbar", text = ACTIONBARS_LABEL },
+					{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
+					{ value = "unitframe", text = UNITFRAME_LABEL },
+				},
+			},
 		},
 	})
 	addon.treeGroup:SetLayout("Fill")
@@ -2461,8 +2722,6 @@ local function CreateUI()
 			addQuestFrame(container, true) -- Ruft die Funktion zum Hinzufügen der Quest-Optionen auf
 		elseif group == "general\001cvar" then
 			addCVarFrame(container, true) -- Ruft die Funktion zum Hinzufügen der CVar-Optionen auf
-		elseif group == "general\001actionbar" then
-			addActionBarFrame(container)
 		elseif group == "general\001dungeon" then
 			addDungeonFrame(container, true) -- Ruft die Funktion zum Hinzufügen der Dungeon-Optionen auf
 		elseif group == "general\001character" then
@@ -2471,6 +2730,12 @@ local function CreateUI()
 			addPartyFrame(container) -- Ruft die Funktion zum Hinzufügen der Party-Optionen auf
 		elseif group == "general\001ui" then
 			addUIFrame(container)
+		elseif group == "general\001ui\001actionbar" then
+			addActionBarFrame(container)
+		elseif group == "general\001ui\001unitframe" then
+			addUnitFrame(container)
+		elseif group == "general\001ui\001chatframe" then
+			addChatFrame(container)
 		elseif string.match(group, "^tooltip") then
 			addon.Tooltip.functions.treeCallback(container, group)
 		elseif string.match(group, "^vendor") then
@@ -2488,6 +2753,7 @@ local function CreateUI()
 		end
 	end)
 	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
+	addon.variables.statusTable.groups["general\001ui"] = true
 	frame:AddChild(addon.treeGroup)
 
 	-- Select the first group by default
@@ -2652,6 +2918,8 @@ local function setAllHooks()
 	initParty()
 	initActionBars()
 	initUI()
+	initUnitFrame()
+	initChatFrame()
 end
 
 function loadMain()

@@ -171,3 +171,8 @@ L["ignoreMinimapSinkHole"] = "Игнорировать следующие кно
 L["useMinimapButtonBinIcon"] = "Использовать кнопку на мини-карте для сборщика"
 L["useMinimapButtonBinMouseover"] = "Показать перемещаемое окно при наведении для сборщика"
 L["lockMinimapButtonBin"] = "Зафиксировать окно сборщика"
+
+L["UnitFrameHideExplain"] = "Скрыть элемент и показывать только при наведении курсора"
+L["chatFrameFadeEnabled"] = "Включить постепенное скрытие чата"
+L["chatFrameFadeTimeVisibleText"] = "Текст остаётся видимым в течение"
+L["chatFrameFadeDurationText"] = "Продолжительность анимации исчезновения"
