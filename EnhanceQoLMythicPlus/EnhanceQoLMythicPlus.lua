@@ -940,7 +940,11 @@ local function addTalentFrame(container)
 				wrapper:DoLayout()
 			end)
 		end)
-		if addon.MythicPlus.variables.currentSpecID then groupTalent:SelectTab(addon.MythicPlus.variables.currentSpecID) end
+		if addon.MythicPlus.variables.currentSpecID and addon.MythicPlus.variables.knownLoadout[addon.MythicPlus.variables.currentSpecID] then
+			groupTalent:SelectTab(addon.MythicPlus.variables.currentSpecID)
+		else
+			groupTalent:SelectTab(addon.MythicPlus.variables.specNames[1].value)
+		end
 
 		wrapper:AddChild(groupTalent)
 	end

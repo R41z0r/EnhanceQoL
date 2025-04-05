@@ -152,3 +152,5 @@ L["UnitFrameHideExplain"] = "Hide the element and only show it on mouseover"
 L["chatFrameFadeEnabled"] = "Enable chat fading"
 L["chatFrameFadeTimeVisibleText"] = "Text remains visible for"
 L["chatFrameFadeDurationText"] = "Fade animation duration"
+
+L["enableLootspecQuickswitch"] = "Enable loot specialization quick-switch on the Minimap"

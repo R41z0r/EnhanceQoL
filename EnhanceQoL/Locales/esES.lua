@@ -153,3 +153,5 @@ L["UnitFrameHideExplain"] = "Ocultar el elemento y mostrarlo solo al pasar el ra
 L["chatFrameFadeEnabled"] = "Habilitar desvanecimiento del chat"
 L["chatFrameFadeTimeVisibleText"] = "El texto permanece visible durante"
 L["chatFrameFadeDurationText"] = "Duración de la animación de desvanecimiento"
+
+L["enableLootspecQuickswitch"] = "Activar el cambio rápido de especialización de botín en el minimapa"

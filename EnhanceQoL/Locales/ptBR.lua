@@ -153,3 +153,5 @@ L["UnitFrameHideExplain"] = "Ocultar o elemento e exibi-lo apenas ao passar o mo
 L["chatFrameFadeEnabled"] = "Ativar desvanecimento do chat"
 L["chatFrameFadeTimeVisibleText"] = "O texto permanece visível por"
 L["chatFrameFadeDurationText"] = "Duração da animação de desvanecimento"
+
+L["enableLootspecQuickswitch"] = "Ativar troca rápida de especialização de saque no minimapa"

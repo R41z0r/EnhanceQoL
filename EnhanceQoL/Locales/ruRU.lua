@@ -176,3 +176,5 @@ L["UnitFrameHideExplain"] = "Скрыть элемент и показывать
 L["chatFrameFadeEnabled"] = "Включить постепенное скрытие чата"
 L["chatFrameFadeTimeVisibleText"] = "Текст остаётся видимым в течение"
 L["chatFrameFadeDurationText"] = "Продолжительность анимации исчезновения"
+
+L["enableLootspecQuickswitch"] = "Включить быстрое переключение специализации добычи на миникарте"

@@ -145,3 +145,5 @@ L["UnitFrameHideExplain"] = "요소를 숨기고 마우스오버 시에만 표�
 L["chatFrameFadeEnabled"] = "채팅 창 페이드 사용"
 L["chatFrameFadeTimeVisibleText"] = "텍스트가 표시되는 시간"
 L["chatFrameFadeDurationText"] = "페이드 애니메이션 지속 시간"
+
+L["enableLootspecQuickswitch"] = "미니맵에서 전리품 전문화 빠른 전환 사용"

@@ -153,3 +153,5 @@ L["UnitFrameHideExplain"] = "Masquer l’élément et ne l’afficher qu’au su
 L["chatFrameFadeEnabled"] = "Activer l’estompage du chat"
 L["chatFrameFadeTimeVisibleText"] = "Le texte reste visible pendant"
 L["chatFrameFadeDurationText"] = "Durée de l’animation d’estompage"
+
+L["enableLootspecQuickswitch"] = "Activer le changement rapide de spécialisation de butin sur la minicarte"

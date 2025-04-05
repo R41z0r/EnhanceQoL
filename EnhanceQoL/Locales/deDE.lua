@@ -152,3 +152,5 @@ L["UnitFrameHideExplain"] = "Element ausblenden und nur bei Mouseover anzeigen"
 L["chatFrameFadeEnabled"] = "Chat-Verblassen aktivieren"
 L["chatFrameFadeTimeVisibleText"] = "Text bleibt sichtbar für"
 L["chatFrameFadeDurationText"] = "Dauer der Verblass-Animation"
+
+L["enableLootspecQuickswitch"] = "Beutespezialisierung per Minimap schnell umschalten"

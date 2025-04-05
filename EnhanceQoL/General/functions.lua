@@ -217,7 +217,7 @@ function addon.functions.createWrapperData(data, container, L)
 
 				if checkboxData.desc then
 					local subtext = AceGUI:Create("Label")
-					subtext:SetText(checkboxData.desc)
+					subtext:SetText(string.format("|cffffd700" .. checkboxData.desc .. "|r "))
 					subtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
 					subtext:SetFullWidth(true)
 					subtext:SetColor(1, 1, 1)

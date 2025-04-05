@@ -147,3 +147,5 @@ L["UnitFrameHideExplain"] = "Nascondi l’elemento e mostralo solo al passaggio 
 L["chatFrameFadeEnabled"] = "Abilita lo sbiadimento della chat"
 L["chatFrameFadeTimeVisibleText"] = "Il testo rimane visibile per"
 L["chatFrameFadeDurationText"] = "Durata dell’animazione di sbiadimento"
+
+L["enableLootspecQuickswitch"] = "Abilita il cambio rapido della specializzazione di bottino sulla minimappa"

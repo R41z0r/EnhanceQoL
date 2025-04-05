@@ -935,6 +935,110 @@ local function addChatFrame(container)
 	end
 end
 
+local function addMinimapFrame(container)
+	local data = {
+		{
+			parent = "",
+			var = "enableLootspecQuickswitch",
+			type = "CheckBox",
+			desc = L["enableLootspecQuickswitch"],
+			callback = function(self, _, value)
+				addon.db["enableLootspecQuickswitch"] = value
+				if value then
+					addon.functions.createLootspecFrame()
+				else
+					addon.functions.removeLootspecframe()
+				end
+			end,
+		},
+		{
+			parent = "",
+			var = "enableMinimapButtonBin",
+			type = "CheckBox",
+			desc = L["enableMinimapButtonBinDesc"],
+			callback = function(self, _, value)
+				addon.db["enableMinimapButtonBin"] = value
+				addon.functions.toggleButtonSink()
+				container:ReleaseChildren()
+				addMinimapFrame(container)
+			end,
+		},
+	}
+
+	if addon.db["enableMinimapButtonBin"] then
+		table.insert(data, {
+			parent = "",
+			var = "useMinimapButtonBinIcon",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["useMinimapButtonBinIcon"] = value
+				if value then addon.db["useMinimapButtonBinMouseover"] = false end
+				addon.functions.toggleButtonSink()
+				container:ReleaseChildren()
+				addMinimapFrame(container)
+			end,
+		})
+		table.insert(data, {
+			parent = "",
+			var = "useMinimapButtonBinMouseover",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["useMinimapButtonBinMouseover"] = value
+				if value then addon.db["useMinimapButtonBinIcon"] = false end
+				addon.functions.toggleButtonSink()
+				container:ReleaseChildren()
+				addMinimapFrame(container)
+			end,
+		})
+		if not addon.db["useMinimapButtonBinIcon"] then
+			table.insert(data, {
+				parent = "",
+				var = "lockMinimapButtonBin",
+				type = "CheckBox",
+				callback = function(self, _, value)
+					addon.db["lockMinimapButtonBin"] = value
+					addon.functions.toggleButtonSink()
+				end,
+			})
+		end
+
+		for i, _ in pairs(addon.variables.bagButtonState) do
+			table.insert(data, {
+				parent = MINIMAP_LABEL .. ": " .. L["ignoreMinimapSinkHole"],
+				var = "ignoreMinimapButtonBin_" .. i,
+				text = i,
+				type = "CheckBox",
+				value = addon.db["ignoreMinimapButtonBin_" .. i] or false,
+				callback = function(self, _, value)
+					addon.db["ignoreMinimapButtonBin_" .. i] = value
+					addon.functions.LayoutButtons()
+				end,
+			})
+		end
+	end
+	for id in pairs(addon.variables.landingPageType) do
+		local actValue = false
+		local page = addon.variables.landingPageType[id]
+		if addon.db["hiddenLandingPages"][id] then actValue = true end
+
+		table.insert(data, {
+			parent = L["landingPageHide"],
+			var = "landingPageType_" .. id,
+			type = "CheckBox",
+			value = actValue,
+			id = id,
+			text = page.checkbox,
+			title = page.title,
+			callback = function(self, _, value)
+				addon.db["hiddenLandingPages"][id] = value
+				addon.functions.toggleLandingPageButton(page.title, value)
+			end,
+		})
+	end
+
+	addon.functions.createWrapperData(data, container, L)
+end
+
 local function addUnitFrame(container)
 	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
 	scroll:SetFullWidth(true)
@@ -1292,91 +1396,6 @@ local function addUIFrame(container)
 			end,
 		},
 	}
-
-	for id in pairs(addon.variables.landingPageType) do
-		local actValue = false
-		local page = addon.variables.landingPageType[id]
-		if addon.db["hiddenLandingPages"][id] then actValue = true end
-
-		table.insert(data, {
-			parent = L["landingPageHide"],
-			var = "landingPageType_" .. id,
-			type = "CheckBox",
-			value = actValue,
-			id = id,
-			text = page.checkbox,
-			title = page.title,
-			callback = function(self, _, value)
-				addon.db["hiddenLandingPages"][id] = value
-				addon.functions.toggleLandingPageButton(page.title, value)
-			end,
-		})
-	end
-
-	table.insert(data, {
-		parent = MINIMAP_LABEL,
-		var = "enableMinimapButtonBin",
-		type = "CheckBox",
-		desc = L["enableMinimapButtonBinDesc"],
-		callback = function(self, _, value)
-			addon.db["enableMinimapButtonBin"] = value
-			addon.functions.toggleButtonSink()
-			container:ReleaseChildren()
-			addUIFrame(container)
-		end,
-	})
-
-	if addon.db["enableMinimapButtonBin"] then
-		table.insert(data, {
-			parent = MINIMAP_LABEL,
-			var = "useMinimapButtonBinIcon",
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["useMinimapButtonBinIcon"] = value
-				if value then addon.db["useMinimapButtonBinMouseover"] = false end
-				addon.functions.toggleButtonSink()
-				container:ReleaseChildren()
-				addUIFrame(container)
-			end,
-		})
-		table.insert(data, {
-			parent = MINIMAP_LABEL,
-			var = "useMinimapButtonBinMouseover",
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["useMinimapButtonBinMouseover"] = value
-				if value then addon.db["useMinimapButtonBinIcon"] = false end
-				addon.functions.toggleButtonSink()
-				container:ReleaseChildren()
-				addUIFrame(container)
-			end,
-		})
-		if not addon.db["useMinimapButtonBinIcon"] then
-			table.insert(data, {
-				parent = MINIMAP_LABEL,
-				var = "lockMinimapButtonBin",
-				type = "CheckBox",
-				callback = function(self, _, value)
-					addon.db["lockMinimapButtonBin"] = value
-					addon.functions.toggleButtonSink()
-				end,
-			})
-		end
-
-		for i, _ in pairs(addon.variables.bagButtonState) do
-			table.insert(data, {
-				parent = MINIMAP_LABEL .. ": " .. L["ignoreMinimapSinkHole"],
-				var = "ignoreMinimapButtonBin_" .. i,
-				text = i,
-				type = "CheckBox",
-				value = addon.db["ignoreMinimapButtonBin_" .. i] or false,
-				callback = function(self, _, value)
-					addon.db["ignoreMinimapButtonBin_" .. i] = value
-					addon.functions.LayoutButtons()
-				end,
-			})
-		end
-	end
 
 	addon.functions.createWrapperData(data, container, L)
 end
@@ -2154,6 +2173,8 @@ end
 local function initUI()
 	addon.functions.InitDBValue("enableMinimapButtonBin", false)
 	addon.functions.InitDBValue("buttonsink", {})
+	addon.functions.InitDBValue("enableLootspecQuickswitch", false)
+	addon.functions.InitDBValue("lootspec_quickswitch", {})
 	addon.functions.InitDBValue("minimapSinkHoleData", {})
 
 	function addon.functions.toggleMinimapButton(value)
@@ -2478,6 +2499,169 @@ local function initUI()
 			addon.functions.LayoutButtons()
 		end
 	end)
+
+	local radioRows = {}
+	local maxTextWidth = 0
+	local rowHeight = 28 -- Höhe pro Zeile (Font + etwas Puffer)
+	local totalRows = 0
+
+	function addon.functions.updateLootspecIcon()
+		if not LDBIcon or not LDBIcon:IsRegistered(addonName .. "_LootSpec") then return end
+
+		local _, specIcon
+
+		local curSpec = GetSpecialization()
+
+		if GetLootSpecialization() == 0 and curSpec then
+			_, _, _, specIcon = GetSpecializationInfoForClassID(addon.variables.unitClassID, curSpec)
+		else
+			_, _, _, specIcon = GetSpecializationInfoByID(GetLootSpecialization())
+		end
+
+		local button = LDBIcon.objects[addonName .. "_LootSpec"]
+		if button and button.icon and specIcon then button.icon:SetTexture(specIcon) end
+	end
+
+	local function UpdateRadioSelection()
+		local lootSpecID = GetLootSpecialization() or 0
+		for _, row in ipairs(radioRows) do
+			row.radio:SetChecked(row.specId == lootSpecID)
+		end
+	end
+
+	local function CreateRadioRow(parent, specId, specName, index)
+		totalRows = totalRows + 1
+
+		-- Das Frame für die Zeile
+		local row = CreateFrame("Button", "MyRadioRow" .. index, parent, "BackdropTemplate")
+		row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
+		row:GetHighlightTexture():SetAlpha(0.3)
+
+		-- Radio-Button selbst
+		row.radio = CreateFrame("CheckButton", "$parentRadio", row, "UIRadioButtonTemplate")
+		row.radio:SetPoint("LEFT", row, "LEFT", 4, 0)
+		row.radio:SetChecked(false)
+
+		-- Schriftgröße vergrößern
+		row.radio.text:SetFontObject(GameFontNormalLarge)
+		row.radio.text:SetText(specName)
+
+		-- Breite des Textes messen
+		local textWidth = row.radio.text:GetStringWidth()
+		-- Wenn diese Zeile die längste ist, merken wir uns das
+		if textWidth > maxTextWidth then maxTextWidth = textWidth end
+
+		row.specId = specId
+
+		-- Klick auf die ganze Zeile
+		row:SetScript("OnClick", function(self)
+			SetLootSpecialization(specId) -- Blizzard-API
+		end)
+
+		-- Klick direkt auf den Radio-Button
+		row.radio:SetScript("OnClick", function(self) SetLootSpecialization(specId) end)
+
+		table.insert(radioRows, row)
+		return row
+	end
+
+	function addon.functions.removeLootspecframe()
+		if LDBIcon:IsRegistered(addonName .. "_LootSpec") then
+			local button = LDBIcon.objects[addonName .. "_LootSpec"]
+			if button then button:Hide() end
+			LDBIcon.objects[addonName .. "_LootSpec"] = nil
+		end
+		if addon.variables.lootSpec then
+			addon.variables.lootSpec:SetParent(nil)
+			addon.variables.lootSpec:SetScript("OnEvent", nil)
+			addon.variables.lootSpec:Hide()
+			addon.variables.lootSpec = nil
+		end
+	end
+
+	local function hoverCheckHide(frame)
+		if frame and frame:IsVisible() then
+			if not MouseIsOver(frame) then
+				frame:Hide()
+			else
+				C_Timer.After(1, function() hoverCheckHide(frame) end)
+			end
+		end
+	end
+
+	function addon.functions.createLootspecFrame()
+		totalRows = 0
+		radioRows = {}
+		local lootSpec = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+		lootSpec:SetPoint("CENTER")
+		lootSpec:SetSize(200, 200) -- Erstmal ein Dummy-Wert, wir passen es später an
+		lootSpec:SetBackdrop({
+			bgFile = "Interface\\Buttons\\WHITE8x8",
+			edgeFile = "Interface\\Buttons\\WHITE8x8",
+			edgeSize = 1,
+		})
+		lootSpec:SetBackdropColor(0, 0, 0, 0.4)
+		lootSpec:SetBackdropBorderColor(1, 1, 1, 1)
+		addon.variables.lootSpec = lootSpec
+		lootSpec:RegisterEvent("PLAYER_LOOT_SPEC_UPDATED")
+		lootSpec:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
+		lootSpec:SetScript("OnEvent", function(self, event)
+			if event == "ACTIVE_TALENT_GROUP_CHANGED" then
+				addon.functions.removeLootspecframe()
+				addon.functions.createLootspecFrame()
+			end
+			addon.functions.updateLootspecIcon()
+			UpdateRadioSelection()
+		end)
+
+		local container = CreateFrame("Frame", nil, lootSpec, "BackdropTemplate")
+		container:SetPoint("TOPLEFT", 10, -10)
+		if nil == GetSpecialization() then return end
+
+		local _, curSpecName = GetSpecializationInfoForClassID(addon.variables.unitClassID, GetSpecialization())
+		local totalSpecs = GetNumSpecializationsForClassID(addon.variables.unitClassID)
+		local row = CreateRadioRow(container, 0, string.format(LOOT_SPECIALIZATION_DEFAULT, curSpecName), 0)
+		for i = 1, totalSpecs do
+			local specID, specName, _, specIcon = GetSpecializationInfoForClassID(addon.variables.unitClassID, i)
+			CreateRadioRow(container, specID, specName, i)
+		end
+
+		for i, row in ipairs(radioRows) do
+			row:ClearAllPoints()
+			row:SetPoint("TOPLEFT", container, "TOPLEFT", 0, -(i - 1) * rowHeight)
+			row:SetSize(maxTextWidth + 40, rowHeight)
+		end
+
+		local finalHeight = #radioRows * rowHeight + 20
+		local finalWidth = math.max(maxTextWidth + 40, 150)
+
+		container:SetSize(finalWidth, finalHeight)
+		lootSpec:SetSize(finalWidth + 20, finalHeight + 20)
+
+		local iconData = {
+			type = "launcher",
+			icon = "Interface\\ICONS\\INV_Misc_QuestionMark", -- irgendein Icon
+			label = addonName .. "_LootSpec",
+			OnEnter = function(self)
+				if addon.variables.lootSpec then
+					positionBagFrame(addon.variables.lootSpec, LDBIcon.objects[addonName .. "_LootSpec"])
+					addon.variables.lootSpec:Show()
+				end
+			end,
+			OnLeave = function(self)
+				C_Timer.After(1, function() hoverCheckHide(addon.variables.lootSpec) end)
+			end,
+		}
+
+		LDB:NewDataObject(addonName .. "_LootSpec", iconData)
+		LDBIcon:Register(addonName .. "_LootSpec", iconData, addon.db["lootspec_quickswitch"])
+
+		UpdateRadioSelection()
+		lootSpec:Hide()
+		addon.functions.updateLootspecIcon()
+	end
+
+	if addon.db["enableLootspecQuickswitch"] then addon.functions.createLootspecFrame() end
 end
 
 local function initCharacter()
@@ -2706,6 +2890,7 @@ local function CreateUI()
 				children = {
 					{ value = "actionbar", text = ACTIONBARS_LABEL },
 					{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
+					{ value = "minimap", text = MINIMAP_LABEL },
 					{ value = "unitframe", text = UNITFRAME_LABEL },
 				},
 			},
@@ -2736,6 +2921,8 @@ local function CreateUI()
 			addUnitFrame(container)
 		elseif group == "general\001ui\001chatframe" then
 			addChatFrame(container)
+		elseif group == "general\001ui\001minimap" then
+			addMinimapFrame(container)
 		elseif string.match(group, "^tooltip") then
 			addon.Tooltip.functions.treeCallback(container, group)
 		elseif string.match(group, "^vendor") then

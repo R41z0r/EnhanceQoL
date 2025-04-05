@@ -145,3 +145,5 @@ L["UnitFrameHideExplain"] = "隐藏元素，仅在鼠标悬停时显示"
 L["chatFrameFadeEnabled"] = "启用聊天渐隐"
 L["chatFrameFadeTimeVisibleText"] = "文字保持可见时间"
 L["chatFrameFadeDurationText"] = "渐隐动画的持续时间"
+
+L["enableLootspecQuickswitch"] = "在小地图上启用战利品专精的快速切换"
