@@ -310,6 +310,7 @@ globals = {
 	"GameFontNormal",
 	"GameFontNormalHuge",
 	"GameFontNormalSmall2",
+	"GameFontNormalLarge",
 	"GameFontHighlight",
 	"GameFontHighlightLarge",
 	"GameFontHighlightSmall",
