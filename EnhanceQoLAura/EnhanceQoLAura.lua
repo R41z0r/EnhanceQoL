@@ -441,6 +441,31 @@ local function removeBar(unit)
 	end
 end
 
+-- local trackSpells = {
+-- 	[102693] = true,
+-- 	[18562] = true,
+-- 	[102342] = true,
+-- 	[197721] = true,
+-- }
+-- local isChecking = false
+-- local function checkLayout()
+-- 	if isChecking then return end
+-- 	isChecking = true
+
+-- 	for i, v in pairs(EssentialCooldownViewer.oldGridSettings.layoutChildren) do
+-- 		if v.cooldownInfo and v.cooldownInfo.spellID and not trackSpells[v.cooldownInfo.spellID] then
+-- 			-- print(v.cooldownInfo.spellID, C_Spell.GetSpellInfo(v.cooldownInfo.spellID).name)
+-- 			if not v.OnShow then v:SetScript("OnShow", function(self)
+-- 				self:Hide()
+-- 				EssentialCooldownViewer:RefreshLayout()
+-- 			end) end
+-- 			v:Hide()
+-- 		end
+-- 	end
+-- 	EssentialCooldownViewer:RefreshLayout()
+-- 	C_Timer.After(0.5, function() isChecking = false end)
+-- end
+
 local eventsToRegister = {
 	-- "UNIT_SPELLCAST_START",
 	-- "UNIT_SPELLCAST_STOP",
@@ -463,9 +488,10 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 
 	if firstStart and event == "PLAYER_ENTERING_WORLD" then
 		firstStart = false
-		createHealthBar(MultiBar5)
-		createPowerBar("MANA", EQOLHealthBar)
-		createPowerBar("ENERGY", powerbar["MANA"])
+		-- checkLayout()
+		-- createHealthBar(MultiBar5)
+		-- createPowerBar("MANA", EQOLHealthBar)
+		-- createPowerBar("ENERGY", powerbar["MANA"])
 	end
 	if unit ~= "player" then return end
 	-- print(event, unit, arg1, arg2, ...)
@@ -496,3 +522,7 @@ end
 -- Event-Handler setzen
 frameAnchor:SetScript("OnEvent", eventHandler)
 frameAnchor:Hide()
+
+-- EssentialCooldownViewer.oldGridSettings.layoutChildren[3]:SetScript("OnShow", function(self) self:Hide() end)
+
+-- hooksecurefunc(EssentialCooldownViewer, "OnShow", function(self) checkLayout() end)

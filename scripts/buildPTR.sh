@@ -2,7 +2,7 @@
 
 # Pfade zu den Verzeichnissen anpassen
 ROOT_DIR=$(pwd)/
-WOW_ADDON_DIR="/Applications/World of Warcraft/_xptr_/Interface/AddOns"
+WOW_ADDON_DIR="/Applications/World of Warcraft/_ptr_/Interface/AddOns"
 
 # Verzeichnisse für die Addons
 EnhanceQoL_ADDON_DIR="$WOW_ADDON_DIR/EnhanceQoL"

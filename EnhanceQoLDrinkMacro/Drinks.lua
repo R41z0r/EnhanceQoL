@@ -562,9 +562,11 @@ function addon.functions.updateAllowedDrinks()
 	local minManaValue = mana * (addon.db["minManaFoodValue"] / 100)
 
 	addon.Drinks.filteredDrinks = {} -- Used for the filtered List later
+	addon.Drinks.mageFood = {} -- Used for Food reminder
 
 	for _, drink in ipairs(addon.Drinks.drinkList) do
 		if drink.isMageFood and mana ~= drink.mana then drink.mana = mana end -- Update magefood in case of level etc.
+		if drink.isMageFood then addon.Drinks.mageFood[drink.id] = true end
 
 		if (drink.requiredLevel >= 0 and drink.requiredLevel <= playerLevel) and (drink.mana >= minManaValue) then
 			if drink.isBuffFood and nil ~= addon.db["ignoreBuffFood"] and addon.db["ignoreBuffFood"] == true then
