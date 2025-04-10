@@ -2176,6 +2176,7 @@ local function initUI()
 	addon.functions.InitDBValue("enableLootspecQuickswitch", false)
 	addon.functions.InitDBValue("lootspec_quickswitch", {})
 	addon.functions.InitDBValue("minimapSinkHoleData", {})
+	addon.functions.InitDBValue("hideQuickJoinToast", false)
 
 	function addon.functions.toggleMinimapButton(value)
 		if value == false then
