@@ -99,11 +99,7 @@ frameLoad:SetScript("OnEvent", function(self, event)
 		healerRole = GetSpecializationRole(GetSpecialization()) == "HEALER" or false
 	end
 	-- check for mage food
-	if healerRole == false then
-		removeBRFrame()
-		return
-	end
-	if not IsResting() then
+	if not healerRole or not IsResting() then
 		removeBRFrame()
 		return
 	end

@@ -259,16 +259,6 @@ if TooltipDataProcessor then
 
 		local id, name, _, timeLimit
 		local kind = addon.Tooltip.variables.kindsByID[tonumber(data.type)]
-		if kind ~= "unit" then
-			if tooltip.healthBar then
-				tooltip.healthBar:Hide()
-				tooltip.healthBar = nil
-			end
-			if tooltip.healthUpdateFrame then
-				tooltip.healthUpdateFrame:Hide()
-				tooltip.healthUpdateFrame = nil
-			end
-		end
 		if kind == "spell" then
 			id = data.id
 			name = L["SpellID"]

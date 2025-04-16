@@ -21,34 +21,34 @@ local activeTrailElements = {}
 
 local trailPresets = {
 	[1] = { -- LOW
-		MaxActuationPoint = 1.0, -- erzeugt nur bei relativ großen Bewegungen
-		duration = 0.2, -- kürzere Lebensdauer
-		Density = 0.03, -- selteneres Spawning
-		ElementCap = 15,
+		MaxActuationPoint = 1.0,
+		duration = 0.4,
+		Density = 0.025,
+		ElementCap = 20,
 	},
 	[2] = { -- MEDIUM
 		MaxActuationPoint = 0.7,
-		duration = 0.3,
-		Density = 0.015,
-		ElementCap = 30,
+		duration = 0.5,
+		Density = 0.02,
+		ElementCap = 40,
 	},
 	[3] = { -- HIGH (Sweet Spot)
 		MaxActuationPoint = 0.5,
-		duration = 0.4,
-		Density = 0.01,
-		ElementCap = 50,
+		duration = 0.7,
+		Density = 0.012,
+		ElementCap = 80,
 	},
 	[4] = { -- ULTRA
-		MaxActuationPoint = 0.3, -- empfindlicher
-		duration = 0.4, -- gleiche Lebensdauer wie HIGH
-		Density = 0.007, -- etwas kürzerer Zeitabstand => mehr Elemente
-		ElementCap = 70,
+		MaxActuationPoint = 0.3,
+		duration = 0.7,
+		Density = 0.007,
+		ElementCap = 120,
 	},
 	[5] = { -- ULTRA HIGH
-		MaxActuationPoint = 0.2, -- sehr empfindlich
-		duration = 0.4, -- ebenfalls 0.4, damit’s optisch nicht zu lange bleibt
-		Density = 0.005, -- noch häufiger
-		ElementCap = 90,
+		MaxActuationPoint = 0.2,
+		duration = 0.8,
+		Density = 0.005,
+		ElementCap = 150,
 	},
 }
 

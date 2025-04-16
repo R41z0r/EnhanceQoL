@@ -8,6 +8,7 @@ else
 end
 
 addon.Drinks.drinkList = { -- Special Food
+	{ key = "MarinatedMaggots", id = 226811, requiredLevel = 75, mana = 2700000, isBuffFood = false },
 	{ key = "CandyBar", id = 20390, requiredLevel = 1, mana = 18000, isBuffFood = false }, -- We don't know the right amount on level 41 it's 18000
 	{ key = "CandyCorn", id = 20389, requiredLevel = 1, mana = 18000, isBuffFood = false }, -- We don't know the right amount on level 41 it's 18000
 	{ key = "ConjuredManaBun", id = 113509, requiredLevel = 40, mana = 0, isMageFood = true, isEarthenFood = true }, -- set mana to zero, because we update it anyway
@@ -554,38 +555,56 @@ addon.Drinks.drinkList = { -- Special Food
 table.sort(addon.Drinks.drinkList, function(a, b) return a.mana > b.mana end)
 
 function addon.functions.updateAllowedDrinks()
-	local playerLevel = UnitLevel("Player")
+	-- cache globals as locals
+	local UnitLevel = UnitLevel
+	local UnitPowerMax = UnitPowerMax
+	local UnitRace = UnitRace
+	local IsSpellKnown = IsSpellKnown
+	local tinsert = table.insert
+	local newItem = addon.functions.newItem
+	local db = addon.db
+
+	local playerLevel = UnitLevel("player")
 	local mana = UnitPowerMax("player", 0)
-	local isEarthen = select(2, UnitRace("player")) == "EarthenDwarf"
 	if mana <= 0 then return end
 
-	local minManaValue = mana * (addon.db["minManaFoodValue"] / 100)
+	local _, race = UnitRace("player")
+	local isEarthen = (race == "EarthenDwarf")
+	local minManaValue = mana * (db.minManaFoodValue / 100)
 
-	addon.Drinks.filteredDrinks = {} -- Used for the filtered List later
-	addon.Drinks.mageFood = {} -- Used for Food reminder
+	-- prepare new result tables
+	local filtered = {}
+	local mageFoodMap = {}
 
-	for _, drink in ipairs(addon.Drinks.drinkList) do
-		if drink.isMageFood and mana ~= drink.mana then drink.mana = mana end -- Update magefood in case of level etc.
-		if drink.isMageFood then addon.Drinks.mageFood[drink.id] = true end
+	local preferMage = db.preferMageFood
+	local ignoreBuff = db.ignoreBuffFood
+	local ignoreGems = db.ignoreGemsEarthen
 
-		if (drink.requiredLevel >= 0 and drink.requiredLevel <= playerLevel) and (drink.mana >= minManaValue) then
-			if drink.isBuffFood and nil ~= addon.db["ignoreBuffFood"] and addon.db["ignoreBuffFood"] == true then
-				-- do nothing because there is not "continue"
-			elseif isEarthen and not drink.isEarthenFood then
-				-- ignore drinks which are not for earthen
-			elseif drink.earthenOnly and not isEarthen then
-				-- ignore only earthen food when not earthen
-			elseif drink.earthenOnly and drink.isGem and addon.db["ignoreGemsEarthen"] then
-				-- ignore gems from jewelcrafting for earthen
-			elseif drink.isSpell and not IsSpellKnown(drink.id) then
-				-- skip - Spell not known
-			else
-				if drink.isMageFood and nil ~= addon.db["preferMageFood"] and addon.db["preferMageFood"] == true then
-					table.insert(addon.Drinks.filteredDrinks, 1, addon.functions.newItem(drink.id, drink.desc, drink.isSpell))
+	-- iterate only once over the master list
+	for i = 1, #addon.Drinks.drinkList do
+		local drink = addon.Drinks.drinkList[i]
+		-- track mage food separately without modifying the original mana
+		if drink.isMageFood then mageFoodMap[drink.id] = true end
+
+		local req = drink.requiredLevel
+		local dMana = drink.isMageFood and mana or drink.mana
+		if req <= playerLevel and dMana >= minManaValue then
+			if
+				not (drink.isBuffFood and ignoreBuff)
+				and not (isEarthen and not drink.isEarthenFood)
+				and not (drink.earthenOnly and not isEarthen)
+				and not (drink.earthenOnly and drink.isGem and ignoreGems)
+				and not (drink.isSpell and not IsSpellKnown(drink.id))
+			then
+				if drink.isMageFood and preferMage then
+					tinsert(filtered, 1, newItem(drink.id, drink.desc, drink.isSpell))
 				else
-					table.insert(addon.Drinks.filteredDrinks, addon.functions.newItem(drink.id, drink.desc, drink.isSpell))
+					tinsert(filtered, newItem(drink.id, drink.desc, drink.isSpell))
 				end
 			end
 		end
 	end
+
+	addon.Drinks.filteredDrinks = filtered
+	addon.Drinks.mageFood = mageFoodMap
 end
