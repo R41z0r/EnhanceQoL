@@ -1,5 +1,3 @@
-## TOC Update
-- Updated TOC-Files for 11.1.5 
+## Added
 
-## Bugfix
-- Quickjoin Button was automatically hidden when not set
+- Right click on the lootspec changer will change your active specialization to that

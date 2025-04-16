@@ -152,4 +152,5 @@ L["chatFrameFadeEnabled"] = "啟用聊天淡出效果"
 L["chatFrameFadeTimeVisibleText"] = "文字保持顯示的時長"
 L["chatFrameFadeDurationText"] = "淡出動畫的持續時間"
 
-L["enableLootspecQuickswitch"] = "在小地圖上啟用戰利品專精的快速切換"
+L["enableLootspecQuickswitch"] = "在小地圖上啟用戰利品和當前專精的快速切換"
+L["enableLootspecQuickswitchDesc"] = "左鍵點擊專精以設定戰利品專精，右鍵點擊以切換當前專精。"

@@ -153,4 +153,5 @@ L["chatFrameFadeEnabled"] = "Chat-Verblassen aktivieren"
 L["chatFrameFadeTimeVisibleText"] = "Text bleibt sichtbar für"
 L["chatFrameFadeDurationText"] = "Dauer der Verblass-Animation"
 
-L["enableLootspecQuickswitch"] = "Beutespezialisierung per Minimap schnell umschalten"
+L["enableLootspecQuickswitch"] = "Schnellwechsel für Beute- und Aktive-Spezialisierungen an der Minikarte aktivieren"
+L["enableLootspecQuickswitchDesc"] = "Linksklick auf eine Spezialisierung setzt deine Beutespezialisierung, Rechtsklick wechselt deine aktive Spezialisierung."

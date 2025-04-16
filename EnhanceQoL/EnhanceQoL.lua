@@ -941,7 +941,7 @@ local function addMinimapFrame(container)
 			parent = "",
 			var = "enableLootspecQuickswitch",
 			type = "CheckBox",
-			desc = L["enableLootspecQuickswitch"],
+			desc = L["enableLootspecQuickswitchDesc"],
 			callback = function(self, _, value)
 				addon.db["enableLootspecQuickswitch"] = value
 				if value then
@@ -2533,34 +2533,40 @@ local function initUI()
 	local function CreateRadioRow(parent, specId, specName, index)
 		totalRows = totalRows + 1
 
-		-- Das Frame für die Zeile
 		local row = CreateFrame("Button", "MyRadioRow" .. index, parent, "BackdropTemplate")
 		row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
 		row:GetHighlightTexture():SetAlpha(0.3)
 
-		-- Radio-Button selbst
 		row.radio = CreateFrame("CheckButton", "$parentRadio", row, "UIRadioButtonTemplate")
 		row.radio:SetPoint("LEFT", row, "LEFT", 4, 0)
 		row.radio:SetChecked(false)
 
-		-- Schriftgröße vergrößern
 		row.radio.text:SetFontObject(GameFontNormalLarge)
 		row.radio.text:SetText(specName)
 
-		-- Breite des Textes messen
+		row:RegisterForClicks("AnyUp")
+		row.radio:RegisterForClicks("AnyUp")
+
 		local textWidth = row.radio.text:GetStringWidth()
-		-- Wenn diese Zeile die längste ist, merken wir uns das
 		if textWidth > maxTextWidth then maxTextWidth = textWidth end
 
 		row.specId = specId
 
-		-- Klick auf die ganze Zeile
-		row:SetScript("OnClick", function(self)
-			SetLootSpecialization(specId) -- Blizzard-API
+		row:SetScript("OnClick", function(self, button)
+			if button == "LeftButton" then
+				SetLootSpecialization(specId)
+			else
+				C_SpecializationInfo.SetSpecialization(index)
+			end
 		end)
 
-		-- Klick direkt auf den Radio-Button
-		row.radio:SetScript("OnClick", function(self) SetLootSpecialization(specId) end)
+		row.radio:SetScript("OnClick", function(self, button)
+			if button == "LeftButton" then
+				SetLootSpecialization(specId)
+			else
+				C_SpecializationInfo.SetSpecialization(index)
+			end
+		end)
 
 		table.insert(radioRows, row)
 		return row

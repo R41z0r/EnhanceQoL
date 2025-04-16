@@ -146,4 +146,5 @@ L["chatFrameFadeEnabled"] = "启用聊天渐隐"
 L["chatFrameFadeTimeVisibleText"] = "文字保持可见时间"
 L["chatFrameFadeDurationText"] = "渐隐动画的持续时间"
 
-L["enableLootspecQuickswitch"] = "在小地图上启用战利品专精的快速切换"
+L["enableLootspecQuickswitch"] = "在小地图上启用快速切换战利品和当前专精"
+L["enableLootspecQuickswitchDesc"] = "左键单击专精设置战利品专精，右键单击更改当前专精。"

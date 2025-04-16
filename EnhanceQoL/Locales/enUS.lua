@@ -153,4 +153,5 @@ L["chatFrameFadeEnabled"] = "Enable chat fading"
 L["chatFrameFadeTimeVisibleText"] = "Text remains visible for"
 L["chatFrameFadeDurationText"] = "Fade animation duration"
 
-L["enableLootspecQuickswitch"] = "Enable loot specialization quick-switch on the Minimap"
+L["enableLootspecQuickswitch"] = "Enable quick switching for loot and active specializations on the Minimap"
+L["enableLootspecQuickswitchDesc"] = "Left-click a specialization to set your loot spec, or right-click to change your active specialization."

@@ -154,4 +154,5 @@ L["chatFrameFadeEnabled"] = "Activer l’estompage du chat"
 L["chatFrameFadeTimeVisibleText"] = "Le texte reste visible pendant"
 L["chatFrameFadeDurationText"] = "Durée de l’animation d’estompage"
 
-L["enableLootspecQuickswitch"] = "Activer le changement rapide de spécialisation de butin sur la minicarte"
+L["enableLootspecQuickswitch"] = "Activer le changement rapide de spé de butin et spé active sur la minicarte"
+L["enableLootspecQuickswitchDesc"] = "Clic gauche sur une spécialisation pour définir la spé de butin, clic droit pour changer de spécialisation active."

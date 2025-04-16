@@ -154,4 +154,5 @@ L["chatFrameFadeEnabled"] = "Habilitar desvanecimiento del chat"
 L["chatFrameFadeTimeVisibleText"] = "El texto permanece visible durante"
 L["chatFrameFadeDurationText"] = "Duración de la animación de desvanecimiento"
 
-L["enableLootspecQuickswitch"] = "Activar el cambio rápido de especialización de botín en el minimapa"
+L["enableLootspecQuickswitch"] = "Habilitar cambio rápido de botín y especialización activa en el minimapa"
+L["enableLootspecQuickswitchDesc"] = "Haz clic izquierdo en una especialización para establecer tu botín, o clic derecho para cambiar tu especialización activa."

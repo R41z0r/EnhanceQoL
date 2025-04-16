@@ -318,6 +318,7 @@ addon.functions.addToTree(nil, {
 		{ value = "item", text = L["Item"] },
 		{ value = "spell", text = L["Spell"] },
 		{ value = "unit", text = L["Unit"] },
+		{ value = "quests", text = QUESTLOG_BUTTON },
 	},
 })
 
@@ -396,6 +397,26 @@ local function addSpellFrame(container)
 		{ text = L["TooltipSpellHideInCombat"], var = "TooltipSpellHideInCombat" },
 		{ text = L["TooltipSpellHideInDungeon"], var = "TooltipSpellHideInDungeon" },
 		{ text = L["TooltipShowSpellID"], var = "TooltipShowSpellID" },
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value) addon.db[cbData.var] = value end)
+		groupCore:AddChild(cbElement)
+	end
+end
+
+local function addQuestsFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+	local list, order = addon.functions.prepareListForDropdown({ [1] = L["None"], [2] = L["Enemies"], [3] = L["Friendly"], [4] = L["Both"] })
+
+	local data = {
+		{ text = L["TooltipShowQuestID"], var = "TooltipShowQuestID" },
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)
@@ -492,6 +513,8 @@ function addon.Tooltip.functions.treeCallback(container, group)
 		addBuffDebuffFrame(container)
 	elseif group == "tooltip\001item" then
 		addItemFrame(container)
+	elseif group == "tooltip\001quests" then
+		addQuestsFrame(container)
 	elseif group == "tooltip\001spell" then
 		addSpellFrame(container)
 	elseif group == "tooltip\001unit" then
@@ -504,3 +527,14 @@ function addon.Tooltip.functions.treeCallback(container, group)
 		-- container:AddChild(label)
 	end
 end
+
+hooksecurefunc("QuestMapLogTitleButton_OnEnter", function(self)
+	if addon.db["TooltipShowQuestID"] then
+		if self then
+			if self.questID and GameTooltip:IsShown() then
+				GameTooltip:AddDoubleLine(ID, self.questID)
+				GameTooltip:Show()
+			end
+		end
+	end
+end)

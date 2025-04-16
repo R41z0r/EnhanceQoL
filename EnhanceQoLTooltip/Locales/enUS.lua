@@ -74,3 +74,6 @@ L["Reagentbank"] = "Reagentbank"
 L["Bank"] = "Bank"
 L["Bag"] = "Bag"
 L["Itemcount"] = "Itemcount"
+
+-- Quests
+L["TooltipShowQuestID"] = "Show Quest ID"
