@@ -85,7 +85,11 @@ local function GetConfigName(configID)
 end
 
 local function showPopup(actTalent, requiredTalent)
-	if ChangeTalentUIPopup and ChangeTalentUIPopup:IsShown() then deleteFrame(ChangeTalentUIPopup) end
+	local playedMusic = false
+	if ChangeTalentUIPopup and ChangeTalentUIPopup:IsShown() then
+		playedMusic = true
+		deleteFrame(ChangeTalentUIPopup)
+	end
 
 	local curName = GetConfigName(actTalent)
 	local newName = GetConfigName(requiredTalent)
@@ -132,7 +136,7 @@ local function showPopup(actTalent, requiredTalent)
 	cancelButton:SetText(CLOSE)
 	cancelButton:SetScript("OnClick", function() deleteFrame(ChangeTalentUIPopup) end)
 
-	if addon.db["talentReminderSoundOnDifference"] then PlaySound(11466, "Master") end
+	if addon.db["talentReminderSoundOnDifference"] and not playedMusic then PlaySound(11466, "Master") end
 	reloadFrame:Show()
 	local maxHeight = addon.functions.getHeightOffset(reloadFrame.reqTalent) * -1
 
