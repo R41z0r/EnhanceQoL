@@ -300,6 +300,7 @@ local eventHandlers = {
 				addon.MythicPlus.functions.getAllLoadouts()
 				addon.MythicPlus.functions.checkRemovedLoadout()
 				checkLoadout()
+				frameLoad:UnregisterEvent("PLAYER_ENTERING_WORLD")
 			end)
 		end
 	end,
