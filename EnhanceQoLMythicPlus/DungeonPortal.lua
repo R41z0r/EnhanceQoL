@@ -252,8 +252,19 @@ local function isToyUsable(id)
 	return false
 end
 
+local function checkProfession()
+	-- 7 = first profession
+	-- 9 = second profession
+	-- 202 = Engineering
+	local _, _, _, _, _, _, skillLine = GetProfessionInfo(7)
+	if skillLine == 202 then return true end
+	_, _, _, _, _, _, skillLine = GetProfessionInfo(9)
+	if skillLine == 202 then return true end
+	return false
+end
+
 local function CreatePortalCompendium(frame, compendium)
-	local hasEngineering = GetProfessionInfo(9) and true or false
+	local hasEngineering = checkProfession()
 	addon.MythicPlus.functions.setRandomHearthstone()
 	-- Entferne alle bestehenden Elemente
 	for _, button in pairs(frame.buttons or {}) do
