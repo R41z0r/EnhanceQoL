@@ -3,9 +3,9 @@ if (GAME_LOCALE or GetLocale()) ~= "zhTW" then return end
 local addonName, addon = ...
 local parentAddonName = "EnhanceQoL"
 if _G[parentAddonName] then
-    addon = _G[parentAddonName]
+	addon = _G[parentAddonName]
 else
-    error(parentAddonName .. " is not loaded")
+	error(parentAddonName .. " is not loaded")
 end
 local L = addon.LDrinkMacro
 
@@ -15,3 +15,6 @@ L["Ignore bufffood"] = "忽略“吃飽喝足”的食物"
 L["Drink Macro"] = "飲料巨集"
 L[addonName] = "飲料巨集"
 L["ignoreGemsEarthen"] = "忽略土灵种族的珠宝工艺宝石"
+L["mageFoodReminder"] = "顯示提醒以從隨從地城獲取法師食物"
+L["mageFoodReminderDesc"] = "點擊提醒以自動排隊進入隨從地城"
+L["mageFoodReminderText"] = "從隨從地城獲取法師食物\n\n點擊以自動排隊"

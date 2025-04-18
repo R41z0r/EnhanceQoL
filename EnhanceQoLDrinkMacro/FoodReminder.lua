@@ -1,6 +1,15 @@
 local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 
+-- Cache globals for performance
+local CreateFrame = CreateFrame
+local UIParent = UIParent
+local print = print
+local C_Item_GetItemCount = C_Item.GetItemCount
+local LFDQueueFrame_SetType = LFDQueueFrame_SetType
+local C_LFGInfo = C_LFGInfo
+local LFGDungeonList_SetDungeonEnabled = LFGDungeonList_SetDungeonEnabled
+
 if _G[parentAddonName] then
 	addon = _G[parentAddonName]
 else
@@ -8,6 +17,8 @@ else
 end
 
 local L = addon.LDrinkMacro
+-- Enable or disable the food reminder frame
+addon.functions.InitDBValue("mageFoodReminder", false)
 
 local brButton
 local defaultButtonSize = 60
@@ -55,8 +66,8 @@ local function createBRFrame()
 
 	brButton.info = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	brButton.info:SetPoint("TOP", brButton, "BOTTOM", 0, -3)
-	brButton.info:SetFont("Fonts\\FRIZQT__.TTF", 18, "OUTLINE")
-	brButton.info:SetText("Get Mage food from follower Dungeon\n\nClick to automatically queue")
+	brButton.info:SetFont("Fonts\\FRIZQT__.TTF", defaultFontSize, "OUTLINE")
+	brButton.info:SetText(L["mageFoodReminderText"])
 
 	local bg = brButton:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints(brButton)
@@ -79,11 +90,38 @@ local function createBRFrame()
 	down:SetSmoothing("IN")
 
 	jumpGroup:SetLooping("BOUNCE")
-	jumpGroup:SetScript("OnFinished", function() print("Jump done!") end)
 	jumpGroup:Play()
 end
 
 local healerRole
+
+local function checkShow()
+	if not addon.db["mageFoodReminder"] then
+		removeBRFrame()
+		return
+	end
+	if not healerRole or not IsResting() then
+		removeBRFrame()
+		return
+	end
+	local found = false
+	local mageFoodList = addon.Drinks.mageFood
+	if mageFoodList then
+		for itemID in pairs(mageFoodList) do
+			local count = C_Item_GetItemCount(itemID, false, false)
+			if count and count > 20 then
+				found = true
+				break
+			end
+		end
+		if found == false then createBRFrame() end
+	end
+end
+
+function addon.Drinks.functions.updateRole()
+	healerRole = GetSpecializationRole(GetSpecialization()) == "HEALER" or false
+	checkShow()
+end
 
 local frameLoad = CreateFrame("Frame")
 -- Registriere das Event
@@ -98,20 +136,6 @@ frameLoad:SetScript("OnEvent", function(self, event)
 	elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
 		healerRole = GetSpecializationRole(GetSpecialization()) == "HEALER" or false
 	end
-	-- check for mage food
-	if not healerRole or not IsResting() then
-		removeBRFrame()
-		return
-	end
-	local found = false
-	if addon.Drinks.mageFood then
-		for i in pairs(addon.Drinks.mageFood) do
-			local count = C_Item.GetItemCount(i, false, false)
-			if count and count > 20 then
-				found = true
-				break
-			end
-		end
-		if found == false then createBRFrame() end
-	end
+
+	checkShow()
 end)

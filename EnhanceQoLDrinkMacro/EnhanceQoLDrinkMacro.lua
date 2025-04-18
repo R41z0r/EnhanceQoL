@@ -103,25 +103,43 @@ local function addDrinkFrame(container)
 		{ text = L["Prefer mage food"], var = "preferMageFood" },
 		{ text = L["Ignore bufffood"], var = "ignoreBuffFood" },
 		{ text = L["ignoreGemsEarthen"], var = "ignoreGemsEarthen" },
+		{
+			text = L["mageFoodReminder"],
+			var = "mageFoodReminder",
+			desc = L["mageFoodReminderDesc"],
+			func = function(self, _, value)
+				addon.db["mageFoodReminder"] = value
+				addon.Drinks.functions.updateRole()
+			end,
+		},
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)
 
 	for _, cbData in ipairs(data) do
-		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value)
+		local uFunc = function(self, _, value)
 			addon.db[cbData.var] = value
 			addon.functions.updateAllowedDrinks()
 			addon.functions.updateAvailableDrinks(false)
-		end)
+		end
+		if cbData.func then uFunc = cbData.func end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc, cbData.desc)
 		groupCore:AddChild(cbElement)
 	end
 
-	local sliderManaMinimum = addon.functions.createSliderAce(L["Minimum mana restore for food"] .. ": " .. addon.db["minManaFoodValue"] .. "%", addon.db["minManaFoodValue"], 0, 100, 1, function(self, _, value2)
-		addon.db["minManaFoodValue"] = value2
-		addon.functions.updateAllowedDrinks()
-		addon.functions.updateAvailableDrinks(false)
-		self:SetLabel(L["Minimum mana restore for food"] .. ": " .. value2 .. "%")
-	end)
+	local sliderManaMinimum = addon.functions.createSliderAce(
+		L["Minimum mana restore for food"] .. ": " .. addon.db["minManaFoodValue"] .. "%",
+		addon.db["minManaFoodValue"],
+		0,
+		100,
+		1,
+		function(self, _, value2)
+			addon.db["minManaFoodValue"] = value2
+			addon.functions.updateAllowedDrinks()
+			addon.functions.updateAvailableDrinks(false)
+			self:SetLabel(L["Minimum mana restore for food"] .. ": " .. value2 .. "%")
+		end
+	)
 	groupCore:AddChild(sliderManaMinimum)
 end
 
