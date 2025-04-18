@@ -278,7 +278,7 @@ local function createPowerBar(type, anchor)
 	end
 
 	local bar = CreateFrame("StatusBar", "EQOL" .. type .. "Bar", UIParent, "BackdropTemplate")
-	bar:SetSize(405, 20) -- Größe des Balkens
+	bar:SetSize(405, 5) -- Größe des Balkens
 	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
 	if anchor then
 		bar:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, 0)
@@ -292,9 +292,9 @@ local function createPowerBar(type, anchor)
 		insets = { left = 0, right = 0, top = 0, bottom = 0 },
 	})
 	bar:SetBackdropColor(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 50% Transparenz
-	bar.text = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	bar.text:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
-	bar.text:SetPoint("CENTER", bar, "CENTER", 3, 0)
+	-- bar.text = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	-- bar.text:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+	-- bar.text:SetPoint("CENTER", bar, "CENTER", 3, 0)
 	bar:SetStatusBarColor(getPowerBarColor(type))
 
 	powerbar[type] = bar
@@ -371,6 +371,25 @@ local function createCooldownBar(unit)
 	end
 end
 
+-- Spec‐Icon: zeigt das aktuelle Talent in der Mitte
+local function createSpecIcon(anchor)
+	local specID = GetSpecialization()
+	if not specID or not frameAnchor then return end
+	local _, _, _, iconPath = GetSpecializationInfo(specID)
+	-- vorhandenes Icon entfernen
+	if frameAnchor.specIcon then frameAnchor.specIcon:Hide() end
+	-- neues Icon anlegen
+	local specIcon = frameAnchor:CreateTexture(nil, "OVERLAY")
+	specIcon:SetSize(32, 32) -- bei Bedarf anpassen
+	specIcon:SetTexture(iconPath)
+	frameAnchor.specIcon = specIcon
+
+	if anchor then
+		specIcon:SetPoint("CENTER", anchor, "CENTER", 0, 0)
+	else
+		specIcon:SetPoint("CENTER", frameAnchor, "CENTER", 0, 0)
+	end
+end
 -- Main
 frameAnchor:SetSize(200, 30) -- Größe des Balkens
 frameAnchor:SetStatusBarTexture("Interface\\TARGETINGFRAME\\UI-StatusBar")
@@ -467,18 +486,11 @@ end
 -- end
 
 local eventsToRegister = {
-	-- "UNIT_SPELLCAST_START",
-	-- "UNIT_SPELLCAST_STOP",
-	-- "UNIT_SPELLCAST_CHANNEL_START",
-	-- "UNIT_SPELLCAST_CHANNEL_STOP",
-	-- "NAME_PLATE_UNIT_ADDED",
-	-- "NAME_PLATE_UNIT_REMOVED",
 	"UNIT_HEALTH",
 	"UNIT_MAXHEALTH",
 	"UNIT_ABSORB_AMOUNT_CHANGED",
 	"UNIT_POWER_UPDATE",
 	"UNIT_POWER_FREQUENT",
-	"PLAYER_ENTERING_WORLD",
 }
 local firstStart = true
 -- Funktion zur Verarbeitung der Events
@@ -489,8 +501,9 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 	if firstStart and event == "PLAYER_ENTERING_WORLD" then
 		firstStart = false
 		-- checkLayout()
-		-- createHealthBar(MultiBar5)
-		-- createPowerBar("MANA", EQOLHealthBar)
+		createHealthBar(MultiBarRight)
+		createPowerBar("MANA", EQOLHealthBar)
+		createSpecIcon()
 		-- createPowerBar("ENERGY", powerbar["MANA"])
 	end
 	if unit ~= "player" then return end
@@ -516,8 +529,10 @@ end
 
 -- Events beim Frame registrieren
 for _, event in ipairs(eventsToRegister) do
-	frameAnchor:RegisterEvent(event)
+	frameAnchor:RegisterUnitEvent(event, "player")
 end
+
+frameAnchor:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 -- Event-Handler setzen
 frameAnchor:SetScript("OnEvent", eventHandler)

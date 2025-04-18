@@ -253,14 +253,18 @@ local function isToyUsable(id)
 end
 
 local function checkProfession()
-	-- 7 = first profession
-	-- 9 = second profession
-	-- 202 = Engineering
-	local _, _, _, _, _, _, skillLine = GetProfessionInfo(7)
-	if skillLine == 202 then return true end
-	_, _, _, _, _, _, skillLine = GetProfessionInfo(9)
-	if skillLine == 202 then return true end
-	return false
+    -- Capture all profession slots into a table
+    local professionIndices = { GetProfessions() }
+    for _, profIndex in ipairs(professionIndices) do
+        -- Only valid indices
+        if profIndex and profIndex > 0 then
+            local _, _, _, _, _, _, skillLine = GetProfessionInfo(profIndex)
+            if skillLine == 202 then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 local function CreatePortalCompendium(frame, compendium)

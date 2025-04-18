@@ -217,6 +217,7 @@ addon.variables.actionBarNames = {
 addon.variables.unitFrameNames = {
 	{ name = "PlayerFrame", var = "unitframeSettingPlayerFrame", text = HUD_EDIT_MODE_PLAYER_FRAME_LABEL },
 	{ name = "BossTargetFrameContainer", var = "unitframeSettingBossTargetFrame", text = HUD_EDIT_MODE_BOSS_FRAMES_LABEL },
+	{ name = "TargetFrame", var = "unitframeSettingTargetFrame", text = HUD_EDIT_MODE_TARGET_FRAME_LABEL },
 }
 
 table.sort(addon.variables.actionBarNames, function(a, b) return a.text < b.text end)
