@@ -21,6 +21,13 @@ L["ignoreTalkingHead"] = "자동으로 대화 머리 프레임 숨기기"
 L["landingPageHide"] = "미니맵에서 확장 페이지 버튼을 숨기려면 이 옵션을 활성화하세요."
 L["automaticallyOpenContainer"] = "자동으로 가방의 컨테이너 아이템 열기"
 
+L["showBagFilterMenu"] = "가방 아이템 필터 활성화"
+L["showBagFilterMenuDesc"] = "통합 가방이 선택된 경우에만 사용 가능"
+L["fadeBagQualityIcons"] = "검색 및 필터 시 전문 기술 품질 아이콘 희미화 활성화"
+L["bagFilterOff"] = "필터 끔"
+L["bagFilterOn"] = "필터 켬"
+L["bagFilterSpec"] = "전문화 추천"
+L["bagFilterEquip"] = "장비만"
 L["showIlvlOnBankFrame"] = "은행 창에 아이템 레벨 표시"
 L["showIlvlOnMerchantframe"] = "상인 창에 아이템 레벨 표시"
 L["showIlvlOnCharframe"] = "캐릭터 장비 창에 아이템 레벨 표시"
@@ -134,7 +141,7 @@ L["ActionbarHideExplain"] = '행동 단축바를 숨김 처리하고 마우스 �
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
 	.. '"로 설정되어 있을 때만 작동합니다.'
 
-L["enableMinimapButtonBin"] = "미니맵 버튼 모음 활성화"
+L["enableMinimapButtonBin"] = "미니맵 버튼 모음 활��화"
 L["enableMinimapButtonBinDesc"] = "모든 미니맵 버튼을 하나의 버튼으로 모읍니다"
 L["ignoreMinimapSinkHole"] = "다음 미니맵 버튼을 모음에서 제외하기..."
 L["useMinimapButtonBinIcon"] = "미니맵 버튼을 모음을 위해 사용"

@@ -162,6 +162,17 @@ local powertypeClasses = {
 			["MANA"] = true,
 		},
 	},
+	["HUNTER"] = {
+		[1] = { --Beastmaster
+			["MAIN"] = "FOCUS",
+		},
+		[2] = { --Marksmanship
+			["MAIN"] = "FOCUS",
+		},
+		[3] = { --Survival
+			["MAIN"] = "FOCUS",
+		},
+	},
 }
 local powerTypeEnums = {}
 for i, v in pairs(Enum.PowerType) do

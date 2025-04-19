@@ -119,7 +119,40 @@ addon.itemBagFilterTypes = {
 			},
 		},
 	},
-	HUNTER = { "Mail" },
+	HUNTER = {
+		[1] = { --Beast Mastery
+			[2] = { -- Weapon
+				[2] = true, -- Bows
+				[3] = true, -- Guns
+				[18] = true, -- Crossbows
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+			},
+		},
+		[2] = { --Marksmanship
+			[2] = { -- Weapon
+				[2] = true, -- Bows
+				[3] = true, -- Guns
+				[18] = true, -- Crossbows
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+			},
+		},
+		[3] = { --Survival
+			[2] = { -- Weapon
+				[6] = true, -- Polearm
+				[10] = true, -- Staff
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+			},
+		},
+	},
 	ROGUE = { "Leather" },
 	PRIEST = { "Cloth" },
 	SHAMAN = { "Mail" },
