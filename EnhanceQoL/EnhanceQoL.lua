@@ -2737,9 +2737,7 @@ local function initCharacter()
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
 		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
-		--@debug@
 		hooksecurefunc(frame, "UpdateSearchResults", addon.functions.updateBags)
-		--@end-debug@
 	end
 
 	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
@@ -3338,7 +3336,6 @@ local function loadSubAddon(name)
 end
 
 local eventHandlers = {
-	--@debug@
 	["ACTIVE_PLAYER_SPECIALIZATION_CHANGED"] = function(arg1)
 		addon.variables.unitSpec = GetSpecialization()
 		if addon.db["showIlvlOnBagItems"] then
@@ -3349,7 +3346,6 @@ local eventHandlers = {
 			if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
 		end
 	end,
-	--@end-debug@
 	["ADDON_LOADED"] = function(arg1)
 		if arg1 == addonName then
 			if not EnhanceQoLDB then EnhanceQoLDB = {} end
