@@ -21,10 +21,8 @@ L["landingPageHide"] = "Aktivieren Sie diese Option, um den Erweiterungs-Button 
 L["automaticallyOpenContainer"] = "Behältergegenstände in der Tasche automatisch öffnen"
 
 L["showBagFilterMenu"] = "Gegenstandsfilter in Taschen aktivieren"
-L["showBagFilterMenuDesc"] = "Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist"
+L["showBagFilterMenuDesc"] = ("Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist. Halte %s, um das Fenster zu verschieben"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "Ausblenden der Berufssymbol‑Qualität bei Suche und Filter aktivieren"
-L["bagFilterOff"] = "Filter aus"
-L["bagFilterOn"] = "Filter an"
 L["bagFilterSpec"] = "Für Spezialisierung empfohlen"
 L["bagFilterEquip"] = "Nur Ausrüstung"
 L["showIlvlOnBankFrame"] = "Zeige Gegenstandsstufe im Bankfenster an"

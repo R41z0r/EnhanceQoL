@@ -22,10 +22,8 @@ L["landingPageHide"] = "啟用此選項以隱藏小地圖上的擴展按鈕。"
 L["automaticallyOpenContainer"] = "自動打開背包中的容器物品"
 
 L["showBagFilterMenu"] = "啟用背包物品篩選"
-L["showBagFilterMenuDesc"] = "僅在啟用合併背包時可用"
+L["showBagFilterMenuDesc"] = ("僅在啟用合併背包時可用。按住 %s 以移動框架"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "於搜尋與篩選時淡化專業品質圖示"
-L["bagFilterOff"] = "篩選關閉"
-L["bagFilterOn"] = "篩選開啟"
 L["bagFilterSpec"] = "專精推薦"
 L["bagFilterEquip"] = "僅限裝備"
 L["showIlvlOnBankFrame"] = "在銀行介面顯示物品等級"

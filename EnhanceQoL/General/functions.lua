@@ -476,7 +476,6 @@ end
 -- Funktion zum Erstellen des Filtermenüs mit AceGUI
 local function CreateFilterMenu()
 	local frame = CreateFrame("Frame", "InventoryFilterPanel", ContainerFrameCombinedBags, "BackdropTemplate")
-	frame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
 	frame:SetBackdrop({
 		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
 		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
@@ -485,8 +484,27 @@ local function CreateFilterMenu()
 	})
 	frame:Hide() -- Standardmäßig ausblenden
 	frame:SetFrameStrata("HIGH")
-	frame:SetMovable(false)
+	frame:SetMovable(true)
 	frame:EnableMouse(true)
+	frame:RegisterForDrag("LeftButton")
+	frame:SetScript("OnDragStart", function(self)
+		if not IsShiftKeyDown() then return end
+		self:StartMoving()
+	end)
+	frame:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		-- Position speichern
+		local point, _, parentPoint, xOfs, yOfs = self:GetPoint()
+		addon.db["bagFilterFrameData"].point = point
+		addon.db["bagFilterFrameData"].parentPoint = parentPoint
+		addon.db["bagFilterFrameData"].x = xOfs
+		addon.db["bagFilterFrameData"].y = yOfs
+	end)
+	if addon.db["bagFilterFrameData"].point and addon.db["bagFilterFrameData"].parentPoint and addon.db["bagFilterFrameData"].x and addon.db["bagFilterFrameData"].y then
+		frame:SetPoint(addon.db["bagFilterFrameData"].point, UIParent, addon.db["bagFilterFrameData"].parentPoint, addon.db["bagFilterFrameData"].x, addon.db["bagFilterFrameData"].y)
+	else
+		frame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
+	end
 
 	-- Scrollbarer Bereich
 	local scrollContainer = AceGUI:Create("ScrollFrame")
@@ -560,21 +578,13 @@ local function CreateFilterMenu()
 			end
 		end
 	end
-	frame:SetSize(longestWidth + 60, 300) -- Feste Größe
+	frame:SetSize(longestWidth + 60, 280) -- Feste Größe
 	return frame
 end
 
--- **Funktion zum Ein-/Ausblenden des Menüs über einen Button**
 local function ToggleFilterMenu(self)
 	if not addon.filterFrame then addon.filterFrame = CreateFilterMenu() end
-	if addon.filterFrame:IsVisible() then
-		addon.filterFrame:Hide()
-		self:SetText(L["bagFilterOff"])
-	else
-		addon.filterFrame:Show()
-		self:SetText(L["bagFilterOn"])
-		addon.filterFrame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
-	end
+	addon.filterFrame:Show()
 
 	addon.functions.updateBags(ContainerFrameCombinedBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
@@ -590,34 +600,17 @@ local function ToggleFilterMenu(self)
 	if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
 end
 
--- **Button zum Öffnen/Schließen des Menüs neben dem Suchfeld**
-local function CreateFilterToggleButton()
-	local button = CreateFrame("Button", "InventoryFilterToggleButton", ContainerFrameCombinedBags, "UIPanelButtonTemplate")
-	button:SetPoint("BOTTOMLEFT", ContainerFrameCombinedBags, "TOPLEFT", 0, 5)
-	button:SetText(L["bagFilterOff"])
-	button:SetSize(100, 30)
-	button:SetScript("OnClick", ToggleFilterMenu)
-	addon.filterButton = button
-end
-
--- Initialisierung beim Laden des UI
 local function InitializeFilterUI()
-	if nil == InventoryFilterToggleButton then CreateFilterToggleButton() end
+	if nil == addon.filterFrame then ToggleFilterMenu() end
 end
 
 function addon.functions.updateBags(frame)
 	if addon.db["showBagFilterMenu"] then
 		InitializeFilterUI()
-	elseif InventoryFilterToggleButton then
-		InventoryFilterToggleButton:SetParent(nil)
-		InventoryFilterToggleButton:SetScript("OnClick", nil)
-		InventoryFilterToggleButton:Hide()
-		InventoryFilterToggleButton = nil
-		if addon.filterFrame then
-			addon.filterFrame:SetParent(nil)
-			addon.filterFrame:Hide()
-			addon.filterFrame = nil
-		end
+	elseif addon.filterFrame then
+		addon.filterFrame:SetParent(nil)
+		addon.filterFrame:Hide()
+		addon.filterFrame = nil
 		addon.itemBagFilters = {}
 		addon.itemBagFiltersQuality = {}
 	end

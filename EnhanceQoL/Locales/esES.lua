@@ -22,10 +22,8 @@ L["landingPageHide"] = "Activa esta opción para ocultar el  botón de la págin
 L["automaticallyOpenContainer"] = "Abrir automáticamente los objetos contenedores en la bolsa"
 
 L["showBagFilterMenu"] = "Activar filtro de objetos en las bolsas"
-L["showBagFilterMenuDesc"] = "Solo utilizable cuando se seleccionan Bolsas combinadas"
+L["showBagFilterMenuDesc"] = "Solo utilizable cuando se activan las Bolsas combinadas. Mantén pulsada SHIFT para mover el marco"
 L["fadeBagQualityIcons"] = "Activar atenuación de los iconos de calidad de profesiones al buscar y filtrar"
-L["bagFilterOff"] = "Filtro desactivado"
-L["bagFilterOn"] = "Filtro activado"
 L["bagFilterSpec"] = "Recomendado para especialización"
 L["bagFilterEquip"] = "Solo equipo"
 L["showIlvlOnBankFrame"] = "Mostrar el nivel de objeto en el banco"

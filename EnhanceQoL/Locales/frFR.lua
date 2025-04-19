@@ -22,10 +22,8 @@ L["landingPageHide"] = "Activez cette option pour masquer le bouton de la page d
 L["automaticallyOpenContainer"] = "Ouvrir automatiquement les objets contenant dans le sac"
 
 L["showBagFilterMenu"] = "Activer le filtre d’objets dans les sacs"
-L["showBagFilterMenuDesc"] = "Utilisable uniquement si Sacs combinés est activé"
+L["showBagFilterMenuDesc"] = ("Utilisable uniquement si Sacs combinés est activé. Maintenez %s pour déplacer la fenêtre"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "Activer l’estompage des icônes de qualité de métier lors de la recherche et du filtrage"
-L["bagFilterOff"] = "Filtre désactivé"
-L["bagFilterOn"] = "Filtre activé"
 L["bagFilterSpec"] = "Recommandé pour la spécialisation"
 L["bagFilterEquip"] = "Équipement uniquement"
 L["showIlvlOnBankFrame"] = "Afficher le niveau d'objet dans la banque"

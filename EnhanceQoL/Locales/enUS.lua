@@ -20,10 +20,9 @@ L["landingPageHide"] = "Enable this option to hide the Expansion Landing Page bu
 L["automaticallyOpenContainer"] = "Automatically open Container items in bag"
 
 L["showBagFilterMenu"] = "Enable item filter in bags"
-L["showBagFilterMenuDesc"] = "Only usable when Combined Bags is enabled"
+L["showBagFilterMenuDesc"] = ("Only usable when Combined Bags is enabled. Hold %s to move the frame"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "Fade profession quality icons during search and filtering"
-L["bagFilterOff"] = "Filter Off"
-L["bagFilterOn"] = "Filter On"
+
 L["bagFilterSpec"] = "Recommended for Specialization"
 L["bagFilterEquip"] = "Equipment Only"
 L["showIlvlOnBankFrame"] = "Display item level on the Bank Frame"

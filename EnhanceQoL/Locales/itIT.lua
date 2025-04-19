@@ -22,10 +22,8 @@ L["landingPageHide"] = "Abilita questa opzione per nascondere il pulsante della 
 L["automaticallyOpenContainer"] = "Apri automaticamente gli oggetti contenitore nella borsa"
 
 L["showBagFilterMenu"] = "Abilita il filtro degli oggetti nelle borse"
-L["showBagFilterMenuDesc"] = "Utilizzabile solo quando è selezionata l’opzione Borse combinate"
+L["showBagFilterMenuDesc"] = ("Utilizzabile solo quando è selezionata l’opzione Borse combinate. Tieni premuto %s per spostare il riquadro"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "Abilita la dissolvenza delle icone di qualità delle professioni durante la ricerca e il filtraggio"
-L["bagFilterOff"] = "Filtro disattivato"
-L["bagFilterOn"] = "Filtro attivato"
 L["bagFilterSpec"] = "Consigliato per la Specializzazione"
 L["bagFilterEquip"] = "Solo equipaggiamento"
 L["showIlvlOnBankFrame"] = "Mostra il livello degli oggetti nella banca"

@@ -113,20 +113,27 @@ local powertypeClasses = {
 	["DRUID"] = {
 		[1] = { --Balance
 			["MAIN"] = "LUNAR_POWER",
+			["RAGE"] = true,
+			["ENERGY"] = true,
 			["MANA"] = true,
 		},
 		[2] = { --Feral
 			["MAIN"] = "ENERGY",
+			["RAGE"] = true,
 			["MANA"] = true,
+			["LUNAR_POWER"] = true,
 		},
 		[3] = { --Guardian
 			["MAIN"] = "RAGE",
+			["ENERGY"] = true,
 			["MANA"] = true,
+			["LUNAR_POWER"] = true,
 		},
 		[4] = { --Restoration
 			["MAIN"] = "MANA",
 			["RAGE"] = true,
 			["ENERGY"] = true,
+			["LUNAR_POWER"] = true,
 		},
 	},
 	["DEMONHUNTER"] = {
@@ -173,6 +180,100 @@ local powertypeClasses = {
 			["MAIN"] = "FOCUS",
 		},
 	},
+	["ROGUE"] = {
+
+		[1] = { --Assassination
+			["MAIN"] = "ENERGY",
+			["COMBO_POINTS"] = true,
+		},
+		[2] = { --Outlaw
+			["MAIN"] = "ENERGY",
+			["COMBO_POINTS"] = true,
+		},
+		[3] = { --Subtlety
+			["MAIN"] = "ENERGY",
+			["COMBO_POINTS"] = true,
+		},
+	},
+	["PRIEST"] = {
+
+		[1] = { --Discipline
+			["MAIN"] = "MANA",
+		},
+		[2] = { --Holy
+			["MAIN"] = "MANA",
+		},
+		[3] = { --Shadow
+			["MAIN"] = "INSANITY",
+			["MANA"] = true,
+		},
+	},
+	["SHAMAN"] = {
+		[1] = { --Elemental
+			["MAIN"] = "MAELSTROM",
+			["MANA"] = true,
+		},
+		[2] = { --Enhancement
+			["MANA"] = true,
+		},
+		[3] = { --Restoration
+			["MAIN"] = "MANA",
+		},
+	},
+	["MAGE"] = {
+		[1] = { --Arcane
+			["MAIN"] = "ARCANE_CHARGES",
+			["MANA"] = true,
+		},
+		[2] = { --Fire
+			["MAIN"] = "MANA",
+		},
+		[3] = { --Frost
+			["MAIN"] = "MANA",
+		},
+	},
+	["WARLOCK"] = {
+		[1] = { --Affliction
+			["MAIN"] = "SOUL_SHARDS",
+			["MANA"] = true,
+		},
+		[2] = { --Demonology
+			["MAIN"] = "SOUL_SHARDS",
+			["MANA"] = true,
+		},
+		[3] = { --Destruction
+			["MAIN"] = "SOUL_SHARDS",
+			["MANA"] = true,
+		},
+	},
+	["MONK"] = {
+		[1] = { --Brewmaster
+			["MAIN"] = "ENERGY",
+			["MANA"] = true,
+		},
+		[2] = { --Mistweaver
+			["MAIN"] = "MANA",
+		},
+		[3] = { --Windwalker
+			["MAIN"] = "CHI",
+			["ENERGY"] = true,
+			["MANA"] = true,
+		},
+	},
+	["EVOKER"] = {
+		[1] = { --Devastation
+			["MAIN"] = "ESSENCE",
+			["MANA"] = true,
+		},
+		[2] = { --Preservation
+			["MAIN"] = "MANA",
+			["ESSENCE"] = true,
+		},
+		[3] = { --Augmentation
+			["MAIN"] = "ESSENCE",
+			["MANA"] = true,
+		},
+	},
 }
 local powerTypeEnums = {}
 for i, v in pairs(Enum.PowerType) do
@@ -181,8 +282,8 @@ end
 -- Alle möglichen Ressourcen für Druiden
 -- Alle möglichen Ressourcen für alle Klassen
 local classPowerTypes = {
-	"MANA",
 	"RAGE",
+	"ESSENCE",
 	"FOCUS",
 	"ENERGY",
 	"FURY",
@@ -194,6 +295,8 @@ local classPowerTypes = {
 	"MAELSTROM",
 	"CHI",
 	"INSANITY",
+	"ARCANE_CHARGES",
+	"MANA",
 }
 local function updatePowerBar(type)
 	if powerbar[type] and powerbar[type]:IsVisible() then
@@ -278,6 +381,7 @@ local function setPowerbars()
 	local _, powerToken = UnitPowerType("player")
 	powerfrequent = {}
 	local mainPowerBar
+	local lastBar
 	if
 		powertypeClasses[addon.variables.unitClass]
 		and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]
@@ -285,9 +389,12 @@ local function setPowerbars()
 	then
 		createPowerBar(powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]["MAIN"], EQOLHealthBar)
 		mainPowerBar = powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]["MAIN"]
+		lastBar = mainPowerBar
+		if powerbar[mainPowerBar] then powerbar[mainPowerBar]:Show() end
 	end
 
 	for _, pType in ipairs(classPowerTypes) do
+		if powerbar[pType] then powerbar[pType]:Hide() end
 		if
 			mainPowerBar == pType
 			or (
@@ -296,11 +403,27 @@ local function setPowerbars()
 				and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec][pType]
 			)
 		then
-			powerfrequent[pType] = true
-			if mainPowerBar ~= pType then createPowerBar(pType, powerbar[mainPowerBar] or EQOLHealthBar) end
-			powerbar[pType]:Show()
-		elseif powerbar[pType] then
-			powerbar[pType]:Hide()
+			if addon.variables.unitClass == "DRUID" then
+				if pType == mainPowerBar and powerbar[pType] then powerbar[pType]:Show() end
+				if pType ~= mainPowerBar and pType == "MANA" then
+					createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
+					lastBar = pType
+					if powerbar[pType] then powerbar[pType]:Show() end
+				elseif powerToken ~= mainPowerBar then
+					if powerToken == pType then
+						createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
+						lastBar = pType
+						if powerbar[pType] then powerbar[pType]:Show() end
+					end
+				end
+			else
+				powerfrequent[pType] = true
+				if mainPowerBar ~= pType then
+					createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
+					lastBar = pType
+				end
+				if powerbar[pType] then powerbar[pType]:Show() end
+			end
 		end
 	end
 end
@@ -312,12 +435,17 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 	-- if not unit or (not string.match(unit, "^nameplate") and not string.match(unit, "^boss")) then return end
 	if firstStart and event == "PLAYER_ENTERING_WORLD" then
 		firstStart = false
-		-- checkLayout()
-		createHealthBar()
-		setPowerbars()
+		C_Timer.After(1, function()
+			createHealthBar()
+			setPowerbars()
+			frameAnchor:UnregisterEvent("PLAYER_ENTERING_WORLD")
+		end)
 	end
+
 	if (event == "UNIT_DISPLAYPOWER") and unit == "player" then
 		setPowerbars()
+	elseif event == "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" then
+		C_Timer.After(0.2, function() setPowerbars() end)
 	elseif event == "UNIT_MAXHEALTH" or event == "UNIT_HEALTH" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
 		updateHealthBar()
 	elseif event == "UNIT_POWER_UPDATE" and powerbar[arg1] and not powerfrequent[arg1] then
@@ -335,6 +463,7 @@ for _, event in ipairs(eventsToRegister) do
 end
 
 frameAnchor:RegisterEvent("PLAYER_ENTERING_WORLD")
+frameAnchor:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
 
 -- Event-Handler setzen
 frameAnchor:SetScript("OnEvent", eventHandler)

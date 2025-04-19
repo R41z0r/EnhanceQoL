@@ -2732,6 +2732,7 @@ local function initCharacter()
 	addon.functions.InitDBValue("showGemsTooltipOnCharframe", false)
 	addon.functions.InitDBValue("showEnchantOnCharframe", false)
 	addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
+	addon.functions.InitDBValue("bagFilterFrameData", {})
 
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
@@ -3525,6 +3526,7 @@ local eventHandlers = {
 	end,
 	["PLAYER_LOGIN"] = function()
 		if addon.db["enableMinimapButtonBin"] then addon.functions.toggleButtonSink() end
+		addon.variables.unitSpec = GetSpecialization()
 	end,
 	["PLAYER_MONEY"] = function()
 		if addon.db["showDurabilityOnCharframe"] then calculateDurability() end

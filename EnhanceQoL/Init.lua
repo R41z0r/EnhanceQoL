@@ -153,12 +153,6 @@ addon.itemBagFilterTypes = {
 			},
 		},
 	},
-	ROGUE = { "Leather" },
-	PRIEST = { "Cloth" },
-	SHAMAN = { "Mail" },
-	MAGE = { "Cloth" },
-	WARLOCK = { "Cloth" },
-	MONK = { "Leather" },
 	DRUID = {
 		[1] = { --Balance
 			[2] = { -- Weapon
@@ -233,7 +227,266 @@ addon.itemBagFilterTypes = {
 			},
 		},
 	},
-	EVOKER = { "Mail" },
+	ROGUE = {
+		[1] = { --Assassination
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+		[2] = { --Outlaw
+			[2] = { -- Weapon
+				[4] = true, -- Maces 1h
+				[7] = true, -- Sword 1h
+				[13] = true, -- Fist Weapon
+				[0] = true, -- Axe 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+		[3] = { --Subtlety
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+	},
+	PRIEST = {
+		[1] = { --Discipline
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[4] = true, -- Maces 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+		[2] = { --Holy
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[4] = true, -- Maces 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+		[3] = { --Shadow
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[4] = true, -- Maces 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+	},
+	SHAMAN = {
+		[1] = { --Elemental
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[4] = true, -- Maces 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+				[6] = true, -- Shield
+			},
+		},
+		[2] = { --Enhancement
+			[2] = { -- Weapon
+				[4] = true, -- Maces 1h
+				[13] = true, -- Fist Weapon
+				[0] = true, -- Axe 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+			},
+		},
+		[3] = { --Restoration
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[4] = true, -- Maces 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+				[6] = true, -- Shield
+			},
+		},
+	},
+	MAGE = {
+		[1] = { --Arcane
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[7] = true, -- Sword 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+		[2] = { --Fire
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[7] = true, -- Sword 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+		[3] = { --Frost
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[7] = true, -- Sword 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+	},
+	WARLOCK = {
+		[1] = { --Affliction
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[7] = true, -- Sword 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+		[2] = { --Demonology
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[7] = true, -- Sword 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+		[3] = { --Destruction
+			[2] = { -- Weapon
+				[15] = true, -- Daggers
+				[10] = true, -- Staff
+				[19] = true, -- Wand
+				[7] = true, -- Sword 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[1] = true, -- Cloth
+			},
+		},
+	},
+	MONK = {
+		[1] = { --Brewmaster
+			[2] = { -- Weapon
+				[6] = true, -- Polearm
+				[10] = true, -- Staff
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+		[2] = { --Mistweaver
+			[2] = { -- Weapon
+				[7] = true, -- Sword 1h
+				[10] = true, -- Staff
+				[4] = true, -- Maces 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+		[3] = { --Windwalker
+			[2] = { -- Weapon
+				[13] = true, -- Fist Weapon
+				[0] = true, -- Axe 1h
+				[4] = true, -- Maces 1h
+				[7] = true, -- Sword 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+	},
+	EVOKER = {
+		[1] = { --Devastation
+			[2] = { -- Weapon
+				[10] = true, -- Staff
+				[7] = true, -- Sword 1h
+				[8] = true, -- Sword 2h
+				[15] = true, -- Daggers
+				[4] = true, -- Maces 1h
+				[5] = true, -- Maces 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+			},
+		},
+		[2] = { --Preservation
+			[2] = { -- Weapon
+				[10] = true, -- Staff
+				[7] = true, -- Sword 1h
+				[8] = true, -- Sword 2h
+				[15] = true, -- Daggers
+				[4] = true, -- Maces 1h
+				[5] = true, -- Maces 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+			},
+		},
+		[3] = { --Augmentation
+			[2] = { -- Weapon
+				[10] = true, -- Staff
+				[7] = true, -- Sword 1h
+				[8] = true, -- Sword 2h
+				[15] = true, -- Daggers
+				[4] = true, -- Maces 1h
+				[5] = true, -- Maces 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[3] = true, -- Mail
+			},
+		},
+	},
 }
 
 addon.variables.unitClass = select(2, UnitClass("player"))

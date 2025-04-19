@@ -3,6 +3,8 @@
 - **Hideable TargetFrame:** You can now hide the TargetFrame and reveal it on mouseover.
 - **Mage Food Reminder:** A button that automatically queues you for a follower dungeon to obtain free mage food.
 - **Fade profession quality icon:** Option to fade the profession quality icon on bags while searching
+- **Bag filter:** Option to enable a filter window for the standard bags
+  - Filter by equipment, rarity and Class/Specialization usable items
 
 ## Changed
 
