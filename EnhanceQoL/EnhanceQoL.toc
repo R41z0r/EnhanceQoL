@@ -3,6 +3,8 @@
 ## Author: R41Z0R
 ## Version: @project-version@
 ## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## Category: Quality of Life
+## X-Category: Quality of Life
 ## Notes: Little Tweaks for enhancing your Quality of Life
 ## Notes-deDE: Kleine Anpassungen zur Verbesserung deiner Lebensqualität
 ## Notes-esES: Pequeños ajustes para mejorar tu calidad de vida

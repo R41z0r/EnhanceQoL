@@ -7,6 +7,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 addon.AceGUI = AceGUI
 
 local LFGListFrame = _G.LFGListFrame
+local GetContainerItemInfo = C_Container.GetContainerItemInfo
 
 local EQOL = select(2, ...)
 EQOL.C = {}
@@ -1400,7 +1401,7 @@ local function addUIFrame(container)
 	addon.functions.createWrapperData(data, container, L)
 end
 
-local function addCharacterFrame(container)
+local function addBagFrame(container)
 	local data = {
 		{
 			parent = BAGSLOT,
@@ -1409,14 +1410,44 @@ local function addCharacterFrame(container)
 			callback = function(self, _, value) addon.db["showIlvlOnMerchantframe"] = value end,
 		},
 		{
-			parent = INFO,
-			var = "showIlvlOnCharframe",
+			parent = BAGSLOT,
+			var = "showIlvlOnBagItems",
 			type = "CheckBox",
 			callback = function(self, _, value)
-				addon.db["showIlvlOnCharframe"] = value
-				setCharFrame()
+				addon.db["showIlvlOnBagItems"] = value
+				for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+					if frame:IsShown() then addon.functions.updateBags(frame) end
+				end
+				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
 			end,
 		},
+		{
+			parent = BAGSLOT,
+			var = "showBagFilterMenu",
+			desc = L["showBagFilterMenuDesc"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showBagFilterMenu"] = value
+				for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+					if frame:IsShown() then addon.functions.updateBags(frame) end
+				end
+				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
+				if value then
+					if BankFrame:IsShown() then
+						for slot = 1, NUM_BANKGENERIC_SLOTS do
+							local itemButton = _G["BankFrameItem" .. slot]
+							if itemButton then addon.functions.updateBank(itemButton, -1, slot) end
+						end
+					end
+				else
+					for slot = 1, NUM_BANKGENERIC_SLOTS do
+						local itemButton = _G["BankFrameItem" .. slot]
+						if itemButton and itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+					end
+				end
+			end,
+		},
+
 		{
 			parent = BAGSLOT,
 			var = "showIlvlOnBankFrame",
@@ -1438,7 +1469,48 @@ local function addCharacterFrame(container)
 				end
 			end,
 		},
+		{
+			parent = BAGSLOT,
+			var = "showBindOnBagItems",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showBindOnBagItems"] = value
+				for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+					if frame:IsShown() then addon.functions.updateBags(frame) end
+				end
+				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
+			end,
+		},
+		{
+			parent = BAGSLOT,
+			var = "fadeBagQualityIcons",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["fadeBagQualityIcons"] = value
+				for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+					if frame:IsShown() then addon.functions.updateBags(frame) end
+				end
+				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
+				if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
+			end,
+		},
+	}
 
+	addon.functions.createWrapperData(data, container, L)
+end
+
+local function addCharacterFrame(container)
+	local data = {
+
+		{
+			parent = INFO,
+			var = "showIlvlOnCharframe",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showIlvlOnCharframe"] = value
+				setCharFrame()
+			end,
+		},
 		{
 			parent = INFO,
 			var = "showGemsTooltipOnCharframe",
@@ -1514,30 +1586,6 @@ local function addCharacterFrame(container)
 				else
 					addon.general.iconFrame:Hide()
 				end
-			end,
-		},
-		{
-			parent = BAGSLOT,
-			var = "showIlvlOnBagItems",
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["showIlvlOnBagItems"] = value
-				for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
-					if frame:IsShown() then addon.functions.updateBags(frame) end
-				end
-				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
-			end,
-		},
-		{
-			parent = BAGSLOT,
-			var = "showBindOnBagItems",
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["showBindOnBagItems"] = value
-				for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
-					if frame:IsShown() then addon.functions.updateBags(frame) end
-				end
-				if ContainerFrameCombinedBags:IsShown() then addon.functions.updateBags(ContainerFrameCombinedBags) end
 			end,
 		},
 	}
@@ -2675,7 +2723,10 @@ local function initCharacter()
 	addon.functions.InitDBValue("showIlvlOnBankFrame", false)
 	addon.functions.InitDBValue("showIlvlOnMerchantframe", false)
 	addon.functions.InitDBValue("showIlvlOnCharframe", false)
+	addon.functions.InitDBValue("showIlvlOnBagItems", false)
+	addon.functions.InitDBValue("showBagFilterMenu", false)
 	addon.functions.InitDBValue("showBindOnBagItems", false)
+	addon.functions.InitDBValue("fadeBagQualityIcons", false)
 	addon.functions.InitDBValue("showInfoOnInspectFrame", false)
 	addon.functions.InitDBValue("showGemsOnCharframe", false)
 	addon.functions.InitDBValue("showGemsTooltipOnCharframe", false)
@@ -2685,32 +2736,37 @@ local function initCharacter()
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
 		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
+		--@debug@
+		hooksecurefunc(frame, "UpdateSearchResults", addon.functions.updateBags)
+		--@end-debug@
 	end
+
 	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
 	hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
 
 	if _G.AccountBankPanel then
-		local knownButtons = {}
-		local update = function(frame)
-			if nil == knownButtons then
-				knownButtons = {}
-			else
-				for i, v in pairs(knownButtons) do
-					if v.ItemLevelText then v.ItemLevelText:Hide() end
-				end
-			end
-			knownButtons = {} -- clear the list again
-			if addon.db["showIlvlOnBankFrame"] then
-				for itemButton in frame:EnumerateValidItems() do
-					local bag = itemButton:GetBankTabID()
-					local slot = itemButton:GetContainerSlotID()
-					if bag and slot then addon.functions.updateBank(itemButton, bag, slot) end
-					table.insert(knownButtons, itemButton)
-				end
-			end
-		end
-		hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", update)
-		hooksecurefunc(AccountBankPanel, "RefreshAllItemsForSelectedTab", update)
+		-- local knownButtons = {}
+		-- local update = function(frame)
+		-- 	if nil == knownButtons then
+		-- 		knownButtons = {}
+		-- 	else
+		-- 		for i, v in pairs(knownButtons) do
+		-- 			if v.ItemLevelText then v.ItemLevelText:Hide() end
+		-- 		end
+		-- 	end
+		-- 	knownButtons = {} -- clear the list again
+		-- 	if addon.db["showIlvlOnBankFrame"] then
+		-- 		for itemButton in frame:EnumerateValidItems() do
+		-- 			local bag = itemButton:GetBankTabID()
+		-- 			local slot = itemButton:GetContainerSlotID()
+		-- 			if bag and slot then addon.functions.updateBank(itemButton, bag, slot) end
+		-- 			table.insert(knownButtons, itemButton)
+		-- 		end
+		-- 	end
+		-- end
+		hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", addon.functions.updateBags)
+		hooksecurefunc(AccountBankPanel, "RefreshAllItemsForSelectedTab", addon.functions.updateBags)
+		hooksecurefunc(AccountBankPanel, "UpdateSearchResults", addon.functions.updateBags)
 	end
 
 	-- Add Cataclyst charges in char frame
@@ -2886,6 +2942,7 @@ local function CreateUI()
 		text = L["General"],
 		children = {
 			{ value = "character", text = L["Character"] },
+			{ value = "bags", text = HUD_EDIT_MODE_BAGS_LABEL },
 			{ value = "cvar", text = "CVar" },
 			{ value = "party", text = PARTY },
 			{ value = "dungeon", text = L["Dungeon"] },
@@ -2918,6 +2975,8 @@ local function CreateUI()
 			addDungeonFrame(container, true) -- Ruft die Funktion zum Hinzufügen der Dungeon-Optionen auf
 		elseif group == "general\001character" then
 			addCharacterFrame(container) -- Ruft die Funktion zum Hinzufügen der Character-Optionen auf
+		elseif group == "general\001bags" then
+			addBagFrame(container) -- Ruft die Funktion zum Hinzufügen der Character-Optionen auf
 		elseif group == "general\001party" then
 			addPartyFrame(container) -- Ruft die Funktion zum Hinzufügen der Party-Optionen auf
 		elseif group == "general\001ui" then
@@ -3286,6 +3345,7 @@ local eventHandlers = {
 			for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
 				addon.functions.updateBags(frame)
 			end
+			if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
 		end
 	end,
 	--@end-debug@

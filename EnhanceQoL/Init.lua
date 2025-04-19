@@ -8,16 +8,120 @@ addon.general = {}
 addon.general.variables = {}
 addon.L = {} -- Language
 addon.elements = {}
---@debug@
 addon.itemBagFilters = {}
 addon.itemBagFiltersQuality = {}
 addon.itemBagFilterTypes = {
-	WARRIOR = { "Plate" },
-	PALADIN = { "Plate" },
+	DEATHKNIGHT = {
+		[1] = { --Blood
+			[2] = { -- Weapon
+				[8] = true, -- Sword 2h
+				[5] = true, -- Mace 2h
+				[1] = true, -- Axe 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+			},
+		},
+		[2] = { --Frost
+			[2] = { -- Weapon
+				[7] = true, -- Sword 1h
+				[4] = true, -- Mace 1h
+				[0] = true, -- Axe 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+			},
+		},
+		[3] = { --Unholy
+			[2] = { -- Weapon
+				[8] = true, -- Sword 2h
+				[5] = true, -- Mace 2h
+				[1] = true, -- Axe 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+				[6] = true, -- Shield
+			},
+		},
+	},
+	WARRIOR = {
+		[1] = { --Arms
+			[2] = { -- Weapon
+				[8] = true, -- Sword 2h
+				[5] = true, -- Mace 2h
+				[1] = true, -- Axe 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+			},
+		},
+		[2] = { --Fury
+			[2] = { -- Weapon
+				[8] = true, -- Sword 2h
+				[5] = true, -- Mace 2h
+				[1] = true, -- Axe 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+			},
+		},
+		[3] = { --Protection
+			[2] = { -- Weapon
+				[7] = true, -- Sword 1h
+				[4] = true, -- Mace 1h
+				[0] = true, -- Axe 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+				[6] = true, -- Shield
+			},
+		},
+	},
+	PALADIN = {
+		[1] = { --Holy
+			[2] = { -- Weapon
+				[7] = true, -- Sword 1h
+				[4] = true, -- Mace 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+				[6] = true, -- Shield
+			},
+		},
+		[2] = { --Protection
+			[2] = { -- Weapon
+				[7] = true, -- Sword 1h
+				[4] = true, -- Mace 1h
+				[0] = true, -- Axe 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+				[6] = true, -- Shield
+			},
+		},
+		[3] = { --Retribution
+			[2] = { -- Weapon
+				[8] = true, -- Sword 2h
+				[5] = true, -- Mace 2h
+				[1] = true, -- Axe 2h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[4] = true, -- Plate
+			},
+		},
+	},
 	HUNTER = { "Mail" },
 	ROGUE = { "Leather" },
 	PRIEST = { "Cloth" },
-	DEATHKNIGHT = { "Plate" },
 	SHAMAN = { "Mail" },
 	MAGE = { "Cloth" },
 	WARLOCK = { "Cloth" },
@@ -70,10 +174,34 @@ addon.itemBagFilterTypes = {
 			},
 		},
 	},
-	DEMONHUNTER = { "Leather" },
+	DEMONHUNTER = {
+		[1] = { --Havoc
+			[2] = { -- Weapon
+				[9] = true, -- Warglaive
+				[7] = true, -- Sword 1h
+				[13] = true, -- Fist Weapon
+				[0] = true, -- Axe 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+		[2] = { --Vengeance
+			[2] = { -- Weapon
+				[9] = true, -- Warglaive
+				[7] = true, -- Sword 1h
+				[13] = true, -- Fist Weapon
+				[0] = true, -- Axe 1h
+			},
+			[4] = { -- Armor
+				[0] = true, -- Generic
+				[2] = true, -- Leather
+			},
+		},
+	},
 	EVOKER = { "Mail" },
 }
---@end-debug@
 
 addon.variables.unitClass = select(2, UnitClass("player"))
 addon.variables.unitClassID = select(3, UnitClass("player"))

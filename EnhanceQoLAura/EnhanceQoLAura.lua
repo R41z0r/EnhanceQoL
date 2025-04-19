@@ -108,11 +108,65 @@ local function createHealthBar()
 end
 
 local powerbar = {}
-local powerfrequent = {
-	["ENERGY"] = true,
-	["RAGE"] = true,
-	["MANA"] = true,
+local powerfrequent = {}
+local powertypeClasses = {
+	["DRUID"] = {
+		[1] = { --Balance
+			["MAIN"] = "LUNAR_POWER",
+			["MANA"] = true,
+		},
+		[2] = { --Feral
+			["MAIN"] = "ENERGY",
+			["MANA"] = true,
+		},
+		[3] = { --Guardian
+			["MAIN"] = "RAGE",
+			["MANA"] = true,
+		},
+		[4] = { --Restoration
+			["MAIN"] = "MANA",
+			["RAGE"] = true,
+			["ENERGY"] = true,
+		},
+	},
+	["DEMONHUNTER"] = {
+		[1] = {
+			["MAIN"] = "FURY",
+		},
+		[2] = {
+			["MAIN"] = "FURY",
+		},
+	},
+	["DEATHKNIGHT"] = {
+		[1] = { --Blood
+			["MAIN"] = "RUNIC_POWER",
+		},
+		[2] = { --Frost
+			["MAIN"] = "RUNIC_POWER",
+		},
+		[3] = { --Unholy
+			["MAIN"] = "RUNIC_POWER",
+		},
+	},
+	["PALADIN"] = {
+		[1] = { --Holy
+			["MAIN"] = "HOLY_POWER",
+			["MANA"] = true,
+		},
+		[2] = { --Protection
+			["MAIN"] = "HOLY_POWER",
+			["MANA"] = true,
+		},
+		[3] = { --Retribution
+			["MAIN"] = "HOLY_POWER",
+			["MANA"] = true,
+		},
+	},
 }
+local powerTypeEnums = {}
+for i, v in pairs(Enum.PowerType) do
+	powerTypeEnums[i:upper()] = v
+end
 -- Alle möglichen Ressourcen für Druiden
 -- Alle möglichen Ressourcen für alle Klassen
 local classPowerTypes = {
@@ -120,6 +174,7 @@ local classPowerTypes = {
 	"RAGE",
 	"FOCUS",
 	"ENERGY",
+	"FURY",
 	"COMBO_POINTS",
 	"RUNIC_POWER",
 	"SOUL_SHARDS",
@@ -131,14 +186,19 @@ local classPowerTypes = {
 }
 local function updatePowerBar(type)
 	if powerbar[type] and powerbar[type]:IsVisible() then
-		local pType = type:sub(1, 1):upper() .. type:sub(2):lower()
+		local pType = powerTypeEnums[type:gsub("_", "")]
 
-		local maxPower = UnitPowerMax("player", Enum.PowerType[pType])
-		local curPower = UnitPower("player", Enum.PowerType[pType])
+		local maxPower = UnitPowerMax("player", pType)
+		local curPower = UnitPower("player", pType)
 
-		local percent = (curPower / maxPower) * 100
-		local percentStr = percent
-		percentStr = string.format("%.0f", percent)
+		local percentStr
+		if type == "MANA" then
+			local percent = (curPower / maxPower) * 100
+			percentStr = percent
+			percentStr = string.format("%.0f", percent)
+		else
+			percentStr = curPower .. " / " .. maxPower
+		end
 		local bar = powerbar[type]
 		bar:SetMinMaxValues(0, maxPower)
 		bar:SetValue(curPower)
@@ -200,7 +260,40 @@ local eventsToRegister = {
 	"UNIT_POWER_UPDATE",
 	"UNIT_POWER_FREQUENT",
 	"UNIT_DISPLAYPOWER",
+	"UNIT_MAXPOWER",
 }
+
+local function setPowerbars()
+	local _, powerToken = UnitPowerType("player")
+	powerfrequent = {}
+	local mainPowerBar
+	if
+		powertypeClasses[addon.variables.unitClass]
+		and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]
+		and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]["MAIN"]
+	then
+		createPowerBar(powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]["MAIN"], EQOLHealthBar)
+		mainPowerBar = powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]["MAIN"]
+	end
+
+	for _, pType in ipairs(classPowerTypes) do
+		if
+			mainPowerBar == pType
+			or (
+				powertypeClasses[addon.variables.unitClass]
+				and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]
+				and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec][pType]
+			)
+		then
+			powerfrequent[pType] = true
+			if mainPowerBar ~= pType then createPowerBar(pType, powerbar[mainPowerBar] or EQOLHealthBar) end
+			powerbar[pType]:Show()
+		elseif powerbar[pType] then
+			powerbar[pType]:Hide()
+		end
+	end
+end
+
 local firstStart = true
 -- Funktion zur Verarbeitung der Events
 local function eventHandler(self, event, unit, arg1, arg2, ...)
@@ -210,35 +303,17 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 		firstStart = false
 		-- checkLayout()
 		createHealthBar()
-		local _, powerToken = UnitPowerType("player")
-		for _, pType in ipairs(classPowerTypes) do
-			createPowerBar(pType, pType == "MANA" and EQOLHealthBar or powerbar["MANA"])
-			if pType == "MANA" then
-				powerbar[pType]:Show()
-			elseif pType == powerToken then
-				powerbar[pType]:Show()
-			elseif powerbar[pType] then
-				powerbar[pType]:Hide()
-			end
-		end
+		setPowerbars()
 	end
-	if event == "UNIT_DISPLAYPOWER" and unit == "player" then
-		local _, powerToken = UnitPowerType("player")
-		-- Nur das aktuell aktive Power-Bar zeigen
-		for _, pType in ipairs(classPowerTypes) do
-			if pType == "MANA" then
-				powerbar[pType]:Show()
-			elseif pType == powerToken then
-				powerbar[pType]:Show()
-			elseif powerbar[pType] then
-				powerbar[pType]:Hide()
-			end
-		end
+	if (event == "UNIT_DISPLAYPOWER") and unit == "player" then
+		setPowerbars()
 	elseif event == "UNIT_MAXHEALTH" or event == "UNIT_HEALTH" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
 		updateHealthBar()
 	elseif event == "UNIT_POWER_UPDATE" and powerbar[arg1] and not powerfrequent[arg1] then
 		updatePowerBar(arg1)
 	elseif event == "UNIT_POWER_FREQUENT" and powerbar[arg1] and powerfrequent[arg1] then
+		updatePowerBar(arg1)
+	elseif event == "UNIT_MAXPOWER" and powerbar[arg1] then
 		updatePowerBar(arg1)
 	end
 end

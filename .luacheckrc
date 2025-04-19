@@ -305,6 +305,7 @@ globals = {
 	"HUD_EDIT_MODE_STANCE_BAR_LABEL",
 	"HUD_EDIT_MODE_CHAT_FRAME_LABEL",
 	"HUD_EDIT_MODE_TARGET_FRAME_LABEL",
+	"HUD_EDIT_MODE_BAGS_LABEL",
 	-- FrameXML globals
 	"ChatFontNormal",
 	"GameFontNormal",
