@@ -352,20 +352,20 @@ local function createPowerBar(type, anchor)
 	updatePowerBar(type)
 end
 
--- local function createSpecIcon(anchor)
--- 	local specID = GetSpecialization()
--- 	if not specID or not anchor then return end
--- 	local _, _, _, iconPath = GetSpecializationInfo(specID)
+local function createSpecIcon(anchor)
+	local specID = GetSpecialization()
+	if not specID or not anchor then return end
+	local _, _, _, iconPath = GetSpecializationInfo(specID)
 
--- 	if anchor.specIcon then anchor.specIcon:Hide() end
--- 	-- neues Icon anlegen
--- 	local specIcon = anchor:CreateTexture(nil, "OVERLAY")
--- 	specIcon:SetSize(50, 50) -- bei Bedarf anpassen
--- 	specIcon:SetTexture("Interface\\AddOns\\EnhanceQoLAura\\Textures\\DruidHUD.tga")
+	if anchor.specIcon then anchor.specIcon:Hide() end
+	-- neues Icon anlegen
+	local specIcon = anchor:CreateTexture(nil, "OVERLAY")
+	specIcon:SetSize(72, 72) -- bei Bedarf anpassen
+	specIcon:SetTexture("Interface\\AddOns\\EnhanceQoLAura\\Textures\\Classes\\" .. addon.variables.unitClass .. "_" .. specID .. ".tga" or iconPath)
 
--- 	anchor.specIcon = specIcon
--- 	specIcon:SetPoint("LEFT", anchor, "RIGHT", 0, 0)
--- end
+	anchor.specIcon = specIcon
+	specIcon:SetPoint("LEFT", anchor, "RIGHT", 0, 0)
+end
 
 local eventsToRegister = {
 	"UNIT_HEALTH",
@@ -439,13 +439,17 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 			createHealthBar()
 			setPowerbars()
 			frameAnchor:UnregisterEvent("PLAYER_ENTERING_WORLD")
+			createSpecIcon(EQOLHealthBar)
 		end)
 	end
 
 	if (event == "UNIT_DISPLAYPOWER") and unit == "player" then
 		setPowerbars()
 	elseif event == "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" then
-		C_Timer.After(0.2, function() setPowerbars() end)
+		C_Timer.After(0.2, function()
+			setPowerbars()
+			createSpecIcon(EQOLHealthBar)
+		end)
 	elseif event == "UNIT_MAXHEALTH" or event == "UNIT_HEALTH" or event == "UNIT_ABSORB_AMOUNT_CHANGED" then
 		updateHealthBar()
 	elseif event == "UNIT_POWER_UPDATE" and powerbar[arg1] and not powerfrequent[arg1] then
