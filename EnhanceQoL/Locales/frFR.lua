@@ -21,6 +21,11 @@ L["ignoreTalkingHead"] = "Masquer automatiquement le cadre Talking Head"
 L["landingPageHide"] = "Activez cette option pour masquer le bouton de la page d'expansion sur la mini-carte."
 L["automaticallyOpenContainer"] = "Ouvrir automatiquement les objets contenant dans le sac"
 
+L["bagFilterDockFrameUnlock"] = "Cliquez pour désancrer la fenêtre de filtre de vos sacs"
+L["bagFilterDockFrameLock"] = "Cliquez pour ancrer la fenêtre de filtre à vos sacs"
+L["enableMoneyTracker"] = "Activer le suivi de votre or sur tous les personnages"
+L["enableMoneyTrackerDesc"] = "Survolez votre or dans vos sacs pour voir l'or de tous vos personnages"
+L["moneyTrackerRemovePlayer"] = "Tous les personnages connus"
 L["showBagFilterMenu"] = "Activer le filtre d’objets dans les sacs"
 L["showBagFilterMenuDesc"] = ("Utilisable uniquement si Sacs combinés est activé. Maintenez %s pour déplacer la fenêtre"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "Activer l’estompage des icônes de qualité de métier lors de la recherche et du filtrage"

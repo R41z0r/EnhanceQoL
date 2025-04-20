@@ -19,10 +19,14 @@ L["ignoreTalkingHead"] = "Automatically hide Talking Head Frame"
 L["landingPageHide"] = "Enable this option to hide the Expansion Landing Page button on the minimap."
 L["automaticallyOpenContainer"] = "Automatically open Container items in bag"
 
+L["bagFilterDockFrameUnlock"] = "Click to undock the filter window from your bags"
+L["bagFilterDockFrameLock"] = "Click to dock the filter window to your bags"
+L["enableMoneyTracker"] = "Enable to track your money across all characters"
+L["enableMoneyTrackerDesc"] = "When you mouse over your gold in your bags, you can see the gold of all characters"
+L["moneyTrackerRemovePlayer"] = "All known characters"
 L["showBagFilterMenu"] = "Enable item filter in bags"
 L["showBagFilterMenuDesc"] = ("Only usable when Combined Bags is enabled. Hold %s to move the frame"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "Fade profession quality icons during search and filtering"
-
 L["bagFilterSpec"] = "Recommended for Specialization"
 L["bagFilterEquip"] = "Equipment Only"
 L["showIlvlOnBankFrame"] = "Display item level on the Bank Frame"

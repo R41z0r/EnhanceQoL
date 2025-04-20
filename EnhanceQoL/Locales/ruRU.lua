@@ -19,6 +19,11 @@ L["ignoreTalkingHead"] = "Автоматически скрывать Talking He
 L["landingPageHide"] = "Включите эту опцию, чтобы скрыть кнопку страницы дополнения на миникарте."
 L["automaticallyOpenContainer"] = "Автоматически открывать предметы-контейнеры в сумке"
 
+L["bagFilterDockFrameUnlock"] = "Щёлкните, чтобы открепить окно фильтра от сумок"
+L["bagFilterDockFrameLock"] = "Щёлкните, чтобы закрепить окно фильтра на сумках"
+L["enableMoneyTracker"] = "Включить отслеживание золота на всех персонажах"
+L["enableMoneyTrackerDesc"] = "При наведении курсора на ваше золото в сумках вы увидите золото всех персонажей"
+L["moneyTrackerRemovePlayer"] = "Все известные персонажи"
 L["showBagFilterMenu"] = "Включить фильтр предметов в сумках"
 L["showBagFilterMenuDesc"] = ("Доступно только при включённом режиме «Объединённые сумки». Удерживайте %s, чтобы переместить рамку"):format(
 	SHIFT_KEY_TEXT

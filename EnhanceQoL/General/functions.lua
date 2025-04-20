@@ -254,6 +254,7 @@ function addon.functions.createWrapperData(data, container, L)
 	end
 	scroll:DoLayout()
 	scrollInner:DoLayout()
+	return wrapper
 end
 
 function addon.functions.addToTree(parentValue, newElement, noSort)
@@ -488,6 +489,7 @@ local function CreateFilterMenu()
 	frame:EnableMouse(true)
 	frame:RegisterForDrag("LeftButton")
 	frame:SetScript("OnDragStart", function(self)
+		if addon.db["bagFilterDockFrame"] then return end
 		if not IsShiftKeyDown() then return end
 		self:StartMoving()
 	end)
@@ -500,7 +502,13 @@ local function CreateFilterMenu()
 		addon.db["bagFilterFrameData"].x = xOfs
 		addon.db["bagFilterFrameData"].y = yOfs
 	end)
-	if addon.db["bagFilterFrameData"].point and addon.db["bagFilterFrameData"].parentPoint and addon.db["bagFilterFrameData"].x and addon.db["bagFilterFrameData"].y then
+	if
+		not addon.db["bagFilterDockFrame"]
+		and addon.db["bagFilterFrameData"].point
+		and addon.db["bagFilterFrameData"].parentPoint
+		and addon.db["bagFilterFrameData"].x
+		and addon.db["bagFilterFrameData"].y
+	then
 		frame:SetPoint(addon.db["bagFilterFrameData"].point, UIParent, addon.db["bagFilterFrameData"].parentPoint, addon.db["bagFilterFrameData"].x, addon.db["bagFilterFrameData"].y)
 	else
 		frame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
@@ -564,21 +572,55 @@ local function CreateFilterMenu()
 				widget:SetLabel(item.label)
 				widget:SetWidth(100)
 				widget:SetText(addon.itemBagFilters[item.key] or "")
-				widget:SetCallback("OnEnterPressed", function(_, _, text)
-					addon.itemBagFilters[item.key] = tonumber(text)
-					-- Hier könnte man die Filterlogik triggern
-				end)
+				widget:SetCallback("OnEnterPressed", function(_, _, text) addon.itemBagFilters[item.key] = tonumber(text) end)
 			end
 
 			if widget then
 				widget:SetFullWidth(true)
 				scrollContainer:AddChild(widget)
-				-- measure widget label width for sizing
 				if widget.text and widget.text.GetStringWidth then longestWidth = math_max(widget.text:GetStringWidth(), longestWidth) end
 			end
 		end
 	end
 	frame:SetSize(longestWidth + 60, 280) -- Feste Größe
+
+	local btnDock = CreateFrame("Button", "InventoryFilterPanelDock", frame)
+	btnDock:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -30, -5)
+	btnDock:SetText("Dock")
+	btnDock.isDocked = addon.db["bagFilterDockFrame"]
+	btnDock:SetScript("OnClick", function(self)
+		self.isDocked = not self.isDocked
+		addon.db["bagFilterDockFrame"] = self.isDocked
+		if self.isDocked then
+			frame:ClearAllPoints()
+			frame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
+			self.icon:SetTexture("Interface\\Addons\\EnhanceQoL\\Icons\\ClosedLock.tga")
+		else
+			self.icon:SetTexture("Interface\\Addons\\EnhanceQoL\\Icons\\OpenLock.tga")
+		end
+	end)
+	btnDock:SetSize(16, 16)
+	btnDock:Show()
+
+	local icon = btnDock:CreateTexture(nil, "ARTWORK")
+	icon:SetAllPoints(btnDock)
+	if addon.db["bagFilterDockFrame"] then
+		icon:SetTexture("Interface\\Addons\\EnhanceQoL\\Icons\\ClosedLock.tga")
+	else
+		icon:SetTexture("Interface\\Addons\\EnhanceQoL\\Icons\\OpenLock.tga")
+	end
+	btnDock.icon = icon
+	-- Tooltip: zeigt dem Spieler, was der Button macht
+	btnDock:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		if self.isDocked then
+			GameTooltip:SetText(L["bagFilterDockFrameUnlock"])
+		else
+			GameTooltip:SetText(L["bagFilterDockFrameLock"])
+		end
+		GameTooltip:Show()
+	end)
+	btnDock:SetScript("OnLeave", function() GameTooltip:Hide() end)
 	return frame
 end
 

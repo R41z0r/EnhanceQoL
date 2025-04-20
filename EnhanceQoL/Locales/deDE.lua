@@ -20,6 +20,11 @@ L["ignoreTalkingHead"] = "Automatisch das Talking Head Fenster ausblenden"
 L["landingPageHide"] = "Aktivieren Sie diese Option, um den Erweiterungs-Button auf der Minimap auszublenden."
 L["automaticallyOpenContainer"] = "Behältergegenstände in der Tasche automatisch öffnen"
 
+L["bagFilterDockFrameUnlock"] = "Klicken, um das Filterfenster von den Taschen zu lösen"
+L["bagFilterDockFrameLock"] = "Klicken, um das Filterfenster an die Taschen zu heften"
+L["enableMoneyTracker"] = "Aktivieren, um dein Gold über alle Charaktere zu verfolgen"
+L["enableMoneyTrackerDesc"] = "Wenn du in deinen Taschen über dein Gold hoverst, siehst du das Gold aller Charaktere"
+L["moneyTrackerRemovePlayer"] = "Alle bekannten Charaktere"
 L["showBagFilterMenu"] = "Gegenstandsfilter in Taschen aktivieren"
 L["showBagFilterMenuDesc"] = ("Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist. Halte %s, um das Fenster zu verschieben"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "Ausblenden der Berufssymbol‑Qualität bei Suche und Filter aktivieren"

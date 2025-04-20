@@ -1,16 +1,24 @@
-## Added
+# Changelog
 
-- **Hideable TargetFrame:** You can now hide the TargetFrame and reveal it on mouseover.
-- **Mage Food Reminder:** A button that automatically queues you for a follower dungeon to obtain free mage food.
-- **Fade profession quality icon:** Option to fade the profession quality icon on bags while searching
-- **Bag filter:** Option to enable a filter window for the standard bags
-  - Filter by equipment, rarity and Class/Specialization usable items
+## ✨ New Features
 
-## Changed
+- **Hideable Target Frame**  
+  You can now hide the default Target Frame and have it reappear on mouse‑over.
+- **Mage‑Food Reminder**  
+  A handy button that queues you for a follower dungeon to grab free Mage food.
+- **Profession‑Icon Fade**  
+  Optionally fade profession quality icons in your bags while searching.
+- **Bag‑Filter Window**  
+  A flexible filter panel for the default bags:
+  - Filter by equipment slot, item rarity, class, or specialization usability.
+- **Money Tracker**  
+  See the gold of all your characters in one tooltip.
 
-- Moved the bag customizations to a new tab "Bags"
+## ⚙️ Changes
 
-## Bug Fixes
+- All bag‑related options have been moved to a dedicated **“Bags”** tab.
 
-- Fixed an issue where Engineering teleport buttons did not appear in certain situations.
-- Fixed an issue causing bag search to not hide item level and bind type
+## 🐛 Bug Fixes
+
+- Engineering teleport buttons now appear reliably in every situation.
+- Bag search no longer hides item‑level or bind‑type indicators.

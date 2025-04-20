@@ -21,6 +21,11 @@ L["ignoreTalkingHead"] = "Ocultar automaticamente o quadro Talking Head"
 L["landingPageHide"] = "Ative esta opção para ocultar o botão da página de expansão no minimapa."
 L["automaticallyOpenContainer"] = "Abrir automaticamente os itens de contêiner na bolsa"
 
+L["bagFilterDockFrameUnlock"] = "Clique para desafixar a janela de filtro das suas bolsas"
+L["bagFilterDockFrameLock"] = "Clique para fixar a janela de filtro às suas bolsas"
+L["enableMoneyTracker"] = "Ativar para rastrear seu ouro em todos os personagens"
+L["enableMoneyTrackerDesc"] = "Ao passar o mouse sobre seu ouro nas bolsas, você verá o ouro de todos os personagens"
+L["moneyTrackerRemovePlayer"] = "Todos os personagens conhecidos"
 L["showBagFilterMenu"] = "Ativar filtro de itens nas bolsas"
 L["showBagFilterMenuDesc"] = ("Disponível apenas quando Bolsas Combinadas estiver habilitado. Segure %s para mover o quadro"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "Ativar esmaecimento dos ícones de qualidade de profissão em buscas e filtros"

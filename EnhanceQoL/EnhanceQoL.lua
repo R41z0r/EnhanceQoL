@@ -1402,6 +1402,12 @@ local function addUIFrame(container)
 end
 
 local function addBagFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
 	local data = {
 		{
 			parent = BAGSLOT,
@@ -1447,7 +1453,17 @@ local function addBagFrame(container)
 				end
 			end,
 		},
-
+		{
+			parent = BAGSLOT,
+			var = "enableMoneyTracker",
+			desc = L["enableMoneyTrackerDesc"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["enableMoneyTracker"] = value
+				container:ReleaseChildren()
+				addBagFrame(container)
+			end,
+		},
 		{
 			parent = BAGSLOT,
 			var = "showIlvlOnBankFrame",
@@ -1495,8 +1511,69 @@ local function addBagFrame(container)
 			end,
 		},
 	}
+	table.sort(data, function(a, b)
+		local textA = a.var
+		local textB = b.var
+		if a.text then
+			textA = a.text
+		else
+			textA = L[a.var]
+		end
+		if b.text then
+			textB = b.text
+		else
+			textB = L[b.var]
+		end
+		return textA < textB
+	end)
+	for _, checkboxData in ipairs(data) do
+		local desc
+		if checkboxData.desc then desc = checkboxData.desc end
+		local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], checkboxData.callback, desc)
+		groupCore:AddChild(cbautoChooseQuest)
+	end
 
-	addon.functions.createWrapperData(data, container, L)
+	if addon.db["enableMoneyTracker"] then
+		local groupMoney = addon.functions.createContainer("InlineGroup", "List")
+		groupMoney:SetTitle(MONEY)
+		wrapper:AddChild(groupMoney)
+
+		local tList = {}
+
+		for i, v in pairs(addon.db["moneyTracker"]) do
+			if i ~= UnitGUID("player") then
+				local col = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[v.class] or { r = 1, g = 1, b = 1 }
+				local displayName
+				displayName = string.format("|cff%02x%02x%02x%s-%s|r", col.r * 255, col.g * 255, col.b * 255, v.name, v.realm)
+				tList[i] = displayName
+			end
+		end
+
+		local list, order = addon.functions.prepareListForDropdown(tList)
+		local dropIncludeList = addon.functions.createDropdownAce(L["moneyTrackerRemovePlayer"], list, order, nil)
+		local btnRemoveNPC = addon.functions.createButtonAce(REMOVE, 100, function(self, _, value)
+			local selectedValue = dropIncludeList:GetValue()
+			if selectedValue then
+				if addon.db["moneyTracker"][selectedValue] then
+					addon.db["moneyTracker"][selectedValue] = nil
+					local tList = {}
+					for i, v in pairs(addon.db["moneyTracker"]) do
+						if i ~= UnitGUID("player") then
+							local col = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[v.class] or { r = 1, g = 1, b = 1 }
+							local displayName
+							displayName = string.format("|cff%02x%02x%02x%s-%s|r", col.r * 255, col.g * 255, col.b * 255, v.name, v.realm)
+							tList[i] = displayName
+						end
+					end
+					local list, order = addon.functions.prepareListForDropdown(tList)
+					dropIncludeList:SetList(list, order)
+					dropIncludeList:SetValue(nil)
+				end
+			end
+		end)
+		groupMoney:AddChild(dropIncludeList)
+		groupMoney:AddChild(btnRemoveNPC)
+	end
 end
 
 local function addCharacterFrame(container)
@@ -2202,6 +2279,68 @@ local function initUnitFrame()
 	end
 end
 
+local function initBagsFrame()
+	addon.functions.InitDBValue("moneyTracker", {})
+	addon.functions.InitDBValue("enableMoneyTracker", false)
+	if addon.db["moneyTracker"][UnitGUID("player")] == nil or type(addon.db["moneyTracker"][UnitGUID("player")]) ~= "table" then addon.db["moneyTracker"][UnitGUID("player")] = {} end
+	local moneyFrame = ContainerFrameCombinedBags.MoneyFrame
+	local otherMoney = {}
+
+	local function ShowBagMoneyTooltip(self)
+		if not addon.db["enableMoneyTracker"] then return end
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:ClearLines()
+
+		local list, total = {}, 0
+		for _, info in pairs(addon.db["moneyTracker"]) do
+			total = total + (info.money or 0)
+			table.insert(list, info)
+		end
+		table.sort(list, function(a, b) return (a.money or 0) > (b.money or 0) end)
+
+		for _, info in ipairs(list) do
+			local col = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[info.class] or { r = 1, g = 1, b = 1 }
+			local displayName
+			if info.realm == GetRealmName() or not info.realm or info.realm == "" then
+				displayName = string.format("|cff%02x%02x%02x%s|r", col.r * 255, col.g * 255, col.b * 255, info.name)
+			else
+				displayName = string.format("|cff%02x%02x%02x%s-%s|r", col.r * 255, col.g * 255, col.b * 255, info.name, info.realm)
+			end
+			GameTooltip:AddDoubleLine(displayName, GetCoinTextureString(info.money))
+		end
+
+		GameTooltip:AddLine(" ")
+		GameTooltip:AddDoubleLine(TOTAL, GetCoinTextureString(total))
+		GameTooltip:Show()
+	end
+
+	local function HideBagMoneyTooltip()
+		if not addon.db["enableMoneyTracker"] then return end
+		GameTooltip:Hide()
+	end
+
+	moneyFrame:HookScript("OnEnter", ShowBagMoneyTooltip)
+	moneyFrame:HookScript("OnLeave", HideBagMoneyTooltip)
+	for _, coin in ipairs({ "GoldButton", "SilverButton", "CopperButton" }) do
+		local btn = moneyFrame[coin]
+		if btn then
+			btn:HookScript("OnEnter", ShowBagMoneyTooltip)
+			btn:HookScript("OnLeave", HideBagMoneyTooltip)
+		end
+	end
+
+	moneyFrame = ContainerFrame1.MoneyFrame
+	moneyFrame:HookScript("OnEnter", ShowBagMoneyTooltip)
+	moneyFrame:HookScript("OnLeave", HideBagMoneyTooltip)
+	for _, coin in ipairs({ "GoldButton", "SilverButton", "CopperButton" }) do
+		local btn = moneyFrame[coin]
+		if btn then
+			btn:HookScript("OnEnter", ShowBagMoneyTooltip)
+			btn:HookScript("OnLeave", HideBagMoneyTooltip)
+		end
+	end
+end
+
 local function initChatFrame()
 	if ChatFrame1 then
 		addon.functions.InitDBValue("chatFrameFadeEnabled", ChatFrame1:GetFading())
@@ -2725,6 +2864,7 @@ local function initCharacter()
 	addon.functions.InitDBValue("showIlvlOnCharframe", false)
 	addon.functions.InitDBValue("showIlvlOnBagItems", false)
 	addon.functions.InitDBValue("showBagFilterMenu", false)
+	addon.functions.InitDBValue("bagFilterDockFrame", true)
 	addon.functions.InitDBValue("showBindOnBagItems", false)
 	addon.functions.InitDBValue("fadeBagQualityIcons", false)
 	addon.functions.InitDBValue("showInfoOnInspectFrame", false)
@@ -3172,6 +3312,7 @@ local function setAllHooks()
 	initUI()
 	initUnitFrame()
 	initChatFrame()
+	initBagsFrame()
 end
 
 function loadMain()
@@ -3246,7 +3387,7 @@ function loadMain()
 	local configFrame = CreateFrame("Frame", addonName .. "ConfigFrame", InterfaceOptionsFramePanelContainer)
 	configFrame.name = addonName
 
-	-- Button für die Optionen
+	-- Button f��r die Optionen
 	local configButton = CreateFrame("Button", nil, configFrame, "UIPanelButtonTemplate")
 	configButton:SetSize(140, 40)
 	configButton:SetPoint("TOPLEFT", 10, -10)
@@ -3523,9 +3664,16 @@ local eventHandlers = {
 	["PLAYER_LOGIN"] = function()
 		if addon.db["enableMinimapButtonBin"] then addon.functions.toggleButtonSink() end
 		addon.variables.unitSpec = GetSpecialization()
+		addon.db["moneyTracker"][UnitGUID("player")] = {
+			name = UnitName("player"),
+			realm = GetRealmName(),
+			money = GetMoney(),
+			class = select(2, UnitClass("player")),
+		}
 	end,
 	["PLAYER_MONEY"] = function()
 		if addon.db["showDurabilityOnCharframe"] then calculateDurability() end
+		if addon.db["moneyTracker"][UnitGUID("player")]["money"] then addon.db["moneyTracker"][UnitGUID("player")]["money"] = GetMoney() end
 	end,
 	["PLAYER_REGEN_ENABLED"] = function()
 		if addon.db["showDurabilityOnCharframe"] then calculateDurability() end

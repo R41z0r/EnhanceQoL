@@ -21,6 +21,11 @@ L["ignoreTalkingHead"] = "自动隐藏Talking Head框体"
 L["landingPageHide"] = "启用此选项以隐藏小地图上的扩展按钮。"
 L["automaticallyOpenContainer"] = "自动打开背包中的容器物品"
 
+L["bagFilterDockFrameUnlock"] = "点击将过滤窗口从背包上分离"
+L["bagFilterDockFrameLock"] = "点击将过滤窗口固定在背包上"
+L["enableMoneyTracker"] = "启用跨角色金币追踪"
+L["enableMoneyTrackerDesc"] = "当你在背包中悬停鼠标于金币上时，可查看所有角色的金币数量"
+L["moneyTrackerRemovePlayer"] = "所有已知角色"
 L["showBagFilterMenu"] = "启用背包物品过滤"
 L["showBagFilterMenuDesc"] = ("仅在启用合并背包时可用。按住 %s 拖动窗口"):format(SHIFT_KEY_TEXT)
 L["fadeBagQualityIcons"] = "在搜索和过滤时淡化专业品质图标"
@@ -151,5 +156,5 @@ L["chatFrameFadeEnabled"] = "启用聊天渐隐"
 L["chatFrameFadeTimeVisibleText"] = "文字保持可见时间"
 L["chatFrameFadeDurationText"] = "渐隐动画的持续时间"
 
-L["enableLootspecQuickswitch"] = "在小地图上启用快速切换战利品和当前专精"
+L["enableLootspecQuickswitch"] = "在小地图上启用快速切���战利品和当前专精"
 L["enableLootspecQuickswitchDesc"] = "左键单击专精设置战利品专精，右键单击更改当前专精。"
