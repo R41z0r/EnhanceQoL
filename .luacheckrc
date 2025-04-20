@@ -101,6 +101,7 @@ globals = {
 	"OBJECTIVE_TRACKER_COLOR",
 	"ObjectiveTrackerAnimLineState",
 	"ContainerFrameContainer",
+	"ContainerFrame1",
 	"DungeonTeleportFrame",
 	"ContainerFrameCombinedBags",
 	"COMMUNITY_MEMBER_ROLE_NAME_LEADER",
