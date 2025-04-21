@@ -496,7 +496,7 @@ addon.variables.unitSpec = GetSpecialization()
 addon.variables.unitSpecName = nil
 addon.variables.unitRole = nil
 if addon.variables.unitSpec then
-	addon.variables.unitSpecName = select(2, GetSpecializationInfo(EnhanceQoL.variables.unitSpec))
+	addon.variables.unitSpecName = select(2, GetSpecializationInfo(addon.variables.unitSpec))
 	addon.variables.unitRole = GetSpecializationRole(GetSpecialization())
 end
 addon.variables.unitRace = select(2, UnitRace("player"))

@@ -3552,7 +3552,7 @@ local eventHandlers = {
 	["ACTIVE_PLAYER_SPECIALIZATION_CHANGED"] = function(arg1)
 		addon.variables.unitSpec = GetSpecialization()
 		if addon.variables.unitSpec then
-			addon.variables.unitSpecName = select(2, GetSpecializationInfo(EnhanceQoL.variables.unitSpec))
+			addon.variables.unitSpecName = select(2, GetSpecializationInfo(addon.variables.unitSpec))
 			addon.variables.unitRole = GetSpecializationRole(GetSpecialization())
 		end
 
@@ -3742,7 +3742,7 @@ local eventHandlers = {
 		if addon.db["enableMinimapButtonBin"] then addon.functions.toggleButtonSink() end
 		addon.variables.unitSpec = GetSpecialization()
 		if addon.variables.unitSpec then
-			addon.variables.unitSpecName = select(2, GetSpecializationInfo(EnhanceQoL.variables.unitSpec))
+			addon.variables.unitSpecName = select(2, GetSpecializationInfo(addon.variables.unitSpec))
 			addon.variables.unitRole = GetSpecializationRole(GetSpecialization())
 		end
 

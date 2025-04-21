@@ -46,7 +46,7 @@ hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
 		blizzGen(menu, root)
 
 		root:CreateTitle("")
-		
+
 		root:CreateTitle(addonName)
 		root:CreateCheckbox(L["Partyfit"], function() return pDb["partyFit"] end, function() pDb["partyFit"] = not pDb["partyFit"] end)
 		if not playerIsLust then
