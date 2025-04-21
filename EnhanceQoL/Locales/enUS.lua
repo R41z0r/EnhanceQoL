@@ -66,7 +66,8 @@ L["Quest"] = "Quest"
 
 L["hideBagsBar"] = "Hide Bagsbar"
 L["hideMicroMenu"] = "Hide Micro Menu"
-
+L["MicroMenu"] = "Micro Menu"
+L["BagsBar"]  = "Bags Bar"
 -- Dungeon
 L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option"
 L["lfgSortByRio"] = "Sort Mythic Dungeon Applicants by Mythic Score"

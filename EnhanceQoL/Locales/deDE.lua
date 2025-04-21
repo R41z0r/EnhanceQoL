@@ -67,6 +67,8 @@ L["Quest"] = "Quest"
 
 L["hideBagsBar"] = "Taschenleiste ausblenden"
 L["hideMicroMenu"] = "Mikromenü ausblenden"
+L["MicroMenu"] = "Mikro-Menü"
+L["BagsBar"] = "Taschenleiste"
 -- Dungeon
 L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen, wenn nur 1 Option verfügbar ist"
 L["lfgSortByRio"] = "Sortiere Bewerber für Mythisch+ Dungeons nach Mythisch-Wertung"

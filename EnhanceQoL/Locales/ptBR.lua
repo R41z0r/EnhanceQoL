@@ -68,6 +68,8 @@ L["Quest"] = "Missão"
 
 L["hideBagsBar"] = "Ocultar barra de sacolas"
 L["hideMicroMenu"] = "Ocultar micro menu"
+L["MicroMenu"] = "Menu Micro"
+L["BagsBar"] = "Barra de bolsas"
 -- Dungeon
 L["autoChooseDelvePower"] = "Selecionar automaticamente o poder de incursão quando houver apenas 1 opção"
 L["lfgSortByRio"] = "Classificar candidatos de masmorras míticas pelo placar mítico"

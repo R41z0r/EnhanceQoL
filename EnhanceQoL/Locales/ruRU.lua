@@ -70,6 +70,8 @@ L["Quest"] = "Задание"
 
 L["hideBagsBar"] = "Скрыть панель сумок"
 L["hideMicroMenu"] = "Скрыть микроменю"
+L["MicroMenu"] = "Микро-меню"
+L["BagsBar"] = "Панель сумок"
 -- Dungeon
 L["autoChooseDelvePower"] = "Автоматически выбирать силу при исследовании, если есть только один вариант"
 L["lfgSortByRio"] = "Сортировать кандидатов в мифик-подземелье по мифик-рейтингу"
@@ -100,7 +102,7 @@ L["deathknight_HideRuneFrame"] = "Скрыть панель рун"
 L["evoker_HideEssence"] = "Скрыть панель эссенции"
 
 -- Монах
-L["monk_HideHarmonyBar"] = "Скрыть панель гармонии"
+L["monk_HideHarmonyBar"] = "��крыть панель гармонии"
 
 -- Паладин
 L["paladin_HideHolyPower"] = "Скрыть панель священной силы"

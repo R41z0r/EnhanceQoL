@@ -62,6 +62,8 @@ L["Quest"] = "퀘스트"
 
 L["hideBagsBar"] = "가방 바 숨기기"
 L["hideMicroMenu"] = "마이크로 메뉴 숨기기"
+L["MicroMenu"] = "마이크로 메뉴"
+L["BagsBar"] = "가방 바"
 -- Dungeon
 L["autoChooseDelvePower"] = "옵션이 1개만 있을 때 델브 파워 자동 선택"
 L["lfgSortByRio"] = "신화 던전 지원자를 신화 점수로 정렬"

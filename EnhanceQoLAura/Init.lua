@@ -8,6 +8,7 @@ end
 
 addon.Aura = {}
 addon.Aura.functions = {}
+addon.Aura.variables = {}
 addon.LAura = {} -- Locales for aura
 
 addon.functions.InitDBValue("AuraCooldownTrackerBarHeight", 30)

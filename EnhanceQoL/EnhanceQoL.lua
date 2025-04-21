@@ -206,6 +206,12 @@ local hookedUnitFrames = {}
 local function UpdateUnitFrameMouseover(barName, cbData)
 	local enable = addon.db[cbData.var]
 
+	if enable and cbData.disableSetting then
+		for i, v in pairs(cbData.disableSetting) do
+			addon.db[v] = false
+		end
+	end
+
 	local uf = _G[barName]
 
 	if enable then
@@ -247,12 +253,21 @@ local function UpdateUnitFrameMouseover(barName, cbData)
 			end
 			uf:SetAlpha(0)
 			if cbData.children then
-				for _, v in pairs(cbData.children) do
+				for _, v in ipairs(cbData.children) do
+					if cbData.revealAllChilds then
+						v:HookScript("OnEnter", function(self)
+							uf:SetAlpha(1)
+							for _, sv in ipairs(cbData.children) do
+								sv:SetAlpha(1)
+							end
+						end)
+						v:HookScript("OnLeave", function(self) genericHoverOutCheck(uf, cbData) end)
+					end
 					v:SetAlpha(0)
 				end
 			end
 			if cbData.hideChildren then
-				for _, v in pairs(cbData.hideChildren) do
+				for _, v in ipairs(cbData.hideChildren) do
 					v:Hide()
 				end
 			end
@@ -272,6 +287,10 @@ local function UpdateUnitFrameMouseover(barName, cbData)
 			for _, v in pairs(cbData.hideChildren) do
 				v:Show()
 			end
+		end
+		if cbData.revealAllChilds then
+			-- to completely remove the hookscript we need a full reload
+			addon.variables.requireReload = true
 		end
 	end
 end
@@ -1355,6 +1374,10 @@ local function addUIFrame(container)
 			callback = function(self, _, value)
 				addon.db["hideBagsBar"] = value
 				addon.functions.toggleBagsBar(addon.db["hideBagsBar"])
+				if value and addon.db["unitframeSettingBagsBar"] then
+					addon.db["unitframeSettingBagsBar"] = false
+					addon.variables.requireReload = true
+				end
 			end,
 		},
 		{
@@ -1374,6 +1397,10 @@ local function addUIFrame(container)
 			callback = function(self, _, value)
 				addon.db["hideMicroMenu"] = value
 				addon.functions.toggleMicroMenu(addon.db["hideMicroMenu"])
+				if value and addon.db["unitframeSettingMicroMenu"] then
+					addon.db["unitframeSettingMicroMenu"] = false
+					addon.variables.requireReload = true
+				end
 			end,
 		},
 		{
@@ -2364,6 +2391,28 @@ local function initUI()
 	addon.functions.InitDBValue("lootspec_quickswitch", {})
 	addon.functions.InitDBValue("minimapSinkHoleData", {})
 	addon.functions.InitDBValue("hideQuickJoinToast", false)
+
+	table.insert(addon.variables.unitFrameNames, {
+		name = "MicroMenu",
+		var = "unitframeSettingMicroMenu",
+		text = addon.L["MicroMenu"],
+		children = { MicroMenu:GetChildren() },
+		revealAllChilds = true,
+		disableSetting = {
+			"hideMicroMenu",
+		},
+	})
+	-- table.insert(addon.variables.unitFrameNames, { name = "MicroMenu", var = "unitframeSettingMicroMenu", text = addon.L["MicroMenu"], children = { MicroMenu:GetChildren() } })
+	table.insert(addon.variables.unitFrameNames, {
+		name = "BagsBar",
+		var = "unitframeSettingBagsBar",
+		text = addon.L["BagsBar"],
+		children = { BagsBar:GetChildren() },
+		revealAllChilds = true,
+		disableSetting = {
+			"hideBagsBar",
+		},
+	})
 
 	function addon.functions.toggleMinimapButton(value)
 		if value == false then
@@ -3479,6 +3528,8 @@ end
 local eventHandlers = {
 	["ACTIVE_PLAYER_SPECIALIZATION_CHANGED"] = function(arg1)
 		addon.variables.unitSpec = GetSpecialization()
+		if addon.variables.unitSpec then addon.variables.unitRole = GetSpecializationRole(GetSpecialization()) end
+
 		if addon.db["showIlvlOnBagItems"] then
 			addon.functions.updateBags(ContainerFrameCombinedBags)
 			for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
@@ -3664,6 +3715,8 @@ local eventHandlers = {
 	["PLAYER_LOGIN"] = function()
 		if addon.db["enableMinimapButtonBin"] then addon.functions.toggleButtonSink() end
 		addon.variables.unitSpec = GetSpecialization()
+		if addon.variables.unitSpec then addon.variables.unitRole = GetSpecializationRole(GetSpecialization()) end
+
 		addon.db["moneyTracker"][UnitGUID("player")] = {
 			name = UnitName("player"),
 			realm = GetRealmName(),

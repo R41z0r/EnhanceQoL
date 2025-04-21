@@ -4,6 +4,10 @@
 
 - **Hideable Target Frame**  
   You can now hide the default Target Frame and have it reappear on mouse‑over.
+- **Hideable Bags Bar**
+  You can now hide the Bags Bar and have it reappear on mouse-over
+- **Hideable Micro Menu**
+  You can now hide the Micro Menu and have it reappear on mouse-over
 - **Mage‑Food Reminder**  
   A handy button that queues you for a follower dungeon to grab free Mage food.
 - **Profession‑Icon Fade**  
