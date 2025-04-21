@@ -11,6 +11,8 @@ local L = addon.LAura
 
 local AceGUI = addon.AceGUI
 
+local sUI = false
+
 local function getPowerBarColor(type)
 	-- Konvertiere 'Mana' zu 'MANA'
 	local powerKey = string.upper(type)
@@ -119,6 +121,7 @@ local powertypeClasses = {
 		},
 		[2] = { --Feral
 			["MAIN"] = "ENERGY",
+			["COMBO_POINTS"] = true,
 			["RAGE"] = true,
 			["MANA"] = true,
 			["LUNAR_POWER"] = true,
@@ -330,7 +333,11 @@ local function createPowerBar(type, anchor)
 	bar:SetSize(addon.db["personalResourceBarManaWidth"], addon.db["personalResourceBarManaHeight"])
 	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
 	if anchor then
-		bar:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, 0)
+		if sUI and anchor.specIcon then
+			bar:SetPoint("LEFT", anchor.specIcon, "RIGHT", 0, 0)
+		else
+			bar:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, 0)
+		end
 	else
 		bar:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, -40)
 	end
@@ -353,6 +360,7 @@ local function createPowerBar(type, anchor)
 end
 
 local function createSpecIcon(anchor)
+	if not sUI then return end
 	local specID = GetSpecialization()
 	if not specID or not anchor then return end
 	local _, _, _, iconPath = GetSpecializationInfo(specID)
@@ -437,9 +445,9 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 		firstStart = false
 		C_Timer.After(1, function()
 			createHealthBar()
+			createSpecIcon(EQOLHealthBar)
 			setPowerbars()
 			frameAnchor:UnregisterEvent("PLAYER_ENTERING_WORLD")
-			createSpecIcon(EQOLHealthBar)
 		end)
 	end
 
@@ -560,7 +568,9 @@ local function addResourceFrame(container)
 				var = "personalResourceBarManaWidth",
 				func = function(self, _, value)
 					addon.db["personalResourceBarManaWidth"] = value
-					powerbar["MANA"]:SetSize(addon.db["personalResourceBarManaWidth"], addon.db["personalResourceBarManaHeight"])
+					for i, v in pairs(powerbar) do
+						powerbar[i]:SetSize(addon.db["personalResourceBarManaWidth"], addon.db["personalResourceBarManaHeight"])
+					end
 				end,
 				min = 1,
 				max = 2000,
@@ -570,7 +580,9 @@ local function addResourceFrame(container)
 				var = "personalResourceBarManaHeight",
 				func = function(self, _, value)
 					addon.db["personalResourceBarManaHeight"] = value
-					powerbar["MANA"]:SetSize(addon.db["personalResourceBarManaWidth"], addon.db["personalResourceBarManaHeight"])
+					for i, v in pairs(powerbar) do
+						powerbar[i]:SetSize(addon.db["personalResourceBarManaWidth"], addon.db["personalResourceBarManaHeight"])
+					end
 				end,
 				min = 1,
 				max = 100,

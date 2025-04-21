@@ -12,5 +12,5 @@
 Init.lua
 locales.xml
 
-DetailsSkin.lua
+#DetailsSkin.lua
 EnhanceQoLAura.lua
