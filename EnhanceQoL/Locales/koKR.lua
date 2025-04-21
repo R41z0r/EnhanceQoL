@@ -139,6 +139,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "친구"
 L["autoAcceptGroupInviteOptions"] = "다음 대상의 초대를 수락..."
 
 L["showLeaderIconRaidFrame"] = "공격대 스타일 파티 프레임에 파티장 아이콘 표시"
+L["showPartyFrameInSoloContent"] = "솔로 콘텐츠에서 파티 프레임 표시"
 
 L["ActionbarHideExplain"] = '행동 단축바를 숨김 처리하고 마우스 오버 시 표시되도록 설정합니다. 이 기능은 ��동 단축바가 편집 모드에서 "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]

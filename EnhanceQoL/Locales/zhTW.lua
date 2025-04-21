@@ -145,6 +145,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "好友"
 L["autoAcceptGroupInviteOptions"] = "接受來自...的邀請"
 
 L["showLeaderIconRaidFrame"] = "在團隊風格的隊伍框架上顯示隊長圖示"
+L["showPartyFrameInSoloContent"] = "在單人內容中顯示隊伍框架"
 
 L["ActionbarHideExplain"] = "將快捷列設置為隱藏，僅在滑鼠懸停時顯示。只有當你的快捷列在編輯模式中設定為「"
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]

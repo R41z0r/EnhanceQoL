@@ -1339,6 +1339,15 @@ local function addPartyFrame(container)
 				end
 			end,
 		},
+		{
+			parent = "",
+			var = "showPartyFrameInSoloContent",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showPartyFrameInSoloContent"] = value
+				addon.variables.requireReload = true
+			end,
+		},
 	}
 
 	if addon.db["autoAcceptGroupInvite"] == true then
@@ -2206,6 +2215,7 @@ local function initParty()
 	addon.functions.InitDBValue("autoAcceptGroupInviteFriendOnly", false)
 	addon.functions.InitDBValue("autoAcceptGroupInviteGuildOnly", false)
 	addon.functions.InitDBValue("showLeaderIconRaidFrame", false)
+	addon.functions.InitDBValue("showPartyFrameInSoloContent", false)
 
 	if CompactUnitFrame_SetUnit then
 		hooksecurefunc("CompactUnitFrame_SetUnit", function(s, type)
@@ -2218,7 +2228,20 @@ local function initParty()
 			end
 		end)
 	end
-	-- if addon.db["showLeaderIconRaidFrame"] then setLeaderIcon() end
+
+	local last_solo
+	local function manage_raid_frame()
+		if not addon.db["showPartyFrameInSoloContent"] then return end
+		local solo = 1
+		if IsInGroup() or IsInRaid() then solo = 0 end
+
+		if solo == 0 and last_solo == 0 then return end
+
+		CompactPartyFrame:SetShown(solo)
+		last_solo = solo
+	end
+
+	hooksecurefunc(CompactPartyFrame, "UpdateVisibility", manage_raid_frame)
 end
 
 local function initQuest()

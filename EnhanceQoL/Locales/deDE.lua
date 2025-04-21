@@ -144,6 +144,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "Freunde"
 L["autoAcceptGroupInviteOptions"] = "Einladungen annehmen von..."
 
 L["showLeaderIconRaidFrame"] = "Zeige das Anführersymbol in gruppierten Schlachtzugsfenstern"
+L["showPartyFrameInSoloContent"] = "Gruppenfenster im Solo‑Inhalt anzeigen"
 
 L["ActionbarHideExplain"] = 'Setze die Aktionsleiste auf versteckt und nur bei Mouseover sichtbar. Dies funktioniert nur, wenn deine Aktionsleiste im Bearbeitungsmodus auf "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]

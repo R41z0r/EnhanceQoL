@@ -102,7 +102,7 @@ L["deathknight_HideRuneFrame"] = "Скрыть панель рун"
 L["evoker_HideEssence"] = "Скрыть панель эссенции"
 
 -- Монах
-L["monk_HideHarmonyBar"] = "��крыть панель гармонии"
+L["monk_HideHarmonyBar"] = "����крыть панель гармонии"
 
 -- Паладин
 L["paladin_HideHolyPower"] = "Скрыть панель священной силы"
@@ -170,6 +170,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "Друзья"
 L["autoAcceptGroupInviteOptions"] = "Принимать приглашения от..."
 
 L["showLeaderIconRaidFrame"] = "Показывать значок лидера в рейдовых групповых фреймах"
+L["showPartyFrameInSoloContent"] = "Отображать рамки группы в одиночном контенте"
 
 L["ActionbarHideExplain"] = 'Сделайте панель команд скрытой и показываемой при наведении мыши. Это работает только если ваша панель настроена на "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]

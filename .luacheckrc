@@ -109,6 +109,8 @@ globals = {
 	"MonkHarmonyBarFrame",
 	"WarlockPowerFrame",
 	"RuneFrame",
+	"ScrollBoxConstants",
+	"PVEFrameLeftInset",
 	"LFGListApplicationViewer_UpdateResults",
 	"InspectHeadSlot",
 	"InspectNeckSlot",

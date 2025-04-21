@@ -139,6 +139,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "好友"
 L["autoAcceptGroupInviteOptions"] = "接受来自...的邀请"
 
 L["showLeaderIconRaidFrame"] = "在团队风格的队伍框体上显示队长图标"
+L["showPartyFrameInSoloContent"] = "在单人内容中显示队伍框体"
 
 L["ActionbarHideExplain"] = "将动作条设置为隐藏，仅在鼠标悬停时显示。只有当你的动作条在编辑模式中设置为“"
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
@@ -153,7 +154,7 @@ L["useMinimapButtonBinIcon"] = "使用小地图按钮作为收集器"
 L["useMinimapButtonBinMouseover"] = "将按钮收集器显示为可移动框体（鼠标悬停时）"
 L["lockMinimapButtonBin"] = "锁定收集器框体"
 
-L["UnitFrameHideExplain"] = "隐藏元素，仅在鼠标悬停时显示"
+L["UnitFrameHideExplain"] = "隐藏元素，仅在鼠标悬���时显示"
 L["chatFrameFadeEnabled"] = "启用聊天渐隐"
 L["chatFrameFadeTimeVisibleText"] = "文字保持可见时间"
 L["chatFrameFadeDurationText"] = "渐隐动画的持续时间"

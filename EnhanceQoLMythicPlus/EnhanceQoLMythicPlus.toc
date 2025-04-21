@@ -25,4 +25,5 @@ locales.xml
 CooldownTracker.lua
 DungeonPortal.lua
 TalentReminder.lua
+DungeonFilter.lua
 EnhanceQoLMythicPlus.lua

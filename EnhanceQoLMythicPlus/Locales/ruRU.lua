@@ -117,4 +117,12 @@ L["ActualTalents"] = "Текущие таланты"
 L["RequiredTalents"] = "Требуемые таланты"
 L["DeletedLoadout"] = "Удаленный набор талантов"
 L["MissingTalentLoadout"] =
-	"Некоторые наборы талантов, использованные в Напомин��нии о талантах,\nбыли удалены и больше не доступны:"
+	"Некоторые наборы талантов, использованные в Напомин����нии о талантах,\nбыли удалены и больше не доступны:"
+
+L["groupFilter"] = "Фильтр группы"
+L["mythicPlusEnableDungeonFilter"] = "Расширяет стандартный фильтр групповых подземелий Blizzard новыми фильтрами"
+L["mythicPlusEnableDungeonFilterClearReset"] = "Сбрасывать расширенные фильтры при сбросе фильтра Blizzard"
+L["filteredTextEntries"] = "Отфильтровано\n%d записей"
+L["Partyfit"] = "Группа подходит"
+L["BloodlustAvailable"] = "Жажда крови доступна"
+L["BattleResAvailable"] = "Боевой рес доступен"

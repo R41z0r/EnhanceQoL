@@ -818,6 +818,45 @@ local function addAutoMarkFrame(container)
 	groupCore:AddChild(labelExplanation)
 end
 
+local function addGroupFilterFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			text = L["mythicPlusEnableDungeonFilter"],
+			var = "mythicPlusEnableDungeonFilter",
+			func = function(self, _, value)
+				addon.db["mythicPlusEnableDungeonFilter"] = value
+				if value then
+					addon.MythicPlus.functions.addDungeonFilter()
+				else
+					addon.MythicPlus.functions.removeDungeonFilter()
+				end
+				container:ReleaseChildren()
+				addGroupFilterFrame(container)
+			end,
+		},
+	}
+	if addon.db["mythicPlusEnableDungeonFilter"] then
+		table.insert(data, {
+			text = L["mythicPlusEnableDungeonFilterClearReset"],
+			var = "mythicPlusEnableDungeonFilterClearReset",
+			func = function(self, _, value) addon.db["mythicPlusEnableDungeonFilterClearReset"] = value end,
+		})
+	end
+
+	for _, cbData in ipairs(data) do
+		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
+		if cbData.func then uFunc = cbData.func end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+		groupCore:AddChild(cbElement)
+	end
+end
+
 local function addRatingFrame(container)
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 	container:AddChild(wrapper)
@@ -968,6 +1007,7 @@ addon.functions.addToTree(nil, {
 		{ value = "brtracker", text = L["BRTracker"] },
 		{ value = "rating", text = DUNGEON_SCORE },
 		{ value = "talents", text = L["TalentReminder"] },
+		{ value = "groupfilter", text = L["groupFilter"] },
 	},
 })
 
@@ -988,5 +1028,9 @@ function addon.MythicPlus.functions.treeCallback(container, group)
 		addRatingFrame(container)
 	elseif group == "mythicplus\001talents" then
 		addTalentFrame(container)
+	elseif group == "mythicplus\001groupfilter" then
+		addGroupFilterFrame(container)
 	end
 end
+
+if addon.db["mythicPlusEnableDungeonFilter"] then addon.MythicPlus.functions.addDungeonFilter() end

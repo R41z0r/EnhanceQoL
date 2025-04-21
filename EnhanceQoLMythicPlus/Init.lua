@@ -72,6 +72,10 @@ addon.functions.InitDBValue("portalHideMissing", false)
 addon.functions.InitDBValue("portalShowTooltip", false)
 addon.functions.InitDBValue("teleportsEnableCompendium", false)
 
+-- Group Dungeon Filter
+addon.functions.InitDBValue("mythicPlusEnableDungeonFilter", false)
+addon.functions.InitDBValue("mythicPlusEnableDungeonFilterClearReset", false)
+
 -- PullTimer
 addon.MythicPlus.variables.handled = false
 addon.MythicPlus.variables.breakIt = false

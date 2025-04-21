@@ -67,7 +67,7 @@ L["Quest"] = "Quest"
 L["hideBagsBar"] = "Hide Bagsbar"
 L["hideMicroMenu"] = "Hide Micro Menu"
 L["MicroMenu"] = "Micro Menu"
-L["BagsBar"]  = "Bags Bar"
+L["BagsBar"] = "Bags Bar"
 -- Dungeon
 L["autoChooseDelvePower"] = "Automatically select delve power when only 1 option"
 L["lfgSortByRio"] = "Sort Mythic Dungeon Applicants by Mythic Score"
@@ -143,6 +143,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "Friends"
 L["autoAcceptGroupInviteOptions"] = "Accept invites from..."
 
 L["showLeaderIconRaidFrame"] = "Show leader icon on raid-style party frames"
+L["showPartyFrameInSoloContent"] = "Show Party Frames in Solo Content"
 
 L["ActionbarHideExplain"] = 'Set the action bar to hidden and show on mouseover. This works only when your Action Bar is set to "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]

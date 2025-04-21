@@ -145,6 +145,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "Amigos"
 L["autoAcceptGroupInviteOptions"] = "Aceitar convites de..."
 
 L["showLeaderIconRaidFrame"] = "Exibir o ícone de líder nos quadros de grupo em estilo de raide"
+L["showPartyFrameInSoloContent"] = "Mostrar quadros de grupo em conteúdo solo"
 
 L["ActionbarHideExplain"] = 'Defina a barra de ação como oculta e exibida ao passar o mouse. Isso só funciona se sua barra de ação estiver configurada como "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
