@@ -37,6 +37,8 @@ end)
 
 hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
 	if not addon.db["mythicPlusEnableDungeonFilter"] then return end
+	local panel = LFGListFrame.SearchPanel
+	if panel.categoryID ~= 2 then return end
 	if originalSetupGen and blizzGen ~= originalSetupGen then return end
 	originalSetupGen = originalSetupGen or blizzGen
 
@@ -141,9 +143,27 @@ local function MyCustomFilter(info)
 end
 
 local function ApplyEQOLFilters(isInitial)
+	--------------------------------------------------------------------
+	-- Avoid flickering / disappearing tooltips ------------------------
+	-- If the mouse is hovering an entry, the GameTooltip is shown.     --
+	-- Removing that entry instantly hides the tooltip, which feels     --
+	-- jarring. We therefore *postpone* the filtering until the tooltip --
+	-- is gone (the user moved the cursor away), then run it once.     --
+	--------------------------------------------------------------------
+
 	if not addon.db["mythicPlusEnableDungeonFilter"] then return end
 	if not pDb["bloodlustAvailable"] and not pDb["battleResAvailable"] and not pDb["partyFit"] then
 		titleScore1:Hide()
+		return
+	end
+	if GameTooltip:IsShown() then
+		if not addon.eqolTooltipHooked then
+			addon.eqolTooltipHooked = true
+			GameTooltip:HookScript("OnHide", function()
+				addon.eqolTooltipHooked = nil
+				ApplyEQOLFilters(false)
+			end)
+		end
 		return
 	end
 	local panel = LFGListFrame.SearchPanel
@@ -164,8 +184,6 @@ local function ApplyEQOLFilters(isInitial)
 		end
 	end
 
-	-- ElementData beim ScrollBox‑DP sind unveränderliche Tabellen,
-	-- deshalb zuerst markieren – dann in zweiter Schleife entfernen
 	local toRemove = {}
 
 	for _, element in dp:EnumerateEntireRange() do

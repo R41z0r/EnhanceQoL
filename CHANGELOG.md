@@ -18,7 +18,7 @@
 - **Bag Filter Window**  
   A flexible filter panel for the default bags:
 
-  - Filter by equipment slot, item rarity, class, or specialization usability.
+  - Filter by equipment slot, item rarity or specialization usability.
 
 - **Money Tracker**  
   See the gold of all your characters in a single tooltip.
