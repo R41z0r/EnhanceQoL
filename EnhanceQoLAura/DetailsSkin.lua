@@ -1,11 +1,11 @@
 local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 
-if _G[parentAddonName] then
-	addon = _G[parentAddonName]
-else
-	error(parentAddonName .. " is not loaded")
-end
+-- if _G[parentAddonName] then
+-- 	addon = _G[parentAddonName]
+-- else
+-- 	error(parentAddonName .. " is not loaded")
+-- end
 
 local skinTable = {
 	file = [[Interface\AddOns\Details\images\skins\flat_skin.blp]],
