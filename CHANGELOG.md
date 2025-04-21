@@ -33,6 +33,8 @@
   - Filter for groups that have Battle Res (or space for it)  
     – only shown to classes without Battle Res.
   - Filter for groups that match your current role.
+  - Filter for groups that already have your specialization in group
+    - only shown for DPS-Specialization
 
 ## ⚙️ Changes
 

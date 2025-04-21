@@ -45,6 +45,8 @@ hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
 	local function EQOL_Generator(menu, root)
 		blizzGen(menu, root)
 
+		root:CreateTitle("")
+		
 		root:CreateTitle(addonName)
 		root:CreateCheckbox(L["Partyfit"], function() return pDb["partyFit"] end, function() pDb["partyFit"] = not pDb["partyFit"] end)
 		if not playerIsLust then
@@ -53,16 +55,23 @@ hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
 		if not playerIsBR then
 			root:CreateCheckbox(L["BattleResAvailable"], function() return pDb["battleResAvailable"] end, function() pDb["battleResAvailable"] = not pDb["battleResAvailable"] end)
 		end
+		if addon.variables.unitRole == "DAMAGER" then
+			root:CreateCheckbox(
+				(L["NoSameSpec"]):format(addon.variables.unitSpecName .. " " .. select(1, UnitClass("player"))),
+				function() return pDb["NoSameSpec"] end,
+				function() pDb["NoSameSpec"] = not pDb["NoSameSpec"] end
+			)
+		end
 	end
 	self:SetupMenu(EQOL_Generator)
 end)
 
 local function MyCustomFilter(info)
-	-- Count group roles
 	local groupTankCount, groupHealerCount, groupDPSCount = 0, 0, 0
-	local hasLust, hasBR = false, false
+	local hasLust, hasBR, hasSameSpec = false, false, false
 	for i = 1, info.numMembers do
 		local mData = C_LFGList.GetSearchResultPlayerInfo(info.searchResultID, i)
+
 		if mData.assignedRole == "TANK" then
 			groupTankCount = groupTankCount + 1
 		elseif mData.assignedRole == "HEALER" then
@@ -75,7 +84,10 @@ local function MyCustomFilter(info)
 		elseif BR_CLASSES[mData.classFilename] then
 			hasBR = true
 		end
+		if mData.classFilename == addon.variables.unitClass and mData.specName == addon.variables.unitSpecName then hasSameSpec = true end
 	end
+
+	if addon.variables.unitRole == "DAMAGER" and pDb["NoSameSpec"] and hasSameSpec then return false end
 
 	if pDb["partyFit"] then
 		-- Party-queue role availability check
@@ -152,7 +164,12 @@ local function ApplyEQOLFilters(isInitial)
 	--------------------------------------------------------------------
 
 	if not addon.db["mythicPlusEnableDungeonFilter"] then return end
-	if not pDb["bloodlustAvailable"] and not pDb["battleResAvailable"] and not pDb["partyFit"] then
+	if
+		(not pDb["bloodlustAvailable"] or playerIsLust)
+		and (not pDb["battleResAvailable"] or playerIsBR)
+		and not pDb["partyFit"]
+		and (not pDb["NoSameSpec"] or addon.variables.unitRole ~= "DAMAGER")
+	then
 		titleScore1:Hide()
 		return
 	end
@@ -256,4 +273,5 @@ LFGListFrame.SearchPanel.FilterButton.ResetButton:HookScript("OnClick", function
 	pDb["bloodlustAvailable"] = false
 	pDb["battleResAvailable"] = false
 	pDb["partyFit"] = false
+	pDb["NoSameSpec"] = false
 end)
