@@ -3676,6 +3676,15 @@ local eventHandlers = {
 	["INSPECT_READY"] = function(arg1)
 		if addon.db["showInfoOnInspectFrame"] then onInspect(arg1) end
 	end,
+	["INVENTORY_SEARCH_UPDATE"] = function()
+		if addon.db["showBagFilterMenu"] then
+			addon.functions.updateBags(ContainerFrameCombinedBags)
+			for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+				addon.functions.updateBags(frame)
+			end
+			if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
+		end
+	end,
 	["PARTY_INVITE_REQUEST"] = function(unitName, arg2, arg3, arg4, arg5, arg6, unitID, arg8)
 		if addon.db["autoAcceptGroupInvite"] then
 			if addon.db["autoAcceptGroupInviteGuildOnly"] then

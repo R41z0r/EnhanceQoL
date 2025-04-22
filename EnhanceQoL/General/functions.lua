@@ -304,6 +304,8 @@ local knownButtons = {}
 
 local function updateButtonInfo(itemButton, bag, slot, frameName)
 	itemButton:SetAlpha(1)
+	itemButton:SetMatchesSearch(true) -- set all to visible on start
+
 	if itemButton.ItemLevelText then itemButton.ItemLevelText:SetAlpha(1) end
 	if itemButton.ItemBoundType then itemButton.ItemBoundType:SetAlpha(1) end
 	local eItem = Item:CreateFromBagAndSlot(bag, slot)
@@ -656,6 +658,7 @@ function addon.functions.updateBags(frame)
 		addon.itemBagFilters = {}
 		addon.itemBagFiltersQuality = {}
 	end
+	if not frame:IsShown() then return end
 	if nil == knownButtons[frame:GetName()] then
 		knownButtons[frame:GetName()] = {}
 	else
