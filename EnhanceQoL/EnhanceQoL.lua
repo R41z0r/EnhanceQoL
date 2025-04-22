@@ -2956,7 +2956,7 @@ local function initCharacter()
 	hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
 
 	if _G.AccountBankPanel then
-		-- local knownButtons = {}
+		-- local  knownButtons = {}
 		-- local update = function(frame)
 		-- 	if nil == knownButtons then
 		-- 		knownButtons = {}
