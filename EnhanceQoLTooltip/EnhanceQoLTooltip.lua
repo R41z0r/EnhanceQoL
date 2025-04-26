@@ -8,19 +8,10 @@ else
 end
 
 local L = addon.LTooltip
+
 local AceGUI = addon.AceGUI
 
 local frameLoad = CreateFrame("Frame")
-
-local function prettyFormatNumber(value)
-	if value >= 1e6 then
-		return string.format("%.1fM", value / 1e6)
-	elseif value >= 1e3 then
-		return string.format("%.1fK", value / 1e3)
-	else
-		return tostring(value)
-	end
-end
 
 local function GetNPCIDFromGUID(guid)
 	if guid then
@@ -28,6 +19,67 @@ local function GetNPCIDFromGUID(guid)
 		if type == "Creature" or type == "Vehicle" then return tonumber(npcID) end
 	end
 	return nil
+end
+
+local function fmtNum(n)
+	if BreakUpLargeNumbers then
+		return BreakUpLargeNumbers(n or 0)
+	else
+		return tostring(n or 0)
+	end
+end
+
+local function checkCurrency(tooltip, id)
+	if not id then return end
+	if not addon.db["TooltipShowCurrencyAccountWide"] then return end
+	local charList = C_CurrencyInfo.FetchCurrencyDataFromAccountCharacters(id)
+
+	local playerName, playerRealm = UnitFullName("player")
+	local playerFullName = playerName .. "-" .. playerRealm
+	local playerQty = C_CurrencyInfo.GetCurrencyInfo(id).quantity or 0
+
+	if nil == charList or #charList == 0 then
+		-- no warband resources - just skip all to only show the player itself by blizzard
+		return
+	end
+
+	table.insert(charList, {
+		fullCharacterName = playerFullName,
+		characterName = playerName,
+		characterGUID = UnitGUID("player"),
+		currencyID = id,
+		quantity = playerQty,
+	})
+
+	if charList and #charList > 0 then
+		table.sort(charList, function(a, b) return a.quantity > b.quantity end)
+
+		for i = tooltip:NumLines(), 1, -1 do
+			local left = _G[tooltip:GetName() .. "TextLeft" .. i]
+			local right = _G[tooltip:GetName() .. "TextRight" .. i]
+			if left and left:GetText() and left:GetText():match("^" .. TOTAL .. ":") then
+				-- wipe both columns and break; there is only one such line
+				left:SetText("")
+				if right then right:SetText("") end
+				break
+			end
+		end
+
+		tooltip:AddLine(" ")
+		local total = 0
+		for _, entry in ipairs(charList) do
+			total = total + entry.quantity
+		end
+
+		tooltip:AddLine(string.format("%s: |cFFFFFFFF%s|r", TOTAL, fmtNum(total)), 1, 0.82, 0)
+
+		tooltip:AddLine(" ")
+
+		for _, entry in ipairs(charList) do
+			tooltip:AddLine(string.format("%s: |cFFFFFFFF%s|r", entry.characterName, fmtNum(entry.quantity)))
+		end
+		tooltip:Show()
+	end
 end
 
 local function checkSpell(tooltip, id, name)
@@ -282,6 +334,11 @@ if TooltipDataProcessor then
 			name = L["SpellID"]
 			checkAura(tooltip, id, name)
 			return
+		elseif kind == "currency" then
+			-- Show account‑wide character breakdown for the given currency
+			id = data.id
+			checkCurrency(tooltip, id)
+			return
 		end
 	end)
 end
@@ -309,6 +366,7 @@ addon.functions.addToTree(nil, {
 		{ value = "spell", text = L["Spell"] },
 		{ value = "unit", text = L["Unit"] },
 		{ value = "quests", text = QUESTLOG_BUTTON },
+		{ value = "currency", text = CURRENCY },
 	},
 })
 
@@ -496,6 +554,25 @@ local function addGeneralFrame(container)
 	end
 end
 
+local function addCurrencyFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{ text = L["TooltipShowCurrencyAccountWide"], var = "TooltipShowCurrencyAccountWide" },
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value) addon.db[cbData.var] = value end)
+		groupCore:AddChild(cbElement)
+	end
+end
+
 function addon.Tooltip.functions.treeCallback(container, group)
 	container:ReleaseChildren() -- Entfernt vorherige Inhalte
 	-- Prüfen, welche Gruppe ausgewählt wurde
@@ -511,6 +588,8 @@ function addon.Tooltip.functions.treeCallback(container, group)
 		addUnitFrame(container)
 	elseif group == "tooltip\001general" then
 		addGeneralFrame(container)
+	elseif group == "tooltip\001currency" then
+		addCurrencyFrame(container)
 	else
 		-- local label = AceGUI:Create("Label")
 		-- label:SetText("No content defined for this section.")

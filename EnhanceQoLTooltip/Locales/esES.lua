@@ -76,3 +76,5 @@ L["Reagentbank"] = "Banco de componentes"
 L["Bank"] = "Banco"
 L["Bag"] = "Bolsa"
 L["Itemcount"] = "Cantidad de objetos"
+
+L["TooltipShowCurrencyAccountWide"] = "Mostrar la divisa de toda la cuenta en el tooltip"

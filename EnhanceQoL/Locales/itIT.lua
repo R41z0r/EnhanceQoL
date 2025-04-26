@@ -130,7 +130,6 @@ L["CVarOptions"] = {
 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Mostra la gilda sui giocatori" },
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Mostra il titolo sui giocatori" },
 	["WholeChatWindowClickable"] = { description = "Rendi cliccabile l'intera finestra di chat", trueValue = "1", falseValue = "0" },
-	["addonProfilerEnabled"] = { description = "Abilita il profiler degli addon di Blizzard (consuma molta CPU)", trueValue = "1", falseValue = "0", register = true },
 }
 
 L["autoAcceptGroupInvite"] = "Accetta automaticamente gli inviti al gruppo"

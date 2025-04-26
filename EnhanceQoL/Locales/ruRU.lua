@@ -102,7 +102,7 @@ L["deathknight_HideRuneFrame"] = "Скрыть панель рун"
 L["evoker_HideEssence"] = "Скрыть панель эссенции"
 
 -- Монах
-L["monk_HideHarmonyBar"] = "����крыть панель гармонии"
+L["monk_HideHarmonyBar"] = "������крыть панель гармонии"
 
 -- Паладин
 L["paladin_HideHolyPower"] = "Скрыть панель священной силы"
@@ -156,12 +156,6 @@ L["CVarOptions"] = {
 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Показывать гильдию игроков" },
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Показывать титул игроков" },
 	["WholeChatWindowClickable"] = { description = "Сделать весь чат кликабельным", trueValue = "1", falseValue = "0" },
-	["addonProfilerEnabled"] = {
-		description = "Включить профилирование аддонов от Blizzard (требует много ресурсов ЦП)",
-		trueValue = "1",
-		falseValue = "0",
-		register = true,
-	},
 }
 
 L["autoAcceptGroupInvite"] = "Автоматически принимать приглашения в группу"

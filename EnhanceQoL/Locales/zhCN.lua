@@ -130,7 +130,6 @@ L["CVarOptions"] = {
 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "显示玩家的公会名称" },
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "显示玩家的头衔" },
 	["WholeChatWindowClickable"] = { description = "使整个聊天窗口可点击", trueValue = "1", falseValue = "0" },
-	["addonProfilerEnabled"] = { description = "启用暴雪插件分析器（高CPU消耗）", trueValue = "1", falseValue = "0", register = true },
 }
 
 L["autoAcceptGroupInvite"] = "自动接受组队邀请"

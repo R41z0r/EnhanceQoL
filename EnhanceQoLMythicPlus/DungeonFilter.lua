@@ -69,6 +69,7 @@ end)
 local function MyCustomFilter(info)
 	local groupTankCount, groupHealerCount, groupDPSCount = 0, 0, 0
 	local hasLust, hasBR, hasSameSpec = false, false, false
+	if info.numMembers == 5 then return false end
 	for i = 1, info.numMembers do
 		local mData = C_LFGList.GetSearchResultPlayerInfo(info.searchResultID, i)
 

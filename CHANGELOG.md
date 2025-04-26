@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.7.0] – 2025-04-26
+### ✨ Added
+- Option to **show account-wide currency totals** in tooltips
+
+### ❌ Removed
+- Removed the option to disable the Blizzard AddOn Profiler (CVar no longer exists)
+
+### 🐛 Bug Fixes
+- Dungeon filter sometimes kept full groups in the list instead of cleaning them
+
+---
+
 ## [3.6.1] – 2025‑04‑22
 ### 🐛 Bug Fixes
 - Clearing the search filter sometimes left inventory items faded.

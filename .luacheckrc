@@ -107,6 +107,8 @@ globals = {
 	"COMMUNITY_MEMBER_ROLE_NAME_LEADER",
 	"PaperDollSidebarTab3",
 	"MonkHarmonyBarFrame",
+	"C_CooldownViewer",
+	"EssentialCooldownViewer",
 	"WarlockPowerFrame",
 	"RuneFrame",
 	"ScrollBoxConstants",

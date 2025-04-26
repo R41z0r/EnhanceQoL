@@ -77,3 +77,5 @@ L["Reagentbank"] = "Банк реагентов"
 L["Bank"] = "Банк"
 L["Bag"] = "Сумка"
 L["Itemcount"] = "Количество предметов"
+
+L["TooltipShowCurrencyAccountWide"] = "Показывать валюту аккаунта во всплывающей подсказке"

@@ -75,3 +75,5 @@ L["Reagentbank"] = "재료 은행"
 L["Bank"] = "은행"
 L["Bag"] = "가방"
 L["Itemcount"] = "아이템 개수"
+
+L["TooltipShowCurrencyAccountWide"] = "툴팁에 계정 전체 화폐 표시"

@@ -130,7 +130,6 @@ L["CVarOptions"] = {
 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "플레이어의 길드 표시" },
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "플레이어의 칭호 표시" },
 	["WholeChatWindowClickable"] = { description = "전체 채팅 창 클릭 가능하게 설정", trueValue = "1", falseValue = "0" },
-	["addonProfilerEnabled"] = { description = "블리자드 애드온 프로파일러 활성화 (CPU 사용량이 많음)", trueValue = "1", falseValue = "0", register = true },
 }
 
 L["autoAcceptGroupInvite"] = "파티 초대를 자동으로 수락"

@@ -76,3 +76,5 @@ L["Reagentbank"] = "Banque de composants"
 L["Bank"] = "Banque"
 L["Bag"] = "Sac"
 L["Itemcount"] = "Nombre d'objets"
+
+L["TooltipShowCurrencyAccountWide"] = "Afficher la monnaie du compte dans l’infobulle"

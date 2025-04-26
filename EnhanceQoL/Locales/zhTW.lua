@@ -136,7 +136,6 @@ L["CVarOptions"] = {
 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "顯示玩家的公會名稱" },
 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "顯示玩家的頭銜" },
 	["WholeChatWindowClickable"] = { description = "使整個聊天視窗可點擊", trueValue = "1", falseValue = "0" },
-	["addonProfilerEnabled"] = { description = "啟用暴雪外掛程式分析器（CPU消耗較高）", trueValue = "1", falseValue = "0", register = true },
 }
 
 L["autoAcceptGroupInvite"] = "自動接受組隊邀請"
@@ -162,7 +161,7 @@ L["lockMinimapButtonBin"] = "鎖定收集器框架"
 
 L["UnitFrameHideExplain"] = "隱藏元素，僅在滑鼠懸停時顯示"
 L["chatFrameFadeEnabled"] = "啟用聊天淡出效果"
-L["chatFrameFadeTimeVisibleText"] = "文字保持顯示的時長"
+L["chatFrameFadeTimeVisibleText"] = "文字保���顯示的時長"
 L["chatFrameFadeDurationText"] = "淡出動畫的持續時間"
 
 L["enableLootspecQuickswitch"] = "在小地圖上啟用戰利品和當前專精的快速切換"

@@ -76,3 +76,5 @@ L["Reagentbank"] = "材料银行"
 L["Bank"] = "银行"
 L["Bag"] = "背包"
 L["Itemcount"] = "物品数量"
+
+L["TooltipShowCurrencyAccountWide"] = "在滑鼠提示中顯示帳號通用貨幣"
