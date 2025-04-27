@@ -42,7 +42,7 @@ local GetSpellInfo = GetSpellInfo or function(spellID)
     end
 end
 local GetSpellCooldown = C_Spell and C_Spell.GetSpellCooldown or GetSpellCooldown
-local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo or GetDetailedItemLevelInfo
+local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo
 local GetSpellTabInfo = GetSpellTabInfo or (function(tabLine)
     if not tabLine then return nil end
 

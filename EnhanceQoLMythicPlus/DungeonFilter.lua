@@ -13,6 +13,23 @@ if addon.db["mythicPlusDungeonFilters"][UnitGUID("player")] == nil then addon.db
 
 local pDb = addon.db["mythicPlusDungeonFilters"][UnitGUID("player")]
 
+local appliedLookup = {}
+
+local ACTIVE_STATUS = {
+	applied = true,
+	invited = true,
+	inviteaccepted = true,
+	pending = true,
+}
+
+local function UpdateAppliedCache()
+	wipe(appliedLookup)
+	for _, appID in ipairs(C_LFGList.GetApplications()) do
+		local resultID, status = C_LFGList.GetApplicationInfo(appID)
+		if resultID and ACTIVE_STATUS[status] then appliedLookup[resultID] = true end
+	end
+end
+
 local LUST_CLASSES = { SHAMAN = true, MAGE = true, HUNTER = true, EVOKER = true }
 local BR_CLASSES = { DRUID = true, WARLOCK = true, DEATHKNIGHT = true, PALADIN = true }
 
@@ -24,7 +41,6 @@ local originalSetupGen
 local initialAllEntries = {}
 local removedResults = {}
 
--- Reset custom menu hook on specialization change to reapply generator
 local titleScore1 = LFGListFrame:CreateFontString(nil, "OVERLAY")
 titleScore1:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
 titleScore1:SetPoint("TOPRIGHT", PVEFrameLeftInset, "TOPRIGHT", -10, -5)
@@ -67,6 +83,7 @@ hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
 end)
 
 local function MyCustomFilter(info)
+	if appliedLookup[info.searchResultID] then return true end
 	local groupTankCount, groupHealerCount, groupDPSCount = 0, 0, 0
 	local hasLust, hasBR, hasSameSpec = false, false, false
 	if info.numMembers == 5 then return false end
@@ -237,9 +254,13 @@ function addon.MythicPlus.functions.addDungeonFilter()
 		LFGListFrame:Show()
 	end
 	f = CreateFrame("Frame")
+	UpdateAppliedCache()
 	f:RegisterEvent("LFG_LIST_SEARCH_RESULTS_RECEIVED")
 	f:RegisterEvent("LFG_LIST_SEARCH_RESULT_UPDATED")
 	f:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+	f:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED")
+	f:RegisterEvent("LFG_LIST_APPLICATION_STATUS_UPDATED")
+	f:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS")
 	f:SetScript("OnEvent", function(_, event, ...)
 		if not addon.db["mythicPlusEnableDungeonFilter"] then return end
 		if event == "LFG_LIST_SEARCH_RESULTS_RECEIVED" then
@@ -250,6 +271,8 @@ function addon.MythicPlus.functions.addDungeonFilter()
 			if info and not MyCustomFilter(info) then ApplyEQOLFilters(false) end
 		elseif event == "PLAYER_SPECIALIZATION_CHANGED" then
 			if drop then drop.eqolWrapped = nil end
+		elseif event == "LFG_LIST_APPLICANT_LIST_UPDATED" or event == "LFG_LIST_APPLICATION_STATUS_UPDATED" or event == "LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS" then
+			UpdateAppliedCache()
 		end
 	end)
 end

@@ -19,6 +19,7 @@
 ## X-Compatible-With: retail
 ## X-WoWI-ID: 26888
 ## LoadOnDemand: 1
+## Globe-Main: EnhanceQoL
 
 Init.lua
 locales.xml

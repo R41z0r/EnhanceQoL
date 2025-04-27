@@ -7,6 +7,7 @@
 ## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
 ## LoadOnDemand: 1
 ## X-Compatible-With: retail
+## Globe-Main: EnhanceQoL
 
 EnhanceQoLQuery.lua
 EnhanceQoLQuery.xml

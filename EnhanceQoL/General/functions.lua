@@ -6,7 +6,7 @@ local AceGUI = LibStub("AceGUI-3.0")
 local L = addon.L
 
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
-local GetItemInfoInstant = C_Item.GetItemInfoInstant or GetItemInfoInstant
+local GetItemInfoInstant = C_Item.GetItemInfoInstant
 local GetItemInfo = C_Item.GetItemInfo
 local GetBagItem = C_TooltipInfo.GetBagItem
 local IsEquippableItem = C_Item.IsEquippableItem
@@ -31,20 +31,25 @@ function addon.functions.toggleRaidTools(value, self)
 	end
 end
 
+local GOLD_ICON = "|TInterface\\MoneyFrame\\UI-GoldIcon:0:0:2:0|t"
+local SILVER_ICON = "|TInterface\\MoneyFrame\\UI-SilverIcon:0:0:2:0|t"
+local COPPER_ICON = "|TInterface\\MoneyFrame\\UI-CopperIcon:0:0:2:0|t"
+
 function addon.functions.formatMoney(copper)
-	local gold = math.floor(copper / 10000)
-	local silver = math.floor((copper % 10000) / 100)
-	local bronze = copper % 100
+	local COPPER_PER_SILVER = 100
+	local COPPER_PER_GOLD = 10000
 
-	local formatted = ""
+	local gold = math.floor(copper / COPPER_PER_GOLD)
+	local silver = math.floor((copper % COPPER_PER_GOLD) / COPPER_PER_SILVER)
+	local bronze = copper % COPPER_PER_SILVER
 
-	if gold > 0 then formatted = string.format("%d|cffffd700g|r ", gold) end
+	local parts = {}
 
-	if silver > 0 or gold > 0 then formatted = formatted .. string.format("%d|cffc7c7cfs|r ", silver) end
+	if gold > 0 then table.insert(parts, string.format("%s%s", BreakUpLargeNumbers(gold), GOLD_ICON)) end
+	if gold > 0 or silver > 0 then table.insert(parts, string.format("%02d%s", silver, SILVER_ICON)) end
+	table.insert(parts, string.format("%02d%s", bronze, COPPER_ICON))
 
-	formatted = formatted .. string.format("%d|cffeda55fc|r", bronze)
-
-	return formatted
+	return table.concat(parts, " ")
 end
 
 function addon.functions.toggleLandingPageButton(title, state)
@@ -689,4 +694,12 @@ function addon.functions.updateBags(frame)
 			end
 		end
 	end
+end
+
+function addon.functions.IsQuestRepeatableType(questID)
+	if C_QuestLog.IsWorldQuest and C_QuestLog.IsWorldQuest(questID) then return true end
+	if C_QuestLog.IsRepeatableQuest and C_QuestLog.IsRepeatableQuest(questID) then return true end
+	local classification
+	if C_QuestInfoSystem and C_QuestInfoSystem.GetQuestClassification then classification = C_QuestInfoSystem.GetQuestClassification(questID) end
+	return classification == Enum.QuestClassification.Recurring or classification == Enum.QuestClassification.Calling
 end

@@ -374,7 +374,7 @@ local function CheckItemGems(element, itemLink, emptySocketsCount, key, pdElemen
 		element.gems[i]:SetScript("OnEnter", nil)
 
 		if gemName then
-			local icon = GetItemIcon(gemLink)
+			local icon = C_Item.GetItemIconByID(gemLink)
 			element.gems[i].icon:SetTexture(icon)
 			element.gems[i]:SetScript("OnEnter", function(self)
 				if gemLink and addon.db["showGemsTooltipOnCharframe"] then
@@ -721,7 +721,7 @@ local function setIlvlText(element, slot)
 							element.gems[i]:Show()
 							local gemName, gemLink = C_Item.GetItemGem(link, i)
 							if gemName then
-								local icon = GetItemIcon(gemLink)
+								local icon = C_Item.GetItemIconByID(gemLink)
 								element.gems[i].icon:SetTexture(icon)
 								element.gems[i]:SetScript("OnEnter", function(self)
 									if gemLink and addon.db["showGemsTooltipOnCharframe"] then
@@ -2054,7 +2054,7 @@ local function updateMerchantButtonInfo()
 						(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
 					then
 						local link = eItem:GetItemLink()
-						local invSlot = select(4, GetItemInfoInstant(link))
+						local invSlot = select(4, C_Item.GetItemInfoInstant(link))
 						if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
 
 						if not itemButton.ItemLevelText then
@@ -2356,11 +2356,11 @@ local function initBagsFrame()
 			else
 				displayName = string.format("|cff%02x%02x%02x%s-%s|r", col.r * 255, col.g * 255, col.b * 255, info.name, info.realm)
 			end
-			GameTooltip:AddDoubleLine(displayName, GetCoinTextureString(info.money))
+			GameTooltip:AddDoubleLine(displayName, addon.functions.formatMoney(info.money))
 		end
 
 		GameTooltip:AddLine(" ")
-		GameTooltip:AddDoubleLine(TOTAL, GetCoinTextureString(total))
+		GameTooltip:AddDoubleLine(TOTAL, addon.functions.formatMoney(total))
 		GameTooltip:Show()
 	end
 
@@ -2885,7 +2885,7 @@ local function initUI()
 		if nil == GetSpecialization() then return end
 
 		local _, curSpecName = GetSpecializationInfoForClassID(addon.variables.unitClassID, GetSpecialization())
-		local totalSpecs = GetNumSpecializationsForClassID(addon.variables.unitClassID)
+		local totalSpecs = C_SpecializationInfo.GetNumSpecializationsForClassID(addon.variables.unitClassID)
 		local row = CreateRadioRow(container, 0, string.format(LOOT_SPECIALIZATION_DEFAULT, curSpecName), 0)
 		for i = 1, totalSpecs do
 			local specID, specName, _, specIcon = GetSpecializationInfoForClassID(addon.variables.unitClassID, i)
@@ -3786,7 +3786,7 @@ local eventHandlers = {
 	["QUEST_DATA_LOAD_RESULT"] = function(arg1)
 		if arg1 and addon.variables.acceptQuestID[arg1] and addon.db["autoChooseQuest"] then
 			if nil ~= UnitGUID("npc") and nil ~= addon.db["ignoredQuestNPC"][addon.functions.getIDFromGUID(UnitGUID("npc"))] then return end
-			if addon.db["ignoreDailyQuests"] and C_QuestLog.IsQuestRepeatableType(arg1) then return end
+			if addon.db["ignoreDailyQuests"] and addon.functions.IsQuestRepeatableType(arg1) then return end
 			if addon.db["ignoreTrivialQuests"] and C_QuestLog.IsQuestTrivial(arg1) then return end
 			if addon.db["ignoreWarbandCompleted"] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(arg1) then return end
 

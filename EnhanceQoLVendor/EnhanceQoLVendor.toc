@@ -18,6 +18,7 @@
 ## Retail: true
 ## X-Compatible-With: retail
 ## LoadOnDemand: 1
+## Globe-Main: EnhanceQoL
 
 Init.lua
 locales.xml

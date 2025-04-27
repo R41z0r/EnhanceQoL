@@ -19,6 +19,9 @@ local mapIDInfo = {}
 local selectedMapId
 local faction = UnitFactionGroup("player")
 
+local GetItemCooldown = C_Item.GetItemCooldown
+local GetItemCount = C_Item.GetItemCount
+
 local function getCurrentSeasonPortal()
 	local cModeIDs = C_ChallengeMode.GetMapTable()
 	local cModeIDLookup = {}
@@ -253,18 +256,16 @@ local function isToyUsable(id)
 end
 
 local function checkProfession()
-    -- Capture all profession slots into a table
-    local professionIndices = { GetProfessions() }
-    for _, profIndex in ipairs(professionIndices) do
-        -- Only valid indices
-        if profIndex and profIndex > 0 then
-            local _, _, _, _, _, _, skillLine = GetProfessionInfo(profIndex)
-            if skillLine == 202 then
-                return true
-            end
-        end
-    end
-    return false
+	-- Capture all profession slots into a table
+	local professionIndices = { GetProfessions() }
+	for _, profIndex in ipairs(professionIndices) do
+		-- Only valid indices
+		if profIndex and profIndex > 0 then
+			local _, _, _, _, _, _, skillLine = GetProfessionInfo(profIndex)
+			if skillLine == 202 then return true end
+		end
+	end
+	return false
 end
 
 local function CreatePortalCompendium(frame, compendium)

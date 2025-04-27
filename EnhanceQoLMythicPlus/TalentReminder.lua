@@ -235,7 +235,7 @@ function addon.MythicPlus.functions.createSeasonInfo() createSeasonInfo() end
 function addon.MythicPlus.functions.checkRemovedLoadout(clear)
 	local tRemoved = {}
 	for _, cbData in pairs(addon.MythicPlus.variables.seasonMapInfo) do
-		for i = 1, GetNumSpecializationsForClassID(addon.variables.unitClassID) do
+		for i = 1, C_SpecializationInfo.GetNumSpecializationsForClassID(addon.variables.unitClassID) do
 			local specID, specName = GetSpecializationInfoForClassID(addon.variables.unitClassID, i)
 			if
 				addon.db["talentReminderSettings"]

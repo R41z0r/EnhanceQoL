@@ -6,6 +6,7 @@
 
 ### ❌ Removed
 - Removed the option to disable the Blizzard AddOn Profiler (CVar no longer exists)
+- Deprecated function calls
 
 ### 🐛 Bug Fixes
 - Dungeon filter sometimes kept full groups in the list instead of cleaning them
