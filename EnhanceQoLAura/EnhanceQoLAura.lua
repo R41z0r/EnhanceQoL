@@ -810,9 +810,8 @@ addon.functions.addToTree(nil, {
 function addon.Aura.functions.treeCallback(container, group)
 	container:ReleaseChildren() -- Entfernt vorherige Inhalte
 	if group == "aura\001resourcebar" then
-		addResourceFrame(container)
-	-- elseif group == "aura\001cooldownmanager\001cdessential" then
-	-- 	addEssentialFrame(container)
+		addResourceFrame(container) -- elseif group == "aura\001cooldownmanager\001cdessential" then
+		-- 	addEssentialFrame(container)
 	end
 end
 
