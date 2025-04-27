@@ -7,6 +7,7 @@ exclude_files = {
 	"LibStub.lua",
 	"CallbackHandler-1.0.lua",
 	"EnhanceQoLAura.lua",
+	"EnhanceQoLMythicPlus/DungeonFilter.lua",
 	"EnhanceQoL/libs/LibOpenRaid/LibOpenRaid.lua",
 	"LibStub.lua",
 	"EnhanceQoL/libs/LibOpenRaid/Deprecated.lua",
