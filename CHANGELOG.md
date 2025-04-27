@@ -10,6 +10,7 @@
 
 ### 🐛 Bug Fixes
 - Dungeon filter sometimes kept full groups in the list instead of cleaning them
+- Dungeon filter sometimes showed filtered entries for a short time
 
 ---
 

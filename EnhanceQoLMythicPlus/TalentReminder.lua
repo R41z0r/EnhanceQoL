@@ -45,7 +45,7 @@ function addon.MythicPlus.functions.getAllLoadouts()
 	addon.MythicPlus.variables.currentSpecID = PlayerUtil.GetCurrentSpecID()
 	addon.MythicPlus.variables.knownLoadout = {}
 	addon.MythicPlus.variables.specNames = {}
-	for i = 1, GetNumSpecializationsForClassID(addon.variables.unitClassID) do
+	for i = 1, C_SpecializationInfo.GetNumSpecializationsForClassID(addon.variables.unitClassID) do
 		local specID, specName = GetSpecializationInfoForClassID(addon.variables.unitClassID, i)
 		addon.MythicPlus.variables.knownLoadout[specID] = {}
 		table.insert(addon.MythicPlus.variables.specNames, { text = specName, value = specID })

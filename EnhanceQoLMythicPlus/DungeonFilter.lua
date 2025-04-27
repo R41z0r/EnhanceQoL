@@ -83,7 +83,7 @@ hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
 end)
 
 local function MyCustomFilter(info)
-	if appliedLookup[info.searchResultID] then return true end
+	-- if appliedLookup[info.searchResultID] then return true end
 	local groupTankCount, groupHealerCount, groupDPSCount = 0, 0, 0
 	local hasLust, hasBR, hasSameSpec = false, false, false
 	if info.numMembers == 5 then return false end
@@ -258,21 +258,14 @@ function addon.MythicPlus.functions.addDungeonFilter()
 	f:RegisterEvent("LFG_LIST_SEARCH_RESULTS_RECEIVED")
 	f:RegisterEvent("LFG_LIST_SEARCH_RESULT_UPDATED")
 	f:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-	f:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED")
-	f:RegisterEvent("LFG_LIST_APPLICATION_STATUS_UPDATED")
-	f:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS")
 	f:SetScript("OnEvent", function(_, event, ...)
 		if not addon.db["mythicPlusEnableDungeonFilter"] then return end
 		if event == "LFG_LIST_SEARCH_RESULTS_RECEIVED" then
 			ApplyEQOLFilters(true)
 		elseif event == "LFG_LIST_SEARCH_RESULT_UPDATED" then
-			local resultID = ...
-			local info = C_LFGList.GetSearchResultInfo(resultID)
-			if info and not MyCustomFilter(info) then ApplyEQOLFilters(false) end
+			ApplyEQOLFilters(false)
 		elseif event == "PLAYER_SPECIALIZATION_CHANGED" then
 			if drop then drop.eqolWrapped = nil end
-		elseif event == "LFG_LIST_APPLICANT_LIST_UPDATED" or event == "LFG_LIST_APPLICATION_STATUS_UPDATED" or event == "LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS" then
-			UpdateAppliedCache()
 		end
 	end)
 end
