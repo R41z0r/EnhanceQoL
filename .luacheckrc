@@ -2272,6 +2272,7 @@ globals = {
 	"GetItemClassInfo",
 	"GetItemCooldown",
 	"GetItemCount",
+	"C_QuestInfoSystem",
 	"GetItemCreationContext",
 	"GetItemFamily",
 	"GetItemGem",
