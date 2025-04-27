@@ -1007,7 +1007,7 @@ addon.functions.addToTree(nil, {
 		{ value = "brtracker", text = L["BRTracker"] },
 		{ value = "rating", text = DUNGEON_SCORE },
 		{ value = "talents", text = L["TalentReminder"] },
-		{ value = "groupfilter", text = L["groupFilter"] },
+		-- { value = "groupfilter", text = L["groupFilter"] },
 	},
 })
 
@@ -1033,4 +1033,8 @@ function addon.MythicPlus.functions.treeCallback(container, group)
 	end
 end
 
-if addon.db["mythicPlusEnableDungeonFilter"] then addon.MythicPlus.functions.addDungeonFilter() end
+if addon.db["mythicPlusEnableDungeonFilter"] then
+	-- disable because of memory problem
+	addon.db["mythicPlusEnableDungeonFilter"] = false
+	addon.MythicPlus.functions.addDungeonFilter()
+end

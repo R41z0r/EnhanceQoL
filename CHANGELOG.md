@@ -4,6 +4,9 @@
 ### ✨ Added
 - Option to **show account-wide currency totals** in tooltips
 
+### 🔁 Changed
+- Temporary disabled the Dungeon filter to investigate a memory heap problem
+
 ### ❌ Removed
 - Removed the option to disable the Blizzard AddOn Profiler (CVar no longer exists)
 - Deprecated function calls

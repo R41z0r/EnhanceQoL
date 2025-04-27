@@ -33,6 +33,33 @@ end
 local LUST_CLASSES = { SHAMAN = true, MAGE = true, HUNTER = true, EVOKER = true }
 local BR_CLASSES = { DRUID = true, WARLOCK = true, DEATHKNIGHT = true, PALADIN = true }
 
+local SearchInfoCache = {}
+
+local function SoftCollect()
+	local ticks = 0
+	local frame = CreateFrame("Frame")
+	frame:SetScript("OnUpdate", function(self)
+		local done = collectgarbage("step", 50000)
+		ticks = ticks + 1
+		if done or ticks > 20 then self:SetScript("OnUpdate", nil) end
+		self:Hide()
+		self:SetParent(nil)
+		frame = nil
+	end)
+end
+
+local function PopulateInfoCache()
+	SoftCollect()
+	wipe(SearchInfoCache)
+	local panel = LFGListFrame.SearchPanel
+	local dp = panel.ScrollBox and panel.ScrollBox:GetDataProvider()
+	if not dp then return end
+	for _, element in dp:EnumerateEntireRange() do
+		local resultID = element.resultID or element.id
+		if resultID then SearchInfoCache[resultID] = C_LFGList.GetSearchResultInfo(resultID) end
+	end
+end
+
 local playerIsLust = LUST_CLASSES[addon.variables.unitClass]
 local playerIsBR = BR_CLASSES[addon.variables.unitClass]
 
@@ -49,6 +76,8 @@ titleScore1:Hide()
 drop:HookScript("OnHide", function()
 	originalSetupGen = nil
 	titleScore1:Hide()
+	wipe(SearchInfoCache)
+	SoftCollect()
 end)
 
 hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
@@ -80,10 +109,11 @@ hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
 		end
 	end
 	self:SetupMenu(EQOL_Generator)
+	self.isSet = true
 end)
 
 local function MyCustomFilter(info)
-	-- if appliedLookup[info.searchResultID] then return true end
+	if appliedLookup[info.searchResultID] then return true end
 	local groupTankCount, groupHealerCount, groupDPSCount = 0, 0, 0
 	local hasLust, hasBR, hasSameSpec = false, false, false
 	if info.numMembers == 5 then return false end
@@ -173,14 +203,7 @@ local function MyCustomFilter(info)
 end
 
 local function ApplyEQOLFilters(isInitial)
-	--------------------------------------------------------------------
-	-- Avoid flickering / disappearing tooltips ------------------------
-	-- If the mouse is hovering an entry, the GameTooltip is shown.     --
-	-- Removing that entry instantly hides the tooltip, which feels     --
-	-- jarring. We therefore *postpone* the filtering until the tooltip --
-	-- is gone (the user moved the cursor away), then run it once.     --
-	--------------------------------------------------------------------
-
+	if not drop:IsVisible() then return end
 	if not addon.db["mythicPlusEnableDungeonFilter"] then return end
 	if
 		(not pDb["bloodlustAvailable"] or playerIsLust)
@@ -219,24 +242,15 @@ local function ApplyEQOLFilters(isInitial)
 		end
 	end
 
-	local toRemove = {}
-
 	for _, element in dp:EnumerateEntireRange() do
 		local resultID = element.resultID or element.id
 		if resultID then
 			if resultID then initialAllEntries[resultID] = true end
-			local info = C_LFGList.GetSearchResultInfo(resultID)
-			if info and not MyCustomFilter(info) then
-				table.insert(toRemove, element)
-				if not removedResults[resultID] then removedResults[resultID] = true end
-			end
+			local info = SearchInfoCache[resultID]
+			if info and not MyCustomFilter(info) then dp:Remove(element) end
 		end
 	end
-	for _, element in ipairs(toRemove) do
-		dp:Remove(element) -- Eintrag streichen
-		local resultID = element.resultID or element.id
-		if resultID then initialAllEntries[resultID] = false end
-	end
+
 	local removedCount = 0
 	for _, v in pairs(initialAllEntries) do
 		if v == false then removedCount = removedCount + 1 end
@@ -258,14 +272,28 @@ function addon.MythicPlus.functions.addDungeonFilter()
 	f:RegisterEvent("LFG_LIST_SEARCH_RESULTS_RECEIVED")
 	f:RegisterEvent("LFG_LIST_SEARCH_RESULT_UPDATED")
 	f:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
+	f:RegisterEvent("LFG_LIST_AVAILABILITY_UPDATE")
+	f:RegisterEvent("LFG_LIST_APPLICATION_STATUS_UPDATED")
+	f:RegisterEvent("LFG_LIST_APPLICANT_LIST_UPDATED")
+	f:RegisterEvent("LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS")
 	f:SetScript("OnEvent", function(_, event, ...)
+		if not drop:IsVisible() then return end
 		if not addon.db["mythicPlusEnableDungeonFilter"] then return end
 		if event == "LFG_LIST_SEARCH_RESULTS_RECEIVED" then
+			PopulateInfoCache()
 			ApplyEQOLFilters(true)
 		elseif event == "LFG_LIST_SEARCH_RESULT_UPDATED" then
+			local resultID = ...
+			if resultID then SearchInfoCache[resultID] = C_LFGList.GetSearchResultInfo(resultID) end
 			ApplyEQOLFilters(false)
+		elseif event == "LFG_LIST_AVAILABILITY_UPDATE" then
+			PopulateInfoCache()
+			ApplyEQOLFilters(true)
 		elseif event == "PLAYER_SPECIALIZATION_CHANGED" then
 			if drop then drop.eqolWrapped = nil end
+		elseif event == "LFG_LIST_APPLICANT_LIST_UPDATED" or event == "LFG_LIST_APPLICATION_STATUS_UPDATED" or event == "LFG_LIST_ENTRY_EXPIRED_TOO_MANY_PLAYERS" then
+			UpdateAppliedCache()
+			ApplyEQOLFilters(false) -- <- direkt hinterher filtern
 		end
 	end)
 end
@@ -276,6 +304,7 @@ function addon.MythicPlus.functions.removeDungeonFilter()
 		f:Hide()
 		f:SetScript("OnEvent", nil)
 		f = nil
+		wipe(SearchInfoCache)
 		titleScore1:Hide()
 		if LFGListFrame.SearchPanel.FilterButton:IsShown() then
 			LFGListFrame:Hide()
