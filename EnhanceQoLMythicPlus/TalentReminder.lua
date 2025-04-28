@@ -297,7 +297,7 @@ local eventHandlers = {
 		if addon.db["talentReminderLoadOnReadyCheck"] then checkLoadout(true) end
 	end,
 	["ZONE_CHANGED_NEW_AREA"] = function() checkLoadout() end,
-	["PLAYER_ENTERING_WORLD"] = function() -- just used for when you are already in an mythic instance to check for talents
+	["PLAYER_ENTERING_WORLD"] = function()
 		if firstLoad then
 			firstLoad = false
 			C_Timer.After(1, function()

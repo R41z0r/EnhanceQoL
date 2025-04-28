@@ -121,3 +121,8 @@ L["Partyfit"] = "파티 적합"
 L["BloodlustAvailable"] = "피의 욕망 가능"
 L["BattleResAvailable"] = "전투 부활 가능"
 L["NoSameSpec"] = "그룹에 %s 없음"
+
+L["mythicPlusEnableObjectiveTracker"] = "퀘스트 추적 자동화"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "쐐기 던전을 시작하면 목표 추적기 블록을 자동으로 숨기거나 접습니다."
+L["mythicPlusObjectiveTrackerSetting"] = "동작"
+L["collapse"] = "접기"

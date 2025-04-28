@@ -117,3 +117,8 @@ L["Partyfit"] = "队伍符合"
 L["BloodlustAvailable"] = "嗜血可用"
 L["BattleResAvailable"] = "战复可用"
 L["NoSameSpec"] = "队伍中没有%s"
+
+L["mythicPlusEnableObjectiveTracker"] = "自动管理目标追踪"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "当开启大秘境时，自动隐藏或折叠所有目标追踪栏。"
+L["mythicPlusObjectiveTrackerSetting"] = "行为"
+L["collapse"] = "折叠"

@@ -27,4 +27,5 @@ CooldownTracker.lua
 DungeonPortal.lua
 TalentReminder.lua
 DungeonFilter.lua
+ObjectiveTracker.lua
 EnhanceQoLMythicPlus.lua

@@ -818,6 +818,48 @@ local function addAutoMarkFrame(container)
 	groupCore:AddChild(labelExplanation)
 end
 
+local function addObjectiveTrackerFrame(container)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			text = L["mythicPlusEnableObjectiveTracker"],
+			var = "mythicPlusEnableObjectiveTracker",
+			func = function(self, _, value)
+				addon.db["mythicPlusEnableObjectiveTracker"] = value
+				container:ReleaseChildren()
+				addObjectiveTrackerFrame(container)
+				addon.MythicPlus.functions.setObjectiveFrames()
+			end,
+			desc = L["mythicPlusEnableObjectiveTrackerDesc"],
+		},
+	}
+	for _, cbData in ipairs(data) do
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func, cbData.desc)
+		groupCore:AddChild(cbElement)
+	end
+	if addon.db["mythicPlusEnableObjectiveTracker"] then
+		local list, order = addon.functions.prepareListForDropdown({ [1] = HIDE, [2] = L["collapse"] })
+
+		local dropHideCollapseTracker = addon.functions.createDropdownAce(L["mythicPlusObjectiveTrackerSetting"], list, order, function(self, _, value)
+			addon.db["mythicPlusObjectiveTrackerSetting"] = value
+			addon.MythicPlus.functions.setObjectiveFrames()
+		end)
+		if addon.db["mythicPlusObjectiveTrackerSetting"] then dropHideCollapseTracker:SetValue(addon.db["mythicPlusObjectiveTrackerSetting"]) end
+
+		groupCore:AddChild(dropHideCollapseTracker)
+	end
+end
+
 local function addGroupFilterFrame(container)
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 	container:AddChild(wrapper)
@@ -1007,6 +1049,7 @@ addon.functions.addToTree(nil, {
 		{ value = "brtracker", text = L["BRTracker"] },
 		{ value = "rating", text = DUNGEON_SCORE },
 		{ value = "talents", text = L["TalentReminder"] },
+		{ value = "objectivetracker", text = HUD_EDIT_MODE_OBJECTIVE_TRACKER_LABEL },
 		-- { value = "groupfilter", text = L["groupFilter"] },
 	},
 })
@@ -1030,6 +1073,8 @@ function addon.MythicPlus.functions.treeCallback(container, group)
 		addTalentFrame(container)
 	elseif group == "mythicplus\001groupfilter" then
 		addGroupFilterFrame(container)
+	elseif group == "mythicplus\001objectivetracker" then
+		addObjectiveTrackerFrame(container)
 	end
 end
 

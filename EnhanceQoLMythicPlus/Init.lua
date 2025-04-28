@@ -420,3 +420,13 @@ function addon.MythicPlus.functions.setRandomHearthstone()
 		[hsSpellID] = { text = "HS", isItem = false or hs.isItem, itemID = hs.id, isToy = false or hs.isToy, toyID = hs.id, isHearthstone = true, icon = hs.icon },
 	}
 end
+
+addon.MythicPlus.variables.collapseFrames = {
+	{ frame = AchievementObjectiveTracker },
+	{ frame = AdventureObjectiveTracker },
+	{ frame = BonusObjectiveTracker },
+	{ frame = CampaignQuestObjectiveTracker },
+	{ frame = QuestObjectiveTracker },
+	{ frame = ProfessionsRecipeTracker },
+	{ frame = WorldQuestObjectiveTracker },
+}

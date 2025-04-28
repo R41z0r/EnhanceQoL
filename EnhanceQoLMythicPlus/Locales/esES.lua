@@ -116,3 +116,8 @@ L["Partyfit"] = "Grupo adecuado"
 L["BloodlustAvailable"] = "Ansia de sangre disponible"
 L["BattleResAvailable"] = "Resurrección en combate disponible"
 L["NoSameSpec"] = "Sin %s en el grupo"
+
+L["mythicPlusEnableObjectiveTracker"] = "Automatizar el seguimiento de objetivos"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "Al comenzar una Mítica+, oculta o pliega automáticamente todos los bloques del rastreador de objetivos."
+L["mythicPlusObjectiveTrackerSetting"] = "Comportamiento"
+L["collapse"] = "Plegar"

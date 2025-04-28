@@ -117,3 +117,8 @@ L["Partyfit"] = "Grupo adequado"
 L["BloodlustAvailable"] = "Sede de Sangue disponível"
 L["BattleResAvailable"] = "Ressurreição em Combate disponível"
 L["NoSameSpec"] = "Sem %s no grupo"
+
+L["mythicPlusEnableObjectiveTracker"] = "Automatizar o rastreador de objetivos"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "Quando uma masmorra Mítico+ começa, oculta ou recolhe automaticamente todos os blocos do rastreador de objetivos."
+L["mythicPlusObjectiveTrackerSetting"] = "Comportamento"
+L["collapse"] = "Recolher"

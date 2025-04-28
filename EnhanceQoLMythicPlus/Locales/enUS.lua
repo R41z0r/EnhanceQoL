@@ -116,3 +116,8 @@ L["Partyfit"] = "Party fits"
 L["BloodlustAvailable"] = "Bloodlust available"
 L["BattleResAvailable"] = "Battle Res available"
 L["NoSameSpec"] = "No %s in Group"
+
+L["mythicPlusEnableObjectiveTracker"] = "Automate Objective Tracker"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "At the start of a Mythic+ run, automatically hide / collapse all objective tracker blocks."
+L["mythicPlusObjectiveTrackerSetting"] = "Behavior"
+L["collapse"] = "Collapse"

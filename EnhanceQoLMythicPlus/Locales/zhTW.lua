@@ -117,3 +117,8 @@ L["Partyfit"] = "隊伍符合"
 L["BloodlustAvailable"] = "嗜血可用"
 L["BattleResAvailable"] = "戰復可用"
 L["NoSameSpec"] = "隊伍中沒有%s"
+
+L["mythicPlusEnableObjectiveTracker"] = "自動管理目標追蹤"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "當進入 M+ 地城時，自動隱藏或收合所有目標追蹤區塊。"
+L["mythicPlusObjectiveTrackerSetting"] = "行為"
+L["collapse"] = "收合"

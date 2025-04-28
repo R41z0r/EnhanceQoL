@@ -117,3 +117,8 @@ L["Partyfit"] = "Gruppo compatibile"
 L["BloodlustAvailable"] = "Brama di sangue disponibile"
 L["BattleResAvailable"] = "Resurrezione in combattimento disponibile"
 L["NoSameSpec"] = "Nessun %s nel gruppo"
+
+L["mythicPlusEnableObjectiveTracker"] = "Automatizza il tracker obiettivi"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "All’avvio di una spedizione Mitica+, nasconde o comprime automaticamente tutti i blocchi del tracker obiettivi."
+L["mythicPlusObjectiveTrackerSetting"] = "Comportamento"
+L["collapse"] = "Comprimi"

@@ -127,3 +127,9 @@ L["Partyfit"] = "Группа подходит"
 L["BloodlustAvailable"] = "Жажда крови доступна"
 L["BattleResAvailable"] = "Боевой рес доступен"
 L["NoSameSpec"] = "Нет %s в группе"
+
+L["mythicPlusEnableObjectiveTracker"] = "Автоматическое управление трекером целей"
+L["mythicPlusEnableObjectiveTrackerDesc"] =
+	"При начале ключа Мифик+ автоматически скрывает или сворачивает все блоки трекера целей."
+L["mythicPlusObjectiveTrackerSetting"] = "Поведение"
+L["collapse"] = "Свернуть"

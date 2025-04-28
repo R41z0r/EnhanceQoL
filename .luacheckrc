@@ -46,6 +46,13 @@ globals = {
 	"Constants",
 
 	-- misc custom
+	"AchievementObjectiveTracker",
+	"AdventureObjectiveTracker",
+	"BonusObjectiveTracker",
+	"CampaignQuestObjectiveTracker",
+	"QuestObjectiveTracker",
+	"ProfessionsRecipeTracker",
+	"WorldQuestObjectiveTracker",
 	"AceGUIWeakAurasMultiLineEditBoxInsertLink",
 	"AceGUIWeakAurasMultiLineEditBoxWithEnterInsertLink",
 	"AceGUIWidgetLSMlists",

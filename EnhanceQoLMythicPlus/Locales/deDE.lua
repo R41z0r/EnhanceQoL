@@ -122,3 +122,8 @@ L["Partyfit"] = "Gruppe passend"
 L["BloodlustAvailable"] = "Kampfrausch verfügbar"
 L["BattleResAvailable"] = "Kampfwiederbelebung verfügbar"
 L["NoSameSpec"] = "Kein %s in der Gruppe"
+
+L["mythicPlusEnableObjectiveTracker"] = "Ziel-Tracker automatisieren"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "Blendet zu Beginn eines Mythic-Dungeons alle Ziel-Tracker-Blöcke automatisch aus bzw. klappt sie ein."
+L["mythicPlusObjectiveTrackerSetting"] = "Verhalten"
+L["collapse"] = "Einklappen"

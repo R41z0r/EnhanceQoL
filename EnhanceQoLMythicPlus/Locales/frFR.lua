@@ -116,3 +116,8 @@ L["Partyfit"] = "Groupe adapté"
 L["BloodlustAvailable"] = "Soif de sang disponible"
 L["BattleResAvailable"] = "Rez combat disponible"
 L["NoSameSpec"] = "Aucun %s dans le groupe"
+
+L["mythicPlusEnableObjectiveTracker"] = "Automatiser le suivi des objectifs"
+L["mythicPlusEnableObjectiveTrackerDesc"] = "Au lancement d’une clé Mythique+, masque ou réduit automatiquement tous les blocs du suivi d’objectifs."
+L["mythicPlusObjectiveTrackerSetting"] = "Comportement"
+L["collapse"] = "Réduire"
