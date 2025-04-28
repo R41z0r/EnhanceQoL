@@ -52,6 +52,7 @@ globals = {
 	"CampaignQuestObjectiveTracker",
 	"QuestObjectiveTracker",
 	"ProfessionsRecipeTracker",
+	"HUD_EDIT_MODE_OBJECTIVE_TRACKER_LABEL",
 	"WorldQuestObjectiveTracker",
 	"AceGUIWeakAurasMultiLineEditBoxInsertLink",
 	"AceGUIWeakAurasMultiLineEditBoxWithEnterInsertLink",

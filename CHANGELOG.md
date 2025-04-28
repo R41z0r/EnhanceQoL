@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.8.0] – 2025-04-29
+### ✨ Added
+- Option to **automatically hide objective tracker in mythic+**
+
+---
+
 ## [3.7.1] – 2025-04-28
 ### 🐛 Bug Fixes
 - Garbled characters (�) in the Russian locale.  
