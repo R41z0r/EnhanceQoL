@@ -77,4 +77,6 @@ L["Bank"] = "Banque"
 L["Bag"] = "Sac"
 L["Itemcount"] = "Nombre d'objets"
 
+L["TooltipShowQuestID"] = "Afficher l’ID de la quête"
+
 L["TooltipShowCurrencyAccountWide"] = "Afficher la monnaie du compte dans l’infobulle"

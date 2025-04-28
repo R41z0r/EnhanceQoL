@@ -641,3 +641,5 @@ addon.variables.unitFrameNames = {
 }
 
 table.sort(addon.variables.actionBarNames, function(a, b) return a.text < b.text end)
+
+addon.variables.defaultFont = "Fonts\\FRIZQT__.TTF"

@@ -160,3 +160,5 @@ L["chatFrameFadeDurationText"] = "페이드 애니메이션 지속 시간"
 
 L["enableLootspecQuickswitch"] = "미니맵에서 전리품 및 현재 특성 빠른 전환 사용"
 L["enableLootspecQuickswitchDesc"] = "특성을 왼쪽 클릭하면 전리품 특성으로 설정하고, 오른쪽 클릭하면 현재 특성을 변경합니다."
+
+addon.variables.defaultFont = "Fonts\\2002.ttf"

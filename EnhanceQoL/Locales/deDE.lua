@@ -27,7 +27,7 @@ L["enableMoneyTrackerDesc"] = "Wenn du in deinen Taschen über dein Gold hoverst
 L["moneyTrackerRemovePlayer"] = "Alle bekannten Charaktere"
 L["showBagFilterMenu"] = "Gegenstandsfilter in Taschen aktivieren"
 L["showBagFilterMenuDesc"] = ("Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist. Halte %s, um das Fenster zu verschieben"):format(SHIFT_KEY_TEXT)
-L["fadeBagQualityIcons"] = "Ausblenden der Berufssymbol‑Qualität bei Suche und Filter aktivieren"
+L["fadeBagQualityIcons"] = "Ausblenden der Berufssymbol-Qualität bei Suche und Filter aktivieren"
 L["bagFilterSpec"] = "Für Spezialisierung empfohlen"
 L["bagFilterEquip"] = "Nur Ausrüstung"
 L["showIlvlOnBankFrame"] = "Zeige Gegenstandsstufe im Bankfenster an"
@@ -143,7 +143,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "Freunde"
 L["autoAcceptGroupInviteOptions"] = "Einladungen annehmen von..."
 
 L["showLeaderIconRaidFrame"] = "Zeige das Anführersymbol in gruppierten Schlachtzugsfenstern"
-L["showPartyFrameInSoloContent"] = "Gruppenfenster im Solo‑Inhalt anzeigen"
+L["showPartyFrameInSoloContent"] = "Gruppenfenster im Solo-Inhalt anzeigen"
 
 L["ActionbarHideExplain"] = 'Setze die Aktionsleiste auf versteckt und nur bei Mouseover sichtbar. Dies funktioniert nur, wenn deine Aktionsleiste im Bearbeitungsmodus auf "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]

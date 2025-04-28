@@ -78,4 +78,6 @@ L["Bank"] = "银行"
 L["Bag"] = "背包"
 L["Itemcount"] = "物品数量"
 
+L["TooltipShowQuestID"] = "显示任务ID"
+
 L["TooltipShowCurrencyAccountWide"] = "在鼠标提示中显示账号通用货币"

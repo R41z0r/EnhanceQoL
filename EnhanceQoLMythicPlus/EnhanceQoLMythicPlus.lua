@@ -77,7 +77,7 @@ local function createBRFrame()
 
 		brButton.charges = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		brButton.charges:SetPoint("BOTTOMRIGHT", brButton, "BOTTOMRIGHT", -3, 3)
-		brButton.charges:SetFont("Fonts\\FRIZQT__.TTF", newFontSize, "OUTLINE")
+		brButton.charges:SetFont(addon.variables.defaultFont, newFontSize, "OUTLINE")
 	end
 end
 
@@ -960,7 +960,7 @@ local function addTalentFrame(container)
 					addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] = value
 					C_Timer.After(1, function() addon.MythicPlus.functions.checkLoadout() end)
 				end)
-				if dropPullTimerType.label and dropPullTimerType.label.SetFont then dropPullTimerType.label:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") end
+				if dropPullTimerType.label and dropPullTimerType.label.SetFont then dropPullTimerType.label:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 				if addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] then
 					dropPullTimerType:SetValue(addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id])
 				else

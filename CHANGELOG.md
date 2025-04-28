@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.1] – 2025-04-28
+### 🐛 Bug Fixes
+- Garbled characters (�) in the Russian locale.  
+  Removed rogue control characters and forced a Cyrillic-capable font in ruRU locale to eliminate yellow “missing glyph” squares.
+
+---
+
 ## [3.7.0] – 2025-04-26
 ### ✨ Added
 - Option to **show account-wide currency totals** in tooltips

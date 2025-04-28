@@ -35,7 +35,7 @@ local GOLD_ICON = "|TInterface\\MoneyFrame\\UI-GoldIcon:0:0:2:0|t"
 local SILVER_ICON = "|TInterface\\MoneyFrame\\UI-SilverIcon:0:0:2:0|t"
 local COPPER_ICON = "|TInterface\\MoneyFrame\\UI-CopperIcon:0:0:2:0|t"
 
-function addon.functions.formatMoney(copper)
+function addon.functions.formatMoney(copper, type)
 	local COPPER_PER_SILVER = 100
 	local COPPER_PER_GOLD = 10000
 
@@ -46,8 +46,10 @@ function addon.functions.formatMoney(copper)
 	local parts = {}
 
 	if gold > 0 then table.insert(parts, string.format("%s%s", BreakUpLargeNumbers(gold), GOLD_ICON)) end
-	if gold > 0 or silver > 0 then table.insert(parts, string.format("%02d%s", silver, SILVER_ICON)) end
-	table.insert(parts, string.format("%02d%s", bronze, COPPER_ICON))
+	if nil == type or (type and type == "tracker" and addon.db["showOnlyGoldOnMoney"] == false) then
+		if gold > 0 or silver > 0 then table.insert(parts, string.format("%02d%s", silver, SILVER_ICON)) end
+		table.insert(parts, string.format("%02d%s", bronze, COPPER_ICON))
+	end
 
 	return table.concat(parts, " ")
 end
@@ -146,11 +148,8 @@ function addon.functions.createLabelAce(text, color, font, fontSize)
 
 	label:SetText(text)
 	if color then label:SetColor(color.r, color.g, color.b) end
-	if font then
-		label:SetFont(font, fontSize, "OUTLINE") -- Du kannst hier eine Schriftgröße und OUTLINE anpassen
-	else
-		label:SetFont("Fonts\\FRIZQT__.TTF", fontSize, "OUTLINE") -- Standard-Schriftart von WoW
-	end
+	
+	label:SetFont(font or addon.variables.defaultFont, fontSize, "OUTLINE")
 	return label
 end
 
@@ -233,7 +232,7 @@ function addon.functions.createWrapperData(data, container, L)
 				if checkboxData.desc then
 					local subtext = AceGUI:Create("Label")
 					subtext:SetText(string.format("|cffffd700" .. checkboxData.desc .. "|r "))
-					subtext:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+					subtext:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
 					subtext:SetFullWidth(true)
 					subtext:SetColor(1, 1, 1)
 					group:AddChild(subtext)
@@ -355,7 +354,7 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 					-- Create behind Blizzard's search overlay so it fades automatically
 					itemButton.ItemLevelText = itemButton:CreateFontString(nil, "ARTWORK")
 					itemButton.ItemLevelText:SetDrawLayer("ARTWORK", 1)
-					itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+					itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 13, "OUTLINE")
 					itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
 
 					itemButton.ItemLevelText:SetShadowOffset(2, -2)
@@ -397,7 +396,7 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 							-- Position behind Blizzard's overlay
 							itemButton.ItemBoundType = itemButton:CreateFontString(nil, "ARTWORK")
 							itemButton.ItemBoundType:SetDrawLayer("ARTWORK", 1)
-							itemButton.ItemBoundType:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+							itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
 							itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
 							itemButton.ItemBoundType:SetShadowOffset(2, 2)
@@ -539,7 +538,7 @@ local function CreateFilterMenu()
 		-- Überschrift für jede Sektion
 		local label = AceGUI:Create("Label")
 		label:SetText("|cffffd100" .. section.label .. "|r") -- Goldene Überschrift
-		label:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+		label:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
 		label:SetFullWidth(true)
 		scrollContainer:AddChild(label)
 

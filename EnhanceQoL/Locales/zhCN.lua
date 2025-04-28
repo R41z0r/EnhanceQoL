@@ -160,3 +160,5 @@ L["chatFrameFadeDurationText"] = "渐隐动画的持续时间"
 
 L["enableLootspecQuickswitch"] = "在小地图上启用快速切���战利品和当前专精"
 L["enableLootspecQuickswitchDesc"] = "左键单击专精设置战利品专精，右键单击更改当前专精。"
+
+addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"

@@ -77,4 +77,6 @@ L["Bank"] = "Banco"
 L["Bag"] = "Bolsa"
 L["Itemcount"] = "Cantidad de objetos"
 
+L["TooltipShowQuestID"] = "Mostrar ID de misión"
+
 L["TooltipShowCurrencyAccountWide"] = "Mostrar la divisa de toda la cuenta en el tooltip"

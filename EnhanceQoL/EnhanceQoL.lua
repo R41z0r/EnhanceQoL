@@ -487,7 +487,7 @@ local function onInspect(arg1)
 
 		pdElement.ilvl = pdElement:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		pdElement.ilvl:SetPoint("TOPRIGHT", pdElement.ilvlBackground, "TOPRIGHT", -1, -1) -- Position des Textes im Zentrum des Hintergrunds
-		pdElement.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+		pdElement.ilvl:SetFont(addon.variables.defaultFont, 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 
 		pdElement.ilvl:SetFormattedText("")
 		pdElement.ilvl:SetTextColor(1, 1, 1, 1)
@@ -598,7 +598,7 @@ local function onInspect(arg1)
 								-- Text für das Item-Level
 								element.ilvl = element:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 								element.ilvl:SetPoint("TOPRIGHT", element.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
-								element.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+								element.ilvl:SetFont(addon.variables.defaultFont, 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 							end
 
 							local color = eItem:GetItemQualityColor()
@@ -628,7 +628,7 @@ local function onInspect(arg1)
 									element.borderGradient:SetGradient("VERTICAL", CreateColor(1, 0, 0, 1), CreateColor(1, 0.3, 0.3, 0.5))
 									element.borderGradient:Hide()
 								end
-								element.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+								element.enchant:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
 							end
 							local data = C_TooltipInfo.GetHyperlink(itemLink)
 							local foundEnchant = false
@@ -1574,6 +1574,35 @@ local function addBagFrame(container)
 		groupMoney:SetTitle(MONEY)
 		wrapper:AddChild(groupMoney)
 
+		local data = {
+			{
+				var = "showOnlyGoldOnMoney",
+				type = "CheckBox",
+				callback = function(self, _, value) addon.db["showOnlyGoldOnMoney"] = value end,
+			},
+		}
+		table.sort(data, function(a, b)
+			local textA = a.var
+			local textB = b.var
+			if a.text then
+				textA = a.text
+			else
+				textA = L[a.var]
+			end
+			if b.text then
+				textB = b.text
+			else
+				textB = L[b.var]
+			end
+			return textA < textB
+		end)
+		for _, checkboxData in ipairs(data) do
+			local desc
+			if checkboxData.desc then desc = checkboxData.desc end
+			local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], checkboxData.callback, desc)
+			groupMoney:AddChild(cbautoChooseQuest)
+		end
+
 		local tList = {}
 
 		for i, v in pairs(addon.db["moneyTracker"]) do
@@ -2011,7 +2040,7 @@ local function updateBankButtonInfo()
 					-- Falls keine Textanzeige vorhanden ist, erstelle eine neue
 					if not itemButton.ItemLevelText then
 						itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-						itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
+						itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
 						itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", 0, -2)
 						itemButton.ItemLevelText:SetShadowOffset(1, -1)
 						itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
@@ -2059,7 +2088,7 @@ local function updateMerchantButtonInfo()
 
 						if not itemButton.ItemLevelText then
 							itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-							itemButton.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
+							itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
 							itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
 							itemButton.ItemLevelText:SetShadowOffset(1, -1)
 							itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
@@ -2089,7 +2118,7 @@ local function updateMerchantButtonInfo()
 						if bType then
 							if not itemButton.ItemBoundType then
 								itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
-								itemButton.ItemBoundType:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+								itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
 								itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
 								itemButton.ItemBoundType:SetShadowOffset(2, 2)
@@ -2138,7 +2167,7 @@ local function updateFlyoutButtonInfo(button)
 
 					if not button.ItemLevelText then
 						button.ItemLevelText = button:CreateFontString(nil, "OVERLAY")
-						button.ItemLevelText:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")
+						button.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
 						button.ItemLevelText:SetPoint("TOPRIGHT", button, "TOPRIGHT", -1, -1)
 					end
 
@@ -2168,7 +2197,7 @@ local function updateFlyoutButtonInfo(button)
 					if bType then
 						if not button.ItemBoundType then
 							button.ItemBoundType = button:CreateFontString(nil, "OVERLAY")
-							button.ItemBoundType:SetFont("Fonts\\FRIZQT__.TTF", 10, "OUTLINE")
+							button.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
 							button.ItemBoundType:SetPoint("BOTTOMLEFT", button, "BOTTOMLEFT", 2, 2)
 
 							button.ItemBoundType:SetShadowOffset(2, 2)
@@ -2332,6 +2361,7 @@ end
 local function initBagsFrame()
 	addon.functions.InitDBValue("moneyTracker", {})
 	addon.functions.InitDBValue("enableMoneyTracker", false)
+	addon.functions.InitDBValue("showOnlyGoldOnMoney", false)
 	if addon.db["moneyTracker"][UnitGUID("player")] == nil or type(addon.db["moneyTracker"][UnitGUID("player")]) ~= "table" then addon.db["moneyTracker"][UnitGUID("player")] = {} end
 	local moneyFrame = ContainerFrameCombinedBags.MoneyFrame
 	local otherMoney = {}
@@ -2356,11 +2386,11 @@ local function initBagsFrame()
 			else
 				displayName = string.format("|cff%02x%02x%02x%s-%s|r", col.r * 255, col.g * 255, col.b * 255, info.name, info.realm)
 			end
-			GameTooltip:AddDoubleLine(displayName, addon.functions.formatMoney(info.money))
+			GameTooltip:AddDoubleLine(displayName, addon.functions.formatMoney(info.money, "tracker"))
 		end
 
 		GameTooltip:AddLine(" ")
-		GameTooltip:AddDoubleLine(TOTAL, addon.functions.formatMoney(total))
+		GameTooltip:AddDoubleLine(TOTAL, addon.functions.formatMoney(total, "tracker"))
 		GameTooltip:Show()
 	end
 
@@ -2995,7 +3025,7 @@ local function initCharacter()
 
 	addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
-	addon.general.iconFrame.count:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+	addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 	addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
 	addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
 
@@ -3014,7 +3044,7 @@ local function initCharacter()
 
 	addon.general.durabilityIconFrame.count = addon.general.durabilityIconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	addon.general.durabilityIconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.durabilityIconFrame, "BOTTOMRIGHT", 1, 2)
-	addon.general.durabilityIconFrame.count:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+	addon.general.durabilityIconFrame.count:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
 
 	if addon.db["showDurabilityOnCharframe"] == false then addon.general.durabilityIconFrame:Hide() end
 
@@ -3037,7 +3067,7 @@ local function initCharacter()
 		-- Text für das Item-Level
 		value.ilvl = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		value.ilvl:SetPoint("TOPRIGHT", value.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
-		value.ilvl:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+		value.ilvl:SetFont(addon.variables.defaultFont, 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 
 		value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		if addon.variables.itemSlotSide[key] == 0 then
@@ -3047,7 +3077,7 @@ local function initCharacter()
 		else
 			value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
 		end
-		value.enchant:SetFont("Fonts\\FRIZQT__.TTF", 12, "OUTLINE")
+		value.enchant:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
 
 		value.gems = {}
 		for i = 1, 3 do

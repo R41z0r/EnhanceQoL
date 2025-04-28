@@ -23,6 +23,7 @@ L["bagFilterDockFrameUnlock"] = "Click to undock the filter window from your bag
 L["bagFilterDockFrameLock"] = "Click to dock the filter window to your bags"
 L["enableMoneyTracker"] = "Enable to track your money across all characters"
 L["enableMoneyTrackerDesc"] = "When you mouse over your gold in your bags, you can see the gold of all characters"
+L["showOnlyGoldOnMoney"] = "Only show Account gold and ignore silver/copper"
 L["moneyTrackerRemovePlayer"] = "All known characters"
 L["showBagFilterMenu"] = "Enable item filter in bags"
 L["showBagFilterMenuDesc"] = ("Only usable when Combined Bags is enabled. Hold %s to move the frame"):format(SHIFT_KEY_TEXT)

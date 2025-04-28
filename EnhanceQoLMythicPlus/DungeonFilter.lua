@@ -69,7 +69,7 @@ local initialAllEntries = {}
 local removedResults = {}
 
 local titleScore1 = LFGListFrame:CreateFontString(nil, "OVERLAY")
-titleScore1:SetFont("Fonts\\FRIZQT__.TTF", 13, "OUTLINE")
+titleScore1:SetFont(addon.variables.defaultFont, 13, "OUTLINE")
 titleScore1:SetPoint("TOPRIGHT", PVEFrameLeftInset, "TOPRIGHT", -10, -5)
 titleScore1:Hide()
 

@@ -79,7 +79,7 @@ local function createHealthBar()
 	healthBar:SetBackdropColor(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 50% Transparenz
 	healthBar:SetBackdropBorderColor(0, 0, 0, 0)
 	healthBar.text = healthBar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	healthBar.text:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+	healthBar.text:SetFont(addon.variables.defaultFont, 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 	healthBar.text:SetPoint("CENTER", healthBar, "CENTER", 3, 0)
 
 	healthBar:SetMovable(true)
@@ -353,7 +353,7 @@ local function createPowerBar(type, anchor)
 	bar:SetBackdropColor(0, 0, 0, 0.8) -- Schwarzer Hintergrund mit 50% Transparenz
 	bar:SetBackdropBorderColor(0, 0, 0, 0)
 	bar.text = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	bar.text:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+	bar.text:SetFont(addon.variables.defaultFont, 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 	bar.text:SetPoint("CENTER", bar, "CENTER", 3, 0)
 	bar:SetStatusBarColor(getPowerBarColor(type))
 

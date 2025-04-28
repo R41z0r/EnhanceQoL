@@ -66,7 +66,7 @@ local function createBRFrame()
 
 	brButton.info = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	brButton.info:SetPoint("TOP", brButton, "BOTTOM", 0, -3)
-	brButton.info:SetFont("Fonts\\FRIZQT__.TTF", defaultFontSize, "OUTLINE")
+	brButton.info:SetFont(addon.variables.defaultFont, defaultFontSize, "OUTLINE")
 	brButton.info:SetText(L["mageFoodReminderText"])
 
 	local bg = brButton:CreateTexture(nil, "BACKGROUND")

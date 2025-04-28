@@ -78,4 +78,6 @@ L["Bank"] = "Банк"
 L["Bag"] = "Сумка"
 L["Itemcount"] = "Количество предметов"
 
+L["TooltipShowQuestID"] = "Показать ID задания"
+
 L["TooltipShowCurrencyAccountWide"] = "Показывать валюту аккаунта во всплывающей подсказке"

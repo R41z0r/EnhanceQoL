@@ -76,4 +76,6 @@ L["Bank"] = "은행"
 L["Bag"] = "가방"
 L["Itemcount"] = "아이템 개수"
 
+L["TooltipShowQuestID"] = "퀘스트 ID 표시"
+
 L["TooltipShowCurrencyAccountWide"] = "툴팁에 계정 전체 화폐 표시"

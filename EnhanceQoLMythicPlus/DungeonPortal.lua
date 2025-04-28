@@ -592,7 +592,7 @@ local gFrameAnchorScore
 
 local function createString(textLeft, textRight, colorLeft, colorRight, anchor, selected)
 	local titleScore1 = gFrameAnchorScore:CreateFontString(nil, "OVERLAY")
-	titleScore1:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+	titleScore1:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 	titleScore1:SetFormattedText(textLeft)
 	titleScore1:SetPoint("TOPLEFT", 7, (addon.functions.getHeightOffset(anchor) - 10))
 	if colorLeft then titleScore1:SetTextColor(colorLeft.r, colorLeft.g, colorLeft.b, 1) end
@@ -600,7 +600,7 @@ local function createString(textLeft, textRight, colorLeft, colorRight, anchor, 
 	table.insert(textList, titleScore1)
 
 	local titleScoreValue = gFrameAnchorScore:CreateFontString(nil, "OVERLAY")
-	titleScoreValue:SetFont("Fonts\\FRIZQT__.TTF", 14, "OUTLINE")
+	titleScoreValue:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 	titleScoreValue:SetFormattedText(textRight)
 	titleScoreValue:SetPoint("TOPRIGHT", -7, (addon.functions.getHeightOffset(anchor) - 10))
 	if colorRight then titleScoreValue:SetTextColor(colorRight.r, colorRight.g, colorRight.b, 1) end
