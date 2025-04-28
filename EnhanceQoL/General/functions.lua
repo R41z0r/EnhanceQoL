@@ -148,7 +148,7 @@ function addon.functions.createLabelAce(text, color, font, fontSize)
 
 	label:SetText(text)
 	if color then label:SetColor(color.r, color.g, color.b) end
-	
+
 	label:SetFont(font or addon.variables.defaultFont, fontSize, "OUTLINE")
 	return label
 end
