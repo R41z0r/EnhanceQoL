@@ -167,3 +167,5 @@ L["chatFrameFadeDurationText"] = "Dauer der Verblass-Animation"
 
 L["enableLootspecQuickswitch"] = "Schnellwechsel für Beute- und Aktive-Spezialisierungen an der Minikarte aktivieren"
 L["enableLootspecQuickswitchDesc"] = "Linksklick auf eine Spezialisierung setzt deine Beutespezialisierung, Rechtsklick wechselt deine aktive Spezialisierung."
+
+L["Profiles"] = "Profile"

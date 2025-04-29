@@ -3237,7 +3237,7 @@ local function CreateUI()
 	})
 	table.insert(addon.treeGroupData, {
 		value = "profiles",
-		text = "Profiles",
+		text = L["Profiles"],
 	})
 	addon.treeGroup:SetLayout("Fill")
 	addon.treeGroup:SetTree(addon.treeGroupData)

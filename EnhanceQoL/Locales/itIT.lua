@@ -162,3 +162,5 @@ L["chatFrameFadeDurationText"] = "Durata dell’animazione di sbiadimento"
 
 L["enableLootspecQuickswitch"] = "Abilita il cambio rapido di specializzazione di bottino e attiva sulla minimappa"
 L["enableLootspecQuickswitchDesc"] = "Fai clic sinistro su una specializzazione per impostare la spec di bottino, o clic destro per cambiare la spec attiva."
+
+L["Profiles"] = "Profili"

@@ -162,3 +162,5 @@ L["enableLootspecQuickswitch"] = "在小地图上启用快速切换战利品与�
 L["enableLootspecQuickswitchDesc"] = "左键单击专精设置战利品专精，右键单击更改当前专精。"
 
 addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
+
+L["Profiles"] = "配置文件"

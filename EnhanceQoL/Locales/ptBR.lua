@@ -168,3 +168,5 @@ L["chatFrameFadeDurationText"] = "Duração da animação de desvanecimento"
 
 L["enableLootspecQuickswitch"] = "Ativar troca rápida de saque e especialização ativa no minimapa"
 L["enableLootspecQuickswitchDesc"] = "Clique esquerdo em uma especialização para definir o saque, ou clique direito para mudar sua especialização ativa."
+
+L["Profiles"] = "Perfis"

@@ -170,3 +170,5 @@ L["enableLootspecQuickswitchDesc"] = "Left-click a specialization to set your lo
 
 L["enableSquareMinimap"] = "Use a square minimap instead of the normal round"
 L["enableSquareMinimapDesc"] = "This option required a reload"
+
+L["Profiles"] = "Profiles"
