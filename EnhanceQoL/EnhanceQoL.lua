@@ -4,6 +4,12 @@ local L = addon.L
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LibStub("LibDBIcon-1.0")
 local AceGUI = LibStub("AceGUI-3.0")
+local AceDB = LibStub("AceDB-3.0")
+local AceConfig = LibStub("AceConfig-3.0")
+local AceConfigDlg = LibStub("AceConfigDialog-3.0")
+local AceDBOptions = LibStub("AceDBOptions-3.0")
+local defaults = { profile = {} }
+
 addon.AceGUI = AceGUI
 
 local LFGListFrame = _G.LFGListFrame
@@ -3229,6 +3235,10 @@ local function CreateUI()
 			},
 		},
 	})
+	table.insert(addon.treeGroupData, {
+		value = "profiles",
+		text = "Profiles",
+	})
 	addon.treeGroup:SetLayout("Fill")
 	addon.treeGroup:SetTree(addon.treeGroupData)
 	addon.treeGroup:SetCallback("OnGroupSelected", function(container, _, group)
@@ -3258,6 +3268,12 @@ local function CreateUI()
 			addChatFrame(container)
 		elseif group == "general\001ui\001minimap" then
 			addMinimapFrame(container)
+		elseif group == "profiles" then
+			local sub = AceGUI:Create("SimpleGroup")
+			sub:SetFullWidth(true)
+			sub:SetFullHeight(true)
+			container:AddChild(sub)
+			AceConfigDlg:Open("EQOL_Profiles", sub)
 		elseif string.match(group, "^tooltip") then
 			addon.Tooltip.functions.treeCallback(container, group)
 		elseif string.match(group, "^vendor") then
@@ -3450,7 +3466,7 @@ function loadMain()
 
 	-- Schleife zur Erzeugung der Checkboxen
 	addon.checkboxes = {}
-	addon.db = EnhanceQoLDB
+	-- addon.db = EnhanceQoLDB
 	addon.variables.acceptQuestID = {}
 
 	setAllHooks()
@@ -3624,7 +3640,29 @@ local eventHandlers = {
 	end,
 	["ADDON_LOADED"] = function(arg1)
 		if arg1 == addonName then
-			if not EnhanceQoLDB then EnhanceQoLDB = {} end
+			local legacy = {}
+			if EnhanceQoLDB and not EnhanceQoLDB.profiles then
+				for k, v in pairs(EnhanceQoLDB) do
+					legacy[k] = v
+				end
+			end
+
+			local dbObj = AceDB:New("EnhanceQoLDB", defaults, "Default")
+
+			addon.dbObject = dbObj
+			addon.db = dbObj.profile
+			dbObj:RegisterCallback("OnProfileChanged", function() addon.variables.requireReload = true end)
+			dbObj:RegisterCallback("OnProfileCopied", function() addon.variables.requireReload = true end)
+			dbObj:RegisterCallback("OnProfileReset", function() addon.variables.requireReload = true end)
+
+			if next(legacy) then
+				for k, v in pairs(legacy) do
+					if addon.db[k] == nil then addon.db[k] = v end
+					EnhanceQoLDB[k] = nil
+				end
+			end
+			local profilesPage = AceDBOptions:GetOptionsTable(addon.dbObject)
+			AceConfig:RegisterOptionsTable("EQOL_Profiles", profilesPage)
 
 			loadMain()
 			EQOL.PersistSignUpNote()

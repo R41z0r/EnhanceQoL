@@ -1,13 +1,16 @@
 # Changelog
 
 ## [3.8.0] – 2025-04-29
-### ✨ Added
-- **Objective‑Tracker Auto‑Hide in Mythic+**  
-  Automatically hides or collapses all objective‑tracker blocks when a Mythic‑Plus key starts.
+### ✨ New Features
+- **Objective-Tracker Auto-Hide in Mythic+**  
+  Hides (or collapses) every objective-tracker block automatically when a Mythic-Plus key starts.
 - **Square Minimap Toggle**  
-  Replaces the round minimap with a space‑efficient square version and automatically re‑anchors minimap buttons.
+  Replaces the round minimap with a space-efficient square version and re-anchors all minimap buttons.
+- **Profile Manager**  
+  Create, copy, delete and switch between profiles (character-specific or global).
+
 ### 🐛 Bug Fixes
-- Garbled characters (�) in the Chinese and Korean locale.  
+- Fixed garbled characters (�) in the Chinese and Korean locales.
 
 ---
 
