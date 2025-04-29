@@ -315,7 +315,7 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 	local eItem = Item:CreateFromBagAndSlot(bag, slot)
 	if eItem and not eItem:IsItemEmpty() then
 		eItem:ContinueOnItemLoad(function()
-			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = GetItemInfo(eItem:GetItemLink())
+			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, _, expId = GetItemInfo(eItem:GetItemLink())
 			local setVisibility = false
 
 			if addon.filterFrame then
@@ -325,6 +325,14 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 					if addon.itemBagFilters["rarity"] then
 						if nil == addon.itemBagFiltersQuality[eItem:GetItemQuality()] or addon.itemBagFiltersQuality[eItem:GetItemQuality()] == false then setVisibility = true end
 					end
+					local cilvl = eItem:GetCurrentItemLevel()
+					if addon.itemBagFilters["minLevel"] and (cilvl < addon.itemBagFilters["minLevel"] or (nil == itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE")) then
+						setVisibility = true
+					end
+					if addon.itemBagFilters["maxLevel"] and (cilvl > addon.itemBagFilters["maxLevel"] or (nil == itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE")) then
+						setVisibility = true
+					end
+					if addon.itemBagFilters["currentExpension"] and LE_EXPANSION_LEVEL_CURRENT ~= expId then setVisibility = true end
 					if addon.itemBagFilters["equipment"] and (nil == itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE") then setVisibility = true end
 					if
 						addon.itemBagFilters["usableOnly"]
@@ -441,18 +449,25 @@ function addon.functions.updateBank(itemButton, bag, slot) updateButtonInfo(item
 
 -- Datenstruktur für das Menü
 local filterData = {
-	-- {
-	-- 	label = "Level Range",
-	-- 	child = {
-	-- 		{ type = "EditBox", key = "minLevel", label = "Min Level" },
-	-- 		{ type = "EditBox", key = "maxLevel", label = "Max Level" },
-	-- 	},
-	-- },
+	{
+		label = AUCTION_HOUSE_FILTER_DROP_DOWN_LEVEL_RANGE,
+		child = {
+			{ type = "EditBox", key = "minLevel", label = MINIMUM },
+			{ type = "EditBox", key = "maxLevel", label = MAXIMUM },
+		},
+		ignoreSort = true,
+	},
 	{
 		label = BAG_FILTER_EQUIPMENT,
 		child = {
 			{ type = "CheckBox", key = "equipment", label = L["bagFilterEquip"] },
 			{ type = "CheckBox", key = "usableOnly", label = L["bagFilterSpec"] },
+		},
+	},
+	{
+		label = EXPANSION_FILTER_TEXT,
+		child = {
+			{ type = "CheckBox", key = "currentExpension", label = REFORGE_CURRENT, tooltip = L["currentExpensionMythicPlusWarning"] },
 		},
 	},
 	{
@@ -469,6 +484,11 @@ local filterData = {
 		},
 	},
 }
+table.sort(filterData, function(a, b)
+    if a.ignoreSort and not b.ignoreSort then return true  end
+    if b.ignoreSort and not a.ignoreSort then return false end
+    return a.label < b.label
+end)
 
 local function checkActiveQualityFilter()
 	for _, value in pairs(addon.itemBagFiltersQuality) do
@@ -573,16 +593,62 @@ local function CreateFilterMenu()
 					end
 					if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
 				end)
+				if item.tooltip then
+					widget:SetCallback("OnEnter", function(self)
+						GameTooltip:SetOwner(self.frame, "ANCHOR_RIGHT")
+						GameTooltip:ClearLines()
+						GameTooltip:AddLine(item.tooltip)
+						GameTooltip:Show()
+					end)
+					widget:SetCallback("OnLeave", function(self) GameTooltip:Hide() end)
+				end
 			elseif item.type == "EditBox" then
+				-- separate label so it aligns nicely above half‑width boxes
+				local eLabel = AceGUI:Create("Label")
+				eLabel:SetText(item.label)
+				eLabel:SetRelativeWidth(0.48)
+				scrollContainer:AddChild(eLabel)
 				widget = AceGUI:Create("EditBox")
-				widget:SetLabel(item.label)
-				widget:SetWidth(100)
+				-- widget:SetLabel(item.label) -- REMOVED: label now handled by separate label above
+				widget:SetWidth(50)
 				widget:SetText(addon.itemBagFilters[item.key] or "")
-				widget:SetCallback("OnEnterPressed", function(_, _, text) addon.itemBagFilters[item.key] = tonumber(text) end)
+				-- Show Min/Max boxes side‑by‑side, half width each
+				if item.key == "minLevel" or item.key == "maxLevel" then
+					-- keep some margin, 0.48 looks good in Flow layout
+					widget:SetRelativeWidth(0.48)
+				end
+
+				widget:SetCallback("OnTextChanged", function(self, _, text)
+					local caret = self.editbox:GetCursorPosition()
+					local numeric = text:gsub("%D", "")
+					if numeric ~= text then
+						self:SetText(numeric)
+						local newPos = math.max(0, caret - (text:len() - numeric:len()))
+						self.editbox:SetCursorPosition(newPos)
+					end
+				end)
+
+				widget:SetCallback("OnEnterPressed", function(self, _, text)
+					addon.itemBagFilters[item.key] = tonumber(text)
+					addon.functions.updateBags(ContainerFrameCombinedBags)
+					for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+						addon.functions.updateBags(frame)
+					end
+
+					if BankFrame and BankFrame:IsShown() and addon.db["showIlvlOnBankFrame"] then
+						for slot = 1, NUM_BANKGENERIC_SLOTS do
+							local itemButton = _G["BankFrameItem" .. slot]
+							if itemButton then addon.functions.updateBank(itemButton, -1, slot) end
+						end
+					end
+					if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
+
+					self:ClearFocus()
+				end)
 			end
 
 			if widget then
-				widget:SetFullWidth(true)
+				if item.type ~= "EditBox" or (item.key ~= "minLevel" and item.key ~= "maxLevel") then widget:SetFullWidth(true) end
 				scrollContainer:AddChild(widget)
 				if widget.text and widget.text.GetStringWidth then longestWidth = math_max(widget.text:GetStringWidth(), longestWidth) end
 			end

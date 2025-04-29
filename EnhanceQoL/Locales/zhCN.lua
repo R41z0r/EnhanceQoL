@@ -25,6 +25,7 @@ L["bagFilterDockFrameUnlock"] = "点击将过滤窗口从背包上分离"
 L["bagFilterDockFrameLock"] = "点击将过滤窗口固定在背包上"
 L["enableMoneyTracker"] = "启用跨角色金币追踪"
 L["enableMoneyTrackerDesc"] = "当你在背包中悬停鼠标于金币上时，可查看所有角色的金币数量"
+L["showOnlyGoldOnMoney"] = "仅显示账号金币（隐藏银币和铜币）"
 L["moneyTrackerRemovePlayer"] = "所有已知角色"
 L["showBagFilterMenu"] = "启用背包物品过滤"
 L["showBagFilterMenuDesc"] = ("仅在启用合并背包时可用。按住 %s 拖动窗口"):format(SHIFT_KEY_TEXT)

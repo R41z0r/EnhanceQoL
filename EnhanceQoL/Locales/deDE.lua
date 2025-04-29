@@ -24,6 +24,7 @@ L["bagFilterDockFrameUnlock"] = "Klicken, um das Filterfenster von den Taschen z
 L["bagFilterDockFrameLock"] = "Klicken, um das Filterfenster an die Taschen zu heften"
 L["enableMoneyTracker"] = "Aktivieren, um dein Gold über alle Charaktere zu verfolgen"
 L["enableMoneyTrackerDesc"] = "Wenn du in deinen Taschen über dein Gold hoverst, siehst du das Gold aller Charaktere"
+L["showOnlyGoldOnMoney"] = "Nur Gold des Accounts anzeigen (Silber / Kupfer ausblenden)"
 L["moneyTrackerRemovePlayer"] = "Alle bekannten Charaktere"
 L["showBagFilterMenu"] = "Gegenstandsfilter in Taschen aktivieren"
 L["showBagFilterMenuDesc"] = ("Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist. Halte %s, um das Fenster zu verschieben"):format(SHIFT_KEY_TEXT)

@@ -25,6 +25,7 @@ L["bagFilterDockFrameUnlock"] = "Clique para desafixar a janela de filtro das su
 L["bagFilterDockFrameLock"] = "Clique para fixar a janela de filtro às suas bolsas"
 L["enableMoneyTracker"] = "Ativar para rastrear seu ouro em todos os personagens"
 L["enableMoneyTrackerDesc"] = "Ao passar o mouse sobre seu ouro nas bolsas, você verá o ouro de todos os personagens"
+L["showOnlyGoldOnMoney"] = "Exibir apenas o ouro da conta (ocultar prata e cobre)"
 L["moneyTrackerRemovePlayer"] = "Todos os personagens conhecidos"
 L["showBagFilterMenu"] = "Ativar filtro de itens nas bolsas"
 L["showBagFilterMenuDesc"] = ("Disponível apenas quando Bolsas Combinadas estiver habilitado. Segure %s para mover o quadro"):format(SHIFT_KEY_TEXT)

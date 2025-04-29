@@ -148,6 +148,7 @@ globals = {
 	"InspectMainHandSlot",
 	"ITEM_COSMETIC_LEARN",
 	"InspectSecondaryHandSlot",
+	"LE_EXPANSION_LEVEL_CURRENT",
 	"InspectFrame",
 	"BagsBar",
 	"MicroMenu",

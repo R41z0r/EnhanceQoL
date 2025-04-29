@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.8.1] – 2025-04-30
+### 🐛 Bug Fixes
+- Missed a translation for an account money option
+
+---
+
 ## [3.8.0] – 2025-04-29
 ### ✨ New Features
 - **Objective-Tracker Auto-Hide in Mythic+**  

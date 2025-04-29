@@ -25,6 +25,7 @@ L["bagFilterDockFrameUnlock"] = "클릭하여 필터 창을 가방에서 분리"
 L["bagFilterDockFrameLock"] = "클릭하여 필터 창을 가방에 고정"
 L["enableMoneyTracker"] = "모든 캐릭터의 골드를 추적하도록 활성화"
 L["enableMoneyTrackerDesc"] = "가방의 골드에 마우스를 올리면 모든 캐릭터의 골드를 확인할 수 있습니다"
+L["showOnlyGoldOnMoney"] = "계정 골드만 표시 (실버/코퍼 숨김)"
 L["moneyTrackerRemovePlayer"] = "모든 알려진 캐릭터"
 L["showBagFilterMenu"] = "가방 아이템 필터 활성화"
 L["showBagFilterMenuDesc"] = ("통합 가방이 선택된 경우에만 사용 가능. %s를 누른 채로 프레임을 이동"):format(SHIFT_KEY_TEXT)
@@ -138,7 +139,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "친구"
 L["autoAcceptGroupInviteOptions"] = "다음 대상의 초대를 수락..."
 
 L["showLeaderIconRaidFrame"] = "공격대 스타일 파티 프레임에 파티장 아이콘 표시"
-L["showPartyFrameInSoloContent"] = "솔로 콘텐츠에서 파티 프레임 표시"
+L["showPartyFrameInSoloContent"] = "��로 콘텐츠에서 파티 프레임 표시"
 
 L["ActionbarHideExplain"] = '행동 단축바를 숨기고 마우스오버 시에만 표시합니다. 이 기능은 행동 단축바가 편집 모드에서 "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
