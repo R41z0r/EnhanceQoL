@@ -47,6 +47,7 @@ globals = {
 
 	-- misc custom
 	"AchievementObjectiveTracker",
+	"MinimapCompassTexture",
 	"AdventureObjectiveTracker",
 	"BonusObjectiveTracker",
 	"CampaignQuestObjectiveTracker",
