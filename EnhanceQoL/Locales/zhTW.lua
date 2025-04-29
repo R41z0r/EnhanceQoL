@@ -161,7 +161,7 @@ L["lockMinimapButtonBin"] = "鎖定收集器框架"
 
 L["UnitFrameHideExplain"] = "隱藏元素，僅在滑鼠懸停時顯示"
 L["chatFrameFadeEnabled"] = "啟用聊天淡出效果"
-L["chatFrameFadeTimeVisibleText"] = "文字保���顯示的時長"
+L["chatFrameFadeTimeVisibleText"] = "文字保持顯示的時長"
 L["chatFrameFadeDurationText"] = "淡出動畫的持續時間"
 
 L["enableLootspecQuickswitch"] = "在小地圖上啟用戰利品和當前專精的快速切換"

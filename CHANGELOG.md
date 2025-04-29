@@ -2,7 +2,12 @@
 
 ## [3.8.0] – 2025-04-29
 ### ✨ Added
-- Option to **automatically hide objective tracker in mythic+**
+- **Objective‑Tracker Auto‑Hide in Mythic+**  
+  Automatically hides or collapses all objective‑tracker blocks when a Mythic‑Plus key starts.
+- **Square Minimap Toggle**  
+  Replaces the round minimap with a space‑efficient square version and automatically re‑anchors minimap buttons.
+### 🐛 Bug Fixes
+- Garbled characters (�) in the Chinese and Korean locale.  
 
 ---
 

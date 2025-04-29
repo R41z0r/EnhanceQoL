@@ -140,14 +140,14 @@ L["autoAcceptGroupInviteOptions"] = "다음 대상의 초대를 수락..."
 L["showLeaderIconRaidFrame"] = "공격대 스타일 파티 프레임에 파티장 아이콘 표시"
 L["showPartyFrameInSoloContent"] = "솔로 콘텐츠에서 파티 프레임 표시"
 
-L["ActionbarHideExplain"] = '행동 단축바를 숨김 처리하고 마우스 오버 시 표시되도록 설정합니다. 이 기능은 ��동 단축바가 편집 모드에서 "'
+L["ActionbarHideExplain"] = '행동 단축바를 숨기고 마우스오버 시에만 표시합니다. 이 기능은 행동 단축바가 편집 모드에서 "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
 	.. '" 및 "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
 	.. '"로 설정되어 있을 때만 작동합니다.'
 
-L["enableMinimapButtonBin"] = "미니맵 버튼 모음 활������화"
-L["enableMinimapButtonBinDesc"] = "모든 미니맵 버���을 하나의 버튼으로 모읍니다"
+L["enableMinimapButtonBin"] = "미니맵 버튼 모음 활성화"
+L["enableMinimapButtonBinDesc"] = "모든 미니맵 버튼을 하나의 버튼으로 모읍니다"
 L["ignoreMinimapSinkHole"] = "다음 미니맵 버튼을 모음에서 제외하기..."
 L["useMinimapButtonBinIcon"] = "미니맵 버튼을 모음을 위해 사용"
 L["useMinimapButtonBinMouseover"] = "마우스오버 시 이동 가능한 모음 프레임 표시"

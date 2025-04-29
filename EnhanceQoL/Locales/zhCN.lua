@@ -153,12 +153,12 @@ L["useMinimapButtonBinIcon"] = "使用小地图按钮作为收集器"
 L["useMinimapButtonBinMouseover"] = "将按钮收集器显示为可移动框体（鼠标悬停时）"
 L["lockMinimapButtonBin"] = "锁定收集器框体"
 
-L["UnitFrameHideExplain"] = "隐藏元素，仅在鼠标悬���时显示"
+L["UnitFrameHideExplain"] = "隐藏元素，仅在鼠标悬停时显示"
 L["chatFrameFadeEnabled"] = "启用聊天渐隐"
 L["chatFrameFadeTimeVisibleText"] = "文字保持可见时间"
 L["chatFrameFadeDurationText"] = "渐隐动画的持续时间"
 
-L["enableLootspecQuickswitch"] = "在小地图上启用快速切���战利品和当前专精"
+L["enableLootspecQuickswitch"] = "在小地图上启用快速切换战利品与当前专精"
 L["enableLootspecQuickswitchDesc"] = "左键单击专精设置战利品专精，右键单击更改当前专精。"
 
 addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"

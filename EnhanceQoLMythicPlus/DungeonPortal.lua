@@ -196,7 +196,7 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 			icon:SetTexture(spellInfo.iconID or "Interface\\ICONS\\INV_Misc_QuestionMark")
 			button.icon = icon
 
-			-- ���berprüfen, ob der Zauber bekannt ist
+			-- berprüfen, ob der Zauber bekannt ist
 			if not spellData.isKnown then
 				icon:SetDesaturated(true) -- Macht das Icon grau/schwarzweiß
 				icon:SetAlpha(0.5) -- Optional: Reduziert die Sichtbarkeit
@@ -727,7 +727,7 @@ local function CreateRioScore()
 			end
 
 			local _, _, _, _, lp = lastElement:GetPoint()
-			frameAnchorScore:SetSize(max(nWidth + 20, 205), max(lp * -1 + 30, 170)) -- Breite x H���he
+			frameAnchorScore:SetSize(max(nWidth + 20, 205), max(lp * -1 + 30, 170)) -- Breite x Hhe
 			frameAnchor:SetSize(max(title:GetStringWidth() + 20, nWidth + 20, 205), 170) -- Breite x Höhe
 		end
 	end

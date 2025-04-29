@@ -983,6 +983,18 @@ local function addMinimapFrame(container)
 				addMinimapFrame(container)
 			end,
 		},
+		{
+			parent = "",
+			var = "enableSquareMinimap",
+			text = L["enableSquareMinimap"],
+			desc = L["enableSquareMinimapDesc"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["enableSquareMinimap"] = value
+				addon.variables.requireReload = true
+				addon.functions.checkReloadFrame()
+			end,
+		},
 	}
 
 	if addon.db["enableMinimapButtonBin"] then
@@ -2338,6 +2350,10 @@ local function initMisc()
 	_G.CompactRaidFrameManager:SetScript("OnShow", function(self) addon.functions.toggleRaidTools(addon.db["hideRaidTools"], self) end)
 	ExpansionLandingPageMinimapButton:HookScript("OnShow", function(self)
 		local id = addon.variables.landingPageReverse[self.title]
+		if addon.db["enableSquareMinimap"] then
+			self:ClearAllPoints()
+			self:SetPoint("BOTTOMLEFT", Minimap, "BOTTOMLEFT", -16, -16)
+		end
 		if addon.db["hiddenLandingPages"][id] then self:Hide() end
 	end)
 end
@@ -2444,6 +2460,7 @@ local function initUI()
 	addon.functions.InitDBValue("lootspec_quickswitch", {})
 	addon.functions.InitDBValue("minimapSinkHoleData", {})
 	addon.functions.InitDBValue("hideQuickJoinToast", false)
+	addon.functions.InitDBValue("enableSquareMinimap", false)
 
 	table.insert(addon.variables.unitFrameNames, {
 		name = "MicroMenu",
@@ -2466,6 +2483,13 @@ local function initUI()
 			"hideBagsBar",
 		},
 	})
+
+	local function makeSquareMinimap()
+		MinimapCompassTexture:Hide()
+		Minimap:SetMaskTexture("Interface\\BUTTONS\\WHITE8X8")
+		function GetMinimapShape() return "SQUARE" end
+	end
+	if addon.db["enableSquareMinimap"] then makeSquareMinimap() end
 
 	function addon.functions.toggleMinimapButton(value)
 		if value == false then
@@ -3126,6 +3150,39 @@ local function RestorePosition(frame)
 	end
 end
 
+function addon.functions.checkReloadFrame()
+	if addon.variables.requireReload == false then return end
+	local reloadFrame = CreateFrame("Frame", "ReloadUIPopup", UIParent, "BasicFrameTemplateWithInset")
+	reloadFrame:SetFrameStrata("TOOLTIP")
+	reloadFrame:SetSize(500, 120) -- Breite und Höhe
+	reloadFrame:SetPoint("TOP", UIParent, "TOP", 0, -200) -- Zentriert auf dem Bildschirm
+
+	reloadFrame.title = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	reloadFrame.title:SetPoint("TOP", reloadFrame, "TOP", 0, -6)
+	reloadFrame.title:SetText(L["tReloadInterface"])
+
+	reloadFrame.infoText = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	reloadFrame.infoText:SetPoint("CENTER", reloadFrame, "CENTER", 0, 10)
+	reloadFrame.infoText:SetText(L["bReloadInterface"])
+
+	local reloadButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
+	reloadButton:SetSize(120, 30)
+	reloadButton:SetPoint("BOTTOMLEFT", reloadFrame, "BOTTOMLEFT", 10, 10)
+	reloadButton:SetText(RELOADUI)
+	reloadButton:SetScript("OnClick", function() ReloadUI() end)
+
+	local cancelButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
+	cancelButton:SetSize(120, 30)
+	cancelButton:SetPoint("BOTTOMRIGHT", reloadFrame, "BOTTOMRIGHT", -10, 10)
+	cancelButton:SetText(CANCEL)
+	cancelButton:SetScript("OnClick", function()
+		reloadFrame:Hide()
+		addon.variables.requireReload = false -- disable the prompt on cancel
+	end)
+
+	reloadFrame:Show()
+end
+
 local function CreateUI()
 	-- Create the main frame
 	local frame = AceGUI:Create("Frame")
@@ -3135,7 +3192,7 @@ local function CreateUI()
 	frame:SetHeight(600)
 	frame:SetLayout("Fill")
 
-	-- Frame wiederherstellen und überpr��fen, wenn das Addon geladen wird
+	-- Frame wiederherstellen und überprfen, wenn das Addon geladen wird
 	frame.frame:Hide()
 	frame.frame:SetScript("OnShow", function(self) RestorePosition(self) end)
 	frame.frame:SetScript("OnHide", function(self)
@@ -3143,36 +3200,7 @@ local function CreateUI()
 		EnhanceQoLDB.point = point
 		EnhanceQoLDB.x = xOfs
 		EnhanceQoLDB.y = yOfs
-		if addon.variables.requireReload == false then return end
-
-		local reloadFrame = CreateFrame("Frame", "ReloadUIPopup", UIParent, "BasicFrameTemplateWithInset")
-		reloadFrame:SetSize(500, 120) -- Breite und Höhe
-		reloadFrame:SetPoint("TOP", UIParent, "TOP", 0, -200) -- Zentriert auf dem Bildschirm
-
-		reloadFrame.title = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-		reloadFrame.title:SetPoint("TOP", reloadFrame, "TOP", 0, -6)
-		reloadFrame.title:SetText(L["tReloadInterface"])
-
-		reloadFrame.infoText = reloadFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-		reloadFrame.infoText:SetPoint("CENTER", reloadFrame, "CENTER", 0, 10)
-		reloadFrame.infoText:SetText(L["bReloadInterface"])
-
-		local reloadButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
-		reloadButton:SetSize(120, 30)
-		reloadButton:SetPoint("BOTTOMLEFT", reloadFrame, "BOTTOMLEFT", 10, 10)
-		reloadButton:SetText(RELOADUI)
-		reloadButton:SetScript("OnClick", function() ReloadUI() end)
-
-		local cancelButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
-		cancelButton:SetSize(120, 30)
-		cancelButton:SetPoint("BOTTOMRIGHT", reloadFrame, "BOTTOMRIGHT", -10, 10)
-		cancelButton:SetText(CANCEL)
-		cancelButton:SetScript("OnClick", function()
-			reloadFrame:Hide()
-			addon.variables.requireReload = false -- disable the prompt on cancel
-		end)
-
-		reloadFrame:Show()
+		addon.functions.checkReloadFrame()
 	end)
 	addon.treeGroupData = {}
 
@@ -3253,7 +3281,7 @@ local function CreateUI()
 	-- Select the first group by default
 	addon.treeGroup:SelectByPath("general")
 
-	-- Datenobjekt f�����r den Minimap-Button
+	-- Datenobjekt fr den Minimap-Button
 	local EnhanceQoLLDB = LDB:NewDataObject("EnhanceQoL", {
 		type = "launcher",
 		text = addonName,
@@ -3489,7 +3517,7 @@ function loadMain()
 	local configFrame = CreateFrame("Frame", addonName .. "ConfigFrame", InterfaceOptionsFramePanelContainer)
 	configFrame.name = addonName
 
-	-- Button f��r die Optionen
+	-- Button fr die Optionen
 	local configButton = CreateFrame("Button", nil, configFrame, "UIPanelButtonTemplate")
 	configButton:SetSize(140, 40)
 	configButton:SetPoint("TOPLEFT", 10, -10)

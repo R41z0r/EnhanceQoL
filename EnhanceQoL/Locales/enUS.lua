@@ -167,3 +167,6 @@ L["chatFrameFadeDurationText"] = "Fade animation duration"
 
 L["enableLootspecQuickswitch"] = "Enable quick switching for loot and active specializations on the Minimap"
 L["enableLootspecQuickswitchDesc"] = "Left-click a specialization to set your loot spec, or right-click to change your active specialization."
+
+L["enableSquareMinimap"] = "Use a square minimap instead of the normal round"
+L["enableSquareMinimapDesc"] = "This option required a reload"
