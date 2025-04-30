@@ -60,7 +60,7 @@ L["potionTrackerHealingPotions"] = "치유 물약 CD 추적"
 L["potionTrackerOffhealing"] = "보조 치유 CD 사용 추적"
 
 -- AutoMark Frame
-L["AutoMark"] = "탱커 징표"
+L["AutoMark"] = "자동 징표"
 L["autoMarkTankInDungeon"] = "던전에서 " .. TANK .. " 자동 표시"
 L["autoMarkTankInDungeonMarker"] = "탱커 징표"
 L["Disabled"] = "비활성화됨"
@@ -126,3 +126,5 @@ L["mythicPlusEnableObjectiveTracker"] = "퀘스트 추적 자동화"
 L["mythicPlusEnableObjectiveTrackerDesc"] = "쐐기 던전을 시작하면 목표 추적기 블록을 자동으로 숨기거나 접습니다."
 L["mythicPlusObjectiveTrackerSetting"] = "동작"
 L["collapse"] = "접기"
+
+L["mythicPlusNoHealerMark"] = "내 역할이 치유사일 때 내 징표를 제거"

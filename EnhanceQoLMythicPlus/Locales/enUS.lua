@@ -58,7 +58,7 @@ L["potionTrackerHealingPotions"] = "Track health pot CD"
 L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
 
 -- Automark Frame
-L["AutoMark"] = "Tank marker"
+L["AutoMark"] = "Auto marker"
 L["autoMarkTankInDungeon"] = "Automatically mark the " .. TANK .. " in dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank marker"
 L["Disabled"] = "Disabled"
@@ -121,3 +121,5 @@ L["mythicPlusEnableObjectiveTracker"] = "Automate Objective Tracker"
 L["mythicPlusEnableObjectiveTrackerDesc"] = "At the start of a Mythic+ run, automatically hide / collapse all objective tracker blocks."
 L["mythicPlusObjectiveTrackerSetting"] = "Behavior"
 L["collapse"] = "Collapse"
+
+L["mythicPlusNoHealerMark"] = "Remove the marker from me when I’m in the healer role"

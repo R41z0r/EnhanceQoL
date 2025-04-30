@@ -1,6 +1,21 @@
 # Changelog
 
+## [3.9.0] – 2025-04-31
+### ✨ New Features
+- **Level-Range Bag Filter**  
+  Restrict the bag view by minimum and/or maximum item level.
+- **Automatically remove RAID Marker on me in healer role**
+  Remove the marker from me when I’m in the healer role
+
+### 🔁 Changed
+- **Renamed Tank marker to Auto marker**
+
+### 🐛 Bug Fixes
+- Item level wasn't displayed on some chest items in bag
+---
+
 ## [3.8.1] – 2025-04-30
+
 ### 🐛 Bug Fixes
 - Added the missing translation for the account-gold option.
 - Fixed an error that could break LFG Quick Signup.

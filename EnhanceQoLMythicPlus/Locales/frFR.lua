@@ -59,7 +59,7 @@ L["potionTrackerHealingPotions"] = "Suivre le CD de la potion de soins"
 L["potionTrackerOffhealing"] = "Suivi de l'utilisation des CD de soins secondaires"
 
 -- AutoMark Frame
-L["AutoMark"] = "Marqueur de tank"
+L["AutoMark"] = "Marcador automático"
 L["autoMarkTankInDungeon"] = "Marquer automatiquement le " .. TANK .. " dans les donjons"
 L["autoMarkTankInDungeonMarker"] = "Marqueur de tank"
 L["Disabled"] = "Désactivé"
@@ -121,3 +121,5 @@ L["mythicPlusEnableObjectiveTracker"] = "Automatiser le suivi des objectifs"
 L["mythicPlusEnableObjectiveTrackerDesc"] = "Au lancement d’une clé Mythique+, masque ou réduit automatiquement tous les blocs du suivi d’objectifs."
 L["mythicPlusObjectiveTrackerSetting"] = "Comportement"
 L["collapse"] = "Réduire"
+
+L["mythicPlusNoHealerMark"] = "Retirer ma propre marque lorsque je suis en rôle de soigneur"

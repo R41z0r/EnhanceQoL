@@ -337,13 +337,10 @@ local function checkRaidMarker()
 end
 
 local function checkCondition()
-	--@debug@
-	-- No Automark for healer when it's me
-	if UnitInParty("player") and UnitGroupRolesAssigned("player") == "HEALER" then
+	if addon.db["mythicPlusNoHealerMark"] and UnitInParty("player") and UnitGroupRolesAssigned("player") == "HEALER" then
 		local rIndex = GetRaidTargetIndex("player")
 		if nil ~= rIndex then SetRaidTarget("player", 0) end
 	end
-	--@end-debug@
 
 	if addon.db["autoMarkTankInDungeon"] then
 		local _, _, difficultyID, difficultyName = GetInstanceInfo()
@@ -816,6 +813,26 @@ local function addAutoMarkFrame(container)
 	local labelExplanation = addon.functions.createLabelAce("|cffffd700" .. L["autoMarkTankExplanation"] .. "|r", nil, nil, 14)
 	labelExplanation:SetFullWidth(true)
 	groupCore:AddChild(labelExplanation)
+
+	local groupHealer = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupHealer)
+	local data = {
+		{
+			text = L["mythicPlusNoHealerMark"],
+			var = "mythicPlusNoHealerMark",
+			func = function(self, _, value)
+				addon.db["mythicPlusNoHealerMark"] = value
+				checkCondition()
+			end,
+		},
+	}
+
+	for _, cbData in ipairs(data) do
+		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
+		if cbData.func then uFunc = cbData.func end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+		groupHealer:AddChild(cbElement)
+	end
 end
 
 local function addObjectiveTrackerFrame(container)

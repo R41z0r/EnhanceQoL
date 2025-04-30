@@ -60,7 +60,7 @@ L["potionTrackerHealingPotions"] = "追踪治疗药水CD"
 L["potionTrackerOffhealing"] = "追踪次要治疗CD的使用"
 
 -- AutoMark Frame
-L["AutoMark"] = "坦克標記"
+L["AutoMark"] = "自動標記"
 L["autoMarkTankInDungeon"] = "在地下城自動標記" .. TANK
 L["autoMarkTankInDungeonMarker"] = "坦克標記"
 L["Disabled"] = "已停用"
@@ -122,3 +122,5 @@ L["mythicPlusEnableObjectiveTracker"] = "自動管理目標追蹤"
 L["mythicPlusEnableObjectiveTrackerDesc"] = "當進入 M+ 地城時，自動隱藏或收合所有目標追蹤區塊。"
 L["mythicPlusObjectiveTrackerSetting"] = "行為"
 L["collapse"] = "收合"
+
+L["mythicPlusNoHealerMark"] = "當我扮演治療角色時移除自己的標記"

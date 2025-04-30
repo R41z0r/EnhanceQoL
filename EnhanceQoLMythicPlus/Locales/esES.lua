@@ -59,7 +59,7 @@ L["potionTrackerHealingPotions"] = "Rastrear CD de poción de salud"
 L["potionTrackerOffhealing"] = "Rastrear uso de CD de sanación secundaria"
 
 -- AutoMark Frame
-L["AutoMark"] = "Marcador de tanque"
+L["AutoMark"] = "Marqueur auto"
 L["autoMarkTankInDungeon"] = "Marcar automáticamente al " .. TANK .. " en mazmorras"
 L["autoMarkTankInDungeonMarker"] = "Marcador de tanque"
 L["Disabled"] = "Desactivado"
@@ -121,3 +121,5 @@ L["mythicPlusEnableObjectiveTracker"] = "Automatizar el seguimiento de objetivos
 L["mythicPlusEnableObjectiveTrackerDesc"] = "Al comenzar una Mítica+, oculta o pliega automáticamente todos los bloques del rastreador de objetivos."
 L["mythicPlusObjectiveTrackerSetting"] = "Comportamiento"
 L["collapse"] = "Plegar"
+
+L["mythicPlusNoHealerMark"] = "Quitar mi marca cuando esté en el rol de sanador"

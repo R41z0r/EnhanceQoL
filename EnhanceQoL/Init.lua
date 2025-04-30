@@ -607,7 +607,7 @@ addon.variables.allowedEquipSlotsBagIlvl = {
 	["INVTYPE_CLOAK"] = true,
 	["INVTYPE_2HWEAPON"] = true, -- ["INVTYPE_BAG"] = true,
 	-- ["INVTYPE_TABARD"] = true,
-	-- ["INVTYPE_ROBE"] = true,
+	["INVTYPE_ROBE"] = true,
 	["INVTYPE_WEAPONMAINHAND"] = true,
 	["INVTYPE_WEAPONOFFHAND"] = true,
 	["INVTYPE_HOLDABLE"] = true,

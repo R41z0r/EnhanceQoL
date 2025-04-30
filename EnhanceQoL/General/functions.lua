@@ -353,7 +353,7 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 					end
 				end
 			end
-
+			
 			if
 				(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
 			then
@@ -447,7 +447,6 @@ end
 
 function addon.functions.updateBank(itemButton, bag, slot) updateButtonInfo(itemButton, bag, slot) end
 
--- Datenstruktur für das Menü
 local filterData = {
 	{
 		label = BAG_FILTER_EQUIPMENT,
@@ -456,7 +455,6 @@ local filterData = {
 			{ type = "CheckBox", key = "usableOnly", label = L["bagFilterSpec"] },
 		},
 	},
-	--@debug@
 	{
 		label = AUCTION_HOUSE_FILTER_DROP_DOWN_LEVEL_RANGE,
 		child = {
@@ -471,7 +469,6 @@ local filterData = {
 			{ type = "CheckBox", key = "currentExpension", label = REFORGE_CURRENT, tooltip = L["currentExpensionMythicPlusWarning"] },
 		},
 	},
-	--@end-debug@
 	{
 		label = RARITY,
 		child = {
@@ -502,7 +499,6 @@ local function checkActiveQualityFilter()
 	addon.itemBagFilters["rarity"] = false
 end
 
--- Funktion zum Erstellen des Filtermenüs mit AceGUI
 local function CreateFilterMenu()
 	local frame = CreateFrame("Frame", "InventoryFilterPanel", ContainerFrameCombinedBags, "BackdropTemplate")
 	frame:SetBackdrop({

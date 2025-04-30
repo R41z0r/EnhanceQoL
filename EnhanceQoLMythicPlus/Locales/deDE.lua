@@ -59,7 +59,7 @@ L["potionTrackerHealingPotions"] = "Gesundheitstrank-CD verfolgen"
 L["potionTrackerOffhealing"] = "Verfolge Offheilung CD Nutzung"
 
 -- AutoMark Frame
-L["AutoMark"] = "Tank-Marker"
+L["AutoMark"] = "Automatischer Marker"
 L["autoMarkTankInDungeon"] = "Markiere automatisch den " .. TANK .. " in Dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank-Marker"
 L["Disabled"] = "Deaktiviert"
@@ -127,3 +127,5 @@ L["mythicPlusEnableObjectiveTracker"] = "Ziel-Tracker automatisieren"
 L["mythicPlusEnableObjectiveTrackerDesc"] = "Blendet zu Beginn eines Mythic-Dungeons alle Ziel-Tracker-Blöcke automatisch aus bzw. klappt sie ein."
 L["mythicPlusObjectiveTrackerSetting"] = "Verhalten"
 L["collapse"] = "Einklappen"
+
+L["mythicPlusNoHealerMark"] = "Entferne mein eigenes Zeichen, wenn ich als Heiler spiele"

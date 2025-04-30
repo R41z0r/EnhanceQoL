@@ -60,7 +60,7 @@ L["potionTrackerHealingPotions"] = "Traccia CD pozione di cura"
 L["potionTrackerOffhealing"] = "Traccia l'uso di CD di cura secondaria"
 
 -- AutoMark Frame
-L["AutoMark"] = "Segnalatore del tank"
+L["AutoMark"] = "Indicatore automatico"
 L["autoMarkTankInDungeon"] = "Marca automaticamente il " .. TANK .. " nei dungeon"
 L["autoMarkTankInDungeonMarker"] = "Segnalatore del tank"
 L["Disabled"] = "Disabilitato"
@@ -122,3 +122,5 @@ L["mythicPlusEnableObjectiveTracker"] = "Automatizza il tracker obiettivi"
 L["mythicPlusEnableObjectiveTrackerDesc"] = "All’avvio di una spedizione Mitica+, nasconde o comprime automaticamente tutti i blocchi del tracker obiettivi."
 L["mythicPlusObjectiveTrackerSetting"] = "Comportamento"
 L["collapse"] = "Comprimi"
+
+L["mythicPlusNoHealerMark"] = "Rimuovi il mio marchio quando sono in ruolo di guaritore"
