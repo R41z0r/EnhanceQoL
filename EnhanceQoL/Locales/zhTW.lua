@@ -171,3 +171,4 @@ L["enableLootspecQuickswitchDesc"] = "左鍵點擊專精以設定戰利品專精
 addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
 
 L["Profiles"] = "設定檔"
+L["currentExpensionMythicPlusWarning"] = "來自舊版本地城的 M+ 裝備可能導致結果不準確。"

@@ -165,3 +165,4 @@ L["enableLootspecQuickswitch"] = "Abilita il cambio rapido di specializzazione d
 L["enableLootspecQuickswitchDesc"] = "Fai clic sinistro su una specializzazione per impostare la spec di bottino, o clic destro per cambiare la spec attiva."
 
 L["Profiles"] = "Profili"
+L["currentExpensionMythicPlusWarning"] = "Per gli oggetti M+ provenienti da spedizioni di vecchie espansioni i risultati potrebbero non essere precisi."

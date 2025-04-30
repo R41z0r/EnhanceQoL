@@ -2,7 +2,10 @@
 
 ## [3.8.1] – 2025-04-30
 ### 🐛 Bug Fixes
-- Missed a translation for an account money option
+- Added the missing translation for the account-gold option.
+- Fixed an error that could break LFG Quick Signup.
+- Persistent signup note in LFG now saves correctly.
+- Corrected window positioning for several settings panels.
 
 ---
 

@@ -450,6 +450,14 @@ function addon.functions.updateBank(itemButton, bag, slot) updateButtonInfo(item
 -- Datenstruktur für das Menü
 local filterData = {
 	{
+		label = BAG_FILTER_EQUIPMENT,
+		child = {
+			{ type = "CheckBox", key = "equipment", label = L["bagFilterEquip"] },
+			{ type = "CheckBox", key = "usableOnly", label = L["bagFilterSpec"] },
+		},
+	},
+	--@debug@
+	{
 		label = AUCTION_HOUSE_FILTER_DROP_DOWN_LEVEL_RANGE,
 		child = {
 			{ type = "EditBox", key = "minLevel", label = MINIMUM },
@@ -458,18 +466,12 @@ local filterData = {
 		ignoreSort = true,
 	},
 	{
-		label = BAG_FILTER_EQUIPMENT,
-		child = {
-			{ type = "CheckBox", key = "equipment", label = L["bagFilterEquip"] },
-			{ type = "CheckBox", key = "usableOnly", label = L["bagFilterSpec"] },
-		},
-	},
-	{
 		label = EXPANSION_FILTER_TEXT,
 		child = {
 			{ type = "CheckBox", key = "currentExpension", label = REFORGE_CURRENT, tooltip = L["currentExpensionMythicPlusWarning"] },
 		},
 	},
+	--@end-debug@
 	{
 		label = RARITY,
 		child = {
@@ -485,9 +487,9 @@ local filterData = {
 	},
 }
 table.sort(filterData, function(a, b)
-    if a.ignoreSort and not b.ignoreSort then return true  end
-    if b.ignoreSort and not a.ignoreSort then return false end
-    return a.label < b.label
+	if a.ignoreSort and not b.ignoreSort then return true end
+	if b.ignoreSort and not a.ignoreSort then return false end
+	return a.label < b.label
 end)
 
 local function checkActiveQualityFilter()

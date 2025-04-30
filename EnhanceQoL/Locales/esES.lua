@@ -171,3 +171,4 @@ L["enableLootspecQuickswitch"] = "Habilitar cambio rápido de botín y especiali
 L["enableLootspecQuickswitchDesc"] = "Haz clic izquierdo en una especialización para establecer tu botín, o clic derecho para cambiar tu especialización activa."
 
 L["Profiles"] = "Perfiles"
+L["currentExpensionMythicPlusWarning"] = "Para objetos de Mítico+ obtenidos en mazmorras antiguas, los resultados pueden ser imprecisos."

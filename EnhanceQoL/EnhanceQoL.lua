@@ -117,7 +117,7 @@ local function toggleLFGFilterPosition()
 end
 
 LFGListApplicationDialog:HookScript("OnShow", function(self)
-	if not EnhanceQoLDB.skipSignUpDialog then return end
+	if not addon.db.skipSignUpDialog then return end
 	if self.SignUpButton:IsEnabled() and not IsShiftKeyDown() then self.SignUpButton:Click() end
 end)
 
@@ -135,7 +135,7 @@ local patchedFunc = function(self, resultID)
 end
 
 function EQOL.PersistSignUpNote()
-	if EnhanceQoLDB.persistSignUpNote then
+	if addon.db.persistSignUpNote then
 		-- overwrite function with patched func missing the call to ClearApplicationTextFields
 		LFGListApplicationDialog_Show = patchedFunc
 		didApplyPatch = true
@@ -3150,9 +3150,9 @@ end
 
 -- Frame-Position wiederherstellen
 local function RestorePosition(frame)
-	if EnhanceQoLDB.point and EnhanceQoLDB.x and EnhanceQoLDB.y then
+	if addon.db.point and addon.db.x and addon.db.y then
 		frame:ClearAllPoints()
-		frame:SetPoint(EnhanceQoLDB.point, UIParent, EnhanceQoLDB.point, EnhanceQoLDB.x, EnhanceQoLDB.y)
+		frame:SetPoint(addon.db.point, UIParent, addon.db.point, addon.db.x, addon.db.y)
 	end
 end
 
@@ -3203,9 +3203,9 @@ local function CreateUI()
 	frame.frame:SetScript("OnShow", function(self) RestorePosition(self) end)
 	frame.frame:SetScript("OnHide", function(self)
 		local point, _, _, xOfs, yOfs = self:GetPoint()
-		EnhanceQoLDB.point = point
-		EnhanceQoLDB.x = xOfs
-		EnhanceQoLDB.y = yOfs
+		addon.db.point = point
+		addon.db.x = xOfs
+		addon.db.y = yOfs
 		addon.functions.checkReloadFrame()
 	end)
 	addon.treeGroupData = {}
@@ -3484,9 +3484,9 @@ function loadMain()
 			-- Frame zurücksetzen
 			addon.aceFrame:ClearAllPoints()
 			addon.aceFrame:SetPoint("CENTER", UIParent, "CENTER")
-			EnhanceQoLDB.point = "CENTER"
-			EnhanceQoLDB.x = 0
-			EnhanceQoLDB.y = 0
+			addon.db.point = "CENTER"
+			addon.db.x = 0
+			addon.db.y = 0
 			print(addonName .. " frame has been reset to the center.")
 		elseif msg:match("^aag%s*(%d+)$") then
 			local id = tonumber(msg:match("^aag%s*(%d+)$")) -- Extrahiere die ID

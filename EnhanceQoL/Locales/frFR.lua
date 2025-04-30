@@ -171,3 +171,4 @@ L["enableLootspecQuickswitch"] = "Activer le changement rapide de spé de butin 
 L["enableLootspecQuickswitchDesc"] = "Clic gauche sur une spécialisation pour définir la spé de butin, clic droit pour changer de spécialisation active."
 
 L["Profiles"] = "Profils"
+L["currentExpensionMythicPlusWarning"] = "Pour les objets Mythique+ issus d’anciens donjons, les résultats peuvent être inexacts."

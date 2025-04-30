@@ -170,3 +170,4 @@ L["enableLootspecQuickswitch"] = "Schnellwechsel für Beute- und Aktive-Speziali
 L["enableLootspecQuickswitchDesc"] = "Linksklick auf eine Spezialisierung setzt deine Beutespezialisierung, Rechtsklick wechselt deine aktive Spezialisierung."
 
 L["Profiles"] = "Profile"
+L["currentExpensionMythicPlusWarning"] = "Bei Mythic-Plus-Gegenständen aus alten Dungeons können die Ergebnisse ungenau sein."

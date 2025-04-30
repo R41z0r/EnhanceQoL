@@ -171,3 +171,4 @@ L["enableLootspecQuickswitch"] = "Ativar troca rápida de saque e especializaç�
 L["enableLootspecQuickswitchDesc"] = "Clique esquerdo em uma especialização para definir o saque, ou clique direito para mudar sua especialização ativa."
 
 L["Profiles"] = "Perfis"
+L["currentExpensionMythicPlusWarning"] = "Para itens de Mítico+ obtidos em masmorras antigas, os resultados podem ficar imprecisos."

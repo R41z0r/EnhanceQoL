@@ -165,3 +165,4 @@ L["enableLootspecQuickswitchDesc"] = "左键单击专精设置战利品专精，
 addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
 
 L["Profiles"] = "配置文件"
+L["currentExpensionMythicPlusWarning"] = "来自旧版本地下城的钥石物品可能会导致结果不准确。"
