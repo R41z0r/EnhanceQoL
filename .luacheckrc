@@ -150,6 +150,8 @@ globals = {
 	"InspectSecondaryHandSlot",
 	"LE_EXPANSION_LEVEL_CURRENT",
 	"InspectFrame",
+	"EXPANSION_FILTER_TEXT",
+	"AUCTION_HOUSE_FILTER_DROP_DOWN_LEVEL_RANGE",
 	"BagsBar",
 	"MicroMenu",
 	"ACCOUNT_COMPLETED_QUEST_LABEL",
