@@ -353,7 +353,7 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 					end
 				end
 			end
-			
+
 			if
 				(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
 			then
