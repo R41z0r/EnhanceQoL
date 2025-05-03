@@ -47,7 +47,7 @@ local function createBRFrame()
 	brButton = CreateFrame("Button", nil, UIParent)
 	brButton:SetSize(defaultButtonSize, defaultButtonSize)
 	brButton:SetPoint("TOP", UIParent, "TOP", 0, -100)
-	brButton:SetFrameStrata("DIALOG")
+	brButton:SetFrameStrata("HIGH")
 	brButton:SetScript("OnClick", function()
 		LFDQueueFrame_SetType("follower")
 

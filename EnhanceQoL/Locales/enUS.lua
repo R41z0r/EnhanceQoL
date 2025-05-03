@@ -173,3 +173,5 @@ L["enableSquareMinimapDesc"] = "This option required a reload"
 
 L["Profiles"] = "Profiles"
 L["currentExpensionMythicPlusWarning"] = "For Mythic+ items from legacy dungeons, the results may be inaccurate."
+
+L["persistAuctionHouseFilter"] = "Persist the Auction House Filter on every open per session"

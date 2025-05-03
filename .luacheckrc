@@ -2,6 +2,7 @@ std = "lua51"
 max_line_length = false
 exclude_files = {
 	"EnhanceQoLAura/EnhanceQoLAura.lua",
+	"EnhanceQoLLayoutTools/EnhanceQoLLayoutTools.lua",
 	".luacheckrc",
 	"LibDataBroker-1.1.lua",
 	"LibStub.lua",

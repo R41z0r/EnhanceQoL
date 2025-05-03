@@ -1,5 +1,5 @@
 ## Interface: 110000, 110002, 110005, 110007, 110100, 110105
-## Title: Enhance QoL Mouse
+## Title: Mouse
 ## Author: R41Z0R
 ## Version: @project-version@
 ## Notes: Accessibility features for the mouse cursor

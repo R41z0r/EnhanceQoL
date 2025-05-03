@@ -1146,6 +1146,35 @@ local function addUnitFrame(container)
 	end
 end
 
+local function addAuctionHouseFrame(container)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			text = L["persistAuctionHouseFilter"],
+			var = "persistAuctionHouseFilter",
+			func = function(self, _, value) addon.db["persistAuctionHouseFilter"] = value end,
+		},
+	}
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func, desc)
+		groupCore:AddChild(cbElement)
+	end
+end
+
 local function addActionBarFrame(container, d)
 	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
 	scroll:SetFullWidth(true)
@@ -2467,6 +2496,7 @@ local function initUI()
 	addon.functions.InitDBValue("minimapSinkHoleData", {})
 	addon.functions.InitDBValue("hideQuickJoinToast", false)
 	addon.functions.InitDBValue("enableSquareMinimap", false)
+	addon.functions.InitDBValue("persistAuctionHouseFilter", false)
 
 	table.insert(addon.variables.unitFrameNames, {
 		name = "MicroMenu",
@@ -3227,6 +3257,7 @@ local function CreateUI()
 				value = "ui",
 				text = BUG_CATEGORY5,
 				children = {
+					{ value = "auctionhouse", text = BUTTON_LAG_AUCTIONHOUSE },
 					{ value = "actionbar", text = ACTIONBARS_LABEL },
 					{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
 					{ value = "minimap", text = MINIMAP_LABEL },
@@ -3260,6 +3291,8 @@ local function CreateUI()
 			addPartyFrame(container) -- Ruft die Funktion zum Hinzufügen der Party-Optionen auf
 		elseif group == "general\001ui" then
 			addUIFrame(container)
+		elseif group == "general\001ui\001auctionhouse" then
+			addAuctionHouseFrame(container)
 		elseif group == "general\001ui\001actionbar" then
 			addActionBarFrame(container)
 		elseif group == "general\001ui\001unitframe" then
@@ -3288,6 +3321,8 @@ local function CreateUI()
 			addon.Sounds.functions.treeCallback(container, group)
 		elseif string.match(group, "^mouse") then
 			addon.Mouse.functions.treeCallback(container, group)
+		elseif string.match(group, "^move") then
+			addon.LayoutTools.functions.treeCallback(container, group)
 		end
 	end)
 	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
@@ -3669,6 +3704,7 @@ local eventHandlers = {
 
 			--@debug@
 			loadSubAddon("EnhanceQoLAura")
+			loadSubAddon("EnhanceQoLLayoutTools")
 			loadSubAddon("EnhanceQoLQuery")
 			loadSubAddon("EnhanceQoLSound")
 			--@end-debug@
@@ -3933,6 +3969,31 @@ local eventHandlers = {
 				addon.variables.hookedOrderHall = true
 				if addon.db["hideOrderHallBar"] then OrderHallCommandBar:Hide() end
 			end
+		end
+	end,
+
+	["AUCTION_HOUSE_SHOW"] = function()
+		if not addon.db["persistAuctionHouseFilter"] then return end
+		if not AuctionHouseFrame.SearchBar.FilterButton.eqolHooked then
+			hooksecurefunc(AuctionHouseFrame.SearchBar.FilterButton, "Reset", function(self)
+				if not addon.db["persistAuctionHouseFilter"] or not addon.variables.safedAuctionFilters then return end
+				if addon.variables.safedAuctionFilters then AuctionHouseFrame.SearchBar.FilterButton.filters = addon.variables.safedAuctionFilters end
+				AuctionHouseFrame.SearchBar.FilterButton.minLevel = addon.variables.safedAuctionMinlevel
+				AuctionHouseFrame.SearchBar.FilterButton.maxLevel = addon.variables.safedAuctionMaxlevel
+				addon.variables.safedAuctionFilters = nil
+				self.ClearFiltersButton:Show()
+			end)
+			AuctionHouseFrame.SearchBar.FilterButton.eqolHooked = true
+		end
+	end,
+	["AUCTION_HOUSE_CLOSED"] = function()
+		if not addon.db["persistAuctionHouseFilter"] then return end
+		if AuctionHouseFrame.SearchBar.FilterButton.ClearFiltersButton:IsShown() then
+			addon.variables.safedAuctionFilters = AuctionHouseFrame.SearchBar.FilterButton.filters
+			addon.variables.safedAuctionMinlevel = AuctionHouseFrame.SearchBar.FilterButton.minLevel
+			addon.variables.safedAuctionMaxlevel = AuctionHouseFrame.SearchBar.FilterButton.maxLevel
+		else
+			addon.variables.safedAuctionFilters = nil
 		end
 	end,
 }

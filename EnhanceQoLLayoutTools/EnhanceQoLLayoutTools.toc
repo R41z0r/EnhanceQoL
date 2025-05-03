@@ -1,5 +1,5 @@
 ## Interface: 110000, 110002, 110005, 110007, 110100, 110105
-## Title: Tooltip
+## Title: Layout
 ## Author: R41Z0R
 ## Version: @project-version@
 ## Notes: Tooltip modifies the visibility in different situations
@@ -13,7 +13,7 @@
 ## Notes-koKR: 툴팁은 다양한 상황에서 표시 여부를 수정합니다
 ## Notes-zhCN: 提示信息在不同情况下更改可见性
 ## Notes-zhTW: 提示在不同情況下修改可見性## Dependencies: EnhanceQoL
-## IconTexture: Interface\AddOns\EnhanceQoLTooltip\Icons\Icon.tga
+## IconTexture: Interface\AddOns\EnhanceQoLLayoutTools\Icons\Icon.tga
 ## Dependencies: EnhanceQoL
 ## Retail: true
 ## X-Compatible-With: retail
@@ -24,4 +24,7 @@
 Init.lua
 locales.xml
 
-EnhanceQoLTooltip.lua
+UI\TalentsSpells.lua
+UI\CharacterPanel.lua
+
+EnhanceQoLLayoutTools.lua

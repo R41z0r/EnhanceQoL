@@ -1,5 +1,17 @@
 # Changelog
 
+
+## [3.10.0] – 03 May 2025
+### ✨ New Options
+
+### 🔁 Changed
+- **Updated Symbols** – New Icons for the different modules
+- **Frame Strata of Food reminder** - Lowered the Strata to not overlap important notifications
+
+### 🐛 Fixed
+
+---
+
 ## [3.9.0] – 02 May 2025
 ### ✨ New Options
 - **Bag Filter: Item-Level Range** – hide items outside a custom ilvl range.  

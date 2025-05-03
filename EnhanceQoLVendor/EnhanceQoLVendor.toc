@@ -1,5 +1,5 @@
 ## Interface: 110000, 110002, 110005, 110007, 110100, 110105
-## Title: Enhance QoL Vendor
+## Title: Vendor
 ## Author: R41Z0R
 ## Version: @project-version@
 ## Notes: Automatically sells different items based on filters
@@ -13,7 +13,7 @@
 ## Notes-koKR: 필터에 따라 다양한 아이템을 자동으로 판매합니다
 ## Notes-zhCN: 根据筛选器自动出售不同物品
 ## Notes-zhTW: 根據過濾器自動出售不同物品## Dependencies: EnhanceQoL
-## IconTexture: Interface\AddOns\EnhanceQoL\Icons\Icon.tga
+## IconTexture: Interface\AddOns\EnhanceQoLVendor\Icons\Icon.tga
 ## Dependencies: EnhanceQoL
 ## Retail: true
 ## X-Compatible-With: retail

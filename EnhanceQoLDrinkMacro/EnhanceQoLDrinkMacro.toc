@@ -1,5 +1,5 @@
 ## Interface: 110000, 110002, 110005, 110007, 110100, 110105
-## Title: Enhance QoL DrinkMacro
+## Title: Drink Macro
 ## Author: R41Z0R
 ## Version: @project-version@
 ## Notes: DrinkMacro - Automatically picks the best drink in your bags and set a macro with that
