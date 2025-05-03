@@ -1,17 +1,16 @@
 # Changelog
 
-## [3.9.0] – 2025-04-31
-### ✨ New Features
-- **Level-Range Bag Filter**  
-  Restrict the bag view by minimum and/or maximum item level.
-- **Automatically remove RAID Marker on me in healer role**
-  Remove the marker from me when I’m in the healer role
+## [3.9.0] – 02 May 2025
+### ✨ New Options
+- **Bag Filter: Item-Level Range** – hide items outside a custom ilvl range.  
+- **Healer Spec: Auto-unmark self** – raid marker is cleared when you switch to healer.
 
 ### 🔁 Changed
-- **Renamed Tank marker to Auto marker**
+- **“Tank Marker” → “Auto Marker”** – new name
 
-### 🐛 Bug Fixes
-- Item level wasn't displayed on some chest items in bag
+### 🐛 Fixed
+- Item level missing on some chest pieces in bags.
+
 ---
 
 ## [3.8.1] – 2025-04-30
