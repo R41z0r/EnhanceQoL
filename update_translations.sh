@@ -32,9 +32,16 @@ do_import() {
   : > "$tempfile"
 
   echo -n "Importing $namespace..."
+
+  # Use empty namespace for the core module so phrases land in the base bucket
+  local cf_namespace="$namespace"
+  if [ "$namespace" = "EnhanceQoL" ]; then
+    cf_namespace=""
+  fi
+
   result=$( curl -sS -0 -X POST -w "%{http_code}" -o "$tempfile" \
     -H "X-Api-Token: $CF_API_KEY" \
-    -F "metadata={ language: \"enUS\", namespace: \"$namespace\", \"missing-phrase-handling\": \"DeletePhrase\" }" \
+    -F "metadata={ language: \"enUS\", namespace: \"$cf_namespace\", \"missing-phrase-handling\": \"DeletePhrase\" }" \
     -F "localizations=<$cleanfile" \
     "https://legacy.curseforge.com/api/projects/1076354/localization/import"
   ) || exit 1
