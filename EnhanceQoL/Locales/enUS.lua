@@ -106,7 +106,7 @@ L["paladin_HideHolyPower"] = "Hide Holypowerbar"
 L["rogue_HideComboPoint"] = "Hide Combopointbar"
 
 -- Druid
-L["druid_HideComboPoint"] = L["rogue_HideComboPoint"]
+L["druid_HideComboPoint"] = "Hide Combopointbar"
 
 -- Shaman
 L["shaman_HideTotem"] = "Hide Totembar"
@@ -175,3 +175,5 @@ L["Profiles"] = "Profiles"
 L["currentExpensionMythicPlusWarning"] = "For Mythic+ items from legacy dungeons, the results may be inaccurate."
 
 L["persistAuctionHouseFilter"] = "Remember Auction House filters for this session"
+
+L["Excluded NPCs"] = "Excluded NPCs"

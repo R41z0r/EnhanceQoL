@@ -23,8 +23,9 @@
 ## X-Compatible-With: retail
 ## X-WoWI-ID: 26888
 
-Init.lua
+libs\AceLocale-3.0\AceLocale-3.0.xml
 locales.xml
+Init.lua
 
 libs\LibStub\LibStub.lua
 libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
@@ -36,7 +37,6 @@ libs\LibOpenRaid\lib.xml
 libs\AceDB-3.0\lib.xml
 libs\AceConfig-3.0\AceConfig-3.0.xml
 libs\AceDBOptions-3.0\lib.xml
-libs\AceLocale-3.0\AceLocale-3.0.xml
 Bindings\Slider.xml
 General\functions.lua
 EnhanceQoL.lua

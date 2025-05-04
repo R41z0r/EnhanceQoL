@@ -18,7 +18,7 @@ local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local EQOL = select(2, ...)
 EQOL.C = {}
 
-local headerClassInfo = L["headerClassInfo"]  .. select(1, UnitClass("player"))
+local headerClassInfo = L["headerClassInfo"]:format(select(1, UnitClass("player")))
 
 hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
 	local panel = LFGListFrame.SearchPanel
