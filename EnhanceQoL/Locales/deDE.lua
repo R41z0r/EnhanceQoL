@@ -1,167 +1,164 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL", "deDE")
 if not L then return end
 
-L["Quick signup"] = "Schnellanmeldung für Dungeon-Such-Tool"
-L["interruptWithShift"] = "Halte die Umschalttaste gedrückt, um diese Funktion zu unterbrechen"
+--@localization(locale="deDE", format="lua_additive_table")@
 
-L["Persist LFG signup note"] = "Dungeon-Such-Tool Notiz wiederverwenden"
-L["Select an option"] = "Bitte auswählen"
-L["Save"] = "Speichern"
-L["Hide Minimap Button"] = "Minimap-Schaltfläche verstecken"
-L["Left-Click to show options"] = "Linksklick, um Optionen anzuzeigen"
+-- L["Quick signup"] = "Schnellanmeldung für Dungeon-Such-Tool"
+-- L["interruptWithShift"] = "Halte die Umschalttaste gedrückt, um diese Funktion zu unterbrechen"
 
-L["Hide Raid Tools"] = "Raid-Werkzeuge in der Gruppe ausblenden"
-L["repairCost"] = "Gegenstände repariert für "
-L["autoRepair"] = "Alle Gegenstände automatisch reparieren"
-L["sellAllJunk"] = "Alle Plundergegenstände automatisch verkaufen"
-L["ignoreTalkingHead"] = "Automatisch das Talking Head Fenster ausblenden"
-L["landingPageHide"] = "Aktivieren Sie diese Option, um den Erweiterungs-Button auf der Minimap auszublenden."
-L["automaticallyOpenContainer"] = "Behältergegenstände in der Tasche automatisch öffnen"
+-- L["Persist LFG signup note"] = "Dungeon-Such-Tool Notiz wiederverwenden"
+-- L["Select an option"] = "Bitte auswählen"
+-- L["Save"] = "Speichern"
+-- L["Hide Minimap Button"] = "Minimap-Schaltfläche verstecken"
+-- L["Left-Click to show options"] = "Linksklick, um Optionen anzuzeigen"
 
-L["bagFilterDockFrameUnlock"] = "Klicken, um das Filterfenster von den Taschen zu lösen"
-L["bagFilterDockFrameLock"] = "Klicken, um das Filterfenster an die Taschen zu heften"
-L["enableMoneyTracker"] = "Aktivieren, um dein Gold über alle Charaktere zu verfolgen"
-L["enableMoneyTrackerDesc"] = "Wenn du in deinen Taschen über dein Gold hoverst, siehst du das Gold aller Charaktere"
-L["showOnlyGoldOnMoney"] = "Nur Gold des Accounts anzeigen (Silber / Kupfer ausblenden)"
-L["moneyTrackerRemovePlayer"] = "Alle bekannten Charaktere"
-L["showBagFilterMenu"] = "Gegenstandsfilter in Taschen aktivieren"
-L["showBagFilterMenuDesc"] = "Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist. Halte %s, um das Fenster zu verschieben"
-L["fadeBagQualityIcons"] = "Ausblenden der Berufssymbol-Qualität bei Suche und Filter aktivieren"
-L["bagFilterSpec"] = "Für Spezialisierung empfohlen"
-L["bagFilterEquip"] = "Nur Ausrüstung"
-L["showIlvlOnBankFrame"] = "Zeige Gegenstandsstufe im Bankfenster an"
-L["showIlvlOnMerchantframe"] = "Gegenstandslevel im Händlerfenster anzeigen"
-L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anzeigen"
-L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"
-L["showBindOnBagItems"] = "Zeigt %s (BoE), %s (WuE) und %s (WB) zusätzlich zur Gegenstandsstufe auf Gegenständen an"
-L["showGemsTooltipOnCharframe"] = "Zeige Edelstein-Sockel-Tooltip im Charakterausrüstungsfenster"
-L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster anzeigen"
-L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstungsfenster anzeigen"
-L["showIlvlOnBagItems"] = "Zeige das Itemlevel auf Ausrüstung in allen Taschen"
-L["showDurabilityOnCharframe"] = "Zeige Haltbarkeit auf dem Charakterausrüstungsfenster"
-L["hideOrderHallBar"] = "Ordenshallen-Kommandoleiste ausblenden"
-L["showInfoOnInspectFrame"] = "Zeige zusätzliche Informationen im Betrachten-Fenster an"
-L["MissingEnchant"] = "Verzauberung"
-L["hideHitIndicatorPlayer"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Charakter ausblenden"
-L["hideHitIndicatorPet"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Begleiter ausblenden"
-L["UnitFrame"] = "Einheitenfenster"
-L["SellJunkIgnoredBag"] = "Du hast das Verkaufen von Plunder in %d Taschen deaktiviert.\nDies könnte verhindern, dass alle Plunder-Artikel automatisch verkauft werden."
+-- L["Hide Raid Tools"] = "Raid-Werkzeuge in der Gruppe ausblenden"
+-- L["repairCost"] = "Gegenstände repariert für "
+-- L["autoRepair"] = "Alle Gegenstände automatisch reparieren"
+-- L["sellAllJunk"] = "Alle Plundergegenstände automatisch verkaufen"
+-- L["ignoreTalkingHead"] = "Automatisch das Talking Head Fenster ausblenden"
+-- L["landingPageHide"] = "Aktivieren Sie diese Option, um den Erweiterungs-Button auf der Minimap auszublenden."
+-- L["automaticallyOpenContainer"] = "Behältergegenstände in der Tasche automatisch öffnen"
 
-L["deleteItemFillDialog"] = 'Füge "' .. DELETE_ITEM_CONFIRM_STRING .. '" zum "Löschbestätigungs-Popup" hinzu'
-L["confirmPatronOrderDialog"] = "Bestätigt automatisch die Nutzung eigener Materialien für " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. "-Aufträge"
-L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
-L["confirmTimerRemovalTrade"] = "Automatisch bestätigen, handelbare Beute im Handelszeitraum zu verkaufen"
+-- L["bagFilterDockFrameUnlock"] = "Klicken, um das Filterfenster von den Taschen zu lösen"
+-- L["bagFilterDockFrameLock"] = "Klicken, um das Filterfenster an die Taschen zu heften"
+-- L["enableMoneyTracker"] = "Aktivieren, um dein Gold über alle Charaktere zu verfolgen"
+-- L["enableMoneyTrackerDesc"] = "Wenn du in deinen Taschen über dein Gold hoverst, siehst du das Gold aller Charaktere"
+-- L["showOnlyGoldOnMoney"] = "Nur Gold des Accounts anzeigen (Silber / Kupfer ausblenden)"
+-- L["moneyTrackerRemovePlayer"] = "Alle bekannten Charaktere"
+-- L["showBagFilterMenu"] = "Gegenstandsfilter in Taschen aktivieren"
+-- L["showBagFilterMenuDesc"] = "Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist. Halte %s, um das Fenster zu verschieben"
+-- L["fadeBagQualityIcons"] = "Ausblenden der Berufssymbol-Qualität bei Suche und Filter aktivieren"
+-- L["bagFilterSpec"] = "Für Spezialisierung empfohlen"
+-- L["bagFilterEquip"] = "Nur Ausrüstung"
+-- L["showIlvlOnBankFrame"] = "Zeige Gegenstandsstufe im Bankfenster an"
+-- L["showIlvlOnMerchantframe"] = "Gegenstandslevel im Händlerfenster anzeigen"
+-- L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anzeigen"
+-- L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"
+-- L["showBindOnBagItems"] = "Zeigt %s (BoE), %s (WuE) und %s (WB) zusätzlich zur Gegenstandsstufe auf Gegenständen an"
+-- L["showGemsTooltipOnCharframe"] = "Zeige Edelstein-Sockel-Tooltip im Charakterausrüstungsfenster"
+-- L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster anzeigen"
+-- L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstungsfenster anzeigen"
+-- L["showIlvlOnBagItems"] = "Zeige das Itemlevel auf Ausrüstung in allen Taschen"
+-- L["showDurabilityOnCharframe"] = "Zeige Haltbarkeit auf dem Charakterausrüstungsfenster"
+-- L["hideOrderHallBar"] = "Ordenshallen-Kommandoleiste ausblenden"
+-- L["showInfoOnInspectFrame"] = "Zeige zusätzliche Informationen im Betrachten-Fenster an"
+-- L["MissingEnchant"] = "Verzauberung"
+-- L["hideHitIndicatorPlayer"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Charakter ausblenden"
+-- L["hideHitIndicatorPet"] = "Schwebenden Kampftext (Schaden und Heilung) über deinem Begleiter ausblenden"
+-- L["UnitFrame"] = "Einheitenfenster"
+-- L["SellJunkIgnoredBag"] = "Du hast das Verkaufen von Plunder in %d Taschen deaktiviert.\nDies könnte verhindern, dass alle Plunder-Artikel automatisch verkauft werden."
 
-L["General"] = "Allgemein"
-L["Character"] = "Charakter"
-L["Dungeon"] = "Dungeon"
-L["Misc"] = "Sonstiges"
-L["Quest"] = "Quest"
+-- L["deleteItemFillDialog"] = 'Füge "%s" zum "Löschbestätigungs-Popup" hinzu'
+-- L["confirmPatronOrderDialog"] = "Bestätigt automatisch die Nutzung eigener Materialien für %s-Aufträge"
+-- L["autoChooseQuest"] = "Quests automatisch annehmen und abschließen"
+-- L["confirmTimerRemovalTrade"] = "Automatisch bestätigen, handelbare Beute im Handelszeitraum zu verkaufen"
 
-L["hideBagsBar"] = "Taschenleiste ausblenden"
-L["hideMicroMenu"] = "Mikromenü ausblenden"
-L["MicroMenu"] = "Mikro-Menü"
-L["BagsBar"] = "Taschenleiste"
--- Dungeon
-L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen, wenn nur 1 Option verfügbar ist"
-L["lfgSortByRio"] = "Sortiere Bewerber für Mythisch+ Dungeons nach Mythisch-Wertung"
-L["DungeonBrowser"] = "Dungeonbrowser"
-L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
-L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite"
-L["groupfinderSkipRoleSelect"] = "Rollen-Auswahl überspringen"
-L["groupfinderSkipRolecheckHeadline"] = "Automatische Rollenzuweisung"
-L["groupfinderSkipRolecheckUseSpec"] = "Verwende die Rolle deiner aktuellen Spezialisierung (z.B. Blut-Todesritter = Tank)"
-L["groupfinderSkipRolecheckUseLFD"] = "Verwende die Rollen aus dem Dungeonbrowser"
+-- L["General"] = "Allgemein"
+-- L["Character"] = "Charakter"
+-- L["Dungeon"] = "Dungeon"
+-- L["Misc"] = "Sonstiges"
+-- L["Quest"] = "Quest"
 
--- Quest
-L["ignoreTrivialQuests"] = "Triviale " .. QUESTS_LABEL .. " nicht automatisch verwalten"
-L["ignoreDailyQuests"] = "Tägliche/wöchentliche " .. QUESTS_LABEL .. " nicht automatisch verwalten"
-L["ignoreWarbandCompleted"] = ACCOUNT_COMPLETED_QUEST_LABEL .. " " .. QUESTS_LABEL .. " nicht automatisch verwalten"
+-- L["hideBagsBar"] = "Taschenleiste ausblenden"
+-- L["hideMicroMenu"] = "Mikromenü ausblenden"
+-- L["MicroMenu"] = "Mikro-Menü"
+-- L["BagsBar"] = "Taschenleiste"
+-- -- Dungeon
+-- L["autoChooseDelvePower"] = "Delve-Power automatisch auswählen, wenn nur 1 Option verfügbar ist"
+-- L["lfgSortByRio"] = "Sortiere Bewerber für Mythisch+ Dungeons nach Mythisch-Wertung"
+-- L["DungeonBrowser"] = "Dungeonbrowser"
+-- L["groupfinderAppText"] = 'Verstecke den Gruppenfinder-Text "Deine Gruppe wird derzeit gebildet"'
+-- L["groupfinderMoveResetButton"] = "Verschiebe den Filter-Zurücksetzen-Knopf des Dungeonbrowsers auf die linke Seite"
+-- L["groupfinderSkipRoleSelect"] = "Rollen-Auswahl überspringen"
+-- L["groupfinderSkipRolecheckHeadline"] = "Automatische Rollenzuweisung"
+-- L["groupfinderSkipRolecheckUseSpec"] = "Verwende die Rolle deiner aktuellen Spezialisierung (z.B. Blut-Todesritter = Tank)"
+-- L["groupfinderSkipRolecheckUseLFD"] = "Verwende die Rollen aus dem Dungeonbrowser"
 
-L["autoQuickLoot"] = "Gegenstände schnell plündern"
-L["openCharframeOnUpgrade"] = "Charakterfenster beim Aufwerten von Gegenständen beim Händler öffnen"
+-- -- Quest
+-- L["ignoreTrivialQuests"] = "Triviale %s nicht automatisch verwalten"
+-- L["ignoreDailyQuests"] = "Tägliche/wöchentliche %s nicht automatisch verwalten"
+-- L["ignoreWarbandCompleted"] = "%s %s nicht automatisch verwalten"
 
-L["headerClassInfo"] = "Diese Einstellungen gelten nur für " .. select(1, UnitClass("player"))
+-- L["autoQuickLoot"] = "Gegenstände schnell plündern"
+-- L["openCharframeOnUpgrade"] = "Charakterfenster beim Aufwerten von Gegenständen beim Händler öffnen"
 
--- Todesritter
-L["deathknight_HideRuneFrame"] = "Runenleiste ausblenden"
+-- L["headerClassInfo"] = "Diese Einstellungen gelten nur für %s"
 
--- Rufer
-L["evoker_HideEssence"] = "Essenzleiste ausblenden"
+-- -- Todesritter
+-- L["deathknight_HideRuneFrame"] = "Runenleiste ausblenden"
 
--- Mönch
-L["monk_HideHarmonyBar"] = "Harmonie-Leiste ausblenden"
+-- -- Rufer
+-- L["evoker_HideEssence"] = "Essenzleiste ausblenden"
 
--- Paladin
-L["paladin_HideHolyPower"] = "Heilige Kraft-Leiste ausblenden"
+-- -- Mönch
+-- L["monk_HideHarmonyBar"] = "Harmonie-Leiste ausblenden"
 
--- Schurke
-L["rogue_HideComboPoint"] = "Kombopunktleiste ausblenden"
+-- -- Paladin
+-- L["paladin_HideHolyPower"] = "Heilige Kraft-Leiste ausblenden"
 
--- Druid
-L["druid_HideComboPoint"] = L["rogue_HideComboPoint"]
+-- -- Schurke
+-- L["rogue_HideComboPoint"] = "Kombopunktleiste ausblenden"
 
--- Schamane
-L["shaman_HideTotem"] = "Totemleiste ausblenden"
+-- -- Druid
+-- L["druid_HideComboPoint"] = "Kombopunktleiste ausblenden"
 
--- Hexenmeister
-L["warlock_HideSoulShardBar"] = "Splitterleiste ausblenden"
+-- -- Schamane
+-- L["shaman_HideTotem"] = "Totemleiste ausblenden"
 
-L["questAddNPCToExclude"] = "Füge anvisierten NPC/geöffnetes Gossip-Fenster zur Ausschlussliste hinzu"
+-- -- Hexenmeister
+-- L["warlock_HideSoulShardBar"] = "Splitterleiste ausblenden"
 
--- CVar
-L["CVar"] = "CVar"
-L["tReloadInterface"] = "Interface-Neuladen erforderlich"
-L["bReloadInterface"] = "Sie müssen Ihr Interface neu laden, um Änderungen zu übernehmen"
+-- L["questAddNPCToExclude"] = "Füge anvisierten NPC/geöffnetes Gossip-Fenster zur Ausschlussliste hinzu"
 
-L["CVarOptions"] = {
-	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Automatisches Absteigen bei Fähigkeiten aktivieren" },
-	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Automatisches Absteigen beim Fliegen aktivieren" },
-	["chatMouseScroll"] = { description = "Maus-Scrollen im Chat aktivieren", trueValue = "1", falseValue = "0" },
-	["ffxDeath"] = { description = "Todeseffekte deaktivieren", trueValue = "0", falseValue = "1" },
-	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Karten-Ausblenden beim Bewegen aktivieren" },
-	["scriptErrors"] = { description = "LUA-Fehler im Interface anzeigen", trueValue = "1", falseValue = "0" },
-	["ShowClassColorInNameplate"] = { description = "Klassenfarben in Namensplaketten anzeigen", trueValue = "1", falseValue = "0" },
-	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Zauberleiste des Ziels anzeigen" },
-	["showTutorials"] = { description = "Tutorials deaktivieren", trueValue = "0", falseValue = "1" },
-	["UberTooltips"] = { description = "Erweiterte Tooltips aktivieren", trueValue = "1", falseValue = "0" },
-	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Gilde bei Spielern anzeigen" },
-	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Titel bei Spielern anzeigen" },
-	["WholeChatWindowClickable"] = { description = "Ganzes Chatfenster anklickbar machen", trueValue = "1", falseValue = "0" },
-}
+-- -- CVar
+-- L["CVar"] = "CVar"
+-- L["tReloadInterface"] = "Interface-Neuladen erforderlich"
+-- L["bReloadInterface"] = "Sie müssen Ihr Interface neu laden, um Änderungen zu übernehmen"
 
-L["autoAcceptGroupInvite"] = "Gruppeneinladungen automatisch annehmen"
-L["autoAcceptGroupInviteGuildOnly"] = "Gildenmitglieder"
-L["autoAcceptGroupInviteFriendOnly"] = "Freunde"
-L["autoAcceptGroupInviteOptions"] = "Einladungen annehmen von..."
+-- -- L["CVarOptions"] = {
+-- -- 	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Automatisches Absteigen bei Fähigkeiten aktivieren" },
+-- -- 	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Automatisches Absteigen beim Fliegen aktivieren" },
+-- -- 	["chatMouseScroll"] = { description = "Maus-Scrollen im Chat aktivieren", trueValue = "1", falseValue = "0" },
+-- -- 	["ffxDeath"] = { description = "Todeseffekte deaktivieren", trueValue = "0", falseValue = "1" },
+-- -- 	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Karten-Ausblenden beim Bewegen aktivieren" },
+-- -- 	["scriptErrors"] = { description = "LUA-Fehler im Interface anzeigen", trueValue = "1", falseValue = "0" },
+-- -- 	["ShowClassColorInNameplate"] = { description = "Klassenfarben in Namensplaketten anzeigen", trueValue = "1", falseValue = "0" },
+-- -- 	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Zauberleiste des Ziels anzeigen" },
+-- -- 	["showTutorials"] = { description = "Tutorials deaktivieren", trueValue = "0", falseValue = "1" },
+-- -- 	["UberTooltips"] = { description = "Erweiterte Tooltips aktivieren", trueValue = "1", falseValue = "0" },
+-- -- 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Gilde bei Spielern anzeigen" },
+-- -- 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Titel bei Spielern anzeigen" },
+-- -- 	["WholeChatWindowClickable"] = { description = "Ganzes Chatfenster anklickbar machen", trueValue = "1", falseValue = "0" },
+-- -- }
 
-L["showLeaderIconRaidFrame"] = "Zeige das Anführersymbol in gruppierten Schlachtzugsfenstern"
-L["showPartyFrameInSoloContent"] = "Gruppenfenster im Solo-Inhalt anzeigen"
+-- L["autoAcceptGroupInvite"] = "Gruppeneinladungen automatisch annehmen"
+-- L["autoAcceptGroupInviteGuildOnly"] = "Gildenmitglieder"
+-- L["autoAcceptGroupInviteFriendOnly"] = "Freunde"
+-- L["autoAcceptGroupInviteOptions"] = "Einladungen annehmen von..."
 
-L["ActionbarHideExplain"] = 'Setze die Aktionsleiste auf versteckt und nur bei Mouseover sichtbar. Dies funktioniert nur, wenn deine Aktionsleiste im Bearbeitungsmodus auf "'
-	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
-	.. '" und "'
-	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
-	.. '" eingestellt ist in '
-	.. _G["HUD_EDIT_MODE_MENU"]
-	.. "."
+-- L["showLeaderIconRaidFrame"] = "Zeige das Anführersymbol in gruppierten Schlachtzugsfenstern"
+-- L["showPartyFrameInSoloContent"] = "Gruppenfenster im Solo-Inhalt anzeigen"
 
-L["enableMinimapButtonBin"] = "Minimap-Button-Sammelstelle aktivieren"
-L["enableMinimapButtonBinDesc"] = "Fasst alle Minimap-Buttons in einem einzelnen Button zusammen"
-L["ignoreMinimapSinkHole"] = "Folgende Minimap-Buttons vom Sammel-Button ausnehmen..."
-L["useMinimapButtonBinIcon"] = "Minimap-Button für die Sammelstelle verwenden"
-L["useMinimapButtonBinMouseover"] = "Zeige ein verschiebbares Frame für die Sammelstelle bei Mouseover"
-L["lockMinimapButtonBin"] = "Frame der Sammelstelle fixieren"
+-- L["ActionbarHideExplain"] =
+-- 	'Setze die Aktionsleiste auf versteckt und nur bei Mouseover sichtbar. Dies funktioniert nur, wenn deine Aktionsleiste im Bearbeitungsmodus auf "%s" und "%s" eingestellt ist in %s'
 
-L["UnitFrameHideExplain"] = "Element ausblenden und nur bei Mouseover anzeigen"
-L["chatFrameFadeEnabled"] = "Chat-Verblassen aktivieren"
-L["chatFrameFadeTimeVisibleText"] = "Text bleibt sichtbar für"
-L["chatFrameFadeDurationText"] = "Dauer der Verblass-Animation"
+-- L["enableMinimapButtonBin"] = "Minimap-Button-Sammelstelle aktivieren"
+-- L["enableMinimapButtonBinDesc"] = "Fasst alle Minimap-Buttons in einem einzelnen Button zusammen"
+-- L["ignoreMinimapSinkHole"] = "Folgende Minimap-Buttons vom Sammel-Button ausnehmen..."
+-- L["useMinimapButtonBinIcon"] = "Minimap-Button für die Sammelstelle verwenden"
+-- L["useMinimapButtonBinMouseover"] = "Zeige ein verschiebbares Frame für die Sammelstelle bei Mouseover"
+-- L["lockMinimapButtonBin"] = "Frame der Sammelstelle fixieren"
 
-L["enableLootspecQuickswitch"] = "Schnellwechsel für Beute- und Aktive-Spezialisierungen an der Minikarte aktivieren"
-L["enableLootspecQuickswitchDesc"] = "Linksklick auf eine Spezialisierung setzt deine Beutespezialisierung, Rechtsklick wechselt deine aktive Spezialisierung."
+-- L["UnitFrameHideExplain"] = "Element ausblenden und nur bei Mouseover anzeigen"
+-- L["chatFrameFadeEnabled"] = "Chat-Verblassen aktivieren"
+-- L["chatFrameFadeTimeVisibleText"] = "Text bleibt sichtbar für"
+-- L["chatFrameFadeDurationText"] = "Dauer der Verblass-Animation"
 
-L["Profiles"] = "Profile"
-L["currentExpensionMythicPlusWarning"] = "Bei Mythic-Plus-Gegenständen aus alten Dungeons können die Ergebnisse ungenau sein."
+-- L["enableLootspecQuickswitch"] = "Schnellwechsel für Beute- und Aktive-Spezialisierungen an der Minikarte aktivieren"
+-- L["enableLootspecQuickswitchDesc"] = "Linksklick auf eine Spezialisierung setzt deine Beutespezialisierung, Rechtsklick wechselt deine aktive Spezialisierung."
 
-L["persistAuctionHouseFilter"] = "Auktionshausfilter während der gesamten Sitzung beibehalten"
+-- L["Profiles"] = "Profile"
+-- L["currentExpensionMythicPlusWarning"] = "Bei Mythic-Plus-Gegenständen aus alten Dungeons können die Ergebnisse ungenau sein."
+
+-- L["persistAuctionHouseFilter"] = "Auktionshausfilter während der gesamten Sitzung beibehalten"

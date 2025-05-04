@@ -37,8 +37,9 @@ move-folders:
   EnhanceQoL/EnhanceQoLMythicPlus: EnhanceQoLMythicPlus
   EnhanceQoL/EnhanceQoLTooltip: EnhanceQoLTooltip
   EnhanceQoL/EnhanceQoLVendor: EnhanceQoLVendor
-  
-localization:
-  - langs: [deDE, frFR, esES, esMX, itIT, ptBR, ruRU, koKR, zhCN, zhTW]
-    format: lua_additive_table # explicit, though default
-    project-words: true # auto-adds new keys
+
+locale:
+  - lang: enUS
+    file: EnhanceQoL/Locales/enUS.lua
+    format: lua_additive_table
+    project-words: true
