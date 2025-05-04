@@ -10,7 +10,6 @@ end
 local L = addon.LTooltip
 
 L["Tooltip"] = "提示"
-L[addonName] = "提示"
 L["None"] = "无"
 L["Enemies"] = "敌人"
 L["Friendly"] = "友方"
@@ -30,10 +29,10 @@ L["Spell"] = "法术"
 L["Item"] = "物品"
 L["Buff"] = "增益"
 L["Debuff"] = "减益"
-L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
+L["Buff_Debuff"] = "增益/减益"
 
 -- Buff
-L["TooltipBuffHideType"] = "隐藏" .. L["Buff_Debuff"] .. "提示"
+L["TooltipBuffHideType"] = "隐藏 增益/减益 提示"
 L["TooltipBuffHideInCombat"] = "仅在战斗中隐藏"
 L["TooltipBuffHideInDungeon"] = "仅在副本中隐藏"
 
@@ -47,7 +46,7 @@ L["TooltipUnitHideType"] = "隐藏单位提示"
 L["TooltipUnitHideInCombat"] = "仅在战斗中隐藏"
 L["TooltipUnitHideInDungeon"] = "仅在副本中隐藏"
 L["BestMythic+run"] = "最佳成绩"
-L["TooltipShowMythicScore"] = "在提示框中显示" .. DUNGEON_SCORE
+L["TooltipShowMythicScore"] = "在提示框中显示 %s"
 L["TooltipShowClassColor"] = "在提示中显示职业颜色"
 L["TooltipShowNPCID"] = "显示NPC ID"
 L["NPCID"] = "ID"

@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL", "deDE")
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_DrinkMacro", "deDE")
 if not L then return end
 
 L["Prefer mage food"] = "Magier-Essen bevorzugen"

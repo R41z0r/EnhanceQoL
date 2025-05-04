@@ -9,7 +9,6 @@ end
 local L = addon.LTooltip
 
 L["Tooltip"] = "Tooltip"
-L[addonName] = "Tooltip"
 L["None"] = "Ninguno"
 L["Enemies"] = "Enemigos"
 L["Friendly"] = "Amistoso"
@@ -29,10 +28,10 @@ L["Spell"] = "Hechizo"
 L["Item"] = "Objeto"
 L["Buff"] = "Beneficio"
 L["Debuff"] = "Perjuicio"
-L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
+L["Buff_Debuff"] = "Beneficio/Perjuicio"
 
 -- Buff
-L["TooltipBuffHideType"] = "Ocultar tooltip en " .. L["Buff_Debuff"]
+L["TooltipBuffHideType"] = "Ocultar tooltip en Beneficio/Perjuicio"
 L["TooltipBuffHideInCombat"] = "Ocultar solo en combate"
 L["TooltipBuffHideInDungeon"] = "Ocultar solo en mazmorras"
 
@@ -46,7 +45,7 @@ L["TooltipUnitHideType"] = "Ocultar tooltip en unidades"
 L["TooltipUnitHideInCombat"] = "Ocultar solo en combate"
 L["TooltipUnitHideInDungeon"] = "Ocultar solo en mazmorras"
 L["BestMythic+run"] = "Mejor carrera"
-L["TooltipShowMythicScore"] = "Mostrar " .. DUNGEON_SCORE .. " en el Tooltip"
+L["TooltipShowMythicScore"] = "Mostrar %s en el Tooltip"
 L["TooltipShowClassColor"] = "Mostrar color de clase en el Tooltip"
 L["TooltipShowNPCID"] = "Mostrar ID de NPC"
 L["NPCID"] = "ID"

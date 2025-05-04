@@ -10,7 +10,6 @@ end
 local L = addon.LTooltip
 
 L["Tooltip"] = "툴팁"
-L[addonName] = "툴팁"
 L["None"] = "없음"
 L["Enemies"] = "적"
 L["Friendly"] = "우호적"
@@ -30,10 +29,10 @@ L["Spell"] = "주문"
 L["Item"] = "아이템"
 L["Buff"] = "버프"
 L["Debuff"] = "디버프"
-L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
+L["Buff_Debuff"] = "버프/디버프"
 
 -- Buff
-L["TooltipBuffHideType"] = L["Buff_Debuff"] .. "툴팁 숨기기"
+L["TooltipBuffHideType"] = "버프/디버프 툴팁 숨기기"
 L["TooltipBuffHideInCombat"] = "전투 중에만 숨기기"
 L["TooltipBuffHideInDungeon"] = "던전에서만 숨기기"
 
@@ -47,7 +46,7 @@ L["TooltipUnitHideType"] = "유닛 툴팁 숨기기"
 L["TooltipUnitHideInCombat"] = "전투 중에만 숨기기"
 L["TooltipUnitHideInDungeon"] = "던전에서만 숨기기"
 L["BestMythic+run"] = "최고 기록"
-L["TooltipShowMythicScore"] = "툴팁에 " .. DUNGEON_SCORE .. " 표시"
+L["TooltipShowMythicScore"] = "툴팁에 %s 표시"
 L["TooltipShowClassColor"] = "툴팁에 직업 색상 표시"
 L["TooltipShowNPCID"] = "NPC ID 표시"
 L["NPCID"] = "ID"

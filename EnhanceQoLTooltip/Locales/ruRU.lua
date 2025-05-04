@@ -10,7 +10,6 @@ end
 local L = addon.LTooltip
 
 L["Tooltip"] = "Подсказка"
-L[addonName] = "Подсказка"
 L["None"] = "Нет"
 L["Enemies"] = "Враги"
 L["Friendly"] = "Дружественные"
@@ -30,10 +29,10 @@ L["Spell"] = "Заклинание"
 L["Item"] = "Предмет"
 L["Buff"] = "Бафф"
 L["Debuff"] = "Дебафф"
-L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
+L["Buff_Debuff"] = "Бафф/Дебафф"
 
 -- Buff
-L["TooltipBuffHideType"] = "Скрыть подсказку на " .. L["Buff_Debuff"]
+L["TooltipBuffHideType"] = "Скрыть подсказку на Бафф/Дебафф"
 L["TooltipBuffHideInCombat"] = "Скрывать только в бою"
 L["TooltipBuffHideInDungeon"] = "Скрывать только в подземельях"
 
@@ -47,7 +46,7 @@ L["TooltipUnitHideType"] = "Скрыть подсказку на единицы"
 L["TooltipUnitHideInCombat"] = "Скрывать только в бою"
 L["TooltipUnitHideInDungeon"] = "Скрывать только в подземельях"
 L["BestMythic+run"] = "Лучший забег"
-L["TooltipShowMythicScore"] = "Показывать " .. DUNGEON_SCORE .. " в подсказке"
+L["TooltipShowMythicScore"] = "Показывать %s в подсказке"
 L["TooltipShowClassColor"] = "Показывать цвет класса в подсказке"
 L["TooltipShowNPCID"] = "Показать ID NPC"
 L["NPCID"] = "ID"

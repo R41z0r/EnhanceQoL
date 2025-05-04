@@ -13,7 +13,6 @@ L["Prefer mage food"] = "Préférer la nourriture de mage"
 L["Minimum mana restore for food"] = "Restauration minimale de mana pour la nourriture"
 L["Ignore bufffood"] = 'Ignorer la nourriture "Bien nourri"'
 L["Drink Macro"] = "Macro de boisson"
-L[addonName] = "Macro de boisson"
 L["ignoreGemsEarthen"] = "Ignorer les gemmes de joaillerie pour la race Terrestres"
 L["mageFoodReminder"] = "Afficher un rappel pour récupérer de la nourriture de mage dans un donjon de suiveurs"
 L["mageFoodReminderDesc"] = "Cliquez sur le rappel pour vous mettre automatiquement en file d'attente pour le donjon de suiveurs"

@@ -9,7 +9,6 @@ end
 local L = addon.LTooltip
 
 L["Tooltip"] = "Infobulle"
-L[addonName] = "Infobulle"
 L["None"] = "Aucun"
 L["Enemies"] = "Ennemis"
 L["Friendly"] = "Amical"
@@ -29,10 +28,10 @@ L["Spell"] = "Sort"
 L["Item"] = "Objet"
 L["Buff"] = "Buff"
 L["Debuff"] = "Debuff"
-L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
+L["Buff_Debuff"] = "Buff/Debuff"
 
 -- Buff
-L["TooltipBuffHideType"] = "Masquer l'infobulle sur les " .. L["Buff_Debuff"]
+L["TooltipBuffHideType"] = "Masquer l'infobulle sur les Buff/Debuff"
 L["TooltipBuffHideInCombat"] = "Masquer uniquement en combat"
 L["TooltipBuffHideInDungeon"] = "Masquer uniquement en donjons"
 
@@ -46,7 +45,7 @@ L["TooltipUnitHideType"] = "Masquer l'infobulle sur les unités"
 L["TooltipUnitHideInCombat"] = "Masquer uniquement en combat"
 L["TooltipUnitHideInDungeon"] = "Masquer uniquement en donjons"
 L["BestMythic+run"] = "Meilleure course"
-L["TooltipShowMythicScore"] = "Afficher le " .. DUNGEON_SCORE .. " dans l'infobulle"
+L["TooltipShowMythicScore"] = "Afficher le %s dans l'infobulle"
 L["TooltipShowClassColor"] = "Afficher la couleur de la classe dans l'infobulle"
 L["TooltipShowNPCID"] = "Afficher l'ID du PNJ"
 L["NPCID"] = "ID"
