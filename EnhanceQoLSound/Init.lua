@@ -504,7 +504,7 @@ addon.Sounds.soundFiles = {
 			},
 		},
 		["chat"] = {
-			["wisper"] = {
+			["whisper"] = {
 				-- Soundkit 3081
 				567421,
 			},
