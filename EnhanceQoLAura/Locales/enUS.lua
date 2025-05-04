@@ -1,11 +1,4 @@
-local parentAddonName = "EnhanceQoL"
-local addonName, addon = ...
-if _G[parentAddonName] then
-    addon = _G[parentAddonName]
-else
-    error(parentAddonName .. " is not loaded")
-end
-local L = addon.LAura
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Aura", "enUS", true) -- “true” = default / fallback
 
 L["Aura"] = "Aura Tracker"
 L["DragToPosition"] = "Drag me to position"

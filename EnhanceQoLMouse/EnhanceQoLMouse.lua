@@ -7,7 +7,8 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local L = addon.LMouse
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_Aura")
+
 local AceGUI = addon.AceGUI
 
 local MaxActuationPoint = 1 -- Minimaler Bewegungsabstand für Trail-Elemente
