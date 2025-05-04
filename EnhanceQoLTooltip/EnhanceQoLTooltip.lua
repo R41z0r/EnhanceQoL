@@ -7,7 +7,7 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local L = addon.LTooltip
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_Tooltip")
 
 local AceGUI = addon.AceGUI
 
@@ -30,9 +30,7 @@ local function fmtNum(n)
 end
 
 local function checkCurrency(tooltip, id)
-	if tooltip:IsForbidden() or tooltip:IsProtected() then
-		return
-	end
+	if tooltip:IsForbidden() or tooltip:IsProtected() then return end
 	if not id then return end
 	if not addon.db["TooltipShowCurrencyAccountWide"] then return end
 	local charList = C_CurrencyInfo.FetchCurrencyDataFromAccountCharacters(id)
@@ -495,7 +493,7 @@ local function addUnitFrame(container)
 	local data = {
 		{ text = L["TooltipUnitHideInCombat"], var = "TooltipUnitHideInCombat" },
 		{ text = L["TooltipUnitHideInDungeon"], var = "TooltipUnitHideInDungeon" },
-		{ text = L["TooltipShowMythicScore"], var = "TooltipShowMythicScore" },
+		{ text = L["TooltipShowMythicScore"]:format(DUNGEON_SCORE), var = "TooltipShowMythicScore" },
 		{ text = L["TooltipShowClassColor"], var = "TooltipShowClassColor" },
 		{ text = L["TooltipShowNPCID"], var = "TooltipShowNPCID" },
 		-- { text = L["TooltipUnitShowHealthText"], var = "TooltipUnitShowHealthText" },

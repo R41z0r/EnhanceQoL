@@ -1331,7 +1331,7 @@ local function addCVarFrame(container, d)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local data = L["CVarOptions"]
+	local data = addon.variables.cvarOptions
 
 	local cvarList = {}
 	for key, optionData in pairs(data) do

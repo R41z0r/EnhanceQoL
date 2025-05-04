@@ -1,14 +1,6 @@
-local parentAddonName = "EnhanceQoL"
-local addonName, addon = ...
-if _G[parentAddonName] then
-	addon = _G[parentAddonName]
-else
-	error(parentAddonName .. " is not loaded")
-end
-local L = addon.LTooltip
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Tooltip", "enUS", true)
 
 L["Tooltip"] = "Tooltip"
-L[addonName] = "Tooltip"
 L["None"] = "None"
 L["Enemies"] = "Enemies"
 L["Friendly"] = "Friendly"
@@ -28,9 +20,9 @@ L["Spell"] = "Spell"
 L["Item"] = "Item"
 L["Buff"] = "Buff"
 L["Debuff"] = "Debuff"
-L["Buff_Debuff"] = L["Buff"] .. "/" .. L["Debuff"]
+L["Buff_Debuff"] = "Buff/Debuff"
 -- Buff
-L["TooltipBuffHideType"] = "Hide tooltip on " .. L["Buff_Debuff"]
+L["TooltipBuffHideType"] = "Hide tooltip on Buff/Debuff"
 L["TooltipBuffHideInCombat"] = "Only hide it in combat"
 L["TooltipBuffHideInDungeon"] = "Only hide it in dungeons"
 
@@ -44,7 +36,7 @@ L["TooltipUnitHideType"] = "Hide tooltip on Unit"
 L["TooltipUnitHideInCombat"] = "Only hide it in combat"
 L["TooltipUnitHideInDungeon"] = "Only hide it in dungeons"
 L["BestMythic+run"] = "Best run"
-L["TooltipShowMythicScore"] = "Show " .. DUNGEON_SCORE .. " on Tooltip"
+L["TooltipShowMythicScore"] = "Show %s on Tooltip"
 L["TooltipShowClassColor"] = "Show class color on Tooltip"
 L["TooltipShowNPCID"] = "Show NPC ID"
 L["NPCID"] = "ID"

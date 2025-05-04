@@ -8,7 +8,7 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local L = addon.LDrinkMacro
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_DrinkMacro")
 
 local function createMacroIfMissing()
 	if GetMacroInfo(drinkMacroName) == nil then CreateMacro(drinkMacroName, "INV_Misc_QuestionMark") end

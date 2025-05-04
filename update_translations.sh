@@ -13,12 +13,12 @@ declare -A locale_files=(
   # core module
   ["EnhanceQoL"]="EnhanceQoL/Locales/enUS.lua"
 
-  # # sub‑modules – add or remove lines if your structure changes
-  # ["EnhanceQoL_DrinkMacro"]="EnhanceQoLDrinkMacro/Locales/enUS.lua"
-  # ["EnhanceQoL_Mouse"]="EnhanceQoLMouse/Locales/enUS.lua"
-  # ["EnhanceQoL_MythicPlus"]="EnhanceQoLMythicPlus/Locales/enUS.lua"
-  # ["EnhanceQoL_Tooltip"]="EnhanceQoLTooltip/Locales/enUS.lua"
-  # ["EnhanceQoL_Vendor"]="EnhanceQoLVendor/Locales/enUS.lua"
+  # sub‑modules – add or remove lines if your structure changes
+  ["Drink"]="EnhanceQoLDrinkMacro/Locales/enUS.lua"
+  ["Mouse"]="EnhanceQoLMouse/Locales/enUS.lua"
+  # ["MythicPlus"]="EnhanceQoLMythicPlus/Locales/enUS.lua"
+  ["Tooltip"]="EnhanceQoLTooltip/Locales/enUS.lua"
+  # ["Vendor"]="EnhanceQoLVendor/Locales/enUS.lua"
 )
 
 tempfile=$( mktemp )

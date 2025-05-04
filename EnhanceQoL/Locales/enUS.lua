@@ -114,21 +114,19 @@ L["CVar"] = "CVar"
 L["tReloadInterface"] = "Interface Reload Required"
 L["bReloadInterface"] = "You need to reload your interface to apply changes"
 
--- L["CVarOptions"] = {
--- 	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities" },
--- 	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities while flying" },
--- 	["chatMouseScroll"] = { description = "Enable mouse scroll in chat", trueValue = "1", falseValue = "0" },
--- 	["ffxDeath"] = { description = "Disable death effects", trueValue = "0", falseValue = "1" },
--- 	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Enable Map Fade while moving" },
--- 	["scriptErrors"] = { description = "Show LUA-Error on UI", trueValue = "1", falseValue = "0" },
--- 	["ShowClassColorInNameplate"] = { description = "Show class colors on nameplates", trueValue = "1", falseValue = "0" },
--- 	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Show the Castbar of your Target" },
--- 	["showTutorials"] = { description = "Disable tutorials", trueValue = "0", falseValue = "1" },
--- 	["UberTooltips"] = { description = "Enable enhanced tooltips", trueValue = "1", falseValue = "0" },
--- 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Show the Guild on Players" },
--- 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Show the Title on Players" },
--- 	["WholeChatWindowClickable"] = { description = "Make the entire chat window clickable", trueValue = "1", falseValue = "0" },
--- }
+L["autoDismount"] = "Enable autodismount when using abilities"
+L["autoDismountFlying"] = "Enable autodismount when using abilities while flying"
+L["chatMouseScroll"] = "Enable mouse scroll in chat"
+L["ffxDeath"] = "Disable death effects"
+L["mapFade"] = "Enable Map Fade while moving"
+L["scriptErrors"] = "Show LUA-Error on UI"
+L["ShowClassColorInNameplate"] = "Show class colors on nameplates"
+L["ShowTargetCastbar"] = "Show the Castbar of your Target"
+L["showTutorials"] = "Disable tutorials"
+L["UberTooltips"] = "Enable enhanced tooltips"
+L["UnitNamePlayerGuild"] = "Show the Guild on Players"
+L["UnitNamePlayerPVPTitle"] = "Show the Title on Players"
+L["WholeChatWindowClickable"] = "Make the entire chat window clickable"
 
 L["autoAcceptGroupInvite"] = "Automatically accept group invites"
 L["autoAcceptGroupInviteGuildOnly"] = "Guild members"

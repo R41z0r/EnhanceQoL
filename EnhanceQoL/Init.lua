@@ -645,3 +645,28 @@ addon.variables.unitFrameNames = {
 table.sort(addon.variables.actionBarNames, function(a, b) return a.text < b.text end)
 
 addon.variables.defaultFont = "Fonts\\FRIZQT__.TTF"
+if (GAME_LOCALE or GetLocale()) == "ruRU" then
+	addon.variables.defaultFont = "Fonts\\ARIALN.TTF"
+elseif (GAME_LOCALE or GetLocale()) == "koKR" then
+	addon.variables.defaultFont = "Fonts\\2002.ttf"
+elseif (GAME_LOCALE or GetLocale()) == "zhTW" then
+	addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
+elseif (GAME_LOCALE or GetLocale()) == "zhCN" then
+	addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
+end
+
+addon.variables.cvarOptions = {
+	["autoDismount"] = { trueValue = "1", falseValue = "0", description = addon.L["autoDismount"] },
+	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = addon.L["autoDismountFlying"] },
+	["chatMouseScroll"] = { trueValue = "1", falseValue = "0", description = addon.L["chatMouseScroll"] },
+	["ffxDeath"] = { trueValue = "0", falseValue = "1", description = addon.L["ffxDeath"] },
+	["mapFade"] = { trueValue = "1", falseValue = "0", description = addon.L["mapFade"] },
+	["scriptErrors"] = { trueValue = "1", falseValue = "0", description = addon.L["scriptErrors"] },
+	["ShowClassColorInNameplate"] = { trueValue = "1", falseValue = "0", description = addon.L["ShowClassColorInNameplate"] },
+	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = addon.L["ShowTargetCastbar"] },
+	["showTutorials"] = { trueValue = "0", falseValue = "1", description = addon.L["showTutorials"] },
+	["UberTooltips"] = { trueValue = "1", falseValue = "0", description = addon.L["UberTooltips"] },
+	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = addon.L["UnitNamePlayerGuild"] },
+	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = addon.L["UnitNamePlayerPVPTitle"] },
+	["WholeChatWindowClickable"] = { trueValue = "1", falseValue = "0", description = addon.L["WholeChatWindowClickable"] },
+}
