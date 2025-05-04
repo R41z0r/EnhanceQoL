@@ -13,6 +13,5 @@ L["Prefer mage food"] = "Предпочитать еду мага"
 L["Minimum mana restore for food"] = "Минимальное восстановление маны от еды"
 L["Ignore bufffood"] = "Игнорировать еду с баффом \"Сыт\""
 L["Drink Macro"] = "Макрос на питье"
-L[addonName] = "Макрос на питье"
 L["ignoreGemsEarthen"] =
     "Игнорировать самоцветы ювелирного дела для расы земельников"
