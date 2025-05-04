@@ -172,3 +172,5 @@ L["enableLootspecQuickswitchDesc"] = "Clique esquerdo em uma especialização pa
 
 L["Profiles"] = "Perfis"
 L["currentExpensionMythicPlusWarning"] = "Para itens de Mítico+ obtidos em masmorras antigas, os resultados podem ficar imprecisos."
+
+L["persistAuctionHouseFilter"] = "Manter os filtros da Casa de Leilões durante a sessão"

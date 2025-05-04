@@ -172,3 +172,5 @@ L["enableLootspecQuickswitchDesc"] = "Clic gauche sur une spécialisation pour d
 
 L["Profiles"] = "Profils"
 L["currentExpensionMythicPlusWarning"] = "Pour les objets Mythique+ issus d’anciens donjons, les résultats peuvent être inexacts."
+
+L["persistAuctionHouseFilter"] = "Conserver les filtres de l'hôtel des ventes pendant toute la session"

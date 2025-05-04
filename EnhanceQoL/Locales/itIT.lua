@@ -166,3 +166,5 @@ L["enableLootspecQuickswitchDesc"] = "Fai clic sinistro su una specializzazione 
 
 L["Profiles"] = "Profili"
 L["currentExpensionMythicPlusWarning"] = "Per gli oggetti M+ provenienti da spedizioni di vecchie espansioni i risultati potrebbero non essere precisi."
+
+L["persistAuctionHouseFilter"] = "Conserva i filtri della Casa d’Aste per tutta la sessione"

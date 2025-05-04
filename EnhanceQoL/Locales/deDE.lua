@@ -171,3 +171,5 @@ L["enableLootspecQuickswitchDesc"] = "Linksklick auf eine Spezialisierung setzt 
 
 L["Profiles"] = "Profile"
 L["currentExpensionMythicPlusWarning"] = "Bei Mythic-Plus-Gegenständen aus alten Dungeons können die Ergebnisse ungenau sein."
+
+L["persistAuctionHouseFilter"] = "Auktionshausfilter während der gesamten Sitzung beibehalten"

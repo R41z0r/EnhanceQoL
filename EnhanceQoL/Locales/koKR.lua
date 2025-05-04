@@ -139,7 +139,7 @@ L["autoAcceptGroupInviteFriendOnly"] = "친구"
 L["autoAcceptGroupInviteOptions"] = "다음 대상의 초대를 수락..."
 
 L["showLeaderIconRaidFrame"] = "공격대 스타일 파티 프레임에 파티장 아이콘 표시"
-L["showPartyFrameInSoloContent"] = "���로 콘텐츠에서 파티 프레임 표시"
+L["showPartyFrameInSoloContent"] = "����로 콘텐츠에서 파티 프레임 표시"
 
 L["ActionbarHideExplain"] = '행동 단축바를 숨기고 마우스오버 시에만 표시합니다. 이 기능은 행동 단축바가 편집 모드에서 "'
 	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
@@ -166,3 +166,5 @@ addon.variables.defaultFont = "Fonts\\2002.ttf"
 
 L["Profiles"] = "프로필"
 L["currentExpensionMythicPlusWarning"] = "과거 던전에서 획득한 쐐기 아이템은 정확하지 않은 결과를 표시할 수 있습니다."
+
+L["persistAuctionHouseFilter"] = "세션 동안 경매장 필터 유지"

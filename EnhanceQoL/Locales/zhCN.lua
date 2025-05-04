@@ -166,3 +166,5 @@ addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
 
 L["Profiles"] = "配置文件"
 L["currentExpensionMythicPlusWarning"] = "来自旧版本地下城的钥石物品可能会导致结果不准确。"
+
+L["persistAuctionHouseFilter"] = "在当前会话中保留拍卖行过滤条件"

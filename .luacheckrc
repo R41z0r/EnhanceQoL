@@ -57,6 +57,8 @@ globals = {
 	"MinimapCompassTexture",
 	"AdventureObjectiveTracker",
 	"BonusObjectiveTracker",
+	"PLAYERSPELLS_BUTTON",
+	"PlayerSpellsFrame",
 	"CampaignQuestObjectiveTracker",
 	"QuestObjectiveTracker",
 	"ProfessionsRecipeTracker",

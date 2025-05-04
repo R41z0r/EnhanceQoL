@@ -675,7 +675,7 @@ local function onInspect(arg1)
 							end
 						else
 							if element.borderGradient then element.borderGradient:Hide() end
-							element.enchant:SetText("")
+							if element.enchant then element.enchant:SetText("") end
 						end
 					end)
 				end

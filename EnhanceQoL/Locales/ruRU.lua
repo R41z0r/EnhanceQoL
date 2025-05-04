@@ -194,3 +194,5 @@ addon.variables.defaultFont = "Fonts\\ARIALN.TTF"
 
 L["Profiles"] = "Профили"
 L["currentExpensionMythicPlusWarning"] = "Для предметов Мифик+ из старых подземелий результаты могут быть неточными."
+
+L["persistAuctionHouseFilter"] = "Запоминать фильтры аукциона на всю сессию"

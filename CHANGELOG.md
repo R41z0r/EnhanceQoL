@@ -1,18 +1,19 @@
 # Changelog
 
+## [3.10.0] – 2025-05-03
+### Added
+- **Auction House Filter Persistence** – remembers your Auction House search filters for the entire session.
 
-## [3.10.0] – 03 May 2025
-### ✨ New Options
+- **Food Reminder** – lowered frame strata so it no longer obscures important notifications.
+- **Module Icons** – refreshed symbol set for all module toggles.
+- **Module naming cleanup** – removed the `Enhance QoL` prefix from all sub‑addon folder names for shorter, clearer titles.
 
-### 🔁 Changed
-- **Updated Symbols** – New Icons for the different modules
-- **Frame Strata of Food reminder** - Lowered the Strata to not overlap important notifications
-
-### 🐛 Fixed
+### Fixed
+- Lua error when inspecting another player.
 
 ---
 
-## [3.9.0] – 02 May 2025
+## [3.9.0] – 2025-05-01
 ### ✨ New Options
 - **Bag Filter: Item-Level Range** – hide items outside a custom ilvl range.  
 - **Healer Spec: Auto-unmark self** – raid marker is cleared when you switch to healer.

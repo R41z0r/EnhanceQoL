@@ -172,3 +172,5 @@ addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
 
 L["Profiles"] = "設定檔"
 L["currentExpensionMythicPlusWarning"] = "來自舊版本地城的 M+ 裝備可能導致結果不準確。"
+
+L["persistAuctionHouseFilter"] = "在本次遊戲期間保留拍賣場篩選條件"
