@@ -1,13 +1,7 @@
-if (GAME_LOCALE or GetLocale()) ~= "ptBR" then return end
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Tooltip", "ptBR")
+if not L then return end
 
-local addonName, addon = ...
-local parentAddonName = "EnhanceQoL"
-if _G[parentAddonName] then
-	addon = _G[parentAddonName]
-else
-	error(parentAddonName .. " is not loaded")
-end
-local L = addon.LTooltip
+--@localization(locale="ptBR", namespace="Tooltip", format="lua_additive_table")@
 
 L["Tooltip"] = "Tooltip"
 L["None"] = "Nenhum"

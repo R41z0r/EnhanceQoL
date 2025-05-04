@@ -1,17 +1,9 @@
-local parentAddonName = "EnhanceQoL"
-local addonName, addon = ...
-if _G[parentAddonName] then
-	addon = _G[parentAddonName]
-else
-	error(parentAddonName .. " is not loaded")
-end
-local L = addon.LMythicPlus
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_MythicPlus", "enUS", true)
 
 L["Keystone"] = "Keystone"
 L["NoKeystone"] = "No Info"
 L["Automatically insert keystone"] = "Automatically insert keystone"
 L["Mythic Plus"] = "Mythic+"
-L[addonName] = "Mythic+"
 L["Close all bags on keystone insert"] = "Close all bags on keystone insert"
 L["ReadyCheck"] = "Ready Check"
 L["ReadyCheckWaiting"] = "Checking Readiness..."
@@ -34,7 +26,7 @@ L["DBM / BigWigs Pull Timer"] = "DBM / BigWigs Pull Timer"
 L["Both"] = "Blizzard and DBM / BigWigs"
 L["Pull Timer Type"] = "Pull Timer Type"
 
-L["groupfinderShowDungeonScoreFrame"] = "Show " .. DUNGEON_SCORE .. " frame next to the Dungeon Finder"
+L["groupfinderShowDungeonScoreFrame"] = "Show %s frame next to the Dungeon Finder"
 -- Keystone
 L["groupfinderShowPartyKeystone"] = "Display your party members Mythic+ Keystone info"
 L["groupfinderShowPartyKeystoneDesc"] = "Allows you to click on the keyinfo icon to teleport to that dungeon"
@@ -59,16 +51,16 @@ L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
 
 -- Automark Frame
 L["AutoMark"] = "Auto marker"
-L["autoMarkTankInDungeon"] = "Automatically mark the " .. TANK .. " in dungeons"
+L["autoMarkTankInDungeon"] = "Automatically mark the %s in dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank marker"
 L["Disabled"] = "Disabled"
-L["autoMarkTankExplanation"] = "It will mark the " .. TANK .. " when he has no mark and only changes the mark, when you are either " .. COMMUNITY_MEMBER_ROLE_NAME_LEADER .. " or " .. TANK
+L["autoMarkTankExplanation"] = "It will mark the %s when he has no mark and only changes the mark, when you are either %s or %s"
 
-L["mythicPlusIgnoreMythic"] = "Do not apply a raid marker in " .. PLAYER_DIFFICULTY6 .. " dungeons"
-L["mythicPlusIgnoreHeroic"] = "Do not apply a raid marker in " .. PLAYER_DIFFICULTY2 .. " dungeons"
-L["mythicPlusIgnoreEvent"] = "Do not apply a raid marker in " .. BATTLE_PET_SOURCE_7 .. " dungeons"
-L["mythicPlusIgnoreNormal"] = "Do not apply a raid marker in " .. PLAYER_DIFFICULTY1 .. " dungeons"
-L["mythicPlusIgnoreTimewalking"] = "Do not apply a raid marker in " .. PLAYER_DIFFICULTY_TIMEWALKER .. " dungeons"
+L["mythicPlusIgnoreMythic"] = "Do not apply a raid marker in %s dungeons"
+L["mythicPlusIgnoreHeroic"] = "Do not apply a raid marker in %s dungeons"
+L["mythicPlusIgnoreEvent"] = "Do not apply a raid marker in %s dungeons"
+L["mythicPlusIgnoreNormal"] = "Do not apply a raid marker in %s dungeons"
+L["mythicPlusIgnoreTimewalking"] = "Do not apply a raid marker in %s dungeons"
 
 -- Teleports
 L["Teleports"] = "Teleports"
@@ -80,7 +72,7 @@ L["teleportsHeadline"] = "This adds a frame with Dungeon Teleports to your PVEFr
 L["teleportCompendiumHeadline"] = "Hide teleports from specific expansions"
 L["portalHideMissing"] = "Hide missing Teleports"
 L["portalShowTooltip"] = "Show tooltip on Teleport buttons"
-L["hideActualSeason"] = "Hide Teleports from actual Season in " .. L["DungeonCompendium"]
+L["hideActualSeason"] = "Hide Teleports from actual Season in Teleport Compendium"
 L["teleportCompendiumAdditionHeadline"] = "Additional Portal Options"
 L["portalShowDungeonTeleports"] = "Show Dungeon Teleports"
 L["portalShowRaidTeleports"] = "Show Raid Teleports"
@@ -99,8 +91,8 @@ L["mythicPlusBRButtonSizeHeadline"] = "Button Size"
 -- Talent Reminder
 L["TalentReminder"] = "Talent Reminder"
 L["talentReminderEnabled"] = "Enable Talent Reminder"
-L["talentReminderEnabledDesc"] = "Only checks in " .. _G["PLAYER_DIFFICULTY6"] .. " difficulty in preparation for " .. _G["PLAYER_DIFFICULTY_MYTHIC_PLUS"]
-L["talentReminderLoadOnReadyCheck"] = "Only check talents on " .. _G["READY_CHECK"]
+L["talentReminderEnabledDesc"] = "Only checks in %s difficulty in preparation for %s"
+L["talentReminderLoadOnReadyCheck"] = "Only check talents on %s"
 L["talentReminderSoundOnDifference"] = "Play a sound if talents differ from the saved setup"
 L["WrongTalents"] = "Wrong Talents"
 L["ActualTalents"] = "Current Talents"

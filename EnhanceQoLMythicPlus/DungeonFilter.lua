@@ -6,7 +6,7 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local L = addon.LMythicPlus
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_MythicPlus")
 
 addon.functions.InitDBValue("mythicPlusDungeonFilters", {})
 if addon.db["mythicPlusDungeonFilters"][UnitGUID("player")] == nil then addon.db["mythicPlusDungeonFilters"][UnitGUID("player")] = {} end

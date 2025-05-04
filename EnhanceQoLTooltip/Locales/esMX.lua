@@ -1,7 +1,7 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Tooltip", "esES")
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Tooltip", "esMX")
 if not L then return end
 
---@localization(locale="esES", namespace="Tooltip", format="lua_additive_table")@
+--@localization(locale="esMX", namespace="Tooltip", format="lua_additive_table")@
 
 L["Tooltip"] = "Tooltip"
 L["None"] = "Ninguno"

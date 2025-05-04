@@ -7,7 +7,7 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local L = addon.LMythicPlus
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_MythicPlus")
 
 local frameLoad = CreateFrame("Frame")
 
@@ -264,9 +264,9 @@ local function checkKeyStone()
 									end
 									if addon.MythicPlus.variables.breakIt == false then
 										if addon.db["cancelPullTimerOnClick"] == true then
-											addon.MythicPlus.Buttons["PullTimer"]:SetText(addon.LMythicPlus["Cancel"] .. " (" .. x .. ")")
+											addon.MythicPlus.Buttons["PullTimer"]:SetText(L["Cancel"] .. " (" .. x .. ")")
 										else
-											addon.MythicPlus.Buttons["PullTimer"]:SetText(addon.LMythicPlus["Pull"] .. " (" .. x .. ")")
+											addon.MythicPlus.Buttons["PullTimer"]:SetText(L["Pull"] .. " (" .. x .. ")")
 										end
 									end
 									if addon.MythicPlus.variables.breakIt == false then
@@ -451,7 +451,7 @@ local function addKeystoneFrame(container)
 
 	local list, order = addon.functions.prepareListForDropdown({ [1] = L["None"], [2] = L["Blizzard Pull Timer"], [3] = L["DBM / BigWigs Pull Timer"], [4] = L["Both"] })
 
-	local dropPullTimerType = addon.functions.createDropdownAce(L["Pull Timer "], list, order, function(self, _, value) addon.db["PullTimerType"] = value end)
+	local dropPullTimerType = addon.functions.createDropdownAce(L["PullTimer"], list, order, function(self, _, value) addon.db["PullTimerType"] = value end)
 	dropPullTimerType:SetValue(addon.db["PullTimerType"])
 	dropPullTimerType:SetFullWidth(false)
 	dropPullTimerType:SetWidth(200)
@@ -627,7 +627,6 @@ local function addTeleportFrame(container)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 	groupCore:SetTitle(L["teleportsHeadline"])
-	local list, order = addon.functions.prepareListForDropdown({ [1] = L["None"], [2] = L["Enemies"], [3] = L["Friendly"], [4] = L["Both"] })
 
 	local cbTeleportsEnabled = addon.functions.createCheckboxAce(L["teleportEnabled"], addon.db["teleportFrame"], function(self, _, value)
 		addon.db["teleportFrame"] = value
@@ -760,7 +759,7 @@ local function addAutoMarkFrame(container)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local cbAutoMarkTank = addon.functions.createCheckboxAce(L["autoMarkTankInDungeon"], addon.db["autoMarkTankInDungeon"], function(self, _, value)
+	local cbAutoMarkTank = addon.functions.createCheckboxAce(L["autoMarkTankInDungeon"]:format(TANK), addon.db["autoMarkTankInDungeon"], function(self, _, value)
 		addon.db["autoMarkTankInDungeon"] = value
 		if value and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
 			setActTank()
@@ -792,11 +791,11 @@ local function addAutoMarkFrame(container)
 		groupCore:AddChild(addon.functions.createSpacerAce())
 
 		local data = {
-			{ text = L["mythicPlusIgnoreNormal"], var = "mythicPlusIgnoreNormal" },
-			{ text = L["mythicPlusIgnoreHeroic"], var = "mythicPlusIgnoreHeroic" },
-			{ text = L["mythicPlusIgnoreEvent"], var = "mythicPlusIgnoreEvent" },
-			{ text = L["mythicPlusIgnoreMythic"], var = "mythicPlusIgnoreMythic" },
-			{ text = L["mythicPlusIgnoreTimewalking"], var = "mythicPlusIgnoreTimewalking" },
+			{ text = L["mythicPlusIgnoreNormal"]:format(PLAYER_DIFFICULTY1), var = "mythicPlusIgnoreNormal" },
+			{ text = L["mythicPlusIgnoreHeroic"]:format(PLAYER_DIFFICULTY2), var = "mythicPlusIgnoreHeroic" },
+			{ text = L["mythicPlusIgnoreEvent"]:format(BATTLE_PET_SOURCE_7), var = "mythicPlusIgnoreEvent" },
+			{ text = L["mythicPlusIgnoreMythic"]:format(PLAYER_DIFFICULTY6), var = "mythicPlusIgnoreMythic" },
+			{ text = L["mythicPlusIgnoreTimewalking"]:format(PLAYER_DIFFICULTY_TIMEWALKER), var = "mythicPlusIgnoreTimewalking" },
 		}
 
 		-- table.sort(data, function(a, b) return a.text < b.text end)
@@ -810,7 +809,7 @@ local function addAutoMarkFrame(container)
 	end
 
 	groupCore:AddChild(addon.functions.createSpacerAce())
-	local labelExplanation = addon.functions.createLabelAce("|cffffd700" .. L["autoMarkTankExplanation"] .. "|r", nil, nil, 14)
+	local labelExplanation = addon.functions.createLabelAce("|cffffd700" .. L["autoMarkTankExplanation"]:format(TANK, COMMUNITY_MEMBER_ROLE_NAME_LEADER, TANK) .. "|r", nil, nil, 14)
 	labelExplanation:SetFullWidth(true)
 	groupCore:AddChild(labelExplanation)
 
@@ -925,7 +924,7 @@ local function addRatingFrame(container)
 
 	local data = {
 		{
-			text = L["groupfinderShowDungeonScoreFrame"],
+			text = L["groupfinderShowDungeonScoreFrame"]:format(DUNGEON_SCORE),
 			var = "groupfinderShowDungeonScoreFrame",
 			func = function(self, _, value)
 				addon.db["groupfinderShowDungeonScoreFrame"] = value
@@ -969,13 +968,13 @@ local function addTalentFrame(container)
 				addTalentFrame(container)
 				addon.MythicPlus.functions.checkLoadout()
 			end,
-			desc = L["talentReminderEnabledDesc"],
+			desc = L["talentReminderEnabledDesc"]:format(PLAYER_DIFFICULTY6, PLAYER_DIFFICULTY_MYTHIC_PLUS),
 		},
 	}
 
 	if addon.db["talentReminderEnabled"] then
 		table.insert(data, {
-			text = L["talentReminderLoadOnReadyCheck"],
+			text = L["talentReminderLoadOnReadyCheck"]:format(READY_CHECK),
 			var = "talentReminderLoadOnReadyCheck",
 			func = function(self, _, value)
 				addon.db["talentReminderLoadOnReadyCheck"] = value

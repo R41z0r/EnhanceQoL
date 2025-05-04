@@ -8,8 +8,7 @@ else
 end
 
 local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
-
-local L = addon.LMythicPlus
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_MythicPlus")
 
 local cModeIDs
 local portalSpells = {}

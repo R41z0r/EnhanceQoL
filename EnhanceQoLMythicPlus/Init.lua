@@ -59,7 +59,6 @@ addon.functions.InitDBValue("talentReminderEnabled", false)
 addon.functions.InitDBValue("talentReminderSettings", {})
 
 addon.MythicPlus = {}
-addon.LMythicPlus = {} -- Locales for MythicPlus
 addon.MythicPlus.functions = {}
 
 addon.MythicPlus.Buttons = {}

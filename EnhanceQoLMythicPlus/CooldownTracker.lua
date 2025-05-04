@@ -7,7 +7,7 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local L = addon.LMythicPlus
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_MythicPlus")
 
 -- Addition für Potion Cooldown tracker
 local allowedSpells = { -- Tinker Engineering
@@ -117,7 +117,12 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
 	frame:SetValue(duration)
 	frame:SetPoint("TOPLEFT", anchorFrame, "TOPLEFT", 0, 0)
 	-- Hintergrund (leicht schwarzer Rahmen)
-	frame:SetBackdrop({ bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 3, insets = { left = 0, right = 0, top = 0, bottom = 0 } })
+	frame:SetBackdrop({
+		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+		edgeSize = 3,
+		insets = { left = 0, right = 0, top = 0, bottom = 0 },
+	})
 	if addon.db["potionTrackerClassColor"] then
 		local rPerc, gPerc, bPerc = GetClassColor(select(2, UnitClass(unit)))
 		frame:SetStatusBarColor(rPerc, gPerc, bPerc)
