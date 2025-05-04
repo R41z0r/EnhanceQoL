@@ -1,46 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "zhCN" then return end
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Vendor", "zhCN")
+if not L then return end
 
-local addonName, addon = ...
-local parentAddonName = "EnhanceQoL"
-if _G[parentAddonName] then
-	addon = _G[parentAddonName]
-else
-	error(parentAddonName .. " is not loaded")
-end
-local L = addon.LVendor
-
--- Chinesisch (vereinfacht)
-L["Vendor"] = "商人"
-L["MerchantWindowClosed"] = "商人窗口已关闭。停止销售"
-
--- 常规
-L["vendorMinIlvlDif"] = "标记为自动销售的最低物品等级低于我的平均值"
-L["vendorIgnoreBoE"] = "忽略装备后绑定的物品"
-L["vendorIgnoreWarbound"] = "忽略战斗绑定的物品"
-L["vendorIgnoreUpgradable"] = "忽略可升级物品"
-L["vendorSwapAutoSellShift"] = "仅在打开时按住 Shift 时自动出售"
-L["vendorOnly12Items"] = "将每次交易出售的物品数量限制为12件，以便更轻松地从商人处回购。"
-
-L["IncludeVendorList"] = "物品列表"
-L["ExcludeVendorList"] = "物品列表"
-L["Include"] = "包括"
-L["Exclude"] = "排除"
-
-L["Add"] = "添加"
-L["Remove"] = "移除"
-L["Item id or drag item"] = "物品ID或拖动物品"
-L["Item id does not exist"] = "物品ID不存在"
-L["vendorAddItemToInclude"] = "将物品添加到此列表中以包含在出售中。 重要：这将忽略该物品的所有其他检查"
-L["vendorAddItemToExclude"] = "将物品添加到此列表中以排除出售。 重要：排除总是优先，除非它是垃圾"
-L["vendorMinIlvl"] = "标记低于选定值的物品以进行自动出售"
-L["vendorAbsolutIlvl"] = "使用绝对物品等级出售装备，而不是最低已装备等级"
-
-for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-	local value = addon.Vendor.variables.tabNames[key]
-	L["labelItemQuality" .. value .. "line"] = "这使您能够根据商人的过滤条件，自动销售质量为 "
-		.. ITEM_QUALITY_COLORS[key].hex
-		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
-		.. "|r 的物品。"
-	L["vendor" .. value .. "Enable"] = "启用自动销售 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 物品"
-	L["labelExplained" .. value .. "line"] = "这意味着它会自动出售 " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r 物品等级为 %s 及以下的物品 %s"
-end
+--@localization(locale="zhCN", namespace="Vendor", format="lua_additive_table")@
