@@ -1,4 +1,4 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Aura", "enUS", true) -- “true” = default / fallback
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Mouse", "enUS", true) -- “true” = default / fallback
 
 L["mouseRingEnabled"] = "Enable visible ring around the mouse cursor"
 L["mouseTrailEnabled"] = "Enable visible trail while moving the mouse cursor"

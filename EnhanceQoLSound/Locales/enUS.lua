@@ -1,11 +1,4 @@
-local parentAddonName = "EnhanceQoL"
-local addonName, addon = ...
-if _G[parentAddonName] then
-	addon = _G[parentAddonName]
-else
-	error(parentAddonName .. " is not loaded")
-end
-local L = addon.LSounds
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Sound", "enUS", true)
 
 L["monk"] = "Monk"
 
@@ -13,17 +6,17 @@ L["affix"] = "Affix"
 L["xalatath"] = "Mute Xal'atath in Dungeons"
 L["train"] = "Mute all Train-Emotes"
 
-L["open"] = MUTE .. " open"
-L["close"] = MUTE .. " " .. CLOSE
-L["changeTab"] = "Mute UI Tabs switch"
-L["enterQueue"] = "Mute Enter Queue (PVP/Dungeon)"
-L["readycheck"] = "Mute " .. READY_CHECK
-L["coinsound"] = "Mute coin sound (looting/buying)"
-L["mailboxopen"] = "Mute Mailbox open"
-L["repair"] = "Mute " .. MINIMAP_TRACKING_REPAIR
+L["open"] = "Mute open sound"
+L["close"] = "Mute close sound"
+L["changeTab"] = "Mute UI tab switch"
+L["enterQueue"] = "Mute queue entry sound (PvP/Dungeon)"
+L["readycheck"] = "Mute Ready Check"
+L["coinsound"] = "Mute coin sounds (looting/buying)"
+L["mailboxopen"] = "Mute mailbox opening"
+L["repair"] = "Mute repair sound"
 
 -- Dungeon
-L["tww"] = EXPANSION_NAME10
+L["tww"] = "The War Within"
 L["stonevault"] = "Stonevault"
 L["dagran_thaurissan_ii"] = "Mute Dagran Thaurissan II (Talking Head)"
 
@@ -37,15 +30,15 @@ L["wonderwing_20"] = "Mute Wonderwing 2.0 squeak"
 L["bloodlust"] = "Mute Bloodlust/Heroism sounds"
 
 -- Interface
-L["interface"] = INTERFACE_LABEL
-L["general"] = GENERAL
+L["interface"] = "Interface"
+L["general"] = "General"
 --Auction House
-L["auctionhouse"] = BUTTON_LAG_AUCTIONHOUSE
+L["auctionhouse"] = "Auction House"
 -- Pings
-L["ping_attack"] = MUTE .. " " .. PING .. " " .. BINDING_NAME_PINGATTACK
-L["ping_assist"] = MUTE .. " " .. PING .. " " .. BINDING_NAME_PINGASSIST
-L["ping_omw"] = MUTE .. " " .. PING .. " " .. BINDING_NAME_PINGONMYWAY
-L["ping_warning"] = MUTE .. " " .. PING .. " " .. BINDING_NAME_PINGWARNING
-L["ping_ping"] = MUTE .. " " .. DEFAULT .. " " .. PING
-L["ping_minimap"] = MUTE .. " " .. PING .. " " .. MINIMAP_LABEL
-L["ping"] = PING
+L["ping_attack"] = "Mute Ping: Attack"
+L["ping_assist"] = "Mute Ping: Assist"
+L["ping_omw"] = "Mute Ping: On My Way"
+L["ping_warning"] = "Mute Ping: Warning"
+L["ping_ping"] = "Mute Default Ping"
+L["ping_minimap"] = "Mute Minimap Ping"
+L["ping"] = "Ping"

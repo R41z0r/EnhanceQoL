@@ -18,6 +18,7 @@ declare -A locale_files=(
   ["Drink"]="EnhanceQoLDrinkMacro/Locales/enUS.lua"
   ["Mouse"]="EnhanceQoLMouse/Locales/enUS.lua"
   ["MythicPlus"]="EnhanceQoLMythicPlus/Locales/enUS.lua"
+  ["Sound"]="EnhanceQoLSound/Locales/enUS.lua"
   ["Tooltip"]="EnhanceQoLTooltip/Locales/enUS.lua"
   # ["Vendor"]="EnhanceQoLVendor/Locales/enUS.lua"
 )

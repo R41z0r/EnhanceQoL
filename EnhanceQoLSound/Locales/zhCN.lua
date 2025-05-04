@@ -1,16 +1,4 @@
-if (GAME_LOCALE or GetLocale()) ~= "zhCN" then return end
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Sound", "zhCN")
+if not L then return end
 
-local addonName, addon = ...
-local parentAddonName = "EnhanceQoL"
-if _G[parentAddonName] then
-    addon = _G[parentAddonName]
-else
-    error(parentAddonName .. " is not loaded")
-end
-local L = addon.LDrinkMacro
-
-L["Prefer mage food"] = "偏爱法师食物"
-L["Minimum mana restore for food"] = "食物的最低法力恢复"
-L["Ignore bufffood"] = "忽略“吃饱喝足”的食物"
-L["Drink Macro"] = "饮料宏"
-L["ignoreGemsEarthen"] = "忽略土灵种族的珠宝工艺宝石"
+--@localization(locale="zhCN", namespace="Sound", format="lua_additive_table")@
