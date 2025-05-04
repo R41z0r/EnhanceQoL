@@ -7,7 +7,7 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local L = addon.LVendor
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_Vendor")
 local lastEbox = nil
 
 local frameLoad = CreateFrame("Frame")
@@ -196,23 +196,27 @@ local function addVendorFrame(container, type)
 			lIlvl = addon.Vendor.variables.avgItemLevelEquipped - sValue2
 		end
 
-		labelHeadlineExplain:SetText("|cffffd700" .. string.format(L["labelExplained" .. sValue .. "line"], lIlvl, table.concat(text, " and ")) .. "|r")
+		labelHeadlineExplain:SetText("|cffffd700" .. string.format(L["labelExplainedline"], lIlvl, table.concat(text, " and ")) .. "|r")
 		wrapper:DoLayout()
 	end
 
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
-	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["labelItemQuality" .. value .. "line"] .. "|r", nil, nil, 14)
+	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["labelItemQualityline"]:format(ITEM_QUALITY_COLORS[type].hex .. _G["ITEM_QUALITY" .. type .. "_DESC"] .. "|r"), nil, nil, 14)
 	groupCore:AddChild(labelHeadline)
 	labelHeadline:SetFullWidth(true)
 
-	local vendorEnable = addon.functions.createCheckboxAce(L["vendor" .. value .. "Enable"], addon.db["vendor" .. value .. "Enable"], function(self, _, checked)
-		addon.db["vendor" .. value .. "Enable"] = checked
-		addon.Vendor.variables.itemQualityFilter[type] = checked
+	local vendorEnable = addon.functions.createCheckboxAce(
+		L["vendorEnable"]:format(ITEM_QUALITY_COLORS[type].hex .. _G["ITEM_QUALITY" .. type .. "_DESC"] .. "|r"),
+		addon.db["vendor" .. value .. "Enable"],
+		function(self, _, checked)
+			addon.db["vendor" .. value .. "Enable"] = checked
+			addon.Vendor.variables.itemQualityFilter[type] = checked
 
-		container:ReleaseChildren()
-		addVendorFrame(container, type)
-	end)
+			container:ReleaseChildren()
+			addVendorFrame(container, type)
+		end
+	)
 	groupCore:AddChild(vendorEnable)
 
 	if addon.Vendor.variables.itemQualityFilter[type] then
@@ -269,7 +273,12 @@ local function addVendorFrame(container, type)
 		groupInfo:SetTitle(INFO)
 		wrapper:AddChild(groupInfo)
 
-		labelHeadlineExplain = addon.functions.createLabelAce("|cffffd700" .. string.format(L["labelExplained" .. value .. "line"], lIlvl, table.concat(text, " and ")) .. "|r", nil, nil, 14)
+		labelHeadlineExplain = addon.functions.createLabelAce(
+			"|cffffd700" .. L["labelExplainedline"]:format(ITEM_QUALITY_COLORS[type].hex .. _G["ITEM_QUALITY" .. type .. "_DESC"] .. "|r", lIlvl, table.concat(text, " and ") .. "|r"),
+			nil,
+			nil,
+			14
+		)
 		groupInfo:AddChild(labelHeadlineExplain)
 		groupInfo:SetFullWidth(true)
 		labelHeadlineExplain:SetFullWidth(true)

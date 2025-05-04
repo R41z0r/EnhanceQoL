@@ -20,7 +20,7 @@ declare -A locale_files=(
   ["MythicPlus"]="EnhanceQoLMythicPlus/Locales/enUS.lua"
   ["Sound"]="EnhanceQoLSound/Locales/enUS.lua"
   ["Tooltip"]="EnhanceQoLTooltip/Locales/enUS.lua"
-  # ["Vendor"]="EnhanceQoLVendor/Locales/enUS.lua"
+  ["Vendor"]="EnhanceQoLVendor/Locales/enUS.lua"
 )
 
 tempfile=$( mktemp )

@@ -1,11 +1,4 @@
-local parentAddonName = "EnhanceQoL"
-local addonName, addon = ...
-if _G[parentAddonName] then
-	addon = _G[parentAddonName]
-else
-	error(parentAddonName .. " is not loaded")
-end
-local L = addon.LVendor
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Vendor", "enUS", true)
 
 L["Vendor"] = "Vendor"
 L["MerchantWindowClosed"] = "Merchant window is closed. Stopping sales"
@@ -32,12 +25,6 @@ L["vendorAddItemToExclude"] = "Add items to this list to exclude for sale. IMPOR
 L["vendorMinIlvl"] = "Mark items with an ilvl below the selected value for autosell"
 L["vendorAbsolutIlvl"] = "Use absolute ilvl for selling gear instead of the minimum equipped ilvl"
 
-for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-	local value = addon.Vendor.variables.tabNames[key]
-	L["labelItemQuality" .. value .. "line"] = "This enabled you to automatically sell "
-		.. ITEM_QUALITY_COLORS[key].hex
-		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
-		.. "|r items based on of filter criteria when at a merchant"
-	L["vendor" .. value .. "Enable"] = "Enable automatic selling for " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r items"
-	L["labelExplained" .. value .. "line"] = "This means it automatically sells " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r items with an ilvl of %s and lower %s"
-end
+L["labelItemQualityline"] = "This enabled you to automatically sell %s items based on of filter criteria when at a merchant"
+L["vendorEnable"] = "Enable automatic selling for %s items"
+L["labelExplainedline"] = "This means it automatically sells %s items with an ilvl of %s and lower %s"

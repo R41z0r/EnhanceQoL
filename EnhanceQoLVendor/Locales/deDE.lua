@@ -1,47 +1,33 @@
-if (GAME_LOCALE or GetLocale()) ~= "deDE" then return end
-local addonName, addon = ...
-local parentAddonName = "EnhanceQoL"
-if _G[parentAddonName] then
-	addon = _G[parentAddonName]
-else
-	error(parentAddonName .. " is not loaded")
-end
-local L = addon.LVendor
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Vendor", "deDE")
+if not L then return end
 
-L["Vendor"] = "Verkäufer"
-L["MerchantWindowClosed"] = "Händlerfenster ist geschlossen. Verkauf wird gestoppt"
+--@localization(locale="deDE", namespace="Vendor", format="lua_additive_table")@
+
+L["Vendor"] = "Händler"
+L["MerchantWindowClosed"] = "Händlerfenster geschlossen. Verkauf gestoppt"
 
 -- Allgemein
-L["vendorMinIlvlDif"] = "Mindestgegenstandsstufe unter meinem Durchschnitt, um zum automatischen Verkauf markiert zu werden"
-L["vendorIgnoreBoE"] = "Beim Anlegen gebundene Gegenstände ignorieren"
+L["vendorMinIlvlDif"] = "Min. Gegenstandsstufe unter meinem Durchschnitt zum automatischen Verkaufen"
+L["vendorIgnoreBoE"] = "Bind-on-Equip-Gegenstände ignorieren"
 L["vendorIgnoreWarbound"] = "Kriegsgebundene Gegenstände ignorieren"
-L["vendorIgnoreUpgradable"] = "Ignoriere upgradebare Gegenstände"
-L["vendorSwapAutoSellShift"] = "Automatisch nur verkaufen, wenn Shift beim Öffnen gehalten wird"
-L["vendorOnly12Items"] = "Begrenzt die Anzahl der verkauften Gegenstände pro Transaktion auf 12, um ein einfacheres Zurückkaufen beim Händler zu ermöglichen."
+L["vendorIgnoreUpgradable"] = "Aufrüstbare Gegenstände ignorieren"
+L["vendorSwapAutoSellShift"] = "Nur automatisch verkaufen, wenn Shift beim Öffnen gehalten wird"
+L["vendorOnly12Items"] = "Begrenzt die Anzahl verkaufter Gegenstände pro Vorgang auf 12, um leichter zurückkaufen zu können"
 
-L["IncludeVendorList"] = "Artikelliste"
-L["ExcludeVendorList"] = "Artikelliste"
-L["Include"] = "Hinzufügen"
+L["IncludeVendorList"] = "Gegenstandsliste"
+L["ExcludeVendorList"] = "Gegenstandsliste"
+L["Include"] = "Einschließen"
 L["Exclude"] = "Ausschließen"
 
 L["Add"] = "Hinzufügen"
 L["Remove"] = "Entfernen"
-L["Item id or drag item"] = "Artikel-ID oder Artikel ziehen"
-L["Item id does not exist"] = "Artikel-ID existiert nicht"
-L["vendorAddItemToInclude"] = "Fügen Sie Artikel zu dieser Liste hinzu, um sie zum Verkauf einzuschließen. WICHTIG: Dies ignoriert alle anderen Prüfungen für diesen Artikel"
-L["vendorAddItemToExclude"] = "Füge Gegenstände zu dieser Liste hinzu, um sie vom Verkauf auszuschließen. WICHTIG: Ausschlüsse haben immer Vorrang, es sei denn, es handelt sich um Müll"
-L["vendorMinIlvl"] = "Markiere Gegenstände mit einem ilvl unter dem ausgewählten Wert zum automatischen Verkaufen"
-L["vendorAbsolutIlvl"] = "Verwende den absoluten ilvl zum Verkaufen von Ausrüstung statt des minimalen ausgerüsteten ilvl"
+L["Item id or drag item"] = "Item-ID oder Gegenstand ziehen"
+L["Item id does not exist"] = "Item-ID existiert nicht"
+L["vendorAddItemToInclude"] = "Füge Gegenstände hinzu, die immer verkauft werden sollen. WICHTIG: Alle anderen Prüfungen werden dabei ignoriert."
+L["vendorAddItemToExclude"] = "Füge Gegenstände hinzu, die niemals verkauft werden sollen. WICHTIG: Ausschluss hat immer Vorrang, außer bei Grauschrott."
+L["vendorMinIlvl"] = "Markiert Gegenstände mit einer Gegenstandsstufe unter dem gewählten Wert zum automatischen Verkauf"
+L["vendorAbsolutIlvl"] = "Absolute Gegenstandsstufe zum Verkaufen verwenden statt minimal ausgerüsteter Gegenstandsstufe"
 
-for _, key in ipairs(addon.Vendor.variables.tabKeyNames) do
-	local value = addon.Vendor.variables.tabNames[key]
-	L["labelItemQuality" .. value .. "line"] = "Dies ermöglicht es Ihnen, "
-		.. ITEM_QUALITY_COLORS[key].hex
-		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
-		.. "|r Gegenstände basierend auf Filterkriterien beim Händler automatisch zu verkaufen."
-	L["vendor" .. value .. "Enable"] = "Automatisches Verkaufen für " .. ITEM_QUALITY_COLORS[key].hex .. _G["ITEM_QUALITY" .. key .. "_DESC"] .. "|r Gegenstände aktivieren"
-	L["labelExplained" .. value .. "line"] = "Das bedeutet, dass automatisch "
-		.. ITEM_QUALITY_COLORS[key].hex
-		.. _G["ITEM_QUALITY" .. key .. "_DESC"]
-		.. "|r Gegenstände mit einer Gegenstandsstufe von %s und niedriger verkauft werden %s"
-end
+L["labelItemQualityline"] = "Ermöglicht das automatische Verkaufen von %s-Gegenständen anhand von Filterkriterien beim Händler"
+L["vendorEnable"] = "Automatischen Verkauf für %s-Gegenstände aktivieren"
+L["labelExplainedline"] = "Das bedeutet: Es verkauft automatisch %s‑Gegenstände mit einer Gegenstandsstufe von %s oder niedriger %s"
