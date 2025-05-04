@@ -864,7 +864,7 @@ local function addObjectiveTrackerFrame(container)
 		groupCore:AddChild(cbElement)
 	end
 	if addon.db["mythicPlusEnableObjectiveTracker"] then
-		local list, order = addon.functions.prepareListForDropdown({ [1] = HIDE, [2] = L["collapse"] })
+		local list, order = addon.functions.prepareListForDropdown({ [1] = L["HideTracker"], [2] = L["collapse"] })
 
 		local dropHideCollapseTracker = addon.functions.createDropdownAce(L["mythicPlusObjectiveTrackerSetting"], list, order, function(self, _, value)
 			addon.db["mythicPlusObjectiveTrackerSetting"] = value

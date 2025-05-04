@@ -3729,8 +3729,8 @@ local eventHandlers = {
 			loadSubAddon("EnhanceQoLAura")
 			loadSubAddon("EnhanceQoLLayoutTools")
 			loadSubAddon("EnhanceQoLQuery")
-			loadSubAddon("EnhanceQoLSound")
 			--@end-debug@
+			loadSubAddon("EnhanceQoLSound")
 			loadSubAddon("EnhanceQoLMouse")
 			loadSubAddon("EnhanceQoLMythicPlus")
 			loadSubAddon("EnhanceQoLDrinkMacro")

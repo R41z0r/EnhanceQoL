@@ -35,11 +35,6 @@ move-folders:
   EnhanceQoL/EnhanceQoLDrinkMacro: EnhanceQoLDrinkMacro
   EnhanceQoL/EnhanceQoLMouse: EnhanceQoLMouse
   EnhanceQoL/EnhanceQoLMythicPlus: EnhanceQoLMythicPlus
+  EnhanceQoL/EnhanceQoLSound: EnhanceQoLSound
   EnhanceQoL/EnhanceQoLTooltip: EnhanceQoLTooltip
   EnhanceQoL/EnhanceQoLVendor: EnhanceQoLVendor
-
-locale:
-  - lang: enUS
-    file: EnhanceQoL/Locales/enUS.lua
-    format: lua_additive_table
-    project-words: true

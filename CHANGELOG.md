@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.11.0] – 2025-05-05
+### ✨ Added
+- Added global language profiles through curseforge
+- New Module Sound
+
+### 🐛 Fixed
+- Missing Faction-specific teleport items on non english clients
+- Objective tracker relied on talent reminder for some reason
+- Missed some translations
+- Some wrong symbols in translations fixed
+
+### Enhance QoL Sound
+- Manage some of the annoying sounds and mute them with an easy click
+
+---
+
 ## [3.10.0] – 2025-05-03
 ### Added
 - **Auction House Filter Persistence** – remembers your Auction House search filters for the entire session.
@@ -8,7 +24,7 @@
 - **Module Icons** – refreshed symbol set for all module toggles.
 - **Module naming cleanup** – removed the `Enhance QoL` prefix from all sub‑addon folder names for shorter, clearer titles.
 
-### Fixed
+### 🐛 Fixed
 - Lua error when inspecting another player.
 
 ---

@@ -28,3 +28,4 @@ L["vendorAbsolutIlvl"] = "Use absolute ilvl for selling gear instead of the mini
 L["labelItemQualityline"] = "This enabled you to automatically sell %s items based on of filter criteria when at a merchant"
 L["vendorEnable"] = "Enable automatic selling for %s items"
 L["labelExplainedline"] = "This means it automatically sells %s items with an ilvl of %s and lower %s"
+L["andWord"] = "and"

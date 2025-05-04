@@ -115,3 +115,4 @@ L["mythicPlusObjectiveTrackerSetting"] = "Behavior"
 L["collapse"] = "Collapse"
 
 L["mythicPlusNoHealerMark"] = "Remove the marker from me when I’m in the healer role"
+L["HideTracker"] = "Hide"

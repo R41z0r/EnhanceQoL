@@ -196,7 +196,7 @@ local function addVendorFrame(container, type)
 			lIlvl = addon.Vendor.variables.avgItemLevelEquipped - sValue2
 		end
 
-		labelHeadlineExplain:SetText("|cffffd700" .. string.format(L["labelExplainedline"], lIlvl, table.concat(text, " and ")) .. "|r")
+		labelHeadlineExplain:SetText("|cffffd700" .. string.format(L["labelExplainedline"], lIlvl, table.concat(text, " " .. L["andWord"] .. " ")) .. "|r")
 		wrapper:DoLayout()
 	end
 

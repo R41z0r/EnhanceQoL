@@ -62,7 +62,7 @@ local function registerEvents(frame)
 	end
 end
 local function eventHandler(self, event, ...)
-	if addon.db["talentReminderEnabled"] then
+	if addon.db["mythicPlusEnableObjectiveTracker"] then
 		if eventHandlers[event] then eventHandlers[event](...) end
 	end
 end

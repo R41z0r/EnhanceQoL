@@ -16,7 +16,7 @@ local allSpells = {} --  for Cooldown checking
 local mapInfo = {}
 local mapIDInfo = {}
 local selectedMapId
-local faction = UnitFactionGroup("player")
+local faction = select(2, UnitFactionGroup("player"))
 
 local GetItemCooldown = C_Item.GetItemCooldown
 local GetItemCount = C_Item.GetItemCount
