@@ -7,7 +7,7 @@ if [ -f ".env" ]; then
 	. ".env"
 fi
 
-[ -z "$cf_token" ] && cf_token=$CURSE_API_TOKEN
+[ -z "$cf_token" ] && cf_token=$CF_API_KEY
 
 declare -A locale_files=(
   # core module
@@ -31,7 +31,7 @@ do_import() {
 
   echo -n "Importing $namespace..."
   result=$( curl -sS -0 -X POST -w "%{http_code}" -o "$tempfile" \
-    -H "X-Api-Token: $CURSE_API_TOKEN" \
+    -H "X-Api-Token: $CF_API_KEY" \
     -F "metadata={ language: \"enUS\", namespace: \"$namespace\", \"missing-phrase-handling\": \"DeletePhrase\" }" \
     -F "localizations=<$file" \
     "https://legacy.curseforge.com/api/projects/1076354/localization/import"
