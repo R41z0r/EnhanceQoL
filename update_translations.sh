@@ -22,18 +22,20 @@ declare -A locale_files=(
 )
 
 tempfile=$( mktemp )
-trap 'rm -f $tempfile' EXIT
+trap 'rm -f $tempfile $cleanfile' EXIT
 
 do_import() {
   namespace="$1"
   file="$2"
+  cleanfile=$( mktemp )
+  sed -n '/L\["/,$p' "$file" > "$cleanfile"
   : > "$tempfile"
 
   echo -n "Importing $namespace..."
   result=$( curl -sS -0 -X POST -w "%{http_code}" -o "$tempfile" \
     -H "X-Api-Token: $CF_API_KEY" \
     -F "metadata={ language: \"enUS\", namespace: \"$namespace\", \"missing-phrase-handling\": \"DeletePhrase\" }" \
-    -F "localizations=<$file" \
+    -F "localizations=<$cleanfile" \
     "https://legacy.curseforge.com/api/projects/1076354/localization/import"
   ) || exit 1
   case $result in
