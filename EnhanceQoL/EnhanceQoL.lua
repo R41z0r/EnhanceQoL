@@ -18,6 +18,7 @@ local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local EQOL = select(2, ...)
 EQOL.C = {}
 
+-- localeadditions
 local headerClassInfo = L["headerClassInfo"]:format(select(1, UnitClass("player")))
 
 hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
@@ -1189,7 +1190,14 @@ local function addActionBarFrame(container, d)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["ActionbarHideExplain"] .. "|r", nil, nil, 14)
+	local labelHeadline = addon.functions.createLabelAce(
+		"|cffffd700"
+			.. L["ActionbarHideExplain"]:format(_G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"], _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"], _G["HUD_EDIT_MODE_MENU"])
+			.. "|r",
+		nil,
+		nil,
+		14
+	)
 	labelHeadline:SetFullWidth(true)
 	groupCore:AddChild(labelHeadline)
 
@@ -1497,12 +1505,14 @@ local function addBagFrame(container)
 		{
 			parent = BAGSLOT,
 			var = "showIlvlOnMerchantframe",
+			text = L["showIlvlOnMerchantframe"],
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["showIlvlOnMerchantframe"] = value end,
 		},
 		{
 			parent = BAGSLOT,
 			var = "showIlvlOnBagItems",
+			text = L["showIlvlOnBagItems"],
 			type = "CheckBox",
 			callback = function(self, _, value)
 				addon.db["showIlvlOnBagItems"] = value
@@ -1515,6 +1525,7 @@ local function addBagFrame(container)
 		{
 			parent = BAGSLOT,
 			var = "showBagFilterMenu",
+			text = L["showBagFilterMenu"],
 			desc = (L["showBagFilterMenuDesc"]):format(SHIFT_KEY_TEXT),
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1541,6 +1552,7 @@ local function addBagFrame(container)
 		{
 			parent = BAGSLOT,
 			var = "enableMoneyTracker",
+			text = L["enableMoneyTracker"],
 			desc = L["enableMoneyTrackerDesc"],
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1552,6 +1564,7 @@ local function addBagFrame(container)
 		{
 			parent = BAGSLOT,
 			var = "showIlvlOnBankFrame",
+			text = L["showIlvlOnBankFrame"],
 			type = "CheckBox",
 			callback = function(self, _, value)
 				addon.db["showIlvlOnBankFrame"] = value
@@ -1573,6 +1586,7 @@ local function addBagFrame(container)
 		{
 			parent = BAGSLOT,
 			var = "showBindOnBagItems",
+			text = L["showBindOnBagItems"]:format(_G.ITEM_BIND_ON_EQUIP, _G.ITEM_ACCOUNTBOUND_UNTIL_EQUIP, _G.ITEM_BNETACCOUNTBOUND),
 			type = "CheckBox",
 			callback = function(self, _, value)
 				addon.db["showBindOnBagItems"] = value
@@ -1585,6 +1599,7 @@ local function addBagFrame(container)
 		{
 			parent = BAGSLOT,
 			var = "fadeBagQualityIcons",
+			text = L["fadeBagQualityIcons"],
 			type = "CheckBox",
 			callback = function(self, _, value)
 				addon.db["fadeBagQualityIcons"] = value
@@ -1614,7 +1629,7 @@ local function addBagFrame(container)
 	for _, checkboxData in ipairs(data) do
 		local desc
 		if checkboxData.desc then desc = checkboxData.desc end
-		local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], checkboxData.callback, desc)
+		local cbautoChooseQuest = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], checkboxData.callback, desc)
 		groupCore:AddChild(cbautoChooseQuest)
 	end
 
@@ -1626,6 +1641,7 @@ local function addBagFrame(container)
 		local data = {
 			{
 				var = "showOnlyGoldOnMoney",
+				text = L["showOnlyGoldOnMoney"],
 				type = "CheckBox",
 				callback = function(self, _, value) addon.db["showOnlyGoldOnMoney"] = value end,
 			},
@@ -1648,7 +1664,7 @@ local function addBagFrame(container)
 		for _, checkboxData in ipairs(data) do
 			local desc
 			if checkboxData.desc then desc = checkboxData.desc end
-			local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], checkboxData.callback, desc)
+			local cbautoChooseQuest = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], checkboxData.callback, desc)
 			groupMoney:AddChild(cbautoChooseQuest)
 		end
 
@@ -1925,12 +1941,14 @@ local function addMiscFrame(container, d)
 		{
 			parent = "",
 			var = "deleteItemFillDialog",
+			text = L["deleteItemFillDialog"]:format(DELETE_ITEM_CONFIRM_STRING),
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["deleteItemFillDialog"] = value end,
 		},
 		{
 			parent = "",
 			var = "confirmPatronOrderDialog",
+			text = (L["confirmPatronOrderDialog"]):format(PROFESSIONS_CRAFTER_ORDER_TAB_NPC),
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["confirmPatronOrderDialog"] = value end,
 		},
@@ -1971,6 +1989,7 @@ local function addQuestFrame(container, d)
 		{
 			parent = "",
 			var = "autoChooseQuest",
+			text = L["autoChooseQuest"],
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db[self.var] = value end,
 			desc = L["interruptWithShift"],
@@ -1978,18 +1997,21 @@ local function addQuestFrame(container, d)
 		{
 			parent = "",
 			var = "ignoreDailyQuests",
+			text = L["ignoreDailyQuests"]:format(QUESTS_LABEL),
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db[self.var] = value end,
 		},
 		{
 			parent = "",
 			var = "ignoreWarbandCompleted",
+			text = L["ignoreWarbandCompleted"]:format(ACCOUNT_COMPLETED_QUEST_LABEL, QUESTS_LABEL),
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db[self.var] = value end,
 		},
 		{
 			parent = "",
 			var = "ignoreTrivialQuests",
+			text = L["ignoreTrivialQuests"]:format(QUESTS_LABEL),
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db[self.var] = value end,
 		},
@@ -2012,7 +2034,7 @@ local function addQuestFrame(container, d)
 	for _, checkboxData in ipairs(groupData) do
 		local desc
 		if checkboxData.desc then desc = checkboxData.desc end
-		local cbautoChooseQuest = addon.functions.createCheckboxAce(L[checkboxData.var], addon.db[checkboxData.var], function(self, _, value) addon.db[checkboxData.var] = value end, desc)
+		local cbautoChooseQuest = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], function(self, _, value) addon.db[checkboxData.var] = value end, desc)
 		groupCore:AddChild(cbautoChooseQuest)
 	end
 

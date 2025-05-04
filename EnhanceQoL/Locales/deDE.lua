@@ -25,7 +25,7 @@ L["enableMoneyTrackerDesc"] = "Wenn du in deinen Taschen über dein Gold hoverst
 L["showOnlyGoldOnMoney"] = "Nur Gold des Accounts anzeigen (Silber / Kupfer ausblenden)"
 L["moneyTrackerRemovePlayer"] = "Alle bekannten Charaktere"
 L["showBagFilterMenu"] = "Gegenstandsfilter in Taschen aktivieren"
-L["showBagFilterMenuDesc"] = ("Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist. Halte %s, um das Fenster zu verschieben"):format(SHIFT_KEY_TEXT)
+L["showBagFilterMenuDesc"] = "Nur nutzbar, wenn „Taschen zusammenfassen“ aktiviert ist. Halte %s, um das Fenster zu verschieben"
 L["fadeBagQualityIcons"] = "Ausblenden der Berufssymbol-Qualität bei Suche und Filter aktivieren"
 L["bagFilterSpec"] = "Für Spezialisierung empfohlen"
 L["bagFilterEquip"] = "Nur Ausrüstung"
@@ -33,13 +33,7 @@ L["showIlvlOnBankFrame"] = "Zeige Gegenstandsstufe im Bankfenster an"
 L["showIlvlOnMerchantframe"] = "Gegenstandslevel im Händlerfenster anzeigen"
 L["showIlvlOnCharframe"] = "Gegenstandsstufe im Charakterausrüstungsfenster anzeigen"
 L["showGemsOnCharframe"] = "Sockelplätze im Charakterausrüstungsfenster anzeigen"
-L["showBindOnBagItems"] = "Zeigt "
-	.. _G.ITEM_BIND_ON_EQUIP
-	.. " (BoE), "
-	.. _G.ITEM_ACCOUNTBOUND_UNTIL_EQUIP
-	.. " (WuE) und "
-	.. _G.ITEM_BNETACCOUNTBOUND
-	.. " (WB) zusätzlich zur Gegenstandsstufe auf Gegenständen an"
+L["showBindOnBagItems"] = "Zeigt %s (BoE), %s (WuE) und %s (WB) zusätzlich zur Gegenstandsstufe auf Gegenständen an"
 L["showGemsTooltipOnCharframe"] = "Zeige Edelstein-Sockel-Tooltip im Charakterausrüstungsfenster"
 L["showEnchantOnCharframe"] = "Verzauberungen im Charakterausrüstungsfenster anzeigen"
 L["showCatalystChargesOnCharframe"] = "Katalysatorladungen im Charakterausrüstungsfenster anzeigen"

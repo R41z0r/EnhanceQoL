@@ -34,13 +34,7 @@ L["showIlvlOnBankFrame"] = "Display item level on the Bank Frame"
 L["showIlvlOnMerchantframe"] = "Display item level on the Merchant Frame"
 L["showIlvlOnCharframe"] = "Display item level on Character Equipment Frame"
 L["showGemsOnCharframe"] = "Display gem slots on Character Equipment Frame"
-L["showBindOnBagItems"] = "Display "
-	.. _G.ITEM_BIND_ON_EQUIP
-	.. " (BoE), "
-	.. _G.ITEM_ACCOUNTBOUND_UNTIL_EQUIP
-	.. " (WuE), and "
-	.. _G.ITEM_BNETACCOUNTBOUND
-	.. " (WB) as an addition to item level on items"
+L["showBindOnBagItems"] = "Display %s (BoE), %s (WuE), and %s (WB) as an addition to item level on items"
 L["showGemsTooltipOnCharframe"] = "Display gem slots tooltip on Character Equipment Frame"
 L["showEnchantOnCharframe"] = "Display enchants on Character Equipment Frame"
 L["showCatalystChargesOnCharframe"] = "Display Catalyst charges on Character Equipment Frame"
@@ -54,8 +48,8 @@ L["hideHitIndicatorPet"] = "Hide floating combat text (damage and healing) over 
 L["UnitFrame"] = "UnitFrame"
 L["SellJunkIgnoredBag"] = "You have ignored junk on %d bags.\nThis may prevent selling all junk items automatically."
 
-L["deleteItemFillDialog"] = 'Add "' .. DELETE_ITEM_CONFIRM_STRING .. '" to the "Delete confirmation Popup"'
-L["confirmPatronOrderDialog"] = "Automatically confirm to use own materials on " .. PROFESSIONS_CRAFTER_ORDER_TAB_NPC .. " crafting orders"
+L["deleteItemFillDialog"] = 'Add "%s" to the "Delete confirmation Popup"'
+L["confirmPatronOrderDialog"] = "Automatically confirm to use own materials on %s crafting orders"
 L["autoChooseQuest"] = "Automatically accept and complete Quests"
 L["confirmTimerRemovalTrade"] = "Automatically confirm to sell tradeable loot within the trade window time frame"
 
@@ -81,9 +75,9 @@ L["groupfinderSkipRolecheckUseSpec"] = "Use your current spec's role (e.g. Blood
 L["groupfinderSkipRolecheckUseLFD"] = "Use roles from Dungeon Finder"
 
 -- Quest
-L["ignoreTrivialQuests"] = "Don't automatically handle trivial " .. QUESTS_LABEL
-L["ignoreDailyQuests"] = "Don't automatically handle daily/weekly " .. QUESTS_LABEL
-L["ignoreWarbandCompleted"] = "Don't automatically handle " .. ACCOUNT_COMPLETED_QUEST_LABEL .. " " .. QUESTS_LABEL
+L["ignoreTrivialQuests"] = "Don't automatically handle trivial %s"
+L["ignoreDailyQuests"] = "Don't automatically handle daily/weekly %s"
+L["ignoreWarbandCompleted"] = "Don't automatically handle %s %s"
 
 L["autoQuickLoot"] = "Quick loot items"
 L["openCharframeOnUpgrade"] = "Open the character frame when upgrading items at the vendor"
@@ -98,7 +92,6 @@ L["evoker_HideEssence"] = "Hide Essencebar"
 
 -- Monk
 L["monk_HideHarmonyBar"] = "Hide Harmonybar"
-L["monk_MuteBanlu"] = MUTE .. ": Ban-Lu"
 -- Paladin
 L["paladin_HideHolyPower"] = "Hide Holypowerbar"
 
@@ -121,21 +114,21 @@ L["CVar"] = "CVar"
 L["tReloadInterface"] = "Interface Reload Required"
 L["bReloadInterface"] = "You need to reload your interface to apply changes"
 
-L["CVarOptions"] = {
-	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities" },
-	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities while flying" },
-	["chatMouseScroll"] = { description = "Enable mouse scroll in chat", trueValue = "1", falseValue = "0" },
-	["ffxDeath"] = { description = "Disable death effects", trueValue = "0", falseValue = "1" },
-	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Enable Map Fade while moving" },
-	["scriptErrors"] = { description = "Show LUA-Error on UI", trueValue = "1", falseValue = "0" },
-	["ShowClassColorInNameplate"] = { description = "Show class colors on nameplates", trueValue = "1", falseValue = "0" },
-	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Show the Castbar of your Target" },
-	["showTutorials"] = { description = "Disable tutorials", trueValue = "0", falseValue = "1" },
-	["UberTooltips"] = { description = "Enable enhanced tooltips", trueValue = "1", falseValue = "0" },
-	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Show the Guild on Players" },
-	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Show the Title on Players" },
-	["WholeChatWindowClickable"] = { description = "Make the entire chat window clickable", trueValue = "1", falseValue = "0" },
-}
+-- L["CVarOptions"] = {
+-- 	["autoDismount"] = { trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities" },
+-- 	["autoDismountFlying"] = { trueValue = "1", falseValue = "0", description = "Enable autodismount when using abilities while flying" },
+-- 	["chatMouseScroll"] = { description = "Enable mouse scroll in chat", trueValue = "1", falseValue = "0" },
+-- 	["ffxDeath"] = { description = "Disable death effects", trueValue = "0", falseValue = "1" },
+-- 	["mapFade"] = { trueValue = "1", falseValue = "0", description = "Enable Map Fade while moving" },
+-- 	["scriptErrors"] = { description = "Show LUA-Error on UI", trueValue = "1", falseValue = "0" },
+-- 	["ShowClassColorInNameplate"] = { description = "Show class colors on nameplates", trueValue = "1", falseValue = "0" },
+-- 	["ShowTargetCastbar"] = { trueValue = "1", falseValue = "0", description = "Show the Castbar of your Target" },
+-- 	["showTutorials"] = { description = "Disable tutorials", trueValue = "0", falseValue = "1" },
+-- 	["UberTooltips"] = { description = "Enable enhanced tooltips", trueValue = "1", falseValue = "0" },
+-- 	["UnitNamePlayerGuild"] = { trueValue = "1", falseValue = "0", description = "Show the Guild on Players" },
+-- 	["UnitNamePlayerPVPTitle"] = { trueValue = "1", falseValue = "0", description = "Show the Title on Players" },
+-- 	["WholeChatWindowClickable"] = { description = "Make the entire chat window clickable", trueValue = "1", falseValue = "0" },
+-- }
 
 L["autoAcceptGroupInvite"] = "Automatically accept group invites"
 L["autoAcceptGroupInviteGuildOnly"] = "Guild members"
@@ -145,13 +138,7 @@ L["autoAcceptGroupInviteOptions"] = "Accept invites from..."
 L["showLeaderIconRaidFrame"] = "Show leader icon on raid-style party frames"
 L["showPartyFrameInSoloContent"] = "Show Party Frames in Solo Content"
 
-L["ActionbarHideExplain"] = 'Set the action bar to hidden and show on mouseover. This works only when your Action Bar is set to "'
-	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_VISIBLE_SETTING_ALWAYS"]
-	.. '" and "'
-	.. _G["HUD_EDIT_MODE_SETTING_ACTION_BAR_ALWAYS_SHOW_BUTTONS"]
-	.. '" in '
-	.. _G["HUD_EDIT_MODE_MENU"]
-	.. "."
+L["ActionbarHideExplain"] = 'Set the action bar to hidden and show on mouseover. This works only when your Action Bar is set to "%s" and "%s" in %s'
 
 L["enableMinimapButtonBin"] = "Enable Minimap Button Sink"
 L["enableMinimapButtonBinDesc"] = "Collect all minimap buttons in a single button"
