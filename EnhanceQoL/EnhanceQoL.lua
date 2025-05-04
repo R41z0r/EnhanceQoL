@@ -18,6 +18,8 @@ local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local EQOL = select(2, ...)
 EQOL.C = {}
 
+local headerClassInfo = L["headerClassInfo"]  .. select(1, UnitClass("player"))
+
 hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
 	local panel = LFGListFrame.SearchPanel
 	if button ~= "RightButton" and LFGListSearchPanelUtil_CanSelectResult(s.resultID) and panel.SignUpButton:IsEnabled() then
@@ -1299,7 +1301,7 @@ end
 
 local function addTotemHideToggle(dbValue, data)
 	table.insert(data, {
-		parent = L["headerClassInfo"],
+		parent = headerClassInfo,
 		var = dbValue,
 		text = L["shaman_HideTotem"],
 		type = "CheckBox",
@@ -1513,7 +1515,7 @@ local function addBagFrame(container)
 		{
 			parent = BAGSLOT,
 			var = "showBagFilterMenu",
-			desc = L["showBagFilterMenuDesc"],
+			desc = (L["showBagFilterMenuDesc"]):format(SHIFT_KEY_TEXT),
 			type = "CheckBox",
 			callback = function(self, _, value)
 				addon.db["showBagFilterMenu"] = value
@@ -1783,7 +1785,7 @@ local function addCharacterFrame(container)
 	-- Classspecific stuff
 	if classname == "DEATHKNIGHT" then
 		table.insert(data, {
-			parent = L["headerClassInfo"],
+			parent = headerClassInfo,
 			var = "deathknight_HideRuneFrame",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1799,7 +1801,7 @@ local function addCharacterFrame(container)
 	elseif classname == "DRUID" then
 		addTotemHideToggle("druid_HideTotemBar", data)
 		table.insert(data, {
-			parent = L["headerClassInfo"],
+			parent = headerClassInfo,
 			var = "druid_HideComboPoint",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1813,7 +1815,7 @@ local function addCharacterFrame(container)
 		})
 	elseif classname == "EVOKER" then
 		table.insert(data, {
-			parent = L["headerClassInfo"],
+			parent = headerClassInfo,
 			var = "evoker_HideEssence",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1829,7 +1831,7 @@ local function addCharacterFrame(container)
 		addTotemHideToggle("mage_HideTotemBar", data)
 	elseif classname == "MONK" then
 		table.insert(data, {
-			parent = L["headerClassInfo"],
+			parent = headerClassInfo,
 			var = "monk_HideHarmonyBar",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1848,7 +1850,7 @@ local function addCharacterFrame(container)
 		addTotemHideToggle("shaman_HideTotem", data)
 	elseif classname == "ROGUE" then
 		table.insert(data, {
-			parent = L["headerClassInfo"],
+			parent = headerClassInfo,
 			var = "rogue_HideComboPoint",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1862,7 +1864,7 @@ local function addCharacterFrame(container)
 		})
 	elseif classname == "PALADIN" then
 		table.insert(data, {
-			parent = L["headerClassInfo"],
+			parent = headerClassInfo,
 			var = "paladin_HideHolyPower",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -1877,7 +1879,7 @@ local function addCharacterFrame(container)
 		addTotemHideToggle("paladin_HideTotemBar", data)
 	elseif classname == "WARLOCK" then
 		table.insert(data, {
-			parent = L["headerClassInfo"],
+			parent = headerClassInfo,
 			var = "warlock_HideSoulShardBar",
 			type = "CheckBox",
 			callback = function(self, _, value)

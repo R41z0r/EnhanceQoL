@@ -1,7 +1,5 @@
-if (GAME_LOCALE or GetLocale()) ~= "deDE" then return end
-local addonName, addon = ...
-
-local L = addon.L
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL", "deDE")
+if not L then return end
 
 L["Quick signup"] = "Schnellanmeldung für Dungeon-Such-Tool"
 L["interruptWithShift"] = "Halte die Umschalttaste gedrückt, um diese Funktion zu unterbrechen"

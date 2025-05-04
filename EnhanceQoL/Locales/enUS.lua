@@ -1,6 +1,6 @@
 local addonName, addon = ...
 
-local L = addon.L
+local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL", "enUS", true) -- “true” = default / fallback
 
 L["Quick signup"] = "Quick signup"
 L["interruptWithShift"] = "Hold shift to interrupt that feature"
@@ -26,7 +26,7 @@ L["enableMoneyTrackerDesc"] = "When you mouse over your gold in your bags, you c
 L["showOnlyGoldOnMoney"] = "Show account gold only (hide silver and copper)"
 L["moneyTrackerRemovePlayer"] = "All known characters"
 L["showBagFilterMenu"] = "Enable item filter in bags"
-L["showBagFilterMenuDesc"] = ("Only usable when Combined Bags is enabled. Hold %s to move the frame"):format(SHIFT_KEY_TEXT)
+L["showBagFilterMenuDesc"] = "Only usable when Combined Bags is enabled. Hold %s to move the frame"
 L["fadeBagQualityIcons"] = "Fade profession quality icons during search and filtering"
 L["bagFilterSpec"] = "Recommended for Specialization"
 L["bagFilterEquip"] = "Equipment Only"
@@ -88,7 +88,7 @@ L["ignoreWarbandCompleted"] = "Don't automatically handle " .. ACCOUNT_COMPLETED
 L["autoQuickLoot"] = "Quick loot items"
 L["openCharframeOnUpgrade"] = "Open the character frame when upgrading items at the vendor"
 
-L["headerClassInfo"] = "These settings only apply to " .. select(1, UnitClass("player"))
+L["headerClassInfo"] = "These settings only apply to %s"
 
 -- Deathknight
 L["deathknight_HideRuneFrame"] = "Hide Runeframe"
