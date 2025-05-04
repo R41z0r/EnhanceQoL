@@ -3,7 +3,7 @@ local addonName, addon = ...
 addon.functions = {}
 local AceGUI = LibStub("AceGUI-3.0")
 
-local L = addon.L
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL")
 
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local GetItemInfoInstant = C_Item.GetItemInfoInstant

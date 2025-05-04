@@ -16,7 +16,8 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local L = addon.LDrinkMacro
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_DrinkMacro")
+
 -- Enable or disable the food reminder frame
 addon.functions.InitDBValue("mageFoodReminder", false)
 

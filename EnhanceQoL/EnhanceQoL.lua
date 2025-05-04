@@ -1,5 +1,4 @@
 local addonName, addon = ...
-local L = addon.L
 
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LibStub("LibDBIcon-1.0")
@@ -11,6 +10,7 @@ local AceDBOptions = LibStub("AceDBOptions-3.0")
 local defaults = { profile = {} }
 
 addon.AceGUI = AceGUI
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL")
 
 local LFGListFrame = _G.LFGListFrame
 local GetContainerItemInfo = C_Container.GetContainerItemInfo
@@ -2532,7 +2532,6 @@ local function initUI()
 			"hideMicroMenu",
 		},
 	})
-	-- table.insert(addon.variables.unitFrameNames, { name = "MicroMenu", var = "unitframeSettingMicroMenu", text = addon.L["MicroMenu"], children = { MicroMenu:GetChildren() } })
 	table.insert(addon.variables.unitFrameNames, {
 		name = "BagsBar",
 		var = "unitframeSettingBagsBar",
