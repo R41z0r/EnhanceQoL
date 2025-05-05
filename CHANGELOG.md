@@ -2,17 +2,18 @@
 
 ## [3.11.0] – 2025-05-05
 ### ✨ Added
-- Added global language profiles through curseforge
-- New Module Sound
+- Add global language profiles (via CurseForge)
+- Add new **Sound** module
 
 ### 🐛 Fixed
-- Missing Faction-specific teleport items on non english clients
-- Objective tracker relied on talent reminder for some reason
-- Missed some translations
-- Some wrong symbols in translations fixed
+- Fix missing faction-specific teleport items in non-English clients
+- Fix Objective Tracker erroneously depending on the *Talent Reminder* module
+- Fix several missing translations
+- Fix wrong symbols in localisation strings
+- Fix default WoW bag search not working with separated bags
 
-### Enhance QoL Sound
-- Manage some of the annoying sounds and mute them with an easy click
+### 🔊 Improved
+- Add one-click mute options for several annoying game sounds (still a work in progress)
 
 ---
 

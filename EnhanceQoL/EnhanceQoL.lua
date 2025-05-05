@@ -3062,32 +3062,12 @@ local function initCharacter()
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
 		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
-		hooksecurefunc(frame, "UpdateSearchResults", addon.functions.updateBags)
 	end
 
 	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
 	hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
 
 	if _G.AccountBankPanel then
-		-- local  knownButtons = {}
-		-- local update = function(frame)
-		-- 	if nil == knownButtons then
-		-- 		knownButtons = {}
-		-- 	else
-		-- 		for i, v in pairs(knownButtons) do
-		-- 			if v.ItemLevelText then v.ItemLevelText:Hide() end
-		-- 		end
-		-- 	end
-		-- 	knownButtons = {} -- clear the list again
-		-- 	if addon.db["showIlvlOnBankFrame"] then
-		-- 		for itemButton in frame:EnumerateValidItems() do
-		-- 			local bag = itemButton:GetBankTabID()
-		-- 			local slot = itemButton:GetContainerSlotID()
-		-- 			if bag and slot then addon.functions.updateBank(itemButton, bag, slot) end
-		-- 			table.insert(knownButtons, itemButton)
-		-- 		end
-		-- 	end
-		-- end
 		hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", addon.functions.updateBags)
 		hooksecurefunc(AccountBankPanel, "RefreshAllItemsForSelectedTab", addon.functions.updateBags)
 		hooksecurefunc(AccountBankPanel, "UpdateSearchResults", addon.functions.updateBags)
