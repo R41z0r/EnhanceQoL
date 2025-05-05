@@ -127,8 +127,17 @@ local function addClassFrame(container, group, sounds)
 			return lA < lB
 		end) -- Alphabetisch sortieren
 
+		local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+		scroll:SetFullWidth(true)
+		scroll:SetFullHeight(true)
+		container:AddChild(scroll)
+
 		local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-		container:AddChild(wrapper)
+		scroll:AddChild(wrapper)
+
+		local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["soundMuteExplained"] .. "|r", nil, nil, 14)
+		labelHeadline:SetFullWidth(true)
+		wrapper:AddChild(labelHeadline)
 
 		local groupCore = addon.functions.createContainer("InlineGroup", "List")
 		wrapper:AddChild(groupCore)
@@ -156,6 +165,15 @@ local function addDebugFrame(container)
 	local cbElement = addon.functions.createCheckboxAce("Enable Debug", addon.db["sounds_DebugEnabled"], function(self, _, value) addon.db["sounds_DebugEnabled"] = value end)
 	groupCore:AddChild(cbElement)
 end
+
+hooksecurefunc("PlaySound", function(soundID, channel, forceNoDuplicates)
+	if addon.db["sounds_DebugEnabled"] then print("Sound played:", soundID, "on channel:", channel) end
+end)
+
+-- Hook für PlaySoundFile
+hooksecurefunc("PlaySoundFile", function(soundFile, channel)
+	if addon.db["sounds_DebugEnabled"] then print("Sound file played:", soundFile, "on channel:", channel) end
+end)
 --@end-debug@
 
 local function addTWWFrame(container, group) addClassFrame() end
@@ -189,15 +207,6 @@ function addon.Sounds.functions.treeCallback(container, group)
 		end
 	end
 end
-
-hooksecurefunc("PlaySound", function(soundID, channel, forceNoDuplicates)
-	if addon.db["sounds_DebugEnabled"] then print("Sound played:", soundID, "on channel:", channel) end
-end)
-
--- Hook für PlaySoundFile
-hooksecurefunc("PlaySoundFile", function(soundFile, channel)
-	if addon.db["sounds_DebugEnabled"] then print("Sound file played:", soundFile, "on channel:", channel) end
-end)
 
 for topic in pairs(addon.Sounds.soundFiles) do
 	if topic == "emotes" then
