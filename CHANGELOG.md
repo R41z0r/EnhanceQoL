@@ -1,19 +1,25 @@
 # Changelog
 
-## [3.11.0] – 2025-05-05
+## [3.11.0] – 2025‑05‑05
 ### ✨ Added
-- Add global language profiles (via CurseForge)
-- Add new **Sound** module
+- **Global Language Profiles** – automatically switches the entire addon to the language selected on CurseForge.
+- **Sound** module – central hub to toggle (or mute) specific in‑game sounds.
+- **Keystone Helper** – brand‑new UI with integrated pull‑timer, ready‑check status and auto‑keystone tools.
 
 ### 🐛 Fixed
-- Fix missing faction-specific teleport items in non-English clients
-- Fix Objective Tracker erroneously depending on the *Talent Reminder* module
-- Fix several missing translations
-- Fix wrong symbols in localisation strings
-- Fix default WoW bag search not working with separated bags
+- Faction‑specific teleport items missing on non‑English clients.
+- Objective Tracker erroneously depended on the *Talent Reminder* module.
+- Multiple missing translations and malformed localisation symbols.
+- Default WoW bag search failed when “separate bags” was enabled.
 
 ### 🔊 Improved
-- Add one-click mute options for several annoying game sounds (still a work in progress)
+- One‑click mute buttons for several annoying game sounds (roll‑out continues).
+
+### 🎨 UI
+- Polished Autokeystone & Pull‑Timer design  
+  • Cleaner layout and visuals  
+  • Animated status icon that reflects the ready‑check result  
+  • Option to revert to the legacy look
 
 ---
 

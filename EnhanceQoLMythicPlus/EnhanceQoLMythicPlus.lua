@@ -198,9 +198,87 @@ hooksecurefunc(ScenarioTrackerProgressBarMixin, "SetValue", function(self, perce
 	end
 end)
 
+local function createButtons()
+	if not addon.db["enableKeystoneHelperNewUI"] then
+		addon.MythicPlus.functions.addButton(ChallengesKeystoneFrame, "ReadyCheck", L["ReadyCheck"], function(self, button)
+			if self:GetText() == L["ReadyCheck"] then
+				DoReadyCheck()
+				self:SetText(L["ReadyCheckWaiting"])
+			end
+		end)
+		-- Button for Pulltimer
+		addon.MythicPlus.functions.addButton(ChallengesKeystoneFrame, "PullTimer", L["PullTimer"], function(self, button)
+			if addon.MythicPlus.variables.handled == false then
+				addon.MythicPlus.Buttons["PullTimer"]:SetText(L["Stating"])
+				addon.MythicPlus.variables.breakIt = false
+				addon.MythicPlus.variables.handled = true
+				local x = nil
+				-- Set time based on settings choosen
+				if button == "RightButton" then
+					x = addon.db["pullTimerShortTime"]
+				else
+					x = addon.db["pullTimerLongTime"]
+				end
+				local cTime = x
+
+				C_Timer.NewTicker(1, function(self)
+					if addon.MythicPlus.variables.breakIt then
+						self:Cancel()
+						C_PartyInfo.DoCountdown(0)
+						if addon.db["noChatOnPullTimer"] == false then SendChatMessage("PULL Canceled", "Party") end
+						C_ChatInfo.SendAddonMessage("D4", ("PT\t%s\t%d"):format(0, instanceId), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
+					end
+
+					if x == 0 then
+						self:Cancel()
+						addon.MythicPlus.variables.handled = false
+						if addon.db["noChatOnPullTimer"] == false then SendChatMessage(">>PULL NOW<<", "Party") end
+						if addon.db["autoKeyStart"] == false then
+							addon.MythicPlus.Buttons["PullTimer"]:SetText(L["PullTimer"])
+						elseif addon.db["autoKeyStart"] and nil ~= C_ChallengeMode.GetSlottedKeystoneInfo() then
+							C_ChallengeMode.StartChallengeMode()
+							ChallengesKeystoneFrame:Hide()
+						end
+					else
+						if x == cTime then
+							local _, _, _, _, _, _, _, id = GetInstanceInfo()
+							local instanceId = tonumber(id) or 0
+							if addon.db["PullTimerType"] == 2 or addon.db["PullTimerType"] == 4 then C_PartyInfo.DoCountdown(cTime) end
+							if addon.db["PullTimerType"] == 3 or addon.db["PullTimerType"] == 4 then
+								C_ChatInfo.SendAddonMessage("D4", ("PT\t%s\t%d"):format(cTime, instanceId), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
+							end
+						end
+						if addon.MythicPlus.variables.breakIt == false then
+							if addon.db["cancelPullTimerOnClick"] == true then
+								addon.MythicPlus.Buttons["PullTimer"]:SetText(L["Cancel"] .. " (" .. x .. ")")
+							else
+								addon.MythicPlus.Buttons["PullTimer"]:SetText(L["Pull"] .. " (" .. x .. ")")
+							end
+						end
+						if addon.MythicPlus.variables.breakIt == false then
+							if addon.db["noChatOnPullTimer"] == false then SendChatMessage(format("PULL in %ds", x), "Party") end
+						end
+					end
+					x = x - 1
+				end)
+			else
+				if addon.db["cancelPullTimerOnClick"] == true then
+					self:SetText(L["PullTimer"])
+					addon.MythicPlus.variables.breakIt = true
+					addon.MythicPlus.variables.handled = false
+				end
+			end
+		end)
+	else
+		addon.MythicPlus.functions.addRCButton()
+		addon.MythicPlus.functions.addPullButton()
+	end
+end
+
 local function checkKeyStone()
 	addon.MythicPlus.variables.handled = false -- reset handle on Keystoneframe open
 	addon.MythicPlus.functions.removeExistingButton()
+	if not addon.db["enableKeystoneHelper"] then return end
 	local GetContainerNumSlots = C_Container.GetContainerNumSlots
 	local GetContainerItemID = C_Container.GetContainerItemID
 	local UseContainerItem = C_Container.UseContainerItem
@@ -213,76 +291,9 @@ local function checkKeyStone()
 			for slot = 1, GetContainerNumSlots(container) do
 				local id = GetContainerItemID(container, slot)
 				if id == 180653 then
-					-- Button for ReadyCheck
-					addon.MythicPlus.functions.addButton(ChallengesKeystoneFrame, "ReadyCheck", L["ReadyCheck"], function(self, button)
-						if self:GetText() == L["ReadyCheck"] then
-							DoReadyCheck()
-							self:SetText(L["ReadyCheckWaiting"])
-						end
-					end)
-					-- Button for Pulltimer
-					addon.MythicPlus.functions.addButton(ChallengesKeystoneFrame, "PullTimer", L["PullTimer"], function(self, button)
-						if addon.MythicPlus.variables.handled == false then
-							addon.MythicPlus.Buttons["PullTimer"]:SetText(L["Stating"])
-							addon.MythicPlus.variables.breakIt = false
-							addon.MythicPlus.variables.handled = true
-							local x = nil
-							-- Set time based on settings choosen
-							if button == "RightButton" then
-								x = addon.db["pullTimerShortTime"]
-							else
-								x = addon.db["pullTimerLongTime"]
-							end
-							local cTime = x
+					-- Button for ReadyCheck and Pulltimer
+					if UnitInParty("player") and UnitIsGroupLeader("player") then createButtons() end
 
-							C_Timer.NewTicker(1, function(self)
-								if addon.MythicPlus.variables.breakIt then
-									self:Cancel()
-									C_PartyInfo.DoCountdown(0)
-									if addon.db["noChatOnPullTimer"] == false then SendChatMessage("PULL Canceled", "Party") end
-									C_ChatInfo.SendAddonMessage("D4", ("PT\t%s\t%d"):format(0, instanceId), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
-								end
-
-								if x == 0 then
-									self:Cancel()
-									addon.MythicPlus.variables.handled = false
-									if addon.db["noChatOnPullTimer"] == false then SendChatMessage(">>PULL NOW<<", "Party") end
-									if addon.db["autoKeyStart"] == false then
-										addon.MythicPlus.Buttons["PullTimer"]:SetText(L["PullTimer"])
-									elseif addon.db["autoKeyStart"] and nil ~= C_ChallengeMode.GetSlottedKeystoneInfo() then
-										C_ChallengeMode.StartChallengeMode()
-										ChallengesKeystoneFrame:Hide()
-									end
-								else
-									if x == cTime then
-										local _, _, _, _, _, _, _, id = GetInstanceInfo()
-										local instanceId = tonumber(id) or 0
-										if addon.db["PullTimerType"] == 2 or addon.db["PullTimerType"] == 4 then C_PartyInfo.DoCountdown(cTime) end
-										if addon.db["PullTimerType"] == 3 or addon.db["PullTimerType"] == 4 then
-											C_ChatInfo.SendAddonMessage("D4", ("PT\t%s\t%d"):format(cTime, instanceId), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
-										end
-									end
-									if addon.MythicPlus.variables.breakIt == false then
-										if addon.db["cancelPullTimerOnClick"] == true then
-											addon.MythicPlus.Buttons["PullTimer"]:SetText(L["Cancel"] .. " (" .. x .. ")")
-										else
-											addon.MythicPlus.Buttons["PullTimer"]:SetText(L["Pull"] .. " (" .. x .. ")")
-										end
-									end
-									if addon.MythicPlus.variables.breakIt == false then
-										if addon.db["noChatOnPullTimer"] == false then SendChatMessage(format("PULL in %ds", x), "Party") end
-									end
-								end
-								x = x - 1
-							end)
-						else
-							if addon.db["cancelPullTimerOnClick"] == true then
-								self:SetText(L["PullTimer"])
-								addon.MythicPlus.variables.breakIt = true
-								addon.MythicPlus.variables.handled = false
-							end
-						end
-					end)
 					if addon.db["autoInsertKeystone"] and addon.db["autoInsertKeystone"] == true then
 						UseContainerItem(container, slot)
 						if addon.db["closeBagsOnKeyInsert"] and addon.db["closeBagsOnKeyInsert"] == true then CloseAllBags() end
@@ -360,7 +371,7 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 		-- loadMain()
 	elseif event == "CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN" then
 		if InCombatLockdown() then return end
-		checkKeyStone()
+		if addon.db["enableKeystoneHelper"] then checkKeyStone() end
 	elseif event == "READY_CHECK_FINISHED" and ChallengesKeystoneFrame and addon.MythicPlus.Buttons["ReadyCheck"] then
 		addon.MythicPlus.Buttons["ReadyCheck"]:SetText(L["ReadyCheck"])
 	elseif event == "RAID_TARGET_UPDATE" and checkCondition() then
@@ -393,53 +404,29 @@ frameLoad:SetScript("OnEvent", eventHandler)
 local function addDungeonBrowserFrame(container) end
 
 local function addKeystoneFrame(container)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-	container:AddChild(wrapper)
+	scroll:AddChild(wrapper)
 
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
 	local data = {
 		{
-			text = L["Automatically insert keystone"],
-			var = "autoInsertKeystone",
-		},
-		{
-			text = L["Close all bags on keystone insert"],
-			var = "closeBagsOnKeyInsert",
-		},
-		{
-			text = L["Cancel Pull Timer on click"],
-			var = "cancelPullTimerOnClick",
-		},
-		{
-			text = L["noChatOnPullTimer"],
-			var = "noChatOnPullTimer",
-		},
-		{
-			text = L["autoKeyStart"],
-			var = "autoKeyStart",
-		},
-		{
-			text = L["mythicPlusTruePercent"],
-			var = "mythicPlusTruePercent",
-			func = function(self, _, value) addon.db["mythicPlusTruePercent"] = value end,
-		},
-		{
-			text = L["mythicPlusChestTimer"],
-			var = "mythicPlusChestTimer",
-		},
-		{
-			text = L["groupfinderShowPartyKeystone"],
-			var = "groupfinderShowPartyKeystone",
+			text = L["enableKeystoneHelper"],
+			var = "enableKeystoneHelper",
 			func = function(self, _, value)
-				addon.db["groupfinderShowPartyKeystone"] = value
-				addon.MythicPlus.functions.togglePartyKeystone()
+				addon.db["enableKeystoneHelper"] = value
+				container:ReleaseChildren()
+				addKeystoneFrame(container)
+				if ChallengesKeystoneFrame:IsShown() then checkKeyStone() end
 			end,
-			desc = L["groupfinderShowPartyKeystoneDesc"],
 		},
 	}
-
 	table.sort(data, function(a, b) return a.text < b.text end)
 
 	for _, cbData in ipairs(data) do
@@ -449,32 +436,95 @@ local function addKeystoneFrame(container)
 		groupCore:AddChild(cbElement)
 	end
 
-	local list, order = addon.functions.prepareListForDropdown({ [1] = L["None"], [2] = L["Blizzard Pull Timer"], [3] = L["DBM / BigWigs Pull Timer"], [4] = L["Both"] })
+	if addon.db["enableKeystoneHelper"] then
+		local groupEnabled = addon.functions.createContainer("InlineGroup", "List")
+		wrapper:AddChild(groupEnabled)
 
-	local dropPullTimerType = addon.functions.createDropdownAce(L["PullTimer"], list, order, function(self, _, value) addon.db["PullTimerType"] = value end)
-	dropPullTimerType:SetValue(addon.db["PullTimerType"])
-	dropPullTimerType:SetFullWidth(false)
-	dropPullTimerType:SetWidth(200)
-	groupCore:AddChild(dropPullTimerType)
-	groupCore:AddChild(addon.functions.createSpacerAce())
+		local data = {
+			{
+				text = L["Automatically insert keystone"],
+				var = "autoInsertKeystone",
+			},
+			{
+				text = L["enableKeystoneHelperNewUI"],
+				var = "enableKeystoneHelperNewUI",
+				func = function(self, _, value)
+					addon.db["enableKeystoneHelperNewUI"] = value
+					if ChallengesKeystoneFrame:IsShown() then checkKeyStone() end
+				end,
+			},
+			{
+				text = L["Close all bags on keystone insert"],
+				var = "closeBagsOnKeyInsert",
+			},
+			{
+				text = L["Cancel Pull Timer on click"],
+				var = "cancelPullTimerOnClick",
+			},
+			{
+				text = L["noChatOnPullTimer"],
+				var = "noChatOnPullTimer",
+			},
+			{
+				text = L["autoKeyStart"],
+				var = "autoKeyStart",
+			},
+			{
+				text = L["mythicPlusTruePercent"],
+				var = "mythicPlusTruePercent",
+				func = function(self, _, value) addon.db["mythicPlusTruePercent"] = value end,
+			},
+			{
+				text = L["mythicPlusChestTimer"],
+				var = "mythicPlusChestTimer",
+			},
+			{
+				text = L["groupfinderShowPartyKeystone"],
+				var = "groupfinderShowPartyKeystone",
+				func = function(self, _, value)
+					addon.db["groupfinderShowPartyKeystone"] = value
+					addon.MythicPlus.functions.togglePartyKeystone()
+				end,
+				desc = L["groupfinderShowPartyKeystoneDesc"],
+			},
+		}
 
-	local longSlider = addon.functions.createSliderAce(L["sliderLongTime"] .. ": " .. addon.db["pullTimerLongTime"] .. "s", addon.db["pullTimerLongTime"], 0, 60, 1, function(self, _, value2)
-		addon.db["pullTimerLongTime"] = value2
-		self:SetLabel(L["sliderLongTime"] .. ": " .. value2 .. "s")
-	end)
-	longSlider:SetFullWidth(false)
-	longSlider:SetWidth(300)
-	groupCore:AddChild(longSlider)
+		table.sort(data, function(a, b) return a.text < b.text end)
 
-	groupCore:AddChild(addon.functions.createSpacerAce())
+		for _, cbData in ipairs(data) do
+			local uFunc = function(self, _, value) addon.db[cbData.var] = value end
+			if cbData.func then uFunc = cbData.func end
+			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+			groupEnabled:AddChild(cbElement)
+		end
 
-	local shortSlider = addon.functions.createSliderAce(L["sliderShortTime"] .. ": " .. addon.db["pullTimerShortTime"] .. "s", addon.db["pullTimerShortTime"], 0, 60, 1, function(self, _, value2)
-		addon.db["pullTimerShortTime"] = value2
-		self:SetLabel(L["sliderShortTime"] .. ": " .. value2 .. "s")
-	end)
-	shortSlider:SetFullWidth(false)
-	shortSlider:SetWidth(300)
-	groupCore:AddChild(shortSlider)
+		local list, order = addon.functions.prepareListForDropdown({ [1] = L["None"], [2] = L["Blizzard Pull Timer"], [3] = L["DBM / BigWigs Pull Timer"], [4] = L["Both"] })
+
+		local dropPullTimerType = addon.functions.createDropdownAce(L["PullTimer"], list, order, function(self, _, value) addon.db["PullTimerType"] = value end)
+		dropPullTimerType:SetValue(addon.db["PullTimerType"])
+		dropPullTimerType:SetFullWidth(false)
+		dropPullTimerType:SetWidth(200)
+		groupEnabled:AddChild(dropPullTimerType)
+		groupEnabled:AddChild(addon.functions.createSpacerAce())
+
+		local longSlider = addon.functions.createSliderAce(L["sliderLongTime"] .. ": " .. addon.db["pullTimerLongTime"] .. "s", addon.db["pullTimerLongTime"], 0, 60, 1, function(self, _, value2)
+			addon.db["pullTimerLongTime"] = value2
+			self:SetLabel(L["sliderLongTime"] .. ": " .. value2 .. "s")
+		end)
+		longSlider:SetFullWidth(false)
+		longSlider:SetWidth(300)
+		groupEnabled:AddChild(longSlider)
+
+		groupEnabled:AddChild(addon.functions.createSpacerAce())
+
+		local shortSlider = addon.functions.createSliderAce(L["sliderShortTime"] .. ": " .. addon.db["pullTimerShortTime"] .. "s", addon.db["pullTimerShortTime"], 0, 60, 1, function(self, _, value2)
+			addon.db["pullTimerShortTime"] = value2
+			self:SetLabel(L["sliderShortTime"] .. ": " .. value2 .. "s")
+		end)
+		shortSlider:SetFullWidth(false)
+		shortSlider:SetWidth(300)
+		groupEnabled:AddChild(shortSlider)
+	end
 end
 
 local function addPotionTrackerFrame(container)

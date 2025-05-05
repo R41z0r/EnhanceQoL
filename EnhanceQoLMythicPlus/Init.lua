@@ -7,6 +7,8 @@ else
 end
 
 -- PullTimer
+addon.functions.InitDBValue("enableKeystoneHelper", true)
+addon.functions.InitDBValue("enableKeystoneHelperNewUI", true)
 addon.functions.InitDBValue("autoInsertKeystone", false)
 addon.functions.InitDBValue("closeBagsOnKeyInsert", false)
 addon.functions.InitDBValue("noChatOnPullTimer", false)
@@ -95,6 +97,244 @@ addon.MythicPlus.variables.resetCooldownEncounterDifficult = {
 	[151] = true,
 	[208] = true, -- delves
 }
+
+function addon.MythicPlus.functions.addRCButton()
+	local rcButton = CreateFrame("Button", "EnhanceQoLMythicPlus_ReadyCheck", ChallengesKeystoneFrame)
+	rcButton:ClearAllPoints()
+	rcButton:SetPoint("TOPLEFT", ChallengesKeystoneFrame, "TOPLEFT", 5, -5)
+	rcButton:SetSize(128, 128)
+	rcButton:SetHitRectInsets(15, 15, 15, 15)
+	rcButton:SetScript("OnClick", function(self, button)
+		if not self.readyCheckRunning then
+			self.readyCheckRunning = true
+			DoReadyCheck()
+		end
+	end)
+	rcButton:RegisterEvent("READY_CHECK")
+	rcButton:RegisterEvent("READY_CHECK_CONFIRM")
+	rcButton:RegisterEvent("READY_CHECK_FINISHED")
+	rcButton:SetScript("OnEvent", function(self, event, ...)
+		if event == "READY_CHECK" then
+			self.icon:SetVertexColor(1, 0.8, 0)
+			self.icon:SetDesaturated(false)
+			self.spin:Play()
+			-- pulse animation for "waiting" state
+			if self.iconPulse and not self.iconPulse:IsPlaying() then
+				self.iconPulse:Play() -- start pulsing while we wait
+			end
+			self.readyCheckRunning = true
+		elseif event == "READY_CHECK_CONFIRM" then
+			local unit, ready = ...
+			if not ready then
+				self.notReady = true
+				self.icon:SetVertexColor(1, 0, 0)
+			end
+		elseif event == "READY_CHECK_FINISHED" then
+			if self.iconPulse and self.iconPulse:IsPlaying() then
+				self.iconPulse:Stop() -- stop pulsing, restore full alpha
+				self.icon:SetAlpha(1)
+			end
+			if not self.notReady then self.icon:SetVertexColor(0, 1, 0.3) end
+			self.readyCheckRunning = false
+			C_Timer.After(2, function()
+				if self.readyCheckRunning then return end
+				self.icon:SetVertexColor(1, 1, 1)
+				self.notReady = false
+				if not MouseIsOver(rcButton) then
+					self.spin:Stop()
+					self.ring:SetRotation(0)
+				end
+			end)
+		end
+	end)
+	rcButton:SetFrameStrata("DIALOG")
+
+	local icon = rcButton:CreateTexture(nil, "ARTWORK", nil, 0)
+	icon:SetPoint("CENTER", rcButton, "CENTER")
+	icon:SetTexture("Interface/AddOns/EnhanceQoLMythicPlus/Art/coreRC.tga")
+	icon:SetSize(70, 70)
+	rcButton.icon = icon
+
+	-- pulse animation for "waiting" state
+	local pulse = icon:CreateAnimationGroup()
+	local fadeOut = pulse:CreateAnimation("Alpha")
+	fadeOut:SetFromAlpha(1)
+	fadeOut:SetToAlpha(0.3)
+	fadeOut:SetDuration(0.8)
+	fadeOut:SetOrder(1)
+
+	local fadeIn = pulse:CreateAnimation("Alpha")
+	fadeIn:SetFromAlpha(0.3)
+	fadeIn:SetToAlpha(1)
+	fadeIn:SetDuration(0.8)
+	fadeIn:SetOrder(2)
+
+	pulse:SetLooping("REPEAT")
+	rcButton.iconPulse = pulse
+
+	local ring = rcButton:CreateTexture(nil, "OVERLAY", nil, 1)
+	ring:SetTexture("Interface/AddOns/EnhanceQoLMythicPlus/Art/coreRing.tga")
+	ring:SetSize(110, 110)
+	ring:SetPoint("CENTER", rcButton, "CENTER")
+	rcButton.ring = ring
+
+	local spin = ring:CreateAnimationGroup()
+	local rot = spin:CreateAnimation("Rotation")
+	rot:SetDegrees(360)
+	rot:SetDuration(30)
+	spin:SetLooping("REPEAT")
+	rcButton.spin = spin
+
+	rcButton:SetScript("OnEnter", function(self, button)
+		if not self.readyCheckRunning then spin:Play() end
+	end)
+	rcButton:SetScript("OnLeave", function(self, button)
+		if not self.readyCheckRunning then
+			spin:Stop()
+			ring:SetRotation(0)
+		end
+	end)
+	addon.MythicPlus.Buttons["EnhanceQoLMythicPlus_ReadyCheck"] = rcButton
+	addon.MythicPlus.nrOfButtons = addon.MythicPlus.nrOfButtons + 1
+end
+
+function addon.MythicPlus.functions.addPullButton()
+	local rcButton = CreateFrame("Button", "EnhanceQoLMythicPlus_PullTimer", ChallengesKeystoneFrame)
+	rcButton:ClearAllPoints()
+	rcButton:SetPoint("TOPRIGHT", ChallengesKeystoneFrame, "TOPRIGHT", -15, -15)
+	rcButton:SetSize(110, 110)
+	rcButton:SetHitRectInsets(15, 15, 15, 15)
+	-- streamlined pull‑timer logic
+	local function startPull(self, duration)
+		self.remaining = duration
+		self.icon:Hide()
+		self.timerCountdown:SetText(duration)
+		self.timerCountdown:Show()
+		if self.remaining > 6 then
+			self.timerCountdown:SetVertexColor(0, 1, 0)
+		elseif self.remaining > 3 then
+			self.timerCountdown:SetVertexColor(1, 1, 0)
+		else
+			self.timerCountdown:SetVertexColor(1, 0, 0)
+		end
+		-- blizzard / DBM alignment
+		local _, _, _, _, _, _, _, instanceId = GetInstanceInfo()
+		if addon.db["PullTimerType"] == 2 or addon.db["PullTimerType"] == 4 then C_PartyInfo.DoCountdown(duration) end
+		if addon.db["PullTimerType"] == 3 or addon.db["PullTimerType"] == 4 then
+			C_ChatInfo.SendAddonMessage("D4", ("PT\t%d\t%d"):format(duration, instanceId), IsInGroup(2) and "INSTANCE_CHAT" or "RAID")
+		end
+		if not addon.db["noChatOnPullTimer"] then SendChatMessage(("PULL in %ds"):format(duration), "PARTY") end
+
+		-- ticker updates local countdown (also handles chat, optional)
+		self.ticker = C_Timer.NewTicker(1, function(t)
+			self.remaining = self.remaining - 1
+			if self.remaining > 6 then
+				self.timerCountdown:SetVertexColor(0, 1, 0)
+			elseif self.remaining > 3 then
+				self.timerCountdown:SetVertexColor(1, 1, 0)
+			else
+				self.timerCountdown:SetVertexColor(1, 0, 0)
+			end
+			if self.remaining <= 0 then
+				t:Cancel()
+				self.timerCountdown:SetText("0")
+				self.icon:Show()
+				self.timerCountdown:Hide()
+				self.running = false
+				self.spin:Stop()
+				self.ring:SetRotation(0)
+
+				if not addon.db["noChatOnPullTimer"] then SendChatMessage(">>PULL NOW<<", "PARTY") end
+				if addon.db["autoKeyStart"] and C_ChallengeMode.GetSlottedKeystoneInfo() then
+					C_ChallengeMode.StartChallengeMode()
+					ChallengesKeystoneFrame:Hide()
+				end
+			else
+				self.timerCountdown:SetText(self.remaining)
+				if not addon.db["noChatOnPullTimer"] then SendChatMessage(("PULL in %d"):format(self.remaining), "PARTY") end
+			end
+		end)
+		self.running = true
+	end
+
+	local function cancelPull(self)
+		if self.ticker then self.ticker:Cancel() end
+		self.icon:Show()
+		self.timerCountdown:Hide()
+		self.running = false
+		self.spin:Stop()
+		self.ring:SetRotation(0)
+		C_PartyInfo.DoCountdown(0) -- abort Blizzard countdown
+		if not addon.db["noChatOnPullTimer"] then SendChatMessage("PULL Canceled", "PARTY") end
+	end
+
+	rcButton:RegisterForClicks("RightButtonDown", "LeftButtonDown")
+	rcButton:SetScript("OnClick", function(self, button)
+		if self.running then
+			if addon.db["cancelPullTimerOnClick"] then cancelPull(self) end
+			return
+		end
+
+		local duration = (button == "RightButton") and addon.db["pullTimerShortTime"] or addon.db["pullTimerLongTime"]
+		startPull(self, duration)
+	end)
+	rcButton:SetFrameStrata("DIALOG")
+
+	local icon = rcButton:CreateTexture(nil, "ARTWORK", nil, 0)
+	icon:SetPoint("CENTER", rcButton, "CENTER")
+	icon:SetTexture("Interface/AddOns/EnhanceQoLMythicPlus/Art/corePull.tga")
+	icon:SetSize(58, 58)
+	rcButton.icon = icon
+
+	local timerCountdown = rcButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+	timerCountdown:SetPoint("CENTER", rcButton, "CENTER", 0, 0)
+	timerCountdown:SetFont(addon.variables.defaultFont, 20, "OUTLINE")
+	timerCountdown:SetVertexColor(1, 1, 0)
+	timerCountdown:Hide()
+	rcButton.timerCountdown = timerCountdown
+
+	-- pulse animation for "waiting" state
+	local pulse = icon:CreateAnimationGroup()
+	local fadeOut = pulse:CreateAnimation("Alpha")
+	fadeOut:SetFromAlpha(1)
+	fadeOut:SetToAlpha(0.3)
+	fadeOut:SetDuration(0.8)
+	fadeOut:SetOrder(1)
+
+	local fadeIn = pulse:CreateAnimation("Alpha")
+	fadeIn:SetFromAlpha(0.3)
+	fadeIn:SetToAlpha(1)
+	fadeIn:SetDuration(0.8)
+	fadeIn:SetOrder(2)
+
+	pulse:SetLooping("REPEAT")
+	rcButton.iconPulse = pulse
+
+	local ring = rcButton:CreateTexture(nil, "OVERLAY", nil, 1)
+	ring:SetTexture("Interface/AddOns/EnhanceQoLMythicPlus/Art/coreRing.tga")
+	ring:SetSize(110, 110)
+	ring:SetPoint("CENTER", rcButton, "CENTER")
+	rcButton.ring = ring
+
+	local spin = ring:CreateAnimationGroup()
+	local rot = spin:CreateAnimation("Rotation")
+	rot:SetDegrees(360)
+	rot:SetDuration(30)
+	spin:SetLooping("REPEAT")
+	rcButton.spin = spin
+
+	rcButton:SetScript("OnEnter", function(self, button)
+		if not self.running then spin:Play() end
+	end)
+	rcButton:SetScript("OnLeave", function(self, button)
+		if not self.running then
+			spin:Stop()
+			ring:SetRotation(0)
+		end
+	end)
+	addon.MythicPlus.Buttons["EnhanceQoLMythicPlus_PullTimer"] = rcButton
+	addon.MythicPlus.nrOfButtons = addon.MythicPlus.nrOfButtons + 1
+end
 
 function addon.MythicPlus.functions.addButton(frame, name, text, call)
 	local button = CreateFrame("Button", nil, frame, "GameMenuButtonTemplate")

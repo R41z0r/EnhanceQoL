@@ -1,5 +1,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_MythicPlus", "enUS", true)
 
+L["enableKeystoneHelper"] = "Enable Keystone helper"
+L["enableKeystoneHelperNewUI"] = "Enable the improved UI Design for Keystone helper"
 L["Keystone"] = "Keystone"
 L["NoKeystone"] = "No Info"
 L["Automatically insert keystone"] = "Automatically insert keystone"
