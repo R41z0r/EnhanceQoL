@@ -101,8 +101,8 @@ addon.MythicPlus.variables.resetCooldownEncounterDifficult = {
 function addon.MythicPlus.functions.addRCButton()
 	local rcButton = CreateFrame("Button", "EnhanceQoLMythicPlus_ReadyCheck", ChallengesKeystoneFrame)
 	rcButton:ClearAllPoints()
-	rcButton:SetPoint("TOPLEFT", ChallengesKeystoneFrame, "TOPLEFT", 5, -5)
-	rcButton:SetSize(128, 128)
+	rcButton:SetPoint("TOPLEFT", ChallengesKeystoneFrame, "TOPLEFT", 15, -15)
+	rcButton:SetSize(110, 110)
 	rcButton:SetHitRectInsets(15, 15, 15, 15)
 	rcButton:SetScript("OnClick", function(self, button)
 		if not self.readyCheckRunning then
@@ -127,7 +127,7 @@ function addon.MythicPlus.functions.addRCButton()
 			local unit, ready = ...
 			if not ready then
 				self.notReady = true
-				self.icon:SetVertexColor(1, 0, 0)
+				self.icon:SetVertexColor(1, 0.2, 0.2)
 			end
 		elseif event == "READY_CHECK_FINISHED" then
 			if self.iconPulse and self.iconPulse:IsPlaying() then
@@ -181,7 +181,7 @@ function addon.MythicPlus.functions.addRCButton()
 	local spin = ring:CreateAnimationGroup()
 	local rot = spin:CreateAnimation("Rotation")
 	rot:SetDegrees(360)
-	rot:SetDuration(30)
+	rot:SetDuration(24)
 	spin:SetLooping("REPEAT")
 	rcButton.spin = spin
 
@@ -241,8 +241,10 @@ function addon.MythicPlus.functions.addPullButton()
 				self.icon:Show()
 				self.timerCountdown:Hide()
 				self.running = false
-				self.spin:Stop()
-				self.ring:SetRotation(0)
+				if not MouseIsOver(rcButton) then
+					self.spin:Stop()
+					self.ring:SetRotation(0)
+				end
 
 				if not addon.db["noChatOnPullTimer"] then SendChatMessage(">>PULL NOW<<", "PARTY") end
 				if addon.db["autoKeyStart"] and C_ChallengeMode.GetSlottedKeystoneInfo() then
@@ -262,8 +264,10 @@ function addon.MythicPlus.functions.addPullButton()
 		self.icon:Show()
 		self.timerCountdown:Hide()
 		self.running = false
-		self.spin:Stop()
-		self.ring:SetRotation(0)
+		if not MouseIsOver(rcButton) then
+			self.spin:Stop()
+			self.ring:SetRotation(0)
+		end
 		C_PartyInfo.DoCountdown(0) -- abort Blizzard countdown
 		if not addon.db["noChatOnPullTimer"] then SendChatMessage("PULL Canceled", "PARTY") end
 	end
@@ -283,7 +287,7 @@ function addon.MythicPlus.functions.addPullButton()
 	local icon = rcButton:CreateTexture(nil, "ARTWORK", nil, 0)
 	icon:SetPoint("CENTER", rcButton, "CENTER")
 	icon:SetTexture("Interface/AddOns/EnhanceQoLMythicPlus/Art/corePull.tga")
-	icon:SetSize(58, 58)
+	icon:SetSize(72, 72)
 	rcButton.icon = icon
 
 	local timerCountdown = rcButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
@@ -319,7 +323,7 @@ function addon.MythicPlus.functions.addPullButton()
 	local spin = ring:CreateAnimationGroup()
 	local rot = spin:CreateAnimation("Rotation")
 	rot:SetDegrees(360)
-	rot:SetDuration(30)
+	rot:SetDuration(24)
 	spin:SetLooping("REPEAT")
 	rcButton.spin = spin
 

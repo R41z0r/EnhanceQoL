@@ -1,10 +1,10 @@
 # Changelog
 
-## [3.11.0] – 2025‑05‑05
+## [3.11.0] – 2025‑05‑06
 ### ✨ Added
-- **Global Language Profiles** – automatically switches the entire addon to the language selected on CurseForge.
+- **CurseForge Localization Support** – all strings are now hosted on CurseForge; anyone can contribute translations.
 - **Sound** module – central hub to toggle (or mute) specific in‑game sounds.
-- **Keystone Helper** – brand‑new UI with integrated pull‑timer, ready‑check status and auto‑keystone tools.
+- **Keystone Helper** – brand‑new UI with new ready‑check status
 
 ### 🐛 Fixed
 - Faction‑specific teleport items missing on non‑English clients.
