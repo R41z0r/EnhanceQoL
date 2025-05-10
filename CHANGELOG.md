@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.11.1] – 2025‑05‑10
+### 🐛 Fixed
+- Tooltip was missing on Player/Target/Boss Frames, when the MouseOver hide option was enabled
+
 ## [3.11.0] – 2025‑05‑06
 ### ✨ Added
 - **CurseForge Localization Support** – all strings are now hosted on CurseForge; anyone can contribute translations.

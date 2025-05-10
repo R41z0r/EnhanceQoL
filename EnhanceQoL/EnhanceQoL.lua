@@ -225,7 +225,7 @@ local function UpdateUnitFrameMouseover(barName, cbData)
 
 	if enable then
 		if not hookedUnitFrames[uf] then
-			if uf.OnEnter then
+			if uf.OnEnter or uf:GetScript("OnEnter") then
 				uf:HookScript("OnEnter", function(self)
 					self:SetAlpha(1)
 					if cbData.children then
@@ -255,7 +255,7 @@ local function UpdateUnitFrameMouseover(barName, cbData)
 					end
 				end)
 			end
-			if uf.OnLeave then
+			if uf.OnLeave or uf:GetScript("OnLeave") then
 				uf:HookScript("OnLeave", function(self) genericHoverOutCheck(self, cbData) end)
 			else
 				uf:SetScript("OnLeave", function(self) genericHoverOutCheck(self, cbData) end)
