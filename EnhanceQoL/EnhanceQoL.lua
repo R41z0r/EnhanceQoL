@@ -629,7 +629,7 @@ local function onInspect(arg1)
 								else
 									element.enchant:SetPoint("BOTTOMRIGHT", element, "BOTTOMLEFT", -2, 1)
 								end
-								if addon.variables.shouldEnchanted[key] then
+								if addon.variables.shouldEnchanted[key] or addon.variables.shouldEnchantedChecks[key] then
 									element.borderGradient = element:CreateTexture(nil, "ARTWORK")
 									element.borderGradient:SetPoint("TOPLEFT", element, "TOPLEFT", -2, 2)
 									element.borderGradient:SetPoint("BOTTOMRIGHT", element, "BOTTOMRIGHT", 2, -2)
@@ -639,40 +639,45 @@ local function onInspect(arg1)
 								end
 								element.enchant:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
 							end
-							local data = C_TooltipInfo.GetHyperlink(itemLink)
-							local foundEnchant = false
-							local foundIcon = nil
-							for i, v in pairs(data.lines) do
-								if v.type == 15 then
-									foundEnchant = true
-									local r, g, b = v.leftColor:GetRGB()
-									local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
+							if element.borderGradient then
+								local data = C_TooltipInfo.GetHyperlink(itemLink)
+								local foundEnchant = false
+								local foundIcon = nil
+								for i, v in pairs(data.lines) do
+									if v.type == 15 then
+										foundEnchant = true
+										local r, g, b = v.leftColor:GetRGB()
+										local colorHex = ("|cff%02x%02x%02x"):format(r * 255, g * 255, b * 255)
 
-									local text = strmatch(gsub(gsub(gsub(v.leftText, "%s?|A.-|a", ""), "|cn.-:(.-)|r", "%1"), "[&+] ?", ""), addon.variables.enchantString)
-									local icons = {}
-									v.leftText:gsub("(|A.-|a)", function(iconString) table.insert(icons, iconString) end)
-									if #icons > 0 then foundIcon = icons[1] end
-									foundEnchant = true
-									local enchantText = text:gsub("(%d+)", "%1")
-									enchantText = enchantText:gsub("(%a%a%a)%a+", "%1")
-									enchantText = enchantText:gsub("%%", "%%%%")
-									if foundIcon then enchantText = enchantText .. foundIcon end
-									element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
+										local text = strmatch(gsub(gsub(gsub(v.leftText, "%s?|A.-|a", ""), "|cn.-:(.-)|r", "%1"), "[&+] ?", ""), addon.variables.enchantString)
+										local icons = {}
+										v.leftText:gsub("(|A.-|a)", function(iconString) table.insert(icons, iconString) end)
+										if #icons > 0 then foundIcon = icons[1] end
+										foundEnchant = true
+										local enchantText = text:gsub("(%d+)", "%1")
+										enchantText = enchantText:gsub("(%a%a%a)%a+", "%1")
+										enchantText = enchantText:gsub("%%", "%%%%")
+										if foundIcon then enchantText = enchantText .. foundIcon end
+										element.enchant:SetFormattedText(colorHex .. enchantText .. "|r")
+									end
 								end
-							end
 
-							if foundEnchant == false then
-								element.enchant:SetText("")
-								if element.borderGradient and UnitLevel(inspectUnit) == addon.variables.maxLevel then
-									if key == 17 then
-										local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
-										if addon.variables.allowedEnchantTypesForOffhand[itemEquipLoc] then
+								if foundEnchant == false and UnitLevel(inspectUnit) == addon.variables.maxLevel then
+									element.enchant:SetText("")
+									if
+										nil == addon.variables.shouldEnchantedChecks[key]
+										or (nil ~= addon.variables.shouldEnchantedChecks[key] and addon.variables.shouldEnchantedChecks[key].func(eItem:GetCurrentItemLevel()))
+									then
+										if key == 17 then
+											local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
+											if addon.variables.allowedEnchantTypesForOffhand[itemEquipLoc] then
+												element.borderGradient:Show()
+												element.enchant:SetFormattedText(("|cff%02x%02x%02x"):format(255, 0, 0) .. L["MissingEnchant"] .. "|r")
+											end
+										else
 											element.borderGradient:Show()
 											element.enchant:SetFormattedText(("|cff%02x%02x%02x"):format(255, 0, 0) .. L["MissingEnchant"] .. "|r")
 										end
-									else
-										element.borderGradient:Show()
-										element.enchant:SetFormattedText(("|cff%02x%02x%02x"):format(255, 0, 0) .. L["MissingEnchant"] .. "|r")
 									end
 								end
 							end
@@ -764,7 +769,7 @@ local function setIlvlText(element, slot)
 					element.ilvlBackground:Hide()
 				end
 
-				if addon.db["showEnchantOnCharframe"] then
+				if addon.db["showEnchantOnCharframe"] and element.borderGradient then
 					local data = C_TooltipInfo.GetHyperlink(link)
 
 					local foundEnchant = false
@@ -788,9 +793,12 @@ local function setIlvlText(element, slot)
 						end
 					end
 
-					if foundEnchant == false then
+					if foundEnchant == false and UnitLevel("player") == addon.variables.maxLevel then
 						element.enchant:SetText("")
-						if element.borderGradient and UnitLevel("player") == addon.variables.maxLevel then
+						if
+							nil == addon.variables.shouldEnchantedChecks[slot]
+							or (nil ~= addon.variables.shouldEnchantedChecks[slot] and addon.variables.shouldEnchantedChecks[slot].func(eItem:GetCurrentItemLevel()))
+						then
 							if slot == 17 then
 								local _, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(link)
 								if addon.variables.allowedEnchantTypesForOffhand[itemEquipLoc] then
@@ -3119,7 +3127,7 @@ local function initCharacter()
 		value.ilvlBackground:SetSize(30, 16) -- Größe des Hintergrunds (muss ggf. angepasst werden)
 
 		-- Roter Rahmen mit Farbverlauf
-		if addon.variables.shouldEnchanted[key] then
+		if addon.variables.shouldEnchanted[key] or addon.variables.shouldEnchantedChecks[key] then
 			value.borderGradient = value:CreateTexture(nil, "ARTWORK")
 			value.borderGradient:SetPoint("TOPLEFT", value, "TOPLEFT", -2, 2)
 			value.borderGradient:SetPoint("BOTTOMRIGHT", value, "BOTTOMRIGHT", 2, -2)

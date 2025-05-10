@@ -1,8 +1,14 @@
 # Changelog
 
-## [3.11.1] – 2025‑05‑10
+## [3.12.0] – 2025‑05‑10
+### ✨ Added
+- **Conditional enchant checks** – detects missing enchants context‑sensitively (e.g., Horrific‑Visions helm).
+
+### 🔁 Changed
+- **Faster enchant scan** – internal routine streamlined for quicker results.
+
 ### 🐛 Fixed
-- Tooltip was missing on Player/Target/Boss Frames, when the MouseOver hide option was enabled
+- Tooltip did not appear on player, target, or boss frames when **Mouse‑over Hide** was enabled.
 
 ## [3.11.0] – 2025‑05‑06
 ### ✨ Added
