@@ -3,6 +3,7 @@
 ## [3.12.0] – 2025‑05‑10
 ### ✨ Added
 - **Conditional enchant checks** – detects missing enchants context‑sensitively (e.g., Horrific‑Visions helm).
+- **Missing Xal'atath voicelines** - some voicelines added in S2 were missing
 
 ### 🔁 Changed
 - **Faster enchant scan** – internal routine streamlined for quicker results.

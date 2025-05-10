@@ -58,23 +58,32 @@ addon.Sounds.soundFiles = {
 	["dungeon"] = {
 		["affix"] = {
 			["xalatath"] = {
-				2530811, -- Do You See It?
-				2530835, -- A Stone To Call Forth The Darkness
-				2530794, -- Open Your Mind To The Whispers
+				2530794, -- Open your mind to the whispers
+				2530811, -- Do you see it?
+				2530835, -- A stone to call forth the darkness
+				5770084, -- Your ascension
+				5770087, -- Is complete
+				5834619, -- *laughing* / haha #1
+				5834623, -- Oh, he's alone / always alone
+				5834632, -- Embrace who you truly are
+				5835195, -- So easily overlooked
+				5835211, -- Your survival wasn't necessary
+				5835212, -- I simply wish you'd lasted a little longer
 				5835214, -- And now you learn the true lesson of the void
-				5770084, -- your ascension
-				5770087, -- is complete
-				5834619, -- *laughing*
-				5834623, -- Oh he's alone
-				5834632, -- Embrace Who You Truly Are
-				5835195, -- So Easily Overlooked
-				5835215, -- Only The Strongest Survive
+				5835215, -- Only the strongest survive
 				5835725, -- Inevitable
 				5835726, -- The void consumes everything
-				-- 5835728, --? You know where to find me
-				5835729, --? Deeper in the Darkness
-				5854705, -- To late (when timer is over)
-				5854706, -- Haha
+				5835729, -- Deeper in the darkness
+				5854705, -- Too late (timer over)
+				5854706, -- Haha #2
+				6178494, -- My emissary brings you power
+				6178497, -- A willing sacrifice
+				6178498, -- Yes, feed
+				6178500, -- Shred of control
+				6178502, -- Resist
+				6178504, -- Overcome this trial
+				6178506, -- My power is transcendent
+				6178508, -- A gift of power
 			},
 		},
 		["tww"] = {
@@ -307,6 +316,57 @@ addon.Sounds.soundFiles = {
 			5357771,
 			5357773,
 			5357775,
+		},
+		["mount_g99_breakneck"] = {
+			-- Movement
+			2431461,
+			2431464,
+			2431465,
+
+			-- Summon
+			1487173,
+			1487174,
+			1487175,
+			1487176,
+			1487177,
+			1487178,
+			1487179,
+			1487180,
+			1487181,
+			1487182,
+
+			-- Engine start
+			1659508,
+			1659509,
+			1659510,
+			1659511,
+
+			-- Gear shift broken
+			2138705,
+
+			-- Engine running
+			6254769,
+			6382128,
+			6382130,
+			6382181,
+			6382183,
+			6382185,
+			6382187,
+			6382189,
+			6382191,
+			6382193,
+
+			-- Drifting
+			6654849,
+			6654851,
+			6654853,
+			6654855,
+			6654857,
+			6654859,
+			6654861,
+			6654863,
+			6654865,
+			6654867,
 		},
 	},
 	["spells"] = {
