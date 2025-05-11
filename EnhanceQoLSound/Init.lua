@@ -179,14 +179,11 @@ addon.Sounds.soundFiles = {
 				2925359,
 				2925360,
 			},
-
-			-- ["stonevault"] = {
-			-- 	["dagran_thaurissan_ii"] = {
-			-- 		5835282, -- So here we are. High Speaker Eirich... or is it just Eirich now?
-			-- 		5835283, -- He's fled from the Hall of Awakening into the Stonevault
-			-- 		5835268, -- He's probably running like a frightened mouse. Wee, sleekit, cowering, timorous beastie!
-			-- 	},
-			-- },
+			["stonevault"] = {
+				5835282, -- So here we are. High Speaker Eirich... or is it just Eirich now?
+				5835283, -- He's fled from the Hall of Awakening into the Stonevault
+				5835268, -- He's probably running like a frightened mouse. Wee, sleekit, cowering, timorous beastie!
+			},
 		},
 	},
 	["mounts"] = {

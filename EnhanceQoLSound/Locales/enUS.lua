@@ -19,8 +19,8 @@ L["repair"] = "Repair sound"
 
 -- Dungeon
 L["tww"] = "The War Within"
-L["stonevault"] = "Stonevault"
-L["dagran_thaurissan_ii"] = "Dagran Thaurissan II (Talking Head)"
+L["stonevault"] = "The Stonevault"
+L["dagran_thaurissan_ii"] = "Dagran Thaurissan II"
 L["priory_of_the_sacred_flame_npc"] = "Priory of the Sacred Flame NPCs"
 L["rookery_npc"] = "Rookery NPCs"
 L["mechagon_npc"] = "Mechagon Workshop NPCs"
