@@ -484,6 +484,8 @@ globals = {
 	"C_AddOns.GetAddOnMetadata",
 	"C_AddOns.IsAddOnLoaded",
 	"C_AddOns.LoadAddOn",
+	"PlayerSpellsMicroButton",
+	"TalentLoadoutEx",
 	"C_AdventureJournal",
 	"C_AdventureJournal.ActivateEntry",
 	"C_AdventureJournal.CanBeShown",
