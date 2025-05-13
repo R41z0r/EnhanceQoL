@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.13.0] – 2025‑05‑14
+### ✨ Added
+- **Support for Talent Loadout Ex** – Talent Reminder supports Loadouts of Talent Loadout Ex
+
+### 🔁 Changed
+
+### 🐛 Fixed
+
 ## [3.12.0] – 2025‑05‑10
 ### ✨ Added
 - **Conditional enchant checks** – detects missing enchants context‑sensitively (e.g., Horrific‑Visions helm).

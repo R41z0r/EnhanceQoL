@@ -1094,6 +1094,26 @@ local function addTalentFrame(container)
 		end
 
 		wrapper:AddChild(groupTalent)
+
+		if TalentLoadoutEx then
+			local groupInfo = addon.functions.createContainer("InlineGroup", "List")
+			groupInfo:SetTitle(INFO)
+			wrapper:AddChild(groupInfo)
+
+			local labelHeadlineExplain = addon.functions.createLabelAce("|cffffd700" .. L["labelExplainedlineTLE"] .. "|r", nil, nil, 14)
+			groupInfo:AddChild(labelHeadlineExplain)
+			labelHeadlineExplain:SetFullWidth(true)
+			groupInfo:AddChild(addon.functions.createSpacerAce())
+
+			local btnToggleAnchor = addon.functions.createButtonAce(L["ReloadLoadouts"], 220, function(self)
+				addon.MythicPlus.functions.getAllLoadouts()
+				addon.MythicPlus.functions.checkRemovedLoadout()
+				addon.MythicPlus.functions.refreshTalentFrameIfOpen()
+			end)
+			local fs = btnToggleAnchor.frame:GetFontString()
+			btnToggleAnchor:SetWidth(fs:GetStringWidth() + 50)
+			groupInfo:AddChild(btnToggleAnchor)
+		end
 	end
 end
 function addon.MythicPlus.functions.refreshTalentFrameIfOpen()

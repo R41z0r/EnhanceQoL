@@ -53,6 +53,13 @@ function addon.MythicPlus.functions.getAllLoadouts()
 			local info = C_Traits.GetConfigInfo(v)
 			if info then addon.MythicPlus.variables.knownLoadout[specID][info.ID] = info.name end
 		end
+		if TalentLoadoutEx then
+			if TalentLoadoutEx[addon.variables.unitClass] and TalentLoadoutEx[addon.variables.unitClass][i] then
+				for _, v in pairs(TalentLoadoutEx[addon.variables.unitClass][i]) do
+					addon.MythicPlus.variables.knownLoadout[specID][v.text .. "_" .. v.name] = "TLE: " .. v.name
+				end
+			end
+		end
 		if #addon.MythicPlus.variables.knownLoadout[specID] then addon.MythicPlus.variables.knownLoadout[specID][0] = "" end
 	end
 end
@@ -78,8 +85,16 @@ end
 
 local function GetConfigName(configID)
 	if configID then
-		local info = C_Traits.GetConfigInfo(configID)
-		if info then return info.name end
+		if type(configID) == "number" then
+			local info = C_Traits.GetConfigInfo(configID)
+			if info then return info.name end
+		elseif
+			type(configID) == "string"
+			and addon.MythicPlus.variables.knownLoadout[addon.MythicPlus.variables.currentSpecID]
+			and addon.MythicPlus.variables.knownLoadout[addon.MythicPlus.variables.currentSpecID][configID]
+		then
+			return addon.MythicPlus.variables.knownLoadout[addon.MythicPlus.variables.currentSpecID][configID]
+		end
 	end
 	return "Unknown"
 end
@@ -122,13 +137,22 @@ local function showPopup(actTalent, requiredTalent)
 	local reloadButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
 	reloadButton:SetSize(120, 30)
 	reloadButton:SetPoint("BOTTOMLEFT", reloadFrame, "BOTTOMLEFT", 10, 10)
-	reloadButton:SetText(SWITCH)
-	reloadButton:SetScript("OnClick", function()
-		if InCombatLockdown() then return end
-		local talentIndex = GetIndexForConfigID(requiredTalent)
-		if talentIndex then ClassTalentHelper.SwitchToLoadoutByIndex(talentIndex) end
-		deleteFrame(ChangeTalentUIPopup)
-	end)
+	if type(requiredTalent) == "number" then
+		reloadButton:SetText(SWITCH)
+		reloadButton:SetScript("OnClick", function()
+			if InCombatLockdown() then return end
+			local talentIndex = GetIndexForConfigID(requiredTalent)
+			if talentIndex then ClassTalentHelper.SwitchToLoadoutByIndex(talentIndex) end
+			deleteFrame(ChangeTalentUIPopup)
+		end)
+	else
+		reloadFrame.reqTalent:SetText("|cff00ff00" .. newName .. "|r\n\n" .. L["useTalentLoadoutEx"])
+		reloadButton:SetText(L["OpenTalents"])
+		reloadButton:SetScript("OnClick", function()
+			if InCombatLockdown() then return end
+			PlayerSpellsMicroButton:Click()
+		end)
+	end
 
 	local cancelButton = CreateFrame("Button", nil, reloadFrame, "GameMenuButtonTemplate")
 	cancelButton:SetSize(120, 30)
@@ -214,12 +238,25 @@ local function checkLoadout(isReadycheck)
 			and addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][addon.MythicPlus.variables.currentSpecID][mapID]
 		then
 			local reqTalent = addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][addon.MythicPlus.variables.currentSpecID][mapID]
-			if reqTalent and reqTalent > 0 then
+			if
+				reqTalent
+				and addon.MythicPlus.variables.knownLoadout
+				and addon.MythicPlus.variables.knownLoadout[addon.MythicPlus.variables.currentSpecID]
+				and addon.MythicPlus.variables.knownLoadout[addon.MythicPlus.variables.currentSpecID][reqTalent]
+			then
 				local actTalent = C_ClassTalents.GetLastSelectedSavedConfigID(addon.MythicPlus.variables.currentSpecID)
-				if actTalent ~= reqTalent then
-					showPopup(actTalent, reqTalent)
-				else
-					deleteFrame(ChangeTalentUIPopup)
+				if type(reqTalent) == "number" and reqTalent > 0 then
+					if actTalent ~= reqTalent then
+						showPopup(actTalent, reqTalent)
+					else
+						deleteFrame(ChangeTalentUIPopup)
+					end
+				elseif type(reqTalent) == "string" and string.len(reqTalent) > 0 then
+					if C_Traits.GenerateImportString(C_ClassTalents.GetActiveConfigID()) ~= reqTalent:gsub("_.*$", "") then
+						showPopup(actTalent, reqTalent)
+					else
+						deleteFrame(ChangeTalentUIPopup)
+					end
 				end
 			else
 				deleteFrame(ChangeTalentUIPopup)
@@ -278,6 +315,7 @@ local eventHandlers = {
 	["TRAIT_CONFIG_CREATED"] = function()
 		addon.MythicPlus.functions.getAllLoadouts()
 		checkLoadout()
+		addon.MythicPlus.functions.checkRemovedLoadout()
 		addon.MythicPlus.functions.refreshTalentFrameIfOpen()
 	end,
 	["TRAIT_CONFIG_DELETED"] = function(arg1)
@@ -290,6 +328,7 @@ local eventHandlers = {
 		C_Timer.After(0.2, function()
 			addon.MythicPlus.functions.getAllLoadouts()
 			checkLoadout()
+			addon.MythicPlus.functions.checkRemovedLoadout()
 			addon.MythicPlus.functions.refreshTalentFrameIfOpen()
 		end)
 	end,

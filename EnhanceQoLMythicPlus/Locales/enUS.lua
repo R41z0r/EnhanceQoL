@@ -118,3 +118,8 @@ L["collapse"] = "Collapse"
 
 L["mythicPlusNoHealerMark"] = "Remove the marker from me when I’m in the healer role"
 L["HideTracker"] = "Hide"
+
+L["useTalentLoadoutEx"] = "Switch talents via Talent Loadout Ex"
+L["OpenTalents"] = "Open Talents"
+L["labelExplainedlineTLE"] = "Talent Loadout Ex (TLE) builds are also displayed here"
+L["ReloadLoadouts"] = "Reload TLE loadouts"
