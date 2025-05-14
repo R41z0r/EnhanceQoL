@@ -619,7 +619,7 @@ local function CreateRioScore()
 	if addon.variables.maxLevel ~= UnitLevel("player") then return end
 
 	if addon.db["groupfinderShowDungeonScoreFrame"] == true then
-		local frameAnchorScore = CreateFrame("Frame", nil, parentFrame, "BackdropTemplate")
+		local frameAnchorScore = CreateFrame("Frame", "EQOLDungeonScoreFrame", parentFrame, "BackdropTemplate")
 		gFrameAnchorScore = frameAnchorScore
 		frameAnchorScore:SetBackdrop({
 			bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", -- Hintergrund
@@ -636,7 +636,14 @@ local function CreateRioScore()
 		titleScore:SetPoint("TOP", 0, -10)
 
 		frameAnchorScore:SetSize(max(titleScore:GetStringWidth() + 20, 200), 170) -- Breite x Höhe
-		frameAnchorScore:SetPoint("TOPLEFT", DungeonTeleportFrame, "BOTTOMLEFT", 0, 0)
+		if addon.db["teleportFrame"] then
+			frameAnchorScore:SetPoint("TOPLEFT", DungeonTeleportFrame, "BOTTOMLEFT", 0, 0)
+		elseif nil ~= RaiderIO_ProfileTooltip then
+			local offsetX = RaiderIO_ProfileTooltip:GetSize()
+			frameAnchorScore:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+		else
+			frameAnchorScore:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
+		end
 		frameAnchor:SetSize(max(title:GetStringWidth() + 20, 205), 170) -- Breite x Höhe
 
 		local ratingInfo = {}
@@ -930,6 +937,17 @@ function addon.MythicPlus.functions.toggleFrame()
 		doAfterCombat = true
 	else
 		doAfterCombat = false
+		if nil ~= RaiderIO_ProfileTooltip then
+			C_Timer.After(0.1, function()
+				if InCombatLockdown() then
+					doAfterCombat = true
+				else
+					CreateRioScore()
+				end
+			end)
+		else
+			CreateRioScore()
+		end
 		if addon.db["teleportFrame"] or addon.db["teleportsEnableCompendium"] then
 			if #portalSpells == 0 then getCurrentSeasonPortal() end
 			checkCooldown()
@@ -941,10 +959,17 @@ function addon.MythicPlus.functions.toggleFrame()
 					if InCombatLockdown() then
 						doAfterCombat = true
 					else
+						CreateRioScore()
+						frameAnchorCompendium:ClearAllPoints()
 						local offsetX = RaiderIO_ProfileTooltip:GetSize()
 						frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
 						if not addon.db["teleportFrame"] then
-							frameAnchorCompendium:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+							if gFrameAnchorScore then
+								local offsetX2 = gFrameAnchorScore:GetSize()
+								frameAnchorCompendium:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", (offsetX + offsetX2), 0)
+							else
+								frameAnchorCompendium:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX, 0)
+							end
 						else
 							frameAnchorCompendium:SetPoint("TOPLEFT", frameAnchor, "TOPRIGHT", 0, 0)
 						end
@@ -953,7 +978,12 @@ function addon.MythicPlus.functions.toggleFrame()
 			else
 				frameAnchor:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
 				if not addon.db["teleportFrame"] then
-					frameAnchorCompendium:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
+					if gFrameAnchorScore then
+						local offsetX2 = gFrameAnchorScore:GetSize()
+						frameAnchorCompendium:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", offsetX2, 0)
+					else
+						frameAnchorCompendium:SetPoint("TOPLEFT", parentFrame, "TOPRIGHT", 0, 0)
+					end
 				else
 					frameAnchorCompendium:SetPoint("TOPLEFT", frameAnchor, "TOPRIGHT", 0, 0)
 				end
@@ -978,7 +1008,6 @@ function addon.MythicPlus.functions.toggleFrame()
 			addon.MythicPlus.triggerRequest()
 			updateKeystoneInfo() -- precall to check if we have all information already
 		end
-		CreateRioScore()
 	end
 end
 
@@ -1055,7 +1084,12 @@ GameTooltip:HookScript("OnShow", function(self)
 				end
 			end
 			CreateRioScore()
-			if gFrameAnchorScore then gFrameAnchorScore:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", 0, 0) end
+			local offsetX = 0
+			if nil ~= RaiderIO_ProfileTooltip then offsetX = RaiderIO_ProfileTooltip:GetSize() end
+			if gFrameAnchorScore then gFrameAnchorScore:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", offsetX, 0) end
+
+			if addon.db["teleportFrame"] then frameAnchor:SetAlpha(0) end
+			if addon.db["teleportsEnableCompendium"] then frameAnchorCompendium:SetAlpha(0) end
 		end
 	end
 end)
@@ -1064,7 +1098,8 @@ GameTooltip:HookScript("OnHide", function(self)
 		selectedMapId = nil
 		local owner = self:GetOwner()
 		CreateRioScore()
-		if gFrameAnchorScore then gFrameAnchorScore:SetPoint("TOPLEFT", DungeonTeleportFrame, "BOTTOMLEFT", 0, 0) end
+		if addon.db["teleportFrame"] then frameAnchor:SetAlpha(1) end
+		if addon.db["teleportsEnableCompendium"] then frameAnchorCompendium:SetAlpha(1) end
 	end
 end)
 

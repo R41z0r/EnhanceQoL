@@ -1,12 +1,11 @@
 # Changelog
 
-## [3.13.0] – 2025‑05‑14
+## [3.13.0] – 2025-05-14
 ### ✨ Added
-- **Support for Talent Loadout Ex** – Talent Reminder supports Loadouts of Talent Loadout Ex
-
-### 🔁 Changed
+- **Support for Talent Loadout Ex** – Talent Reminder now supports loadouts created with Talent Loadout Ex.
 
 ### 🐛 Fixed
+- Mythic+ rating text could overlap other Enhance QoL frames in certain situations.
 
 ## [3.12.0] – 2025‑05‑10
 ### ✨ Added
