@@ -937,6 +937,8 @@ function addon.MythicPlus.functions.toggleFrame()
 		doAfterCombat = true
 	else
 		doAfterCombat = false
+		frameAnchor:SetAlpha(1)
+		frameAnchorCompendium:SetAlpha(1)
 		if nil ~= RaiderIO_ProfileTooltip then
 			C_Timer.After(0.1, function()
 				if InCombatLockdown() then
