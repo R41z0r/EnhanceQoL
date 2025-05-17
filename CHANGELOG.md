@@ -1,6 +1,8 @@
 # Changelog
 
 ## [3.13.1] – 2025-05-17
+### ✨ Added
+- **Bag Filter by Binding type** - Option to filter items in bags by bind type
 ### 🐛 Fixed
 - Errors could occur when selling or buying items with the **Vendor** feature.
 - Vendor tools now load correctly after updating.

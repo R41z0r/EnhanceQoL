@@ -315,29 +315,29 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 	local eItem = Item:CreateFromBagAndSlot(bag, slot)
 	if eItem and not eItem:IsItemEmpty() then
 		eItem:ContinueOnItemLoad(function()
-                        local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, _, expId = GetItemInfo(eItem:GetItemLink())
-                        local bType, bKey
-                        if addon.db["showBindOnBagItems"] or addon.itemBagFilters["bind"] then
-                                local data = GetBagItem(bag, slot)
-                                if data and data.lines then
-                                        for i, v in pairs(data.lines) do
-                                                if v.type == 20 then
-                                                        if v.leftText == ITEM_BIND_ON_EQUIP then
-                                                                bType = "BoE"
-                                                                bKey = "boe"
-                                                        elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
-                                                                bType = "WuE"
-                                                                bKey = "wue"
-                                                        elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
-                                                                bType = "WB"
-                                                                bKey = "wb"
-                                                        end
-                                                        break
-                                                end
-                                        end
-                                end
-                        end
-                        local setVisibility = false
+			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, _, expId = GetItemInfo(eItem:GetItemLink())
+			local bType, bKey
+			if addon.db["showBindOnBagItems"] or addon.itemBagFilters["bind"] then
+				local data = GetBagItem(bag, slot)
+				if data and data.lines then
+					for i, v in pairs(data.lines) do
+						if v.type == 20 then
+							if v.leftText == ITEM_BIND_ON_EQUIP then
+								bType = "BoE"
+								bKey = "boe"
+							elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+								bType = "WuE"
+								bKey = "wue"
+							elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+								bType = "WB"
+								bKey = "wb"
+							end
+							break
+						end
+					end
+				end
+			end
+			local setVisibility = false
 
 			if addon.filterFrame then
 				local cInfo = GetContainerItemInfo(bag, slot)
@@ -354,14 +354,14 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 						setVisibility = true
 					end
 					if addon.itemBagFilters["currentExpension"] and LE_EXPANSION_LEVEL_CURRENT ~= expId then setVisibility = true end
-                                        if addon.itemBagFilters["equipment"] and (nil == itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE") then setVisibility = true end
-                                        if addon.itemBagFilters["bind"] then
-                                                if nil == addon.itemBagFiltersBound[bKey] or addon.itemBagFiltersBound[bKey] == false then setVisibility = true end
-                                        end
-                                        if
-                                                addon.itemBagFilters["usableOnly"]
-                                                and (
-                                                        IsEquippableItem(eItem:GetItemLink()) == false
+					if addon.itemBagFilters["equipment"] and (nil == itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE") then setVisibility = true end
+					if addon.itemBagFilters["bind"] then
+						if nil == addon.itemBagFiltersBound[bKey] or addon.itemBagFiltersBound[bKey] == false then setVisibility = true end
+					end
+					if
+						addon.itemBagFilters["usableOnly"]
+						and (
+							IsEquippableItem(eItem:GetItemLink()) == false
 							or (
 								(
 									nil == addon.itemBagFilterTypes[addon.variables.unitClass]
@@ -404,22 +404,22 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 
 					itemButton.ItemLevelText:Show()
 
-                                        if addon.db["showBindOnBagItems"] and bType then
-                                                if not itemButton.ItemBoundType then
-                                                        -- Position behind Blizzard's overlay
-                                                        itemButton.ItemBoundType = itemButton:CreateFontString(nil, "ARTWORK")
-                                                        itemButton.ItemBoundType:SetDrawLayer("ARTWORK", 1)
-                                                        itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
-                                                        itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+					if addon.db["showBindOnBagItems"] and bType then
+						if not itemButton.ItemBoundType then
+							-- Position behind Blizzard's overlay
+							itemButton.ItemBoundType = itemButton:CreateFontString(nil, "ARTWORK")
+							itemButton.ItemBoundType:SetDrawLayer("ARTWORK", 1)
+							itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
+							itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
 							itemButton.ItemBoundType:SetShadowOffset(2, 2)
 							itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
 						end
-                                                itemButton.ItemBoundType:SetFormattedText(bType)
-                                                itemButton.ItemBoundType:Show()
-                                        elseif itemButton.ItemBoundType then
-                                                itemButton.ItemBoundType:Hide()
-                                        end
+						itemButton.ItemBoundType:SetFormattedText(bType)
+						itemButton.ItemBoundType:Show()
+					elseif itemButton.ItemBoundType then
+						itemButton.ItemBoundType:Hide()
+					end
 				elseif itemButton.ItemLevelText then
 					if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
 					itemButton.ItemLevelText:Hide()
@@ -468,25 +468,25 @@ local filterData = {
 		},
 		ignoreSort = true,
 	},
-        {
-                label = EXPANSION_FILTER_TEXT,
-                child = {
-                        { type = "CheckBox", key = "currentExpension", label = REFORGE_CURRENT, tooltip = L["currentExpensionMythicPlusWarning"] },
-                },
-        },
-        {
-                label = L["bagFilterBindType"],
-                child = {
-                        { type = "CheckBox", key = "boe", label = L["bagFilterBoE"], bFilter = "boe" },
-                        { type = "CheckBox", key = "wue", label = L["bagFilterWuE"], bFilter = "wue" },
-                        { type = "CheckBox", key = "wb", label = L["bagFilterWB"], bFilter = "wb" },
-                },
-        },
-        {
-                label = RARITY,
-                child = {
-                        { type = "CheckBox", key = "poor", label = "|cff9d9d9d" .. ITEM_QUALITY0_DESC, qFilter = 0 },
-                        { type = "CheckBox", key = "common", label = "|cffffffff" .. ITEM_QUALITY1_DESC, qFilter = 1 },
+	{
+		label = EXPANSION_FILTER_TEXT,
+		child = {
+			{ type = "CheckBox", key = "currentExpension", label = REFORGE_CURRENT, tooltip = L["currentExpensionMythicPlusWarning"] },
+		},
+	},
+	{
+		label = L["bagFilterBindType"],
+		child = {
+			{ type = "CheckBox", key = "boe", label = ITEM_BIND_ON_EQUIP, bFilter = "boe" },
+			{ type = "CheckBox", key = "wue", label = ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP, bFilter = "wue" },
+			{ type = "CheckBox", key = "wb", label = ITEM_BIND_TO_ACCOUNT, bFilter = "wb" },
+		},
+	},
+	{
+		label = RARITY,
+		child = {
+			{ type = "CheckBox", key = "poor", label = "|cff9d9d9d" .. ITEM_QUALITY0_DESC, qFilter = 0 },
+			{ type = "CheckBox", key = "common", label = "|cffffffff" .. ITEM_QUALITY1_DESC, qFilter = 1 },
 			{ type = "CheckBox", key = "uncommon", label = "|cff1eff00" .. ITEM_QUALITY2_DESC, qFilter = 2 },
 			{ type = "CheckBox", key = "rare", label = "|cff0070dd" .. ITEM_QUALITY3_DESC, qFilter = 3 },
 			{ type = "CheckBox", key = "epic", label = "|cffa335ee" .. ITEM_QUALITY4_DESC, qFilter = 4 },
@@ -513,13 +513,13 @@ local function checkActiveQualityFilter()
 end
 
 local function checkActiveBindFilter()
-        for _, value in pairs(addon.itemBagFiltersBound) do
-                if value == true then
-                        addon.itemBagFilters["bind"] = true
-                        return
-                end
-        end
-        addon.itemBagFilters["bind"] = false
+	for _, value in pairs(addon.itemBagFiltersBound) do
+		if value == true then
+			addon.itemBagFilters["bind"] = true
+			return
+		end
+	end
+	addon.itemBagFilters["bind"] = false
 end
 
 local function CreateFilterMenu()
@@ -590,21 +590,21 @@ local function CreateFilterMenu()
 			local widget
 
 			if item.type == "CheckBox" then
-                                widget = AceGUI:Create("CheckBox")
-                                widget:SetLabel(item.label)
-                                widget:SetValue(addon.itemBagFilters[item.key])
-                                widget:SetCallback("OnValueChanged", function(_, _, value)
-                                        addon.itemBagFilters[item.key] = value
-                                        if item.qFilter then
-                                                addon.itemBagFiltersQuality[item.qFilter] = value
-                                                checkActiveQualityFilter()
-                                        end
-                                        if item.bFilter then
-                                                addon.itemBagFiltersBound[item.bFilter] = value
-                                                checkActiveBindFilter()
-                                        end
-                                        -- Hier könnte man die Filterlogik triggern, z. B.:
-                                        -- UpdateInventoryDisplay()
+				widget = AceGUI:Create("CheckBox")
+				widget:SetLabel(item.label)
+				widget:SetValue(addon.itemBagFilters[item.key])
+				widget:SetCallback("OnValueChanged", function(_, _, value)
+					addon.itemBagFilters[item.key] = value
+					if item.qFilter then
+						addon.itemBagFiltersQuality[item.qFilter] = value
+						checkActiveQualityFilter()
+					end
+					if item.bFilter then
+						addon.itemBagFiltersBound[item.bFilter] = value
+						checkActiveBindFilter()
+					end
+					-- Hier könnte man die Filterlogik triggern, z. B.:
+					-- UpdateInventoryDisplay()
 					addon.functions.updateBags(ContainerFrameCombinedBags)
 					for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
 						addon.functions.updateBags(frame)
@@ -747,13 +747,13 @@ function addon.functions.updateBags(frame)
 	if addon.db["showBagFilterMenu"] then
 		InitializeFilterUI()
 	elseif addon.filterFrame then
-                addon.filterFrame:SetParent(nil)
-                addon.filterFrame:Hide()
-                addon.filterFrame = nil
-                addon.itemBagFilters = {}
-                addon.itemBagFiltersQuality = {}
-                addon.itemBagFiltersBound = {}
-        end
+		addon.filterFrame:SetParent(nil)
+		addon.filterFrame:Hide()
+		addon.filterFrame = nil
+		addon.itemBagFilters = {}
+		addon.itemBagFiltersQuality = {}
+		addon.itemBagFiltersBound = {}
+	end
 	if not frame:IsShown() then return end
 	if nil == knownButtons[frame:GetName()] then
 		knownButtons[frame:GetName()] = {}
