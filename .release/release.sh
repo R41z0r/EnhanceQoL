@@ -2807,7 +2807,7 @@ upload_curseforge() {
 			200) echo "Success!" ;;
 			302)
 				echo "Error! ($result)"
-				# don't need to ouput the redirect page
+                                # don't need to output the redirect page
 				return_code=1
 				;;
 			404)
@@ -3033,7 +3033,7 @@ upload_wago() {
 			200|201) echo "Success!" ;;
 			302)
 				echo "Error! ($result)"
-				# don't need to ouput the redirect page
+                                # don't need to output the redirect page
 				return_code=1
 				;;
 			404)
