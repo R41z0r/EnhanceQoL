@@ -37,6 +37,7 @@ local SearchInfoCache = {}
 
 local function CacheResultInfo(resultID)
         local info = C_LFGList.GetSearchResultInfo(resultID)
+
         if not info then
                 SearchInfoCache[resultID] = nil
                 return
@@ -91,6 +92,7 @@ local function EnsureExtraInfo(resultID)
         info.hasSameSpec = sameSpec
         info.extraCalculated = true
         return info
+
 end
 
 local function PopulateInfoCache()
