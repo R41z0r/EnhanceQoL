@@ -46,9 +46,9 @@ local function checkItem()
 	local _, avgItemLevelEquipped = GetAverageItemLevel()
 	local itemsToSell = {}
 	for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
-                for slot = 1, C_Container.GetContainerNumSlots(bag) do
-                        local containerInfo = C_Container.GetContainerItemInfo(bag, slot)
-                        if containerInfo then
+		for slot = 1, C_Container.GetContainerNumSlots(bag) do
+			local containerInfo = C_Container.GetContainerItemInfo(bag, slot)
+			if containerInfo then
 				-- check if cosmetic
 				local eItem = Item:CreateFromBagAndSlot(bag, slot)
 				if eItem and not eItem:IsItemEmpty() then
