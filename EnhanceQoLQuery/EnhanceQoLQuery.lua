@@ -427,6 +427,5 @@ function addon.Performance.LogEvent(addonName, event, elapsedTime)
 end
 
 function addon.Performance.GetPerformanceData() return addon.Performance.Data end
-function addon.Performance.GetPerformanceData() return addon.Performance.Data end
 
 addon.Query.frame = frame
