@@ -35,29 +35,20 @@ local BR_CLASSES = { DRUID = true, WARLOCK = true, DEATHKNIGHT = true, PALADIN =
 
 local SearchInfoCache = {}
 
-local function SoftCollect()
-	local ticks = 0
-	local frame = CreateFrame("Frame")
-	frame:SetScript("OnUpdate", function(self)
-		local done = collectgarbage("step", 50000)
-		ticks = ticks + 1
-		if done or ticks > 20 then self:SetScript("OnUpdate", nil) end
-		self:Hide()
-		self:SetParent(nil)
-		frame = nil
-	end)
+local function CacheResultInfo(resultID)
+        local info = C_LFGList.GetSearchResultInfo(resultID)
+        if info then SearchInfoCache[resultID] = { searchResultID = resultID, numMembers = info.numMembers } end
 end
 
 local function PopulateInfoCache()
-	SoftCollect()
-	wipe(SearchInfoCache)
-	local panel = LFGListFrame.SearchPanel
-	local dp = panel.ScrollBox and panel.ScrollBox:GetDataProvider()
-	if not dp then return end
-	for _, element in dp:EnumerateEntireRange() do
-		local resultID = element.resultID or element.id
-		if resultID then SearchInfoCache[resultID] = C_LFGList.GetSearchResultInfo(resultID) end
-	end
+        wipe(SearchInfoCache)
+        local panel = LFGListFrame.SearchPanel
+        local dp = panel.ScrollBox and panel.ScrollBox:GetDataProvider()
+        if not dp then return end
+        for _, element in dp:EnumerateEntireRange() do
+                local resultID = element.resultID or element.id
+                if resultID then CacheResultInfo(resultID) end
+        end
 end
 
 local playerIsLust = LUST_CLASSES[addon.variables.unitClass]
@@ -74,10 +65,9 @@ titleScore1:SetPoint("TOPRIGHT", PVEFrameLeftInset, "TOPRIGHT", -10, -5)
 titleScore1:Hide()
 
 drop:HookScript("OnHide", function()
-	originalSetupGen = nil
-	titleScore1:Hide()
-	wipe(SearchInfoCache)
-	SoftCollect()
+        originalSetupGen = nil
+        titleScore1:Hide()
+        wipe(SearchInfoCache)
 end)
 
 hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
@@ -282,10 +272,10 @@ function addon.MythicPlus.functions.addDungeonFilter()
 		if event == "LFG_LIST_SEARCH_RESULTS_RECEIVED" then
 			PopulateInfoCache()
 			ApplyEQOLFilters(true)
-		elseif event == "LFG_LIST_SEARCH_RESULT_UPDATED" then
-			local resultID = ...
-			if resultID then SearchInfoCache[resultID] = C_LFGList.GetSearchResultInfo(resultID) end
-			ApplyEQOLFilters(false)
+               elseif event == "LFG_LIST_SEARCH_RESULT_UPDATED" then
+                       local resultID = ...
+                        if resultID then CacheResultInfo(resultID) end
+                        ApplyEQOLFilters(false)
 		elseif event == "LFG_LIST_AVAILABILITY_UPDATE" then
 			PopulateInfoCache()
 			ApplyEQOLFilters(true)
