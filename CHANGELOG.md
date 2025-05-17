@@ -2,6 +2,7 @@
 
 ## [3.13.1] – 2025-05-17
 ### ✨ Added
+- **Enabled the Dungeon Filter Option** - Re-enabled the dungeon filter option
 - **Bag Filter by Binding type** - Option to filter items in bags by bind type
 ### 🐛 Fixed
 - Errors could occur when selling or buying items with the **Vendor** feature.
