@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.13.1] – 2025-05-17
+### 🐛 Fixed
+- Errors could occur when selling or buying items with the **Vendor** feature.
+- Vendor tools now load correctly after updating.
+- Miscellaneous internal clean‑up for better stability.
+
 ## [3.13.0] – 2025-05-14
 ### ✨ Added
 - **Support for Talent Loadout Ex** – Talent Reminder now supports loadouts created with Talent Loadout Ex.
