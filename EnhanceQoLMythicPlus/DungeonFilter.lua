@@ -35,29 +35,73 @@ local BR_CLASSES = { DRUID = true, WARLOCK = true, DEATHKNIGHT = true, PALADIN =
 
 local SearchInfoCache = {}
 
-local function SoftCollect()
-	local ticks = 0
-	local frame = CreateFrame("Frame")
-	frame:SetScript("OnUpdate", function(self)
-		local done = collectgarbage("step", 50000)
-		ticks = ticks + 1
-		if done or ticks > 20 then self:SetScript("OnUpdate", nil) end
-		self:Hide()
-		self:SetParent(nil)
-		frame = nil
-	end)
+local function CacheResultInfo(resultID)
+        local info = C_LFGList.GetSearchResultInfo(resultID)
+        if not info then
+                SearchInfoCache[resultID] = nil
+                return
+        end
+
+        local cached = SearchInfoCache[resultID] or {}
+        cached.searchResultID = resultID
+        cached.numMembers = info.numMembers
+
+        cached.extraCalculated = nil
+        cached.groupTankCount = nil
+        cached.groupHealerCount = nil
+        cached.groupDPSCount = nil
+        cached.hasLust = nil
+        cached.hasBR = nil
+        cached.hasSameSpec = nil
+
+        SearchInfoCache[resultID] = cached
+end
+
+local function EnsureExtraInfo(resultID)
+        local info = SearchInfoCache[resultID]
+        if not info or info.extraCalculated then return info end
+
+        local tank, healer, dps = 0, 0, 0
+        local lust, br, sameSpec = false, false, false
+
+        for i = 1, info.numMembers do
+                local mData = C_LFGList.GetSearchResultPlayerInfo(resultID, i)
+                if mData.assignedRole == "TANK" then
+                        tank = tank + 1
+                elseif mData.assignedRole == "HEALER" then
+                        healer = healer + 1
+                elseif mData.assignedRole == "DAMAGER" then
+                        dps = dps + 1
+                end
+                if LUST_CLASSES[mData.classFilename] then
+                        lust = true
+                elseif BR_CLASSES[mData.classFilename] then
+                        br = true
+                end
+                if mData.classFilename == addon.variables.unitClass and mData.specName == addon.variables.unitSpecName then
+                        sameSpec = true
+                end
+        end
+
+        info.groupTankCount = tank
+        info.groupHealerCount = healer
+        info.groupDPSCount = dps
+        info.hasLust = lust
+        info.hasBR = br
+        info.hasSameSpec = sameSpec
+        info.extraCalculated = true
+        return info
 end
 
 local function PopulateInfoCache()
-	SoftCollect()
-	wipe(SearchInfoCache)
-	local panel = LFGListFrame.SearchPanel
-	local dp = panel.ScrollBox and panel.ScrollBox:GetDataProvider()
-	if not dp then return end
-	for _, element in dp:EnumerateEntireRange() do
-		local resultID = element.resultID or element.id
-		if resultID then SearchInfoCache[resultID] = C_LFGList.GetSearchResultInfo(resultID) end
-	end
+        wipe(SearchInfoCache)
+        local panel = LFGListFrame.SearchPanel
+        local dp = panel.ScrollBox and panel.ScrollBox:GetDataProvider()
+        if not dp then return end
+        for _, element in dp:EnumerateEntireRange() do
+                local resultID = element.resultID or element.id
+                if resultID then CacheResultInfo(resultID) end
+        end
 end
 
 local playerIsLust = LUST_CLASSES[addon.variables.unitClass]
@@ -74,10 +118,9 @@ titleScore1:SetPoint("TOPRIGHT", PVEFrameLeftInset, "TOPRIGHT", -10, -5)
 titleScore1:Hide()
 
 drop:HookScript("OnHide", function()
-	originalSetupGen = nil
-	titleScore1:Hide()
-	wipe(SearchInfoCache)
-	SoftCollect()
+        originalSetupGen = nil
+        titleScore1:Hide()
+        wipe(SearchInfoCache)
 end)
 
 hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
@@ -113,27 +156,17 @@ hooksecurefunc(drop, "SetupMenu", function(self, blizzGen)
 end)
 
 local function MyCustomFilter(info)
-	if appliedLookup[info.searchResultID] then return true end
-	local groupTankCount, groupHealerCount, groupDPSCount = 0, 0, 0
-	local hasLust, hasBR, hasSameSpec = false, false, false
-	if info.numMembers == 5 then return false end
-	for i = 1, info.numMembers do
-		local mData = C_LFGList.GetSearchResultPlayerInfo(info.searchResultID, i)
+        if appliedLookup[info.searchResultID] then return true end
+        if info.numMembers == 5 then return false end
 
-		if mData.assignedRole == "TANK" then
-			groupTankCount = groupTankCount + 1
-		elseif mData.assignedRole == "HEALER" then
-			groupHealerCount = groupHealerCount + 1
-		elseif mData.assignedRole == "DAMAGER" then
-			groupDPSCount = groupDPSCount + 1
-		end
-		if LUST_CLASSES[mData.classFilename] then
-			hasLust = true
-		elseif BR_CLASSES[mData.classFilename] then
-			hasBR = true
-		end
-		if mData.classFilename == addon.variables.unitClass and mData.specName == addon.variables.unitSpecName then hasSameSpec = true end
-	end
+        info = EnsureExtraInfo(info.searchResultID) or info
+
+        local groupTankCount = info.groupTankCount or 0
+        local groupHealerCount = info.groupHealerCount or 0
+        local groupDPSCount = info.groupDPSCount or 0
+        local hasLust = info.hasLust or false
+        local hasBR = info.hasBR or false
+        local hasSameSpec = info.hasSameSpec or false
 
 	if addon.variables.unitRole == "DAMAGER" and pDb["NoSameSpec"] and hasSameSpec then return false end
 
@@ -232,24 +265,27 @@ local function ApplyEQOLFilters(isInitial)
 	local dp = panel.ScrollBox and panel.ScrollBox:GetDataProvider()
 	if not dp then return end
 
-	-- On initial call, record total entries before removal
-	if isInitial or not initialAllEntries then
-		initialAllEntries = {}
-		removedResults = {}
-		for _, element in dp:EnumerateEntireRange() do
-			local resultID = element.resultID or element.id
-			if resultID then initialAllEntries[resultID] = true end
-		end
-	end
+        -- On initial call, record total entries before removal
+        if isInitial or not next(initialAllEntries) then
+                initialAllEntries = {}
+                removedResults = {}
+                for _, element in dp:EnumerateEntireRange() do
+                        local resultID = element.resultID or element.id
+                        if resultID then initialAllEntries[resultID] = true end
+                end
+        end
 
-	for _, element in dp:EnumerateEntireRange() do
-		local resultID = element.resultID or element.id
-		if resultID then
-			if resultID then initialAllEntries[resultID] = true end
-			local info = SearchInfoCache[resultID]
-			if info and not MyCustomFilter(info) then dp:Remove(element) end
-		end
-	end
+        for _, element in dp:EnumerateEntireRange() do
+                local resultID = element.resultID or element.id
+                if resultID then
+                        local info = SearchInfoCache[resultID]
+                        if info and not removedResults[resultID] and not MyCustomFilter(info) then
+                                dp:Remove(element)
+                                initialAllEntries[resultID] = false
+                                removedResults[resultID] = true
+                        end
+                end
+        end
 
 	local removedCount = 0
 	for _, v in pairs(initialAllEntries) do
@@ -282,10 +318,10 @@ function addon.MythicPlus.functions.addDungeonFilter()
 		if event == "LFG_LIST_SEARCH_RESULTS_RECEIVED" then
 			PopulateInfoCache()
 			ApplyEQOLFilters(true)
-		elseif event == "LFG_LIST_SEARCH_RESULT_UPDATED" then
-			local resultID = ...
-			if resultID then SearchInfoCache[resultID] = C_LFGList.GetSearchResultInfo(resultID) end
-			ApplyEQOLFilters(false)
+               elseif event == "LFG_LIST_SEARCH_RESULT_UPDATED" then
+                       local resultID = ...
+                        if resultID then CacheResultInfo(resultID) end
+                        ApplyEQOLFilters(false)
 		elseif event == "LFG_LIST_AVAILABILITY_UPDATE" then
 			PopulateInfoCache()
 			ApplyEQOLFilters(true)
