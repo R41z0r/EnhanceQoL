@@ -12,6 +12,7 @@ addon.L = AceLocale:GetLocale(addonName)
 addon.elements = {}
 addon.itemBagFilters = {}
 addon.itemBagFiltersQuality = {}
+addon.itemBagFiltersBound = {}
 addon.itemBagFilterTypes = {
 	DEATHKNIGHT = {
 		[1] = { --Blood
