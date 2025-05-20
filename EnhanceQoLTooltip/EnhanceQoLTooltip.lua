@@ -248,17 +248,14 @@ local function checkUnit(tooltip)
 end
 
 local function CheckReagentBankCount(itemID)
-	local count = 0
-	if IsReagentBankUnlocked() then
-		for i = 1, C_Container.GetContainerNumSlots(REAGENTBANK_CONTAINER) do
-			local itemInSlot = C_Container.GetContainerItemID(REAGENTBANK_CONTAINER, i)
-			if itemInSlot == itemID then
-				local info = C_Container.GetContainerItemInfo(REAGENTBANK_CONTAINER, i)
-				count = count + info.stackCount
-			end
-		end
-	end
-	return count
+        if not itemID or not IsReagentBankUnlocked() then return 0 end
+
+        -- total count including reagent bank
+        local withReagent = C_Item.GetItemCount(itemID, true, false, true)
+        -- count without reagent bank
+        local withoutReagent = C_Item.GetItemCount(itemID, true)
+
+        return withReagent - withoutReagent
 end
 
 local function checkItem(tooltip, id, name)
