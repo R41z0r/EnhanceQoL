@@ -3728,16 +3728,22 @@ local eventHandlers = {
 			checkBagIgnoreJunk()
 		end
 	end,
-	--@debug@
-	["BAG_UPDATE_DELAYED"] = function(arg1)
-		if addon.db["automaticallyOpenContainer"] then
-			if wOpen then return end
-			wOpen = true
-			addon.functions.checkForContainer()
-		end
-	end,
-	--@end-debug@
-	["BANKFRAME_OPENED"] = function()
+        --@debug@
+        ["BAG_UPDATE_DELAYED"] = function(arg1)
+                if addon.db["automaticallyOpenContainer"] then
+                        if wOpen then return end
+                        wOpen = true
+                        addon.functions.checkForContainer()
+                end
+        end,
+        --@end-debug@
+        ["BAG_UPDATE"] = function(bag, slot)
+                addon.functions.updateBags(ContainerFrameCombinedBags, bag, slot)
+                for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+                        addon.functions.updateBags(frame, bag, slot)
+                end
+        end,
+        ["BANKFRAME_OPENED"] = function()
 		if not addon.db["showIlvlOnBankFrame"] then return end
 		for slot = 1, NUM_BANKGENERIC_SLOTS do
 			local itemButton = _G["BankFrameItem" .. slot]

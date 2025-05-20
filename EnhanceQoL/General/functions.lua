@@ -392,9 +392,8 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 					itemButton.ItemLevelText:SetShadowOffset(2, -2)
 					itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
 				end
-				if frameName then table.insert(knownButtons[frameName], itemButton) end
-				local link = eItem:GetItemLink()
-				local invSlot = select(4, GetItemInfoInstant(link))
+                                local link = eItem:GetItemLink()
+                                local invSlot = select(4, GetItemInfoInstant(link))
 				if nil ~= addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
 					local color = eItem:GetItemQualityColor()
 					local itemLevelText = eItem:GetCurrentItemLevel()
@@ -743,48 +742,74 @@ local function InitializeFilterUI()
 	if nil == addon.filterFrame then ToggleFilterMenu() end
 end
 
-function addon.functions.updateBags(frame)
-	if addon.db["showBagFilterMenu"] then
-		InitializeFilterUI()
-	elseif addon.filterFrame then
-		addon.filterFrame:SetParent(nil)
-		addon.filterFrame:Hide()
-		addon.filterFrame = nil
-		addon.itemBagFilters = {}
-		addon.itemBagFiltersQuality = {}
-		addon.itemBagFiltersBound = {}
-	end
-	if not frame:IsShown() then return end
-	if nil == knownButtons[frame:GetName()] then
-		knownButtons[frame:GetName()] = {}
-	else
-		for i, v in pairs(knownButtons[frame:GetName()]) do
-			if v.ItemLevelText then v.ItemLevelText:Hide() end
-		end
-	end
-	knownButtons[frame:GetName()] = {} -- clear the list again
+function addon.functions.updateBags(frame, bag, slot)
+        if addon.db["showBagFilterMenu"] then
+                InitializeFilterUI()
+        elseif addon.filterFrame then
+                addon.filterFrame:SetParent(nil)
+                addon.filterFrame:Hide()
+                addon.filterFrame = nil
+                addon.itemBagFilters = {}
+                addon.itemBagFiltersQuality = {}
+                addon.itemBagFiltersBound = {}
+        end
 
-	if frame:GetName() == "AccountBankPanel" then
-		for itemButton in frame:EnumerateValidItems() do
-			if addon.db["showIlvlOnBankFrame"] then
-				local bag = itemButton:GetBankTabID()
-				local slot = itemButton:GetContainerSlotID()
-				if bag and slot then updateButtonInfo(itemButton, bag, slot, frame:GetName()) end
-			elseif itemButton.ItemLevelText then
-				itemButton.ItemLevelText:Hide()
-			end
-		end
-	else
-		for _, itemButton in frame:EnumerateValidItems() do
-			if itemButton then
-				if addon.db["showIlvlOnBagItems"] then
-					updateButtonInfo(itemButton, itemButton:GetBagID(), itemButton:GetID(), frame:GetName())
-				elseif itemButton.ItemLevelText then
-					itemButton.ItemLevelText:Hide()
-				end
-			end
-		end
-	end
+        if not frame:IsShown() then return end
+
+        local frameName = frame:GetName()
+        if not knownButtons[frameName] then knownButtons[frameName] = { initialized = false } end
+
+        local function registerButton(itemButton)
+                local b, s
+                if frameName == "AccountBankPanel" then
+                        b = itemButton:GetBankTabID()
+                        s = itemButton:GetContainerSlotID()
+                else
+                        b = itemButton:GetBagID()
+                        s = itemButton:GetID()
+                end
+                if b and s then
+                        knownButtons[frameName][b] = knownButtons[frameName][b] or {}
+                        knownButtons[frameName][b][s] = itemButton
+                end
+                return b, s
+        end
+
+        local function handleButton(itemButton, b, s)
+                if frameName == "AccountBankPanel" then
+                        if addon.db["showIlvlOnBankFrame"] then
+                                updateButtonInfo(itemButton, b, s, frameName)
+                        elseif itemButton.ItemLevelText then
+                                itemButton.ItemLevelText:Hide()
+                        end
+                else
+                        if addon.db["showIlvlOnBagItems"] then
+                                updateButtonInfo(itemButton, b, s, frameName)
+                        elseif itemButton.ItemLevelText then
+                                itemButton.ItemLevelText:Hide()
+                        end
+                end
+        end
+
+        -- initialize mapping or refresh all when no bag provided
+        if not knownButtons[frameName].initialized or not bag then
+                knownButtons[frameName] = { initialized = true }
+                for itemButton in frame:EnumerateValidItems() do
+                        local b, s = registerButton(itemButton)
+                        if b and s then handleButton(itemButton, b, s) end
+                end
+                return
+        end
+
+        if knownButtons[frameName][bag] then
+                if slot and knownButtons[frameName][bag][slot] then
+                        handleButton(knownButtons[frameName][bag][slot], bag, slot)
+                else
+                        for s, button in pairs(knownButtons[frameName][bag]) do
+                                handleButton(button, bag, s)
+                        end
+                end
+        end
 end
 
 function addon.functions.IsQuestRepeatableType(questID)
