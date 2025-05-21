@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.15.0] – 2025-05-22
+### ✨ Added
+- **Change Mouse Ring size** - Option to change mouse ring size
+
 ## [3.14.0] – 2025-05-21
 ### ✨ Added
 - **Re-enabled “Dungeon Filter” option**
