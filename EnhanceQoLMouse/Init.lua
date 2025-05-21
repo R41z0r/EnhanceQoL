@@ -13,3 +13,4 @@ addon.LMouse = {} -- Locales for aura
 addon.functions.InitDBValue("mouseRingEnabled", false)
 addon.functions.InitDBValue("mouseTrailEnabled", false)
 addon.functions.InitDBValue("mouseTrailDensity", 1)
+addon.functions.InitDBValue("mouseRingSize", 70)

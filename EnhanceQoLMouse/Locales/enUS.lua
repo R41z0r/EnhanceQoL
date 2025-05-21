@@ -6,3 +6,4 @@ L["Trailinfo"] = "Depending on your hardware this could have a performance impac
 L["Ring Color"] = "Ring color"
 L["Trail Color"] = "Trail color"
 L["mouseTrailDensity"] = "Mouse trail density"
+L["mouseRingSize"] = "Ring size"

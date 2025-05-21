@@ -160,7 +160,7 @@ local function createMouseRing()
 
 		local texture1 = imageFrame:CreateTexture(nil, "BACKGROUND")
 		texture1:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Icons\\Mouse.tga")
-		texture1:SetSize(70, 70)
+		texture1:SetSize(addon.db["mouseRingSize"], addon.db["mouseRingSize"])
 		texture1:SetPoint("CENTER", imageFrame, "CENTER", 0, 0)
 		local color = addon.db["mouseRingColor"]
 		if color then
@@ -242,6 +242,13 @@ local function addGeneralFrame(container)
 		end)
 
 		groupCore:AddChild(colorPicker)
+
+		local sliderRingSize = addon.functions.createSliderAce(L["mouseRingSize"] .. ": " .. addon.db["mouseRingSize"], addon.db["mouseRingSize"], 20, 200, 1, function(self, _, value2)
+			addon.db["mouseRingSize"] = value2
+			if addon.mousePointer and addon.mousePointer.texture1 then addon.mousePointer.texture1:SetSize(value2, value2) end
+			self:SetLabel(L["mouseRingSize"] .. ": " .. value2)
+		end)
+		groupCore:AddChild(sliderRingSize)
 
 		local groupTrail = addon.functions.createContainer("InlineGroup", "List")
 		groupTrail:SetTitle(L["Trailinfo"])
