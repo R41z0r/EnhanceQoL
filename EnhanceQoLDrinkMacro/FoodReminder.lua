@@ -25,6 +25,47 @@ local brButton
 local defaultButtonSize = 60
 local defaultFontSize = 16
 
+local queuedFollower = false
+
+local function createLeaveFrame()
+    removeBRFrame()
+    brButton = CreateFrame("Button", nil, UIParent)
+    brButton:SetSize(defaultButtonSize, defaultButtonSize)
+    brButton:SetPoint("TOP", UIParent, "TOP", 0, -100)
+    brButton:SetFrameStrata("HIGH")
+    brButton:SetScript("OnClick", function()
+        LeaveParty()
+    end)
+
+    brButton.info = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+    brButton.info:SetPoint("TOP", brButton, "BOTTOM", 0, -3)
+    brButton.info:SetFont(addon.variables.defaultFont, defaultFontSize, "OUTLINE")
+    brButton.info:SetText(L["mageFoodLeaveText"])
+
+    local bg = brButton:CreateTexture(nil, "BACKGROUND")
+    bg:SetAllPoints(brButton)
+    bg:SetColorTexture(0, 0, 0, 0.8)
+
+    local icon = brButton:CreateTexture(nil, "ARTWORK")
+    icon:SetAllPoints(brButton)
+    icon:SetTexture(136813) -- door icon
+    brButton.icon = icon
+
+    local jumpGroup = brButton:CreateAnimationGroup()
+    local up = jumpGroup:CreateAnimation("Translation")
+    up:SetOffset(0, 50)
+    up:SetDuration(1)
+    up:SetSmoothing("OUT")
+
+    local down = jumpGroup:CreateAnimation("Translation")
+    down:SetOffset(0, -50)
+    down:SetDuration(1)
+    down:SetSmoothing("IN")
+
+    jumpGroup:SetLooping("BOUNCE")
+    jumpGroup:Play()
+end
+
 local function removeBRFrame()
 	if brButton then
 		brButton:Hide()
@@ -48,9 +89,9 @@ local function createBRFrame()
 	brButton = CreateFrame("Button", nil, UIParent)
 	brButton:SetSize(defaultButtonSize, defaultButtonSize)
 	brButton:SetPoint("TOP", UIParent, "TOP", 0, -100)
-	brButton:SetFrameStrata("HIGH")
-	brButton:SetScript("OnClick", function()
-		LFDQueueFrame_SetType("follower")
+        brButton:SetFrameStrata("HIGH")
+        brButton:SetScript("OnClick", function()
+                LFDQueueFrame_SetType("follower")
 
 		LFDQueueFrame_Update()
 		for _, dungeonID in ipairs(_G["LFDDungeonList"]) do
@@ -59,11 +100,12 @@ local function createBRFrame()
 
 				LFDQueueFrameList_Update()
 				LFDQueueFrame_UpdateRoleButtons()
-				LFDQueueFrameFindGroupButton:Click()
-				return
-			end
-		end
-	end)
+                                LFDQueueFrameFindGroupButton:Click()
+                                queuedFollower = true
+                                return
+                        end
+                end
+        end)
 
 	brButton.info = brButton:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	brButton.info:SetPoint("TOP", brButton, "BOTTOM", 0, -3)
@@ -96,27 +138,44 @@ end
 
 local healerRole
 
+local function hasEnoughMageFood()
+        local mageFoodList = addon.Drinks.mageFood
+        if mageFoodList then
+                for itemID in pairs(mageFoodList) do
+                        local count = C_Item_GetItemCount(itemID, false, false)
+                        if count and count > 20 then return true end
+                end
+        end
+        return false
+end
+
 local function checkShow()
-	if not addon.db["mageFoodReminder"] then
-		removeBRFrame()
-		return
-	end
-	if not healerRole or not IsResting() then
-		removeBRFrame()
-		return
-	end
-	local found = false
-	local mageFoodList = addon.Drinks.mageFood
-	if mageFoodList then
-		for itemID in pairs(mageFoodList) do
-			local count = C_Item_GetItemCount(itemID, false, false)
-			if count and count > 20 then
-				found = true
-				break
-			end
-		end
-		if found == false then createBRFrame() end
-	end
+        if not addon.db["mageFoodReminder"] then
+                removeBRFrame()
+                return
+        end
+
+        local enoughFood = hasEnoughMageFood()
+
+        if queuedFollower and IsInLFGDungeon() then
+                if enoughFood then
+                        createLeaveFrame()
+                else
+                        removeBRFrame()
+                end
+                return
+        end
+
+        if not healerRole or not IsResting() then
+                removeBRFrame()
+                return
+        end
+
+        if not enoughFood then
+                createBRFrame()
+        else
+                removeBRFrame()
+        end
 end
 
 function addon.Drinks.functions.updateRole()
@@ -130,13 +189,19 @@ frameLoad:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 frameLoad:RegisterEvent("PLAYER_LOGIN")
 frameLoad:RegisterEvent("BAG_UPDATE_DELAYED")
 frameLoad:RegisterEvent("PLAYER_UPDATE_RESTING")
+frameLoad:RegisterEvent("PLAYER_ENTERING_WORLD")
+frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 frameLoad:SetScript("OnEvent", function(self, event)
-	if event == "PLAYER_LOGIN" then
-		healerRole = GetSpecializationRole(GetSpecialization()) == "HEALER" or false
-	elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
-		healerRole = GetSpecializationRole(GetSpecialization()) == "HEALER" or false
-	end
+        if event == "PLAYER_LOGIN" then
+                healerRole = GetSpecializationRole(GetSpecialization()) == "HEALER" or false
+        elseif event == "ACTIVE_TALENT_GROUP_CHANGED" then
+                healerRole = GetSpecializationRole(GetSpecialization()) == "HEALER" or false
+        elseif event == "PLAYER_ENTERING_WORLD" then
+                if not IsInLFGDungeon() then queuedFollower = false end
+        elseif event == "GROUP_ROSTER_UPDATE" then
+                if not IsInGroup() then queuedFollower = false end
+        end
 
 	checkShow()
 end)
