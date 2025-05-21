@@ -1,13 +1,15 @@
 # Changelog
 
-## [3.13.1] – 2025-05-17
+## [3.14.0] – 2025-05-21
 ### ✨ Added
-- **Enabled the Dungeon Filter Option** - Re-enabled the dungeon filter option
-- **Bag Filter by Binding type** - Option to filter items in bags by bind type
+- **Re-enabled “Dungeon Filter” option**
+- **Bag Filter: Binding Type** – filter bag items by their binding type
+
 ### 🐛 Fixed
-- Errors could occur when selling or buying items with the **Vendor** feature.
-- Vendor tools now load correctly after updating.
-- Miscellaneous internal clean‑up for better stability.
+- Fixed errors that could occur when buying or selling items with the **Vendor** feature.
+- Vendor tools now load correctly after an update.
+- Miscellaneous internal clean-up for improved stability.
+- ButtonSink now correctly captures the minimap button of a specific add-on.
 
 ## [3.13.0] – 2025-05-14
 ### ✨ Added

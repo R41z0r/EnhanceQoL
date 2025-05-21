@@ -20,6 +20,7 @@ EQOL.C = {}
 
 -- localeadditions
 local headerClassInfo = L["headerClassInfo"]:format(select(1, UnitClass("player")))
+local hookedATT = false -- need to hook ATT because of the way the minimap button is created
 
 hooksecurefunc("LFGListSearchEntry_OnClick", function(s, button)
 	local panel = LFGListFrame.SearchPanel
@@ -2698,10 +2699,31 @@ local function initUI()
 		end
 	end
 
+	local function firstStartButtonSink(counter)
+		if hookedATT then return end
+		if C_AddOns.IsAddOnLoadable("AllTheThings") then
+			if _G["AllTheThings-Minimap"] then
+				addon.functions.gatherMinimapButtons()
+				addon.functions.LayoutButtons()
+				return
+			end
+			if _G["AllTheThings"] and _G["AllTheThings"].SetMinimapButtonSettings then
+				hooksecurefunc(_G["AllTheThings"], "SetMinimapButtonSettings", function(self, visible)
+					addon.functions.gatherMinimapButtons()
+					addon.functions.LayoutButtons()
+				end)
+				hookedATT = true
+				return
+			end
+			if counter < 30 then C_Timer.After(0.5, function() firstStartButtonSink(counter + 1) end) end
+		end
+	end
+
 	function addon.functions.toggleButtonSink()
 		if addon.db["enableMinimapButtonBin"] then
 			removeButtonSink()
 
+			firstStartButtonSink(0)
 			local buttonBag = CreateFrame("Frame", addonName .. "_ButtonSink", UIParent, "BackdropTemplate")
 			buttonBag:SetSize(150, 150)
 			buttonBag:SetBackdrop({
