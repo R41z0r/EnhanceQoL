@@ -2,3 +2,8 @@ local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_Aura", "enUS", true) --
 
 L["Aura"] = "Aura Tracker"
 L["DragToPosition"] = "Drag me to position"
+L["BuffTracker"] = "Buff Tracker"
+L["EnableBuffTracker"] = "Enable Buff Tracker"
+L["GrowthDirection"] = "Growth Direction"
+L["SpellID"] = "Spell ID"
+L["TrackedBuffs"] = "Tracked Buffs"

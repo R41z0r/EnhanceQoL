@@ -800,19 +800,24 @@ addon.functions.addToTree(nil, {
 	value = "aura",
 	text = L["Aura"],
 	children = {
-		{ value = "resourcebar", text = DISPLAY_PERSONAL_RESOURCE },
-		{ value = "cooldownmanager", text = "CD Manager", children = {
-			{ value = "cdessential", text = "Essential" },
-		} },
+               { value = "resourcebar", text = DISPLAY_PERSONAL_RESOURCE },
+               { value = "bufftracker", text = L["BuffTracker"] },
+               { value = "cooldownmanager", text = "CD Manager", children = {
+                        { value = "cdessential", text = "Essential" },
+                } },
 	},
 })
 
 function addon.Aura.functions.treeCallback(container, group)
 	container:ReleaseChildren() -- Entfernt vorherige Inhalte
-	if group == "aura\001resourcebar" then
-		addResourceFrame(container) -- elseif group == "aura\001cooldownmanager\001cdessential" then
-		-- 	addEssentialFrame(container)
-	end
+        if group == "aura\001resourcebar" then
+                addResourceFrame(container)
+        elseif group == "aura\001bufftracker" then
+                addon.Aura.functions.addBuffTrackerOptions(container)
+                addon.Aura.scanBuffs()
+                -- elseif group == "aura\001cooldownmanager\001cdessential" then
+                --      addEssentialFrame(container)
+        end
 end
 
 -- local function getKnownCD(category, cd)
