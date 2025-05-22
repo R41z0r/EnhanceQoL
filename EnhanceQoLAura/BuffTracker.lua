@@ -8,6 +8,7 @@ else
 end
 
 local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_Aura")
+local AceGUI = addon.AceGUI
 
 local activeBuffFrames = {}
 
@@ -73,6 +74,38 @@ local function applySize()
         updatePositions()
 end
 
+local function applyLockState()
+        if addon.db["buffTrackerLocked"] then
+                anchor:RegisterForDrag()
+                anchor:SetMovable(false)
+                anchor:EnableMouse(false)
+                anchor:SetScript("OnDragStart", nil)
+                anchor:SetScript("OnDragStop", nil)
+                anchor.text:Hide()
+        else
+                anchor:RegisterForDrag("LeftButton")
+                anchor:SetMovable(true)
+                anchor:EnableMouse(true)
+                anchor:SetScript("OnDragStart", anchor.StartMoving)
+                anchor:SetScript("OnDragStop", anchorDragStop)
+                anchor.text:Show()
+        end
+end
+
+local function applySize()
+        local size = addon.db["buffTrackerSize"]
+        anchor:SetSize(size, size)
+        for _, frame in pairs(activeBuffFrames) do
+                frame:SetSize(size, size)
+                frame.cd:SetAllPoints(frame)
+        end
+        updatePositions()
+end
+
+-- apply saved states once helpers are defined
+applyLockState()
+applySize()
+
 local function createBuffFrame(icon)
         local frame = CreateFrame("Frame", nil, anchor)
         frame:SetSize(addon.db["buffTrackerSize"], addon.db["buffTrackerSize"])
@@ -133,10 +166,14 @@ local function updateBuff(id)
 end
 
 local function scanBuffs()
-	for id in pairs(addon.db["buffTrackerList"]) do
-		updateBuff(id)
-	end
-	updatePositions()
+        for id in pairs(addon.db["buffTrackerList"]) do
+                if not addon.db["buffTrackerHidden"][id] then
+                        updateBuff(id)
+                elseif activeBuffFrames[id] then
+                        activeBuffFrames[id]:Hide()
+                end
+        end
+        updatePositions()
 end
 
 anchor:SetScript("OnEvent", function(_, event, unit)
@@ -157,14 +194,16 @@ addon.Aura.buffAnchor = anchor
 addon.Aura.scanBuffs = scanBuffs
 
 local function addBuff(id)
-	local spell = C_Spell.GetSpellInfo(id)
-	if not spell.name then return end
-	if not addon.db["buffTrackerList"][id] then addon.db["buffTrackerList"][id] = spell.name end
-	scanBuffs()
+        local spell = C_Spell.GetSpellInfo(id)
+        if not spell.name then return end
+        if not addon.db["buffTrackerList"][id] then addon.db["buffTrackerList"][id] = spell.name end
+        addon.db["buffTrackerHidden"][id] = nil
+        scanBuffs()
 end
 
 local function removeBuff(id)
         addon.db["buffTrackerList"][id] = nil
+        addon.db["buffTrackerHidden"][id] = nil
         if activeBuffFrames[id] then
                 activeBuffFrames[id]:Hide()
                 activeBuffFrames[id] = nil
@@ -239,12 +278,31 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
         table.sort(buffData, function(a, b) return a.name < b.name end)
 
         for _, info in ipairs(buffData) do
-                local cbSpell = addon.functions.createCheckboxAce(info.name .. " (" .. info.id .. ")", true, function(self, _, val)
-                        if not val then
-                                removeBuff(info.id)
-                                refresh()
+               local row = addon.functions.createContainer("SimpleGroup", "Flow")
+                listGroup:AddChild(row)
+
+                local cbSpell = addon.functions.createCheckboxAce(info.name .. " (" .. info.id .. ")", not addon.db["buffTrackerHidden"][info.id], function(self, _, val)
+                        addon.db["buffTrackerHidden"][info.id] = not val
+                        if val then
+                                updateBuff(info.id)
+                        elseif activeBuffFrames[info.id] then
+                                activeBuffFrames[info.id]:Hide()
+                                updatePositions()
                         end
                 end)
-                listGroup:AddChild(cbSpell)
+                cbSpell:SetWidth(200)
+                row:AddChild(cbSpell)
+
+                local removeIcon = AceGUI:Create("Icon")
+                removeIcon:SetLabel("")
+                removeIcon:SetImage("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+                removeIcon:SetImageSize(14, 14)
+                removeIcon:SetWidth(16)
+                removeIcon:SetHeight(16)
+                removeIcon:SetCallback("OnClick", function()
+                        removeBuff(info.id)
+                        refresh()
+                end)
+                row:AddChild(removeIcon)
         end
 end
