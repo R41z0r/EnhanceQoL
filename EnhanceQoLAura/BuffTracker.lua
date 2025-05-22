@@ -10,6 +10,16 @@ end
 local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_Aura")
 local AceGUI = addon.AceGUI
 
+addon.Aura.categories = addon.Aura.categories
+       or {
+               { text = L["Offensive"], value = "offensive" },
+               { text = L["Defensive"], value = "defensive" },
+               { text = L["Utility"], value = "utility" },
+               { text = L["Other"], value = "other" },
+       }
+
+local selectedCategory = addon.db["buffTrackerSelectedCategory"] or "offensive"
+
 local activeBuffFrames = {}
 
 local anchor = CreateFrame("Frame", "EQOLBuffTrackerAnchor", UIParent, "BackdropTemplate")
@@ -160,12 +170,12 @@ end
 addon.Aura.buffAnchor = anchor
 addon.Aura.scanBuffs = scanBuffs
 
-local function addBuff(id)
+local function addBuff(id, category)
 	-- get spell name and icon once
 	local spellData = C_Spell.GetSpellInfo(id)
 	if not spellData then return end
 
-	addon.db["buffTrackerList"][id] = { name = spellData.name, icon = spellData.iconID }
+       addon.db["buffTrackerList"][id] = { name = spellData.name, icon = spellData.iconID, type = category or "other" }
 
 	-- make sure the buff is not hidden
 	addon.db["buffTrackerHidden"][id] = nil
@@ -174,127 +184,143 @@ local function addBuff(id)
 end
 
 local function removeBuff(id)
-	addon.db["buffTrackerList"][id] = nil
-	addon.db["buffTrackerHidden"][id] = nil
-	if activeBuffFrames[id] then
-		activeBuffFrames[id]:Hide()
-		activeBuffFrames[id] = nil
-	end
-	scanBuffs()
+       addon.db["buffTrackerList"][id] = nil
+       addon.db["buffTrackerHidden"][id] = nil
+       if activeBuffFrames[id] then
+               activeBuffFrames[id]:Hide()
+               activeBuffFrames[id] = nil
+       end
+       scanBuffs()
+end
+
+local function buildTabContent(tabContainer, category)
+       local function refresh()
+               tabContainer:ReleaseChildren()
+               buildTabContent(tabContainer, category)
+       end
+
+       local core = addon.functions.createContainer("InlineGroup", "List")
+       tabContainer:AddChild(core)
+
+       local cb = addon.functions.createCheckboxAce(L["EnableBuffTracker"], addon.db["buffTrackerEnabled"], function(self, _, val)
+               addon.db["buffTrackerEnabled"] = val
+               if val then
+                       anchor:Show()
+                       applyLockState()
+                       applySize()
+               else
+                       anchor:Hide()
+               end
+       end)
+       core:AddChild(cb)
+
+       local lockCB = addon.functions.createCheckboxAce(L["buffTrackerLocked"], addon.db["buffTrackerLocked"], function(self, _, val)
+               addon.db["buffTrackerLocked"] = val
+               applyLockState()
+       end)
+       core:AddChild(lockCB)
+
+       local sizeSlider = addon.functions.createSliderAce(L["buffTrackerIconSizeHeadline"] .. ": " .. addon.db["buffTrackerSize"], addon.db["buffTrackerSize"], 20, 100, 1, function(self, _, val)
+               addon.db["buffTrackerSize"] = val
+               self:SetLabel(L["buffTrackerIconSizeHeadline"] .. ": " .. val)
+               applySize()
+       end)
+       core:AddChild(sizeSlider)
+
+       local dirDrop = addon.functions.createDropdownAce(L["GrowthDirection"], { LEFT = "LEFT", RIGHT = "RIGHT", UP = "UP", DOWN = "DOWN" }, nil, function(self, _, val)
+               addon.db["buffTrackerDirection"] = val
+               updatePositions()
+       end)
+       dirDrop:SetValue(addon.db["buffTrackerDirection"])
+       core:AddChild(dirDrop)
+
+       local edit
+       edit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
+               local id = tonumber(text)
+               if id then
+                       addBuff(id, category)
+                       refresh()
+               end
+               self:SetText("")
+       end)
+       core:AddChild(edit)
+
+       local listGroup = addon.functions.createContainer("InlineGroup", "List")
+       listGroup:SetTitle(L["TrackedBuffs"])
+
+       tabContainer:AddChild(listGroup)
+
+       local buffData = {}
+       for id, data in pairs(addon.db["buffTrackerList"]) do
+               if (data.type or "other") == category then
+                       table.insert(buffData, { id = id, name = data.name, icon = data.icon })
+               end
+       end
+       table.sort(buffData, function(a, b) return a.name < b.name end)
+
+       for _, info in ipairs(buffData) do
+               local row = addon.functions.createContainer("SimpleGroup", "Flow")
+
+               row:SetFullWidth(true)
+
+               local spellIconTexture = info.icon
+               if not spellIconTexture then
+                       local spellData = C_Spell.GetSpellInfo(info.id)
+                       info.icon = spellData.iconID
+               end
+
+               listGroup:AddChild(row)
+
+               local cbSpell = addon.functions.createCheckboxAce(info.name .. " (" .. info.id .. ")", not addon.db["buffTrackerHidden"][info.id], function(self, _, val)
+                       addon.db["buffTrackerHidden"][info.id] = not val
+                       if val then
+                               updateBuff(info.id)
+                       elseif activeBuffFrames[info.id] then
+                               activeBuffFrames[info.id]:Hide()
+                               updatePositions()
+                       end
+               end)
+               if spellIconTexture then cbSpell:SetImage(spellIconTexture) end
+               cbSpell:SetRelativeWidth(0.85)
+               row:AddChild(cbSpell)
+
+               local removeIcon = AceGUI:Create("Icon")
+               removeIcon:SetLabel("")
+               removeIcon:SetImage("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+               removeIcon:SetImageSize(16, 16)
+               removeIcon:SetRelativeWidth(0.15)
+               removeIcon:SetHeight(16)
+               removeIcon:SetCallback("OnClick", function()
+                       removeBuff(info.id)
+                       refresh()
+               end)
+               row:AddChild(removeIcon)
+       end
+
+       tabContainer:DoLayout()
 end
 
 function addon.Aura.functions.addBuffTrackerOptions(container)
-	local function refresh()
-		container:ReleaseChildren()
-		addon.Aura.functions.addBuffTrackerOptions(container)
-	end
+       local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+       scroll:SetFullWidth(true)
+       scroll:SetFullHeight(true)
+       container:AddChild(scroll)
 
-	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
-	scroll:SetFullWidth(true)
-	scroll:SetFullHeight(true)
-	container:AddChild(scroll)
+       local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+       scroll:AddChild(wrapper)
 
-	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-	scroll:AddChild(wrapper)
+       local groupTabs = addon.functions.createContainer("TabGroup", "Flow")
+       groupTabs:SetTabs(addon.Aura.categories)
+       groupTabs:SetCallback("OnGroupSelected", function(tabContainer, event, group)
+               selectedCategory = group
+               addon.db["buffTrackerSelectedCategory"] = group
+               tabContainer:ReleaseChildren()
+               buildTabContent(tabContainer, group)
+       end)
+       groupTabs:SetFullWidth(true)
+       wrapper:AddChild(groupTabs)
 
-	local core = addon.functions.createContainer("InlineGroup", "List")
-	wrapper:AddChild(core)
-
-	local cb = addon.functions.createCheckboxAce(L["EnableBuffTracker"], addon.db["buffTrackerEnabled"], function(self, _, val)
-		addon.db["buffTrackerEnabled"] = val
-		if val then
-			anchor:Show()
-			applyLockState()
-			applySize()
-		else
-			anchor:Hide()
-		end
-	end)
-	core:AddChild(cb)
-
-	local lockCB = addon.functions.createCheckboxAce(L["buffTrackerLocked"], addon.db["buffTrackerLocked"], function(self, _, val)
-		addon.db["buffTrackerLocked"] = val
-		applyLockState()
-	end)
-	core:AddChild(lockCB)
-
-	local sizeSlider = addon.functions.createSliderAce(L["buffTrackerIconSizeHeadline"] .. ": " .. addon.db["buffTrackerSize"], addon.db["buffTrackerSize"], 20, 100, 1, function(self, _, val)
-		addon.db["buffTrackerSize"] = val
-		self:SetLabel(L["buffTrackerIconSizeHeadline"] .. ": " .. val)
-		applySize()
-	end)
-	core:AddChild(sizeSlider)
-
-	local dirDrop = addon.functions.createDropdownAce(L["GrowthDirection"], { LEFT = "LEFT", RIGHT = "RIGHT", UP = "UP", DOWN = "DOWN" }, nil, function(self, _, val)
-		addon.db["buffTrackerDirection"] = val
-		updatePositions()
-	end)
-	dirDrop:SetValue(addon.db["buffTrackerDirection"])
-	core:AddChild(dirDrop)
-
-	local edit
-	edit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
-		local id = tonumber(text)
-		if id then
-			addBuff(id)
-			refresh()
-		end
-		self:SetText("")
-	end)
-	core:AddChild(edit)
-
-	local listGroup = addon.functions.createContainer("InlineGroup", "List")
-	listGroup:SetTitle(L["TrackedBuffs"])
-
-	wrapper:AddChild(listGroup)
-
-	local buffData = {}
-	for id, data in pairs(addon.db["buffTrackerList"]) do
-		table.insert(buffData, { id = id, name = data.name, icon = data.icon })
-	end
-	table.sort(buffData, function(a, b) return a.name < b.name end)
-
-	for _, info in ipairs(buffData) do
-		local row = addon.functions.createContainer("SimpleGroup", "Flow")
-
-		row:SetFullWidth(true)
-
-		-- spell icon
-		local spellIconTexture = info.icon
-		if not spellIconTexture then
-			local spellData = C_Spell.GetSpellInfo(info.id)
-			info.icon = spellData.iconID
-		end
-
-		listGroup:AddChild(row)
-
-		local cbSpell = addon.functions.createCheckboxAce(info.name .. " (" .. info.id .. ")", not addon.db["buffTrackerHidden"][info.id], function(self, _, val)
-			addon.db["buffTrackerHidden"][info.id] = not val
-			if val then
-				updateBuff(info.id)
-			elseif activeBuffFrames[info.id] then
-				activeBuffFrames[info.id]:Hide()
-				updatePositions()
-			end
-		end)
-		if spellIconTexture then cbSpell:SetImage(spellIconTexture) end
-		cbSpell:SetRelativeWidth(0.85)
-		row:AddChild(cbSpell)
-
-		local removeIcon = AceGUI:Create("Icon")
-		removeIcon:SetLabel("")
-		removeIcon:SetImage("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
-		removeIcon:SetImageSize(16, 16)
-		removeIcon:SetRelativeWidth(0.15)
-		removeIcon:SetHeight(16)
-		removeIcon:SetCallback("OnClick", function()
-			removeBuff(info.id)
-			refresh()
-		end)
-		row:AddChild(removeIcon)
-	end
-
-	scroll:DoLayout()
+       groupTabs:SelectTab(selectedCategory)
 end
 
 applyLockState()
