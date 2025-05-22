@@ -43,6 +43,36 @@ end
 
 anchor:SetScript("OnShow", restorePosition)
 restorePosition()
+applyLockState()
+applySize()
+
+local function applyLockState()
+        if addon.db["buffTrackerLocked"] then
+                anchor:RegisterForDrag(nil)
+                anchor:SetMovable(false)
+                anchor:EnableMouse(false)
+                anchor:SetScript("OnDragStart", nil)
+                anchor:SetScript("OnDragStop", nil)
+                anchor.text:Hide()
+        else
+                anchor:RegisterForDrag("LeftButton")
+                anchor:SetMovable(true)
+                anchor:EnableMouse(true)
+                anchor:SetScript("OnDragStart", anchor.StartMoving)
+                anchor:SetScript("OnDragStop", anchorDragStop)
+                anchor.text:Show()
+        end
+end
+
+local function applySize()
+        local size = addon.db["buffTrackerSize"]
+        anchor:SetSize(size, size)
+        for _, frame in pairs(activeBuffFrames) do
+                frame:SetSize(size, size)
+                frame.cd:SetAllPoints(frame)
+        end
+        updatePositions()
+end
 
 local function applyLockState()
         if addon.db["buffTrackerLocked"] then
@@ -248,7 +278,7 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
         table.sort(buffData, function(a, b) return a.name < b.name end)
 
         for _, info in ipairs(buffData) do
-                local row = addon.functions.createContainer("SimpleGroup", "Flow")
+               local row = addon.functions.createContainer("SimpleGroup", "Flow")
                 listGroup:AddChild(row)
 
                 local cbSpell = addon.functions.createCheckboxAce(info.name .. " (" .. info.id .. ")", not addon.db["buffTrackerHidden"][info.id], function(self, _, val)
