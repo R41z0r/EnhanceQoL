@@ -15,3 +15,4 @@ locales.xml
 
 #DetailsSkin.lua
 EnhanceQoLAura.lua
+BuffTracker.lua

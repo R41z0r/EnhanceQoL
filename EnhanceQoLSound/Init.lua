@@ -381,11 +381,14 @@ addon.Sounds.soundFiles = {
 			1416760, -- Timewarp
 			1416761, -- Timewarp
 			1416762, -- Timewarp
-			4558551,
-			4558553,
-			4558555,
-			4558557,
-			4558559,
+			4558551, -- Fury of the Aspects
+			4558553, -- Fury of the Aspects
+			4558555, -- Fury of the Aspects
+			4558557, -- Fury of the Aspects
+			4558559, -- Fury of the Aspects
+			4575217, -- Fury of the Aspects
+			4575219, -- Fury of the Aspects
+			4575221, -- Fury of the Aspects
 		},
 	},
 	["emotes"] = {
