@@ -125,37 +125,37 @@ local function createBuffFrame(icon)
 end
 
 local function playBuffSound(id)
-        local sound = addon.db["buffTrackerSounds"][id]
-        if not sound then return end
-        if tonumber(sound) then
-                PlaySound(tonumber(sound), "Master")
-        else
-                PlaySoundFile(sound, "Master")
-        end
+	local sound = addon.db["buffTrackerSounds"][id]
+	if not sound then return end
+	if tonumber(sound) then
+		PlaySound(tonumber(sound), "Master")
+	else
+		PlaySoundFile(sound, "Master")
+	end
 end
 
 local function updateBuff(id)
-        local aura = C_UnitAuras.GetPlayerAuraBySpellID(id)
+	local aura = C_UnitAuras.GetPlayerAuraBySpellID(id)
 
-        local frame = activeBuffFrames[id]
-        local wasShown = frame and frame:IsShown()
-        if aura then
-                local icon = aura.icon
-                if not frame then
-                        frame = createBuffFrame(icon)
-                        activeBuffFrames[id] = frame
-                end
-                frame.icon:SetTexture(icon)
-                if aura.duration and aura.duration > 0 then
-                        frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
-                else
-                        frame.cd:Clear()
-                end
-                if not wasShown then playBuffSound(id) end
-                frame:Show()
-        else
-                if frame then frame:Hide() end
-        end
+	local frame = activeBuffFrames[id]
+	local wasShown = frame and frame:IsShown()
+	if aura then
+		local icon = aura.icon
+		if not frame then
+			frame = createBuffFrame(icon)
+			activeBuffFrames[id] = frame
+		end
+		frame.icon:SetTexture(icon)
+		if aura.duration and aura.duration > 0 then
+			frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+		else
+			frame.cd:Clear()
+		end
+		if not wasShown then playBuffSound(id) end
+		frame:Show()
+	else
+		if frame then frame:Hide() end
+	end
 end
 
 local function scanBuffs()
@@ -186,78 +186,79 @@ addon.Aura.buffAnchor = anchor
 addon.Aura.scanBuffs = scanBuffs
 
 local function moveTrackedBuff(id, direction)
-        local list = addon.db["buffTrackerOrder"]
-        local oldIndex
-        for i, v in ipairs(list) do
-                if v == id then
-                        oldIndex = i
-                        break
-                end
-        end
-        if not oldIndex then
-                table.insert(list, id)
-                oldIndex = #list
-        end
+	local list = addon.db["buffTrackerOrder"]
+	local oldIndex
+	for i, v in ipairs(list) do
+		if v == id then
+			oldIndex = i
+			break
+		end
+	end
+	if not oldIndex then
+		table.insert(list, id)
+		oldIndex = #list
+	end
 
-        local newIndex = math.max(1, math.min(#list, oldIndex + direction))
-        table.remove(list, oldIndex)
-        table.insert(list, newIndex, id)
+	local newIndex = math.max(1, math.min(#list, oldIndex + direction))
+	table.remove(list, oldIndex)
+	table.insert(list, newIndex, id)
 end
 
 local function openBuffConfig(id)
-        local frame = AceGUI:Create("Frame")
-        frame:SetTitle(L["BuffTracker"])
-        frame:SetWidth(300)
-        frame:SetHeight(120)
-        frame:SetLayout("List")
-        frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+	local frame = AceGUI:Create("Frame")
+	frame:SetTitle(L["BuffTracker"])
+	frame:SetWidth(400)
+	frame:SetHeight(180)
+	frame:SetLayout("List")
+	frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
 
-        local label = AceGUI:Create("Label")
-        label:SetText(addon.db["buffTrackerList"][id].name .. " (" .. id .. ")")
-        frame:AddChild(label)
+	local label = AceGUI:Create("Label")
+	label:SetText(addon.db["buffTrackerList"][id].name .. " (" .. id .. ")")
+	frame:AddChild(label)
 
-        local edit = addon.functions.createEditboxAce(L["SoundFile"], addon.db["buffTrackerSounds"][id] or "", function(self, _, text)
-                if text == "" then
-                        addon.db["buffTrackerSounds"][id] = nil
-                else
-                        addon.db["buffTrackerSounds"][id] = text
-                end
-        end)
-        frame:AddChild(edit)
+	local edit = addon.functions.createEditboxAce(L["SoundFile"], addon.db["buffTrackerSounds"][id] or "", function(self, _, text)
+		if text == "" then
+			addon.db["buffTrackerSounds"][id] = nil
+		else
+			addon.db["buffTrackerSounds"][id] = text
+		end
+	end)
+	frame:AddChild(edit)
 
-        local playButton = addon.functions.createButtonAce(L["Play"], 80, function()
-                playBuffSound(id)
-        end)
-        frame:AddChild(playButton)
+	local playButton = addon.functions.createButtonAce(L["Play"], 80, function() playBuffSound(id) end)
+	frame:AddChild(playButton)
 end
 
 local function addBuff(id, category)
-        -- get spell name and icon once
-        local spellData = C_Spell.GetSpellInfo(id)
-        if not spellData then return end
+	-- get spell name and icon once
+	local spellData = C_Spell.GetSpellInfo(id)
+	if not spellData then return end
 
-        addon.db["buffTrackerList"][id] = { name = spellData.name, icon = spellData.iconID, type = category or "other" }
+	addon.db["buffTrackerList"][id] = { name = spellData.name, icon = spellData.iconID, type = category or "other" }
 
-        if not tContains(addon.db["buffTrackerOrder"], id) then table.insert(addon.db["buffTrackerOrder"], id) end
+	if not tContains(addon.db["buffTrackerOrder"], id) then table.insert(addon.db["buffTrackerOrder"], id) end
 
-        -- make sure the buff is not hidden
-        addon.db["buffTrackerHidden"][id] = nil
+	-- make sure the buff is not hidden
+	addon.db["buffTrackerHidden"][id] = nil
 
-        scanBuffs()
+	scanBuffs()
 end
 
 local function removeBuff(id)
-        addon.db["buffTrackerList"][id] = nil
-        addon.db["buffTrackerHidden"][id] = nil
-        addon.db["buffTrackerSounds"][id] = nil
-        for i, v in ipairs(addon.db["buffTrackerOrder"]) do
-                if v == id then table.remove(addon.db["buffTrackerOrder"], i) break end
-        end
-        if activeBuffFrames[id] then
-                activeBuffFrames[id]:Hide()
-                activeBuffFrames[id] = nil
-        end
-        scanBuffs()
+	addon.db["buffTrackerList"][id] = nil
+	addon.db["buffTrackerHidden"][id] = nil
+	addon.db["buffTrackerSounds"][id] = nil
+	for i, v in ipairs(addon.db["buffTrackerOrder"]) do
+		if v == id then
+			table.remove(addon.db["buffTrackerOrder"], i)
+			break
+		end
+	end
+	if activeBuffFrames[id] then
+		activeBuffFrames[id]:Hide()
+		activeBuffFrames[id] = nil
+	end
+	scanBuffs()
 end
 
 local function buildTabContent(tabContainer, category, scroll)
@@ -265,7 +266,7 @@ local function buildTabContent(tabContainer, category, scroll)
 
 	local function refresh()
 		tabContainer:ReleaseChildren()
-		buildTabContent(tabContainer, category)
+		buildTabContent(tabContainer, category, scroll)
 		scroll:DoLayout()
 	end
 
@@ -274,22 +275,22 @@ local function buildTabContent(tabContainer, category, scroll)
 
 	tabContainer:AddChild(listGroup)
 
-        local buffData = {}
-        for id, data in pairs(addon.db["buffTrackerList"]) do
-                if (data.type or "other") == category then table.insert(buffData, { id = id, name = data.name, icon = data.icon }) end
-        end
+	local buffData = {}
+	for id, data in pairs(addon.db["buffTrackerList"]) do
+		if (data.type or "other") == category then table.insert(buffData, { id = id, name = data.name, icon = data.icon }) end
+	end
 
-        local orderIndex = {}
-        for idx, bid in ipairs(addon.db["buffTrackerOrder"]) do
-                orderIndex[bid] = idx
-        end
+	local orderIndex = {}
+	for idx, bid in ipairs(addon.db["buffTrackerOrder"]) do
+		orderIndex[bid] = idx
+	end
 
-        table.sort(buffData, function(a, b)
-                local idxA = orderIndex[a.id] or math.huge
-                local idxB = orderIndex[b.id] or math.huge
-                if idxA ~= idxB then return idxA < idxB end
-                return a.name < b.name
-        end)
+	table.sort(buffData, function(a, b)
+		local idxA = orderIndex[a.id] or math.huge
+		local idxB = orderIndex[b.id] or math.huge
+		if idxA ~= idxB then return idxA < idxB end
+		return a.name < b.name
+	end)
 
 	for _, info in ipairs(buffData) do
 		local row = addon.functions.createContainer("SimpleGroup", "Flow")
@@ -304,85 +305,84 @@ local function buildTabContent(tabContainer, category, scroll)
 
 		listGroup:AddChild(row)
 
+		local cbSpell = addon.functions.createCheckboxAce(info.name .. " (" .. info.id .. ")", not addon.db["buffTrackerHidden"][info.id], function(self, _, val)
+			addon.db["buffTrackerHidden"][info.id] = not val
+			if val then
+				updateBuff(info.id)
+			elseif activeBuffFrames[info.id] then
+				activeBuffFrames[info.id]:Hide()
+				updatePositions()
+			end
+		end)
+		if spellIconTexture then cbSpell:SetImage(spellIconTexture) end
+		cbSpell:SetRelativeWidth(0.6)
+		cbSpell.frame:HookScript("OnEnter", function()
+			GameTooltip:SetOwner(cbSpell.frame, "ANCHOR_RIGHT")
+			GameTooltip:SetSpellByID(info.id)
+			GameTooltip:Show()
+		end)
+		cbSpell.frame:HookScript("OnLeave", function() GameTooltip:Hide() end)
+		row:AddChild(cbSpell)
 
-                local cbSpell = addon.functions.createCheckboxAce(info.name .. " (" .. info.id .. ")", not addon.db["buffTrackerHidden"][info.id], function(self, _, val)
-                        addon.db["buffTrackerHidden"][info.id] = not val
-                        if val then
-                                updateBuff(info.id)
-                        elseif activeBuffFrames[info.id] then
-                                activeBuffFrames[info.id]:Hide()
-                                updatePositions()
-                        end
-                end)
-                if spellIconTexture then cbSpell:SetImage(spellIconTexture) end
-                cbSpell:SetRelativeWidth(0.6)
-                cbSpell.frame:HookScript("OnEnter", function()
-                        GameTooltip:SetOwner(cbSpell.frame, "ANCHOR_RIGHT")
-                        GameTooltip:SetSpellByID(info.id)
-                        GameTooltip:Show()
-                end)
-                cbSpell.frame:HookScript("OnLeave", function() GameTooltip:Hide() end)
-                row:AddChild(cbSpell)
+		local upIcon = AceGUI:Create("Icon")
+		upIcon:SetLabel("")
+		upIcon:SetImage("Interface\\AddOns\\" .. addonName .. "\\Textures\\up.blp")
+		upIcon:SetImageSize(20, 20)
+		upIcon:SetRelativeWidth(0.05)
+		upIcon:SetHeight(20)
+		if #buffData > 1 and info ~= buffData[1] then
+			upIcon:SetCallback("OnClick", function()
+				moveTrackedBuff(info.id, -1)
+				refresh()
+			end)
+		else
+			upIcon:SetDisabled(true)
+		end
+		row:AddChild(upIcon)
 
-                local upIcon = AceGUI:Create("Icon")
-                upIcon:SetLabel("")
-                upIcon:SetImage("Interface\\AddOns\\" .. parentAddonName .. "\\Textures\\up.blp")
-                upIcon:SetImageSize(16, 16)
-                upIcon:SetRelativeWidth(0.1)
-                upIcon:SetHeight(16)
-                if #buffData > 1 and info ~= buffData[1] then
-                        upIcon:SetCallback("OnClick", function()
-                                moveTrackedBuff(info.id, -1)
-                                refresh()
-                        end)
-                else
-                        upIcon:SetDisabled(true)
-                end
-                row:AddChild(upIcon)
+		local downIcon = AceGUI:Create("Icon")
+		downIcon:SetLabel("")
+		downIcon:SetImage("Interface\\AddOns\\" .. addonName .. "\\Textures\\down.blp")
+		downIcon:SetImageSize(20, 20)
+		downIcon:SetRelativeWidth(0.05)
+		downIcon:SetHeight(20)
+		if #buffData > 1 and info ~= buffData[#buffData] then
+			downIcon:SetCallback("OnClick", function()
+				moveTrackedBuff(info.id, 1)
+				refresh()
+			end)
+		else
+			downIcon:SetDisabled(true)
+		end
+		row:AddChild(downIcon)
 
-                local downIcon = AceGUI:Create("Icon")
-                downIcon:SetLabel("")
-                downIcon:SetImage("Interface\\AddOns\\" .. parentAddonName .. "\\Textures\\down.blp")
-                downIcon:SetImageSize(16, 16)
-                downIcon:SetRelativeWidth(0.1)
-                downIcon:SetHeight(16)
-                if #buffData > 1 and info ~= buffData[#buffData] then
-                        downIcon:SetCallback("OnClick", function()
-                                moveTrackedBuff(info.id, 1)
-                                refresh()
-                        end)
-                else
-                        downIcon:SetDisabled(true)
-                end
-                row:AddChild(downIcon)
+		local gearIcon = AceGUI:Create("Icon")
+		gearIcon:SetLabel("")
+		gearIcon:SetImage("Interface\\Icons\\INV_Misc_Gear_01")
+		gearIcon:SetImageSize(16, 16)
+		gearIcon:SetRelativeWidth(0.1)
+		gearIcon:SetHeight(16)
+		gearIcon:SetCallback("OnClick", function() openBuffConfig(info.id) end)
+		row:AddChild(gearIcon)
 
-                local gearIcon = AceGUI:Create("Icon")
-                gearIcon:SetLabel("")
-                gearIcon:SetImage("Interface\\Icons\\INV_Misc_Gear_01")
-                gearIcon:SetImageSize(16, 16)
-                gearIcon:SetRelativeWidth(0.1)
-                gearIcon:SetHeight(16)
-                gearIcon:SetCallback("OnClick", function() openBuffConfig(info.id) end)
-                row:AddChild(gearIcon)
-
-                local removeIcon = AceGUI:Create("Icon")
-                removeIcon:SetLabel("")
-                removeIcon:SetImage("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
-                removeIcon:SetImageSize(16, 16)
-                removeIcon:SetRelativeWidth(0.1)
-                removeIcon:SetHeight(16)
-                removeIcon:SetCallback("OnClick", function()
-                        removeBuff(info.id)
-                        refresh()
-                end)
-                row:AddChild(removeIcon)
-
+		local removeIcon = AceGUI:Create("Icon")
+		removeIcon:SetLabel("")
+		removeIcon:SetImage("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+		removeIcon:SetImageSize(16, 16)
+		removeIcon:SetRelativeWidth(0.1)
+		removeIcon:SetHeight(16)
+		removeIcon:SetCallback("OnClick", function()
+			removeBuff(info.id)
+			refresh()
+		end)
+		row:AddChild(removeIcon)
 	end
 
 	tabContainer:DoLayout()
+	scroll:DoLayout()
 end
-local function buildTopOptions(container)
-	local core = addon.functions.createContainer("InlineGroup", "List")
+local function buildTopOptions(container, scroll)
+	local core = addon.functions.createContainer("InlineGroup", "Flow")
 	container:AddChild(core)
 
 	local cb = addon.functions.createCheckboxAce(L["EnableBuffTracker"], addon.db["buffTrackerEnabled"], function(self, _, val)
@@ -415,6 +415,7 @@ local function buildTopOptions(container)
 		updatePositions()
 	end)
 	dirDrop:SetValue(addon.db["buffTrackerDirection"])
+	dirDrop:SetRelativeWidth(0.4)
 	core:AddChild(dirDrop)
 
 	local list, order = {}, {}
@@ -424,6 +425,7 @@ local function buildTopOptions(container)
 	end
 	local typeDrop = addon.functions.createDropdownAce(L["BuffType"], list, order, function(self, _, val) newBuffCategory = val end)
 	typeDrop:SetValue(newBuffCategory)
+	typeDrop:SetRelativeWidth(0.4)
 	core:AddChild(typeDrop)
 
 	local edit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
@@ -432,7 +434,7 @@ local function buildTopOptions(container)
 			addBuff(id, newBuffCategory)
 			if activeTabContainer then
 				activeTabContainer:ReleaseChildren()
-				buildTabContent(activeTabContainer, selectedCategory)
+				buildTabContent(activeTabContainer, selectedCategory, scroll)
 			end
 		end
 		self:SetText("")
@@ -451,7 +453,7 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 	scroll:AddChild(wrapper)
 
-	buildTopOptions(wrapper)
+	buildTopOptions(wrapper, scroll)
 
 	local groupTabs = addon.functions.createContainer("TabGroup", "Flow")
 	groupTabs:SetTabs(addon.Aura.categories)
