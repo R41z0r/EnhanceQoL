@@ -1,6 +1,7 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("EnhanceQoL_MythicPlus", "enUS", true)
 
 L["enableKeystoneHelper"] = "Enable Keystone Helper"
+L["enableKeystoneHelperDesc"] = "Adds ready check and pull timer buttons to the Keystone frame. Requires party leader privileges"
 L["enableKeystoneHelperNewUI"] = "Enable the improved Keystone Helper UI"
 L["Keystone"] = "Keystone"
 L["NoKeystone"] = "No Info"

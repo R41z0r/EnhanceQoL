@@ -416,25 +416,26 @@ local function addKeystoneFrame(container)
 	wrapper:AddChild(groupCore)
 
 	local data = {
-		{
-			text = L["enableKeystoneHelper"],
-			var = "enableKeystoneHelper",
-			func = function(self, _, value)
-				addon.db["enableKeystoneHelper"] = value
-				container:ReleaseChildren()
-				addKeystoneFrame(container)
-				if _G["ChallengesKeystoneFrame"] and ChallengesKeystoneFrame:IsShown() then checkKeyStone() end
-			end,
-		},
+               {
+                       text = L["enableKeystoneHelper"],
+                       var = "enableKeystoneHelper",
+                       func = function(self, _, value)
+                               addon.db["enableKeystoneHelper"] = value
+                               container:ReleaseChildren()
+                               addKeystoneFrame(container)
+                               if _G["ChallengesKeystoneFrame"] and ChallengesKeystoneFrame:IsShown() then checkKeyStone() end
+                       end,
+                       desc = L["enableKeystoneHelperDesc"],
+               },
 	}
 	table.sort(data, function(a, b) return a.text < b.text end)
 
-	for _, cbData in ipairs(data) do
-		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
-		if cbData.func then uFunc = cbData.func end
-		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
-		groupCore:AddChild(cbElement)
-	end
+       for _, cbData in ipairs(data) do
+               local uFunc = function(self, _, value) addon.db[cbData.var] = value end
+               if cbData.func then uFunc = cbData.func end
+               local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc, cbData.desc)
+               groupCore:AddChild(cbElement)
+       end
 
 	if addon.db["enableKeystoneHelper"] then
 		local groupEnabled = addon.functions.createContainer("InlineGroup", "List")
