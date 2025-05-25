@@ -544,13 +544,54 @@ local function checkActiveBindFilter()
 end
 
 local function checkActiveUpgradeFilter()
-	for _, value in pairs(addon.itemBagFiltersUpgrade) do
-		if value == true then
-			addon.itemBagFilters["upgrade"] = true
-			return
-		end
-	end
-	addon.itemBagFilters["upgrade"] = false
+        for _, value in pairs(addon.itemBagFiltersUpgrade) do
+                if value == true then
+                        addon.itemBagFilters["upgrade"] = true
+                        return
+                end
+        end
+        addon.itemBagFilters["upgrade"] = false
+end
+
+local function createCollapsibleSection(parent, title, key)
+       local group = AceGUI:Create("InlineGroup")
+       group:SetFullWidth(true)
+       group:SetLayout("Flow")
+       group:SetTitle("|cffffd100" .. title .. "|r")
+
+       local button = CreateFrame("Button", nil, group.frame)
+       button:SetSize(14, 14)
+       button:SetPoint("TOPRIGHT", -6, -4)
+
+       addon.db.bagFilterCollapsed = addon.db.bagFilterCollapsed or {}
+       local collapsed = addon.db.bagFilterCollapsed[key]
+       if collapsed == nil then
+               collapsed = true
+               addon.db.bagFilterCollapsed[key] = true
+       end
+
+       local function refresh()
+               if collapsed then
+                       group.content:Hide()
+                       button:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up")
+                       button:SetPushedTexture("Interface\\Buttons\\UI-PlusButton-Down")
+               else
+                       group.content:Show()
+                       button:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up")
+                       button:SetPushedTexture("Interface\\Buttons\\UI-MinusButton-Down")
+               end
+               parent:DoLayout()
+       end
+
+       button:SetScript("OnClick", function()
+               collapsed = not collapsed
+               addon.db.bagFilterCollapsed[key] = collapsed
+               refresh()
+       end)
+
+       refresh()
+       parent:AddChild(group)
+       return group, group.titletext
 end
 
 local function CreateFilterMenu()
@@ -605,20 +646,15 @@ local function CreateFilterMenu()
 
 	local longestWidth = 200
 	local math_max = math.max
-	-- Dynamisch die UI-Elemente aus `filterData` erstellen
-	for _, section in ipairs(filterData) do
-		-- Überschrift für jede Sektion
-		local label = AceGUI:Create("Label")
-		label:SetText("|cffffd100" .. section.label .. "|r") -- Goldene Überschrift
-		label:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
-		label:SetFullWidth(true)
-		scrollContainer:AddChild(label)
+       -- Dynamisch die UI-Elemente aus `filterData` erstellen
+       for idx, section in ipairs(filterData) do
+               local content, title = createCollapsibleSection(scrollContainer, section.label, tostring(idx))
 
-		longestWidth = math_max(label.label:GetStringWidth(), longestWidth)
+               longestWidth = math_max(title:GetStringWidth(), longestWidth)
 
-		-- Füge die Kind-Elemente hinzu
-		for _, item in ipairs(section.child) do
-			local widget
+               -- Füge die Kind-Elemente hinzu
+               for _, item in ipairs(section.child) do
+                       local widget
 
 			if item.type == "CheckBox" then
 				widget = AceGUI:Create("CheckBox")
@@ -667,7 +703,7 @@ local function CreateFilterMenu()
 				local eLabel = AceGUI:Create("Label")
 				eLabel:SetText(item.label)
 				eLabel:SetRelativeWidth(0.48)
-				scrollContainer:AddChild(eLabel)
+                               content:AddChild(eLabel)
 				widget = AceGUI:Create("EditBox")
 				-- widget:SetLabel(item.label) -- REMOVED: label now handled by separate label above
 				widget:SetWidth(50)
@@ -709,7 +745,7 @@ local function CreateFilterMenu()
 
 			if widget then
 				if item.type ~= "EditBox" or (item.key ~= "minLevel" and item.key ~= "maxLevel") then widget:SetFullWidth(true) end
-				scrollContainer:AddChild(widget)
+                               content:AddChild(widget)
 				if widget.text and widget.text.GetStringWidth then longestWidth = math_max(widget.text:GetStringWidth(), longestWidth) end
 			end
 		end
