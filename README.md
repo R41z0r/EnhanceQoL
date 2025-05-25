@@ -41,6 +41,13 @@ Search for **“Enhance QoL”** in the CurseForge app and hit **Install** – d
 | `/eqol aag <id>` | Auto‑pick a gossip option |
 | `/eqol rag <id>` | Remove an auto‑picked gossip ID |
 
+## Buff Tracker Categories
+You can create custom categories for the buff tracker in the options
+(`Aura` → `Buff Tracker`). Use **Add Category** to create a new anchor and
+**Delete Category** to remove the current one. Each category stores its own
+position, icon size and growth direction. Assign buffs to categories in the
+buff list or via the settings gear next to a buff entry.
+
 ---
 
 ## 🌐 Localisation
