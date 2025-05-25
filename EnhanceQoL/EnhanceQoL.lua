@@ -2100,61 +2100,28 @@ local function addQuestFrame(container, d)
 			end
 		end
 	end)
-        groupNPC:AddChild(btnAddNPC)
-        groupNPC:AddChild(dropIncludeList)
-        groupNPC:AddChild(btnRemoveNPC)
+	groupNPC:AddChild(btnAddNPC)
+	groupNPC:AddChild(dropIncludeList)
+	groupNPC:AddChild(btnRemoveNPC)
 end
 
 local function addMapFrame(container)
-       local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-       container:AddChild(wrapper)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
 
-       local groupCore = addon.functions.createContainer("InlineGroup", "List")
-       wrapper:AddChild(groupCore)
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
 
-       local cbElement = addon.functions.createCheckboxAce(L["enableWayCommand"], addon.db["enableWayCommand"], function(self, _, value)
-               addon.db["enableWayCommand"] = value
-               if value then registerWayCommand() end
-       end)
-       groupCore:AddChild(cbElement)
-end
-
-local function handleWayCommand(msg)
-       local args = {}
-       for token in string.gmatch(msg or "", "[^%s,]+") do
-               table.insert(args, token)
-       end
-
-       local mapID, x, y
-       if #args == 2 then
-               x = tonumber(args[1])
-               y = tonumber(args[2])
-               mapID = C_Map.GetBestMapForUnit("player")
-       elseif #args == 3 then
-               mapID = tonumber(args[1])
-               x = tonumber(args[2])
-               y = tonumber(args[3])
-       end
-
-       if not mapID or not x or not y then
-               print("|cff00ff98Enhance QoL|r: " .. L["wayUsage"])
-               return
-       end
-
-       x = x / 100
-       y = y / 100
-
-       local point = UiMapPoint.CreateFromCoordinates(mapID, x, y)
-       C_Map.SetUserWaypoint(point)
-       C_SuperTrack.SetSuperTrackedUserWaypoint(true)
-
-       print("|cff00ff98Enhance QoL|r: " .. string.format(L["waySet"], x * 100, y * 100))
-end
-
-local function registerWayCommand()
-       if SlashCmdList["WAY"] or _G.SLASH_WAY1 then return end
-       SLASH_EQOLWAY1 = "/way"
-       SlashCmdList["EQOLWAY"] = handleWayCommand
+	local cbElement = addon.functions.createCheckboxAce(L["enableWayCommand"], addon.db["enableWayCommand"], function(self, _, value)
+		addon.db["enableWayCommand"] = value
+		if value then
+			addon.functions.registerWayCommand()
+		else
+			_G.SLASH_EQOLWAY1 = nil
+			SlashCmdList["EQOLWAY"] = nil
+		end
+	end)
+	groupCore:AddChild(cbElement)
 end
 
 local function updateBankButtonInfo()
@@ -2570,12 +2537,12 @@ local function initChatFrame()
 		addon.functions.InitDBValue("chatFrameFadeEnabled", true)
 		addon.functions.InitDBValue("chatFrameFadeTimeVisible", 120)
 		addon.functions.InitDBValue("chatFrameFadeDuration", 3)
-        end
+	end
 end
 
 local function initMap()
-       addon.functions.InitDBValue("enableWayCommand", false)
-       if addon.db["enableWayCommand"] then registerWayCommand() end
+	addon.functions.InitDBValue("enableWayCommand", false)
+	if addon.db["enableWayCommand"] then addon.functions.registerWayCommand() end
 end
 
 local function initUI()
@@ -3332,17 +3299,18 @@ local function CreateUI()
 
 	-- Create the TreeGroup
 	addon.treeGroup = AceGUI:Create("TreeGroup")
-        addon.functions.addToTree(nil, {
-                value = "general",
-                text = L["General"],
-                children = {
-                        { value = "character", text = L["Character"] },
+	addon.functions.addToTree(nil, {
+		value = "general",
+		text = L["General"],
+		children = {
+			{ value = "character", text = L["Character"] },
 			{ value = "bags", text = HUD_EDIT_MODE_BAGS_LABEL },
 			{ value = "cvar", text = "CVar" },
 			{ value = "party", text = PARTY },
 			{ value = "dungeon", text = L["Dungeon"] },
 			{ value = "misc", text = L["Misc"] },
 			{ value = "quest", text = L["Quest"] },
+			{ value = "map", text = L["Map"] },
 			{
 				value = "ui",
 				text = BUG_CATEGORY5,
@@ -3354,19 +3322,12 @@ local function CreateUI()
 					{ value = "unitframe", text = UNITFRAME_LABEL },
 				},
 			},
-                },
-        })
-        addon.functions.addToTree(nil, {
-                value = "map",
-                text = L["Map"],
-                children = {
-                        { value = "general", text = GENERAL },
-                },
-        })
-        table.insert(addon.treeGroupData, {
-                value = "profiles",
-                text = L["Profiles"],
-        })
+		},
+	})
+	table.insert(addon.treeGroupData, {
+		value = "profiles",
+		text = L["Profiles"],
+	})
 	addon.treeGroup:SetLayout("Fill")
 	addon.treeGroup:SetTree(addon.treeGroupData)
 	addon.treeGroup:SetCallback("OnGroupSelected", function(container, _, group)
@@ -3396,11 +3357,11 @@ local function CreateUI()
 			addUnitFrame(container)
 		elseif group == "general\001ui\001chatframe" then
 			addChatFrame(container)
-               elseif group == "general\001ui\001minimap" then
-                       addMinimapFrame(container)
-               elseif group == "map\001general" then
-                       addMapFrame(container)
-               elseif group == "profiles" then
+		elseif group == "general\001ui\001minimap" then
+			addMinimapFrame(container)
+		elseif group == "general\001map" then
+			addMapFrame(container)
+		elseif group == "profiles" then
 			local sub = AceGUI:Create("SimpleGroup")
 			sub:SetFullWidth(true)
 			sub:SetFullHeight(true)
@@ -3424,10 +3385,9 @@ local function CreateUI()
 			addon.LayoutTools.functions.treeCallback(container, group)
 		end
 	end)
-       addon.treeGroup:SetStatusTable(addon.variables.statusTable)
-       addon.variables.statusTable.groups["general\001ui"] = true
-       addon.variables.statusTable.groups["map"] = true
-       frame:AddChild(addon.treeGroup)
+	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
+	addon.variables.statusTable.groups["general\001ui"] = true
+	frame:AddChild(addon.treeGroup)
 
 	-- Select the first group by default
 	addon.treeGroup:SelectByPath("general")
@@ -3590,11 +3550,11 @@ local function setAllHooks()
 	initDungeon()
 	initParty()
 	initActionBars()
-       initUI()
-       initUnitFrame()
-       initChatFrame()
-       initMap()
-       initBagsFrame()
+	initUI()
+	initUnitFrame()
+	initChatFrame()
+	initMap()
+	initBagsFrame()
 end
 
 function loadMain()

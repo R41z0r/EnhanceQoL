@@ -172,7 +172,8 @@ L["currentExpensionMythicPlusWarning"] = "For Mythic+ items from legacy dungeons
 L["Map"] = "Map"
 L["enableWayCommand"] = "Enable /way command"
 L["wayUsage"] = "Usage /way [mapID] 37.8 61.2"
-L["waySet"] = "Waypoint set at %.1f %.1f"
+L["waySet"] = "Waypoint set to %s at %.1f %.1f"
+L["wayError"] = "MapID %s not found"
 L["wayMapUnknown"] = "Map unknown – try again outdoors."
 
 L["persistAuctionHouseFilter"] = "Remember Auction House filters for this session"
