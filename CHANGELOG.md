@@ -1,8 +1,11 @@
 # Changelog
 
-## [3.15.0] – 2025-05-22
+## [3.15.0] – 2025-05-26
 ### ✨ Added
 - **Change Mouse Ring size** - Option to change mouse ring size
+
+### 🐛 Fixed
+- Fixed an error when you disable Autokeystone Feature in some places
 
 ## [3.14.0] – 2025-05-21
 ### ✨ Added

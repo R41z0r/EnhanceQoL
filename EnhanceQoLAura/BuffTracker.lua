@@ -110,6 +110,7 @@ end
 local function createBuffFrame(icon)
 	local frame = CreateFrame("Frame", nil, anchor)
 	frame:SetSize(addon.db["buffTrackerSize"], addon.db["buffTrackerSize"])
+	frame:SetFrameStrata("DIALOG")
 
 	local tex = frame:CreateTexture(nil, "ARTWORK")
 	tex:SetAllPoints(frame)

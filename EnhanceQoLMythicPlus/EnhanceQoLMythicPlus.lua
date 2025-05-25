@@ -423,7 +423,7 @@ local function addKeystoneFrame(container)
 				addon.db["enableKeystoneHelper"] = value
 				container:ReleaseChildren()
 				addKeystoneFrame(container)
-				if ChallengesKeystoneFrame:IsShown() then checkKeyStone() end
+				if _G["ChallengesKeystoneFrame"] and ChallengesKeystoneFrame:IsShown() then checkKeyStone() end
 			end,
 		},
 	}
@@ -450,7 +450,7 @@ local function addKeystoneFrame(container)
 				var = "enableKeystoneHelperNewUI",
 				func = function(self, _, value)
 					addon.db["enableKeystoneHelperNewUI"] = value
-					if ChallengesKeystoneFrame:IsShown() then checkKeyStone() end
+					if _G["ChallengesKeystoneFrame"] and ChallengesKeystoneFrame:IsShown() then checkKeyStone() end
 				end,
 			},
 			{
@@ -1164,6 +1164,4 @@ function addon.MythicPlus.functions.treeCallback(container, group)
 	end
 end
 
-if addon.db["mythicPlusEnableDungeonFilter"] then
-	addon.MythicPlus.functions.addDungeonFilter()
-end
+if addon.db["mythicPlusEnableDungeonFilter"] then addon.MythicPlus.functions.addDungeonFilter() end
