@@ -318,7 +318,7 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 	local eItem = Item:CreateFromBagAndSlot(bag, slot)
 	if eItem and not eItem:IsItemEmpty() then
 		eItem:ContinueOnItemLoad(function()
-			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, _, expId = GetItemInfo(eItem:GetItemLink())
+			local _, _, _, _, _, _, _, _, itemEquipLoc, _, sellPrice, classID, subclassID, _, expId = GetItemInfo(eItem:GetItemLink())
 			local bType, bKey, upgradeKey
 			local data
 			if addon.db["showBindOnBagItems"] or addon.itemBagFilters["bind"] or addon.itemBagFilters["upgrade"] then
@@ -369,6 +369,9 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 					end
 					if addon.itemBagFilters["upgrade"] then
 						if nil == addon.itemBagFiltersUpgrade[upgradeKey] or addon.itemBagFiltersUpgrade[upgradeKey] == false then setVisibility = true end
+					end
+					if addon.itemBagFilters["misc_sellable"] then
+						if addon.itemBagFilters["misc_sellable"] == true and (not sellPrice or sellPrice == 0) then setVisibility = true end
 					end
 					if
 						addon.itemBagFilters["usableOnly"]
@@ -514,6 +517,12 @@ local filterData = {
 			{ type = "CheckBox", key = "legendary", label = "|cffff8000" .. ITEM_QUALITY5_DESC, qFilter = 5 },
 			{ type = "CheckBox", key = "artifact", label = "|cffe6cc80" .. ITEM_QUALITY6_DESC, qFilter = 6 },
 			{ type = "CheckBox", key = "heirloom", label = "|cff00ccff" .. ITEM_QUALITY7_DESC, qFilter = 7 },
+		},
+	},
+	{
+		label = HUD_EDIT_MODE_SETTINGS_CATEGORY_TITLE_MISC,
+		child = {
+			{ type = "CheckBox", key = "misc_sellable", label = L["misc_sellable"] },
 		},
 	},
 }
