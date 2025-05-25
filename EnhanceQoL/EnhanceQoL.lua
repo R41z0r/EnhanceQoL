@@ -3086,8 +3086,9 @@ local function initCharacter()
 	addon.functions.InitDBValue("showGemsOnCharframe", false)
 	addon.functions.InitDBValue("showGemsTooltipOnCharframe", false)
 	addon.functions.InitDBValue("showEnchantOnCharframe", false)
-	addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
-	addon.functions.InitDBValue("bagFilterFrameData", {})
+        addon.functions.InitDBValue("showCatalystChargesOnCharframe", false)
+        addon.functions.InitDBValue("bagFilterFrameData", {})
+        addon.functions.InitDBValue("bagFilterCollapsed", {})
 
 	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", addon.functions.updateBags)
 	for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
