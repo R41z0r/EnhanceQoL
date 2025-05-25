@@ -3,6 +3,7 @@
 ## [3.15.0] – 2025-05-26
 ### ✨ Added
 - **Change Mouse Ring size** - Option to change mouse ring size
+- **Upgrade Track Filter** - Bag filter for Upgrade tracks
 
 ### 🐛 Fixed
 - Fixed an error when you disable Autokeystone Feature in some places
