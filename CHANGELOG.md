@@ -2,12 +2,12 @@
 
 ## [3.15.0] – 2025-05-26
 ### ✨ Added
-- **Change Mouse Ring size** - Option to change mouse ring size
-- **Upgrade Track Filter** - Bag filter for Upgrade tracks
+- **Customisable Mouse-Ring Size** – New slider lets you shrink or enlarge the on-screen mouse ring to suit your taste.
+- **Upgrade-Track Bag Filter** – Filter your bags by upgrade track (Veteran, Champion, Hero, Mythic, etc.) with a single click.
 
 ### 🐛 Fixed
-- Fixed an error when you disable Autokeystone Feature in some places
-- Sometimes the labels for BoE, BoP and WA got stuck on wrong items
+- Disabling the **Auto-Keystone** feature no longer triggers Lua errors in certain edge-cases.
+- Bind-type labels (BoE, BoP, and WA) now stay with the correct items instead of occasionally sticking to the wrong slot.
 
 ## [3.14.0] – 2025-05-21
 ### ✨ Added
