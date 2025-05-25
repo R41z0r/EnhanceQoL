@@ -4,6 +4,8 @@
 ### ✨ Added
 - **Customisable Mouse-Ring Size** – New slider lets you shrink or enlarge the on-screen mouse ring to suit your taste.
 - **Upgrade-Track Bag Filter** – Filter your bags by upgrade track (Veteran, Champion, Hero, Mythic, etc.) with a single click.
+- **Sellable on Vendor Filter** – Filter your bags by Items sellable to a Vendor.
+- **Sellable on Auction House Filter** – Filter your bags by Items sellable on the Auction House.
 
 ### 🐛 Fixed
 - Disabling the **Auto-Keystone** feature no longer triggers Lua errors in certain edge-cases.

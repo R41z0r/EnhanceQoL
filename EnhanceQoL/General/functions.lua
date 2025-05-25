@@ -319,16 +319,18 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 	if eItem and not eItem:IsItemEmpty() then
 		eItem:ContinueOnItemLoad(function()
 			local _, _, _, _, _, _, _, _, itemEquipLoc, _, sellPrice, classID, subclassID, _, expId = GetItemInfo(eItem:GetItemLink())
-			local bType, bKey, upgradeKey
+			local bType, bKey, upgradeKey, bAuc
 			local data
-			if addon.db["showBindOnBagItems"] or addon.itemBagFilters["bind"] or addon.itemBagFilters["upgrade"] then
+			if addon.db["showBindOnBagItems"] or addon.itemBagFilters["bind"] or addon.itemBagFilters["upgrade"] or addon.itemBagFilters["misc_auctionhouse_sellable"] then
 				data = GetBagItem(bag, slot)
 				if data and data.lines then
 					for i, v in pairs(data.lines) do
 						if v.type == 20 then
+							bAuc = true
 							if v.leftText == ITEM_BIND_ON_EQUIP then
 								bType = "BoE"
 								bKey = "boe"
+								bAuc = false
 							elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
 								bType = "WuE"
 								bKey = "wue"
@@ -349,6 +351,7 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 			local setVisibility = false
 
 			if addon.filterFrame then
+				if classID == 15 and subclassID == 0 then bAuc = true end -- ignore lockboxes etc.
 				local cInfo = GetContainerItemInfo(bag, slot)
 				if cInfo and cInfo.isFiltered then setVisibility = true end
 				if addon.filterFrame:IsVisible() then
@@ -366,6 +369,9 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 					if addon.itemBagFilters["equipment"] and (nil == itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE") then setVisibility = true end
 					if addon.itemBagFilters["bind"] then
 						if nil == addon.itemBagFiltersBound[bKey] or addon.itemBagFiltersBound[bKey] == false then setVisibility = true end
+					end
+					if addon.itemBagFilters["misc_auctionhouse_sellable"] then
+						if bAuc then setVisibility = true end
 					end
 					if addon.itemBagFilters["upgrade"] then
 						if nil == addon.itemBagFiltersUpgrade[upgradeKey] or addon.itemBagFiltersUpgrade[upgradeKey] == false then setVisibility = true end
@@ -523,6 +529,7 @@ local filterData = {
 		label = HUD_EDIT_MODE_SETTINGS_CATEGORY_TITLE_MISC,
 		child = {
 			{ type = "CheckBox", key = "misc_sellable", label = L["misc_sellable"] },
+			{ type = "CheckBox", key = "misc_auctionhouse_sellable", label = L["misc_auctionhouse_sellable"] },
 		},
 	},
 }
