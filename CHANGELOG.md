@@ -6,6 +6,7 @@
 
 ### 🐛 Fixed
 - Fixed an error when you disable Autokeystone Feature in some places
+- Sometimes the labels for BoE, BoP and WA got stuck on wrong items
 
 ## [3.14.0] – 2025-05-21
 ### ✨ Added

@@ -311,7 +311,10 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 	itemButton:SetMatchesSearch(true) -- set all to visible on start
 
 	if itemButton.ItemLevelText then itemButton.ItemLevelText:SetAlpha(1) end
-	if itemButton.ItemBoundType then itemButton.ItemBoundType:SetAlpha(1) end
+	if itemButton.ItemBoundType then
+		itemButton.ItemBoundType:SetAlpha(1)
+		itemButton.ItemBoundType:SetText("")
+	end
 	local eItem = Item:CreateFromBagAndSlot(bag, slot)
 	if eItem and not eItem:IsItemEmpty() then
 		eItem:ContinueOnItemLoad(function()
