@@ -440,195 +440,6 @@ local function setPowerbars()
 	end
 end
 
-local knownCDIDs = {}
-local knownSpellID = {}
-local origGetSet = C_CooldownViewer.GetCooldownViewerCategorySet
-local activeCooldownContainer
-
-local function setKnownIDs()
-	knownCDIDs = {}
-	knownSpellID = {}
-	for i = 0, 3, 1 do
-		knownCDIDs[i] = {}
-		for _, v in pairs(origGetSet(i)) do
-			local cdInfo = C_CooldownViewer.GetCooldownViewerCooldownInfo(v)
-			if cdInfo then
-				if cdInfo.spellID then
-					knownSpellID[cdInfo.spellID] = v
-					local spellInfo = C_Spell.GetSpellInfo(cdInfo.spellID)
-					if spellInfo then
-						cdInfo.iconID = spellInfo.iconID
-						cdInfo.spellName = spellInfo.name
-					end
-				end
-				knownCDIDs[i][v] = cdInfo
-			end
-		end
-	end
-end
-
-addon.functions.InitDBValue("essentialOrder", {})
-local essentialOrder
-
-function addon.functions.moveEssentialSpell(cdID, direction)
-	local list = essentialOrder
-	local oldIndex
-	for i, id in ipairs(list) do
-		if id == cdID then
-			oldIndex = i
-			break
-		end
-	end
-	if not oldIndex then
-		table.insert(list, cdID)
-		oldIndex = #list
-	end
-
-	-- ③ Neuen Index berechnen & verschieben
-	local newIndex = math.max(1, math.min(#list, oldIndex + direction))
-	table.remove(list, oldIndex)
-	table.insert(list, newIndex, cdID)
-end
-
-local function addEssentialFrame(container)
-	setKnownIDs()
-	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
-	scroll:SetFullWidth(true)
-	scroll:SetFullHeight(true)
-	container:AddChild(scroll)
-
-	activeCooldownContainer = container
-	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-	scroll:AddChild(wrapper)
-
-	local groupCore = addon.functions.createContainer("InlineGroup", "List")
-	groupCore:SetTitle("Choose which Cooldowns to show on the Essential Cooldown Viewer")
-	wrapper:AddChild(groupCore)
-
-	local headline = addon.functions.createLabelAce("You can only change settings of your current specialization")
-	headline:SetFullWidth(true)
-	groupCore:AddChild(headline)
-
-	local data = {}
-	for i, v in pairs(knownCDIDs[0]) do
-		table.insert(data, {
-			text = v.spellName,
-			var = "showEssentialCD_" .. addon.variables.unitClass .. "_" .. addon.variables.unitSpec .. "_" .. i,
-			func = function(self, _, value)
-				addon.db["showEssentialCD_" .. addon.variables.unitClass .. "_" .. addon.variables.unitSpec .. "_" .. i] = value
-				EssentialCooldownViewer:RefreshLayout()
-				-- remember scroll offset
-				addon.tempScrollPos = scroll.scrollbar and scroll.scrollbar:GetValue() or 0
-				container:ReleaseChildren()
-				addEssentialFrame(container)
-			end,
-			cdID = i,
-			icon = v.iconID,
-		})
-	end
-	table.sort(data, function(a, b) return a.text < b.text end)
-
-	for _, cbData in ipairs(data) do
-		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
-		if cbData.func then uFunc = cbData.func end
-		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
-		if nil == addon.db[cbData.var] then cbElement:SetValue(true) end
-		if cbData.icon then cbElement:SetImage(cbData.icon) end
-		groupCore:AddChild(cbElement)
-	end
-
-	------------------------------------------------------------------
-	-- Sort after user‑defined order (essentialOrder) first --
-	-- Fallback to alphabetical for yet‑unlisted spells              --
-	------------------------------------------------------------------
-	local orderIndex = {}
-	for idx, cdID in ipairs(essentialOrder) do
-		orderIndex[cdID] = idx
-	end
-
-	table.sort(data, function(a, b)
-		local idA = tonumber(a.cdID)
-		local idB = tonumber(b.cdID)
-		local idxA = orderIndex[idA] or math.huge -- unknown = bottom
-		local idxB = orderIndex[idB] or math.huge
-		if idxA ~= idxB then return idxA < idxB end
-		-- same order slot (or both new) => alphabetical fallback
-		return a.text < b.text
-	end)
-
-	local groupOrder = addon.functions.createContainer("InlineGroup", "List")
-	wrapper:AddChild(groupOrder)
-
-	for index, cbData in ipairs(data) do
-		local row = AceGUI:Create("SimpleGroup")
-		row:SetLayout("Flow")
-		row:SetFullWidth(true)
-
-		-- Checkbox mit Icon
-		local cb = AceGUI:Create("Icon")
-		cb:SetWidth(40)
-		cb:SetHeight(40)
-		cb:SetImageSize(35, 35)
-		cb:SetImage(cbData.icon)
-		row:AddChild(cb)
-
-		local spacer = addon.functions.createSpacerAce()
-		spacer:SetFullWidth(false)
-		spacer:SetWidth(30)
-		row:AddChild(spacer)
-
-		-- ▲-Button
-		local up = AceGUI:Create("Icon")
-		up:SetWidth(40)
-		up:SetHeight(40)
-		if index ~= 1 then
-			up:SetImage("Interface\\addons\\" .. addonName .. "\\Textures\\up.blp")
-			up:SetImageSize(30, 30)
-			up:SetCallback("OnClick", function()
-				local cdID = cbData.cdID
-				addon.functions.moveEssentialSpell(cdID, -1)
-				-- remember scroll offset
-				addon.tempScrollPos = scroll.scrollbar and scroll.scrollbar:GetValue() or 0
-				container:ReleaseChildren()
-				addEssentialFrame(container)
-				EssentialCooldownViewer:RefreshLayout()
-				scroll:DoLayout()
-				wrapper:DoLayout()
-			end)
-		else
-			up:SetImageSize(0, 0)
-		end
-		row:AddChild(up)
-
-		-- ▼-Button
-		local down = AceGUI:Create("Icon")
-		down:SetWidth(40)
-		down:SetHeight(40)
-		down:SetImageSize(30, 30)
-		down:SetImage("Interface\\addons\\" .. addonName .. "\\Textures\\down.blp")
-		down:SetCallback("OnClick", function()
-			local cdID = cbData.cdID
-			addon.functions.moveEssentialSpell(cdID, 1)
-			-- remember scroll offset
-			addon.tempScrollPos = scroll.scrollbar and scroll.scrollbar:GetValue() or 0
-			container:ReleaseChildren()
-			addEssentialFrame(container)
-			EssentialCooldownViewer:RefreshLayout()
-			scroll:DoLayout()
-			wrapper:DoLayout()
-		end)
-		if index ~= #data then row:AddChild(down) end
-
-		groupOrder:AddChild(row)
-	end
-
-	if addon.tempScrollPos then C_Timer.After(0, function()
-		if scroll and scroll.scrollbar then scroll.scrollbar:SetValue(addon.tempScrollPos) end
-	end) end
-	scroll:DoLayout()
-	wrapper:DoLayout()
-end
-
 local firstStart = true
 -- Funktion zur Verarbeitung der Events
 local function eventHandler(self, event, unit, arg1, arg2, ...)
@@ -641,13 +452,6 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 			createSpecIcon(EQOLHealthBar)
 			setPowerbars()
 
-			-- if nil == addon.db["essentialOrder"][addon.variables.unitClass .. "_" .. addon.variables.unitSpec] then
-			-- 	addon.db["essentialOrder"][addon.variables.unitClass .. "_" .. addon.variables.unitSpec] = {}
-			-- end
-			-- essentialOrder = addon.db["essentialOrder"][addon.variables.unitClass .. "_" .. addon.variables.unitSpec]
-			-- setKnownIDs()
-			-- EssentialCooldownViewer:RefreshLayout()
-
 			frameAnchor:UnregisterEvent("PLAYER_ENTERING_WORLD")
 		end)
 	end
@@ -658,16 +462,6 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 		C_Timer.After(0.2, function()
 			setPowerbars()
 			createSpecIcon(EQOLHealthBar)
-			-- setKnownIDs()
-			-- EssentialCooldownViewer:RefreshLayout()
-			-- if nil == addon.db["essentialOrder"][addon.variables.unitClass .. "_" .. addon.variables.unitSpec] then
-			-- 	addon.db["essentialOrder"][addon.variables.unitClass .. "_" .. addon.variables.unitSpec] = {}
-			-- end
-			-- essentialOrder = addon.db["essentialOrder"][addon.variables.unitClass .. "_" .. addon.variables.unitSpec]
-			-- if activeCooldownContainer and addon.variables.statusTable.selected == "aura\001cooldownmanager\001cdessential" then
-			-- 	activeCooldownContainer:ReleaseChildren()
-			-- 	addEssentialFrame(activeCooldownContainer)
-			-- end
 		end)
 	-- elseif event == "TRAIT_CONFIG_UPDATED" then
 	-- 	setKnownIDs()
@@ -802,73 +596,15 @@ addon.functions.addToTree(nil, {
 	children = {
 		--    { value = "resourcebar", text = DISPLAY_PERSONAL_RESOURCE },
 		{ value = "bufftracker", text = L["BuffTracker"] },
-		--    { value = "cooldownmanager", text = "CD Manager", children = {
-		--             { value = "cdessential", text = "Essential" },
-		--     } },
 	},
 })
 
 function addon.Aura.functions.treeCallback(container, group)
-	container:ReleaseChildren() -- Entfernt vorherige Inhalte
+	container:ReleaseChildren()
 	if group == "aura\001resourcebar" then
 		addResourceFrame(container)
 	elseif group == "aura\001bufftracker" then
 		addon.Aura.functions.addBuffTrackerOptions(container)
 		addon.Aura.scanBuffs()
-		-- elseif group == "aura\001cooldownmanager\001cdessential" then
-		--      addEssentialFrame(container)
 	end
 end
-
--- local function getKnownCD(category, cd)
--- 	if knownCDIDs[category] and knownCDIDs[category][cd] then return knownCDIDs[category][cd] end
--- 	return false
--- end
-
--- local function getOverrideSpell(cd)
--- 	local cdInfo = C_CooldownViewer.GetCooldownViewerCooldownInfo(cd)
--- 	if cdInfo and cdInfo.spellID then return knownSpellID[cdInfo.spellID] end
--- 	return false
--- end
-
--- C_CooldownViewer.GetCooldownViewerCategorySet = function(category)
--- 	local list = { unpack(origGetSet(category)) } -- Kopie des Originals
-
--- 	if category == Enum.CooldownViewerCategory.Essential then
--- 		-- Alle geblacklisteten entfernen
--- 		for i = #list, 1, -1 do
--- 			if addon.variables.unitSpec then
--- 				if addon.db["showEssentialCD_" .. addon.variables.unitClass .. "_" .. addon.variables.unitSpec .. "_" .. list[i]] == false then table.remove(list, i) end
--- 			end
--- 		end
-
--- 		local ordered = {}
--- 		local inSet = {}
-
--- 		if essentialOrder then
--- 			for _, id in ipairs(essentialOrder) do
--- 				if
--- 					not inSet[id]
--- 					and (
--- 						addon.variables.unitSpec
--- 						and (
--- 							addon.db["showEssentialCD_" .. addon.variables.unitClass .. "_" .. addon.variables.unitSpec .. "_" .. id] == nil
--- 							or addon.db["showEssentialCD_" .. addon.variables.unitClass .. "_" .. addon.variables.unitSpec .. "_" .. id] == true
--- 						)
--- 					)
--- 				then
--- 					table.insert(ordered, id)
--- 					inSet[id] = true
--- 				end
--- 			end
--- 		end
-
--- 		for _, id in ipairs(list) do
--- 			if not inSet[id] then table.insert(ordered, id) end
--- 		end
-
--- 		return ordered
--- 	end
-
--- 	return list
--- end

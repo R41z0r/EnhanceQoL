@@ -2,14 +2,14 @@
 
 ## [3.15.0] – 2025-05-26
 ### ✨ Added
-- **Customisable Mouse-Ring Size** – New slider lets you shrink or enlarge the on-screen mouse ring to suit your taste.
-- **Upgrade-Track Bag Filter** – Filter your bags by upgrade track (Veteran, Champion, Hero, Mythic, etc.) with a single click.
-- **Sellable on Vendor Filter** – Filter your bags by Items sellable to a Vendor.
-- **Sellable on Auction House Filter** – Filter your bags by Items sellable on the Auction House.
+- **Customisable Mouse-Ring Size** – Added a slider to adjust the diameter of the on-screen mouse ring.
+- **Upgrade-Track Bag Filter** – New filter that groups items by upgrade track (Veteran, Champion, Hero, Mythic, etc.).
+- **Vendor-Sellable Filter** – Quickly show items that can be sold to a vendor.
+- **Auction-House-Sellable Filter** – Quickly show items that can be listed on the Auction House.
 
 ### 🐛 Fixed
-- Disabling the **Auto-Keystone** feature no longer triggers Lua errors in certain edge-cases.
-- Bind-type labels (BoE, BoP, and WA) now stay with the correct items instead of occasionally sticking to the wrong slot.
+- Disabling **Auto-Keystone** no longer triggers Lua errors in edge cases.
+- Bind-type labels (BoE, BoP and WA) now stay attached to the correct items instead of drifting to neighbouring slots.
 
 ## [3.14.0] – 2025-05-21
 ### ✨ Added
