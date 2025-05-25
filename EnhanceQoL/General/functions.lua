@@ -319,33 +319,33 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 	if eItem and not eItem:IsItemEmpty() then
 		eItem:ContinueOnItemLoad(function()
 			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, _, expId = GetItemInfo(eItem:GetItemLink())
-                       local bType, bKey, upgradeKey
-                       local data
-                       if addon.db["showBindOnBagItems"] or addon.itemBagFilters["bind"] or addon.itemBagFilters["upgrade"] then
-                               data = GetBagItem(bag, slot)
-                               if data and data.lines then
-                                       for i, v in pairs(data.lines) do
-                                               if v.type == 20 then
-                                                       if v.leftText == ITEM_BIND_ON_EQUIP then
-                                                               bType = "BoE"
-                                                               bKey = "boe"
-                                                       elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
-                                                               bType = "WuE"
-                                                               bKey = "wue"
-                                                       elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
-                                                               bType = "WB"
-                                                               bKey = "wb"
-                                                       end
-                                               elseif v.type == 42 then
-                                                       local text = v.rightText or v.leftText
-                                                       if text then
-                                                               local tier = string.match(text, "^(%S+)")
-                                                               if tier then upgradeKey = string.lower(tier) end
-                                                       end
-                                               end
-                                       end
-                               end
-                       end
+			local bType, bKey, upgradeKey
+			local data
+			if addon.db["showBindOnBagItems"] or addon.itemBagFilters["bind"] or addon.itemBagFilters["upgrade"] then
+				data = GetBagItem(bag, slot)
+				if data and data.lines then
+					for i, v in pairs(data.lines) do
+						if v.type == 20 then
+							if v.leftText == ITEM_BIND_ON_EQUIP then
+								bType = "BoE"
+								bKey = "boe"
+							elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+								bType = "WuE"
+								bKey = "wue"
+							elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+								bType = "WB"
+								bKey = "wb"
+							end
+						elseif v.type == 42 then
+							local text = v.rightText or v.leftText
+							if text then
+								local tier = text:gsub(".+:%s?", ""):gsub("%s?%d/%d", "")
+								if tier then upgradeKey = string.lower(tier) end
+							end
+						end
+					end
+				end
+			end
 			local setVisibility = false
 
 			if addon.filterFrame then
@@ -364,16 +364,16 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 					end
 					if addon.itemBagFilters["currentExpension"] and LE_EXPANSION_LEVEL_CURRENT ~= expId then setVisibility = true end
 					if addon.itemBagFilters["equipment"] and (nil == itemEquipLoc or itemEquipLoc == "INVTYPE_NON_EQUIP_IGNORE") then setVisibility = true end
-                                       if addon.itemBagFilters["bind"] then
-                                               if nil == addon.itemBagFiltersBound[bKey] or addon.itemBagFiltersBound[bKey] == false then setVisibility = true end
-                                       end
-                                       if addon.itemBagFilters["upgrade"] then
-                                               if nil == addon.itemBagFiltersUpgrade[upgradeKey] or addon.itemBagFiltersUpgrade[upgradeKey] == false then setVisibility = true end
-                                       end
-                                       if
-                                               addon.itemBagFilters["usableOnly"]
-                                               and (
-                                                       IsEquippableItem(eItem:GetItemLink()) == false
+					if addon.itemBagFilters["bind"] then
+						if nil == addon.itemBagFiltersBound[bKey] or addon.itemBagFiltersBound[bKey] == false then setVisibility = true end
+					end
+					if addon.itemBagFilters["upgrade"] then
+						if nil == addon.itemBagFiltersUpgrade[upgradeKey] or addon.itemBagFiltersUpgrade[upgradeKey] == false then setVisibility = true end
+					end
+					if
+						addon.itemBagFilters["usableOnly"]
+						and (
+							IsEquippableItem(eItem:GetItemLink()) == false
 							or (
 								(
 									nil == addon.itemBagFilterTypes[addon.variables.unitClass]
@@ -486,27 +486,27 @@ local filterData = {
 			{ type = "CheckBox", key = "currentExpension", label = REFORGE_CURRENT, tooltip = L["currentExpensionMythicPlusWarning"] },
 		},
 	},
-        {
-                label = L["bagFilterBindType"],
-                child = {
-                        { type = "CheckBox", key = "boe", label = ITEM_BIND_ON_EQUIP, bFilter = "boe" },
-                        { type = "CheckBox", key = "wue", label = ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP, bFilter = "wue" },
-                        { type = "CheckBox", key = "wb", label = ITEM_BIND_TO_ACCOUNT, bFilter = "wb" },
-                },
-        },
-       {
-               label = L["bagFilterUpgradeLevel"],
-               child = {
-                       { type = "CheckBox", key = "upgrade_veteran", label = L["upgradeLevelVeteran"], uFilter = "veteran" },
-                       { type = "CheckBox", key = "upgrade_champion", label = L["upgradeLevelChampion"], uFilter = "champion" },
-                       { type = "CheckBox", key = "upgrade_hero", label = L["upgradeLevelHero"], uFilter = "hero" },
-                       { type = "CheckBox", key = "upgrade_mythic", label = L["upgradeLevelMythic"], uFilter = "mythic" },
-               },
-       },
-        {
-                label = RARITY,
-                child = {
-                        { type = "CheckBox", key = "poor", label = "|cff9d9d9d" .. ITEM_QUALITY0_DESC, qFilter = 0 },
+	{
+		label = L["bagFilterBindType"],
+		child = {
+			{ type = "CheckBox", key = "boe", label = ITEM_BIND_ON_EQUIP, bFilter = "boe" },
+			{ type = "CheckBox", key = "wue", label = ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP, bFilter = "wue" },
+			{ type = "CheckBox", key = "wb", label = ITEM_BIND_TO_ACCOUNT, bFilter = "wb" },
+		},
+	},
+	{
+		label = L["bagFilterUpgradeLevel"],
+		child = {
+			{ type = "CheckBox", key = "upgrade_veteran", label = L["upgradeLevelVeteran"], uFilter = L["upgradeLevelVeteran"] },
+			{ type = "CheckBox", key = "upgrade_champion", label = L["upgradeLevelChampion"], uFilter = L["upgradeLevelChampion"] },
+			{ type = "CheckBox", key = "upgrade_hero", label = L["upgradeLevelHero"], uFilter = L["upgradeLevelHero"] },
+			{ type = "CheckBox", key = "upgrade_mythic", label = L["upgradeLevelMythic"], uFilter = L["upgradeLevelMythic"] },
+		},
+	},
+	{
+		label = RARITY,
+		child = {
+			{ type = "CheckBox", key = "poor", label = "|cff9d9d9d" .. ITEM_QUALITY0_DESC, qFilter = 0 },
 			{ type = "CheckBox", key = "common", label = "|cffffffff" .. ITEM_QUALITY1_DESC, qFilter = 1 },
 			{ type = "CheckBox", key = "uncommon", label = "|cff1eff00" .. ITEM_QUALITY2_DESC, qFilter = 2 },
 			{ type = "CheckBox", key = "rare", label = "|cff0070dd" .. ITEM_QUALITY3_DESC, qFilter = 3 },
@@ -534,23 +534,23 @@ local function checkActiveQualityFilter()
 end
 
 local function checkActiveBindFilter()
-        for _, value in pairs(addon.itemBagFiltersBound) do
-                if value == true then
-                        addon.itemBagFilters["bind"] = true
-                        return
-                end
-        end
-        addon.itemBagFilters["bind"] = false
+	for _, value in pairs(addon.itemBagFiltersBound) do
+		if value == true then
+			addon.itemBagFilters["bind"] = true
+			return
+		end
+	end
+	addon.itemBagFilters["bind"] = false
 end
 
 local function checkActiveUpgradeFilter()
-       for _, value in pairs(addon.itemBagFiltersUpgrade) do
-               if value == true then
-                       addon.itemBagFilters["upgrade"] = true
-                       return
-               end
-       end
-       addon.itemBagFilters["upgrade"] = false
+	for _, value in pairs(addon.itemBagFiltersUpgrade) do
+		if value == true then
+			addon.itemBagFilters["upgrade"] = true
+			return
+		end
+	end
+	addon.itemBagFilters["upgrade"] = false
 end
 
 local function CreateFilterMenu()
@@ -625,19 +625,19 @@ local function CreateFilterMenu()
 				widget:SetLabel(item.label)
 				widget:SetValue(addon.itemBagFilters[item.key])
 				widget:SetCallback("OnValueChanged", function(_, _, value)
-                                        addon.itemBagFilters[item.key] = value
-                                        if item.qFilter then
-                                                addon.itemBagFiltersQuality[item.qFilter] = value
-                                                checkActiveQualityFilter()
-                                        end
-                                        if item.bFilter then
-                                                addon.itemBagFiltersBound[item.bFilter] = value
-                                                checkActiveBindFilter()
-                                        end
-                                        if item.uFilter then
-                                                addon.itemBagFiltersUpgrade[item.uFilter] = value
-                                                checkActiveUpgradeFilter()
-                                        end
+					addon.itemBagFilters[item.key] = value
+					if item.qFilter then
+						addon.itemBagFiltersQuality[item.qFilter] = value
+						checkActiveQualityFilter()
+					end
+					if item.bFilter then
+						addon.itemBagFiltersBound[item.bFilter] = value
+						checkActiveBindFilter()
+					end
+					if item.uFilter then
+						addon.itemBagFiltersUpgrade[string.lower(item.uFilter)] = value
+						checkActiveUpgradeFilter()
+					end
 					-- Hier könnte man die Filterlogik triggern, z. B.:
 					-- UpdateInventoryDisplay()
 					addon.functions.updateBags(ContainerFrameCombinedBags)
@@ -782,14 +782,14 @@ function addon.functions.updateBags(frame)
 	if addon.db["showBagFilterMenu"] then
 		InitializeFilterUI()
 	elseif addon.filterFrame then
-                addon.filterFrame:SetParent(nil)
-                addon.filterFrame:Hide()
-                addon.filterFrame = nil
-                addon.itemBagFilters = {}
-                addon.itemBagFiltersQuality = {}
-                addon.itemBagFiltersBound = {}
-                addon.itemBagFiltersUpgrade = {}
-        end
+		addon.filterFrame:SetParent(nil)
+		addon.filterFrame:Hide()
+		addon.filterFrame = nil
+		addon.itemBagFilters = {}
+		addon.itemBagFiltersQuality = {}
+		addon.itemBagFiltersBound = {}
+		addon.itemBagFiltersUpgrade = {}
+	end
 	if not frame:IsShown() then return end
 	if nil == knownButtons[frame:GetName()] then
 		knownButtons[frame:GetName()] = {}
