@@ -13,6 +13,7 @@ addon.elements = {}
 addon.itemBagFilters = {}
 addon.itemBagFiltersQuality = {}
 addon.itemBagFiltersBound = {}
+addon.itemBagFiltersUpgrade = {}
 addon.itemBagFilterTypes = {
 	DEATHKNIGHT = {
 		[1] = { --Blood
