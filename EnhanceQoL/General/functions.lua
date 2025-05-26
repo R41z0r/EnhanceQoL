@@ -849,7 +849,8 @@ end
 
 local function handleWayCommand(msg)
 	local args = {}
-	for token in string.gmatch(msg or "", "[^%s,]+") do
+	msg = (msg or ""):gsub(",", " ")
+	for token in string.gmatch(msg, "%S+") do
 		table.insert(args, token)
 	end
 
@@ -872,6 +873,11 @@ local function handleWayCommand(msg)
 	local mInfo = C_Map.GetMapInfo(mapID)
 	if not mInfo or nil == mInfo then
 		print("|cff00ff98Enhance QoL|r: " .. L["wayError"]:format(mapID))
+		return
+	end
+
+	if not C_Map.CanSetUserWaypointOnMap(mapID) then
+		print("|cff00ff98Enhance QoL|r: " .. L["wayErrorPlacePing"])
 		return
 	end
 

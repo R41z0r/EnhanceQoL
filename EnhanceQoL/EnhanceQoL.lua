@@ -2117,10 +2117,9 @@ local function addMapFrame(container)
 		if value then
 			addon.functions.registerWayCommand()
 		else
-			_G.SLASH_EQOLWAY1 = nil
-			SlashCmdList["EQOLWAY"] = nil
+			addon.variables.requireReload = true
 		end
-	end)
+	end, L["enableWayCommandDesc"])
 	groupCore:AddChild(cbElement)
 end
 
@@ -3310,7 +3309,7 @@ local function CreateUI()
 			{ value = "dungeon", text = L["Dungeon"] },
 			{ value = "misc", text = L["Misc"] },
 			{ value = "quest", text = L["Quest"] },
-			{ value = "map", text = L["Map"] },
+			{ value = "map", text = WORLD_MAP },
 			{
 				value = "ui",
 				text = BUG_CATEGORY5,

@@ -40,6 +40,7 @@ Search for **“Enhance QoL”** in the CurseForge app and hit **Install** – d
 | `/eqol lag` | List gossip IDs of the current NPC dialog |
 | `/eqol aag <id>` | Auto‑pick a gossip option |
 | `/eqol rag <id>` | Remove an auto‑picked gossip ID |
+| `/way` | Create a waypoint at given coordinates |
 
 ---
 
