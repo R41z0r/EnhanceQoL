@@ -40,3 +40,4 @@ libs\AceDBOptions-3.0\lib.xml
 Bindings\Slider.xml
 General\functions.lua
 EnhanceQoL.lua
+Submodules\GemHelper.lua

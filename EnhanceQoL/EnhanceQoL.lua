@@ -1804,6 +1804,20 @@ local function addCharacterFrame(container)
 				end
 			end,
 		},
+
+		{
+			parent = AUCTION_CATEGORY_GEMS,
+			var = "enableGemHelper",
+			type = "CheckBox",
+			desc = L["enableGemHelperDesc"],
+			callback = function(self, _, value)
+				addon.db["enableGemHelper"] = value
+				if not value and EnhanceQoLGemHelper then
+					EnhanceQoLGemHelper:Hide()
+					EnhanceQoLGemHelper = nil
+				end
+			end,
+		},
 	}
 
 	local classname = select(2, UnitClass("player"))

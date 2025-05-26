@@ -56,6 +56,8 @@ L["hideHitIndicatorPlayer"] = "Hide floating combat text (damage and healing) ov
 L["hideHitIndicatorPet"] = "Hide floating combat text (damage and healing) over your pet"
 L["UnitFrame"] = "UnitFrame"
 L["SellJunkIgnoredBag"] = "You have ignored junk on %d bags.\nThis may prevent selling all junk items automatically."
+L["enableGemHelper"] = "Enable Gem-Socket Helper"
+L["enableGemHelperDesc"] = "Displays a helper panel when you open the socketing UI.\nLeft-click a gem to pick it up."
 
 L["deleteItemFillDialog"] = 'Add "%s" to the "Delete confirmation Popup"'
 L["confirmPatronOrderDialog"] = "Automatically confirm to use own materials on %s crafting orders"

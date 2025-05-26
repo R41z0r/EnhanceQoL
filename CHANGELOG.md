@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.16.0] – 2025-05-26
+### ✨ Added
+- **Gem-Socket Helper** – New Option under General->Character: Shows all socketable gems in a panel below the socket UI.
+
 ## [3.15.0] – 2025-05-26
 ### ✨ Added
 - **Customisable Mouse-Ring Size** – Added a slider to adjust the diameter of the on-screen mouse ring.
