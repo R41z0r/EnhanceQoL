@@ -50,7 +50,10 @@ local function ensureAnchor(id)
 			anchor:SetPoint(cat.point, UIParent, cat.point, cat.x, cat.y)
 		end
 	end)
-
+	if cat.point then
+		anchor:ClearAllPoints()
+		anchor:SetPoint(cat.point, UIParent, cat.point, cat.x, cat.y)
+	end
 	anchors[id] = anchor
 	return anchor
 end
@@ -80,7 +83,7 @@ end
 
 local function applyLockState()
 	for id, anchor in pairs(anchors) do
-		if addon.db["buffTrackerLocked"] then
+		if addon.db["buffTrackerLocked"][id] then
 			anchor:RegisterForDrag()
 			anchor:SetMovable(false)
 			anchor:EnableMouse(false)
@@ -138,8 +141,8 @@ local function createBuffFrame(icon, parent, size)
 	return frame
 end
 
-local function playBuffSound(id)
-	local sound = addon.db["buffTrackerSounds"][id]
+local function playBuffSound(catId, id)
+	local sound = addon.db["buffTrackerSounds"][catId][id]
 	if not sound then return end
 	if tonumber(sound) then
 		PlaySound(tonumber(sound), "Master")
@@ -166,7 +169,7 @@ local function updateBuff(catId, id)
 		else
 			frame.cd:Clear()
 		end
-		if not wasShown then playBuffSound(id) end
+		if not wasShown then playBuffSound(catId, id) end
 		frame:Show()
 	else
 		if frame then frame:Hide() end
@@ -186,27 +189,27 @@ local function scanBuffs()
 	end
 end
 
-local eventFrame = CreateFrame("Frame")
-eventFrame:SetScript("OnEvent", function(_, event, unit)
-	if event == "PLAYER_ENTERING_WORLD" or unit == "player" then scanBuffs() end
-end)
-eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
-eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-
-for id in pairs(addon.db["buffTrackerCategories"]) do
-	ensureAnchor(id)
-	if addon.db["buffTrackerEnabled"] then
-		anchors[id]:Show()
-	else
-		anchors[id]:Hide()
-	end
-end
-
 addon.Aura.buffAnchors = anchors
 addon.Aura.scanBuffs = scanBuffs
 
+local eventFrame = CreateFrame("Frame")
+eventFrame:SetScript("OnEvent", function(_, event, unit)
+	if event == "PLAYER_LOGIN" then
+		for id, anchor in pairs(anchors) do
+			if addon.db["buffTrackerEnabled"][id] then
+				anchor:Show()
+			else
+				anchor:Hide()
+			end
+		end
+	end
+	scanBuffs()
+end)
+eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
+eventFrame:RegisterEvent("PLAYER_LOGIN")
+
 local function moveTrackedBuff(catId, id, direction)
-	addon.db["buffTrackerOrder"][catId] = addon.db["buffTrackerOrder"][catId] or {}
+	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	local list = addon.db["buffTrackerOrder"][catId]
 	local oldIndex
 	for i, v in ipairs(list) do
@@ -225,7 +228,7 @@ local function moveTrackedBuff(catId, id, direction)
 	table.insert(list, newIndex, id)
 end
 
-local function openBuffConfig(id)
+local function openBuffConfig(catId, id)
 	local frame = AceGUI:Create("Frame")
 	frame:SetTitle(L["BuffTracker"])
 	frame:SetWidth(400)
@@ -234,26 +237,23 @@ local function openBuffConfig(id)
 	frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
 
 	local label = AceGUI:Create("Label")
-	local name
-	for _, cat in pairs(addon.db["buffTrackerCategories"]) do
-		if cat.buffs[id] then
-			name = cat.buffs[id].name
-			break
-		end
-	end
+	local name = addon.db["buffTrackerCategories"][catId]["buffs"][id].name
 	label:SetText((name or "") .. " (" .. id .. ")")
 	frame:AddChild(label)
 
-	local edit = addon.functions.createEditboxAce(L["SoundFile"], addon.db["buffTrackerSounds"][id] or "", function(self, _, text)
+	addon.db["buffTrackerSounds"][catId] = addon.db["buffTrackerSounds"][catId] or {}
+
+	local edit = addon.functions.createEditboxAce(L["SoundFile"], addon.db["buffTrackerSounds"][catId][id] or "", function(self, _, text)
 		if text == "" then
-			addon.db["buffTrackerSounds"][id] = nil
+			addon.db["buffTrackerSounds"][catId][id] = nil
 		else
-			addon.db["buffTrackerSounds"][id] = text
+			addon.db["buffTrackerSounds"][catId][id] = text
 		end
 	end)
+	edit:SetFullWidth(true)
 	frame:AddChild(edit)
 
-	local playButton = addon.functions.createButtonAce(L["Play"], 80, function() playBuffSound(id) end)
+	local playButton = addon.functions.createButtonAce(L["Play"], 80, function() playBuffSound(catId, id) end)
 	frame:AddChild(playButton)
 end
 
@@ -267,7 +267,7 @@ local function addBuff(catId, id)
 
 	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID }
 
-	addon.db["buffTrackerOrder"][catId] = addon.db["buffTrackerOrder"][catId] or {}
+	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	if not tContains(addon.db["buffTrackerOrder"][catId], id) then table.insert(addon.db["buffTrackerOrder"][catId], id) end
 
 	-- make sure the buff is not hidden
@@ -281,8 +281,8 @@ local function removeBuff(catId, id)
 	if not cat then return end
 	cat.buffs[id] = nil
 	addon.db["buffTrackerHidden"][id] = nil
-	addon.db["buffTrackerSounds"][id] = nil
-	addon.db["buffTrackerOrder"][catId] = addon.db["buffTrackerOrder"][catId] or {}
+	addon.db["buffTrackerSounds"][catId][id] = nil
+	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	for i, v in ipairs(addon.db["buffTrackerOrder"][catId]) do
 		if v == id then
 			table.remove(addon.db["buffTrackerOrder"][catId], i)
@@ -296,14 +296,90 @@ local function removeBuff(catId, id)
 	scanBuffs()
 end
 
-local function buildTabContent(tabContainer, catId, scroll, groupTabs)
-	activeTabContainer = tabContainer
-
-	local function refresh()
-		tabContainer:ReleaseChildren()
-		buildTabContent(tabContainer, catId, scroll, groupTabs)
-		scroll:DoLayout()
+local function getCategoryTabs()
+	local tabs = {}
+	for id, cat in pairs(addon.db["buffTrackerCategories"]) do
+		table.insert(tabs, { value = id, text = cat.name })
 	end
+	table.sort(tabs, function(a, b) return a.value < b.value end)
+	return tabs
+end
+
+function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTabs, scroll)
+	local cat = getCategory(catId)
+	local core = addon.functions.createContainer("InlineGroup", "Flow")
+	tabContainer:AddChild(core)
+
+	local enableCB = addon.functions.createCheckboxAce(L["EnableBuffTracker"], addon.db["buffTrackerEnabled"][catId], function(self, _, val)
+		addon.db["buffTrackerEnabled"][catId] = val
+		for id, anchor in pairs(anchors) do
+			if addon.db["buffTrackerEnabled"][id] then
+				anchor:Show()
+			else
+				anchor:Hide()
+			end
+		end
+	end)
+	core:AddChild(enableCB)
+
+	local lockCB = addon.functions.createCheckboxAce(L["buffTrackerLocked"], addon.db["buffTrackerLocked"][catId], function(self, _, val)
+		addon.db["buffTrackerLocked"][catId] = val
+		applyLockState()
+	end)
+	core:AddChild(lockCB)
+
+	local nameEdit = addon.functions.createEditboxAce(L["CategoryName"], cat.name, function(self, _, text)
+		if text ~= "" then cat.name = text end
+		groupTabs:SetTabs(getCategoryTabs())
+		groupTabs:SelectTab(catId)
+	end)
+	core:AddChild(nameEdit)
+
+	local sizeSlider = addon.functions.createSliderAce(L["buffTrackerIconSizeHeadline"] .. ": " .. cat.size, cat.size, 20, 100, 1, function(self, _, val)
+		cat.size = val
+		self:SetLabel(L["buffTrackerIconSizeHeadline"] .. ": " .. val)
+		applySize(catId)
+	end)
+	core:AddChild(sizeSlider)
+
+	local dirDrop = addon.functions.createDropdownAce(L["GrowthDirection"], { LEFT = "LEFT", RIGHT = "RIGHT", UP = "UP", DOWN = "DOWN" }, nil, function(self, _, val)
+		cat.direction = val
+		updatePositions(catId)
+	end)
+	dirDrop:SetValue(cat.direction)
+	dirDrop:SetRelativeWidth(0.4)
+	core:AddChild(dirDrop)
+
+	local spellEdit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
+		local id = tonumber(text)
+		if id then
+			addBuff(catId, id)
+			tabContainer:ReleaseChildren()
+			addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, groupTabs)
+			scroll:DoLayout()
+		end
+		self:SetText("")
+	end)
+	core:AddChild(spellEdit)
+
+	local delBtn = addon.functions.createButtonAce(L["DeleteCategory"], 150, function()
+		addon.db["buffTrackerCategories"][catId] = nil
+		addon.db["buffTrackerOrder"][catId] = nil
+		if anchors[catId] then
+			anchors[catId]:Hide()
+			anchors[catId] = nil
+		end
+		selectedCategory = next(addon.db["buffTrackerCategories"]) or 1
+		groupTabs:SetTabs(getCategoryTabs())
+		groupTabs:SelectTab(selectedCategory)
+	end)
+	core:AddChild(delBtn)
+
+	return core
+end
+
+function addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, groupTabs)
+	activeTabContainer = tabContainer
 
 	local listGroup = addon.functions.createContainer("InlineGroup", "List")
 	listGroup:SetTitle(L["TrackedBuffs"])
@@ -312,10 +388,12 @@ local function buildTabContent(tabContainer, catId, scroll, groupTabs)
 
 	local buffData = {}
 	local cat = getCategory(catId)
-	for id, data in pairs(cat.buffs) do
-		table.insert(buffData, { id = id, name = data.name, icon = data.icon })
+	if cat then
+		for id, data in pairs(cat.buffs) do
+			table.insert(buffData, { id = id, name = data.name, icon = data.icon })
+		end
 	end
-	addon.db["buffTrackerOrder"][catId] = addon.db["buffTrackerOrder"][catId] or {}
+	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	local orderIndex = {}
 	for idx, bid in ipairs(addon.db["buffTrackerOrder"][catId]) do
 		orderIndex[bid] = idx
@@ -369,7 +447,9 @@ local function buildTabContent(tabContainer, catId, scroll, groupTabs)
 		if #buffData > 1 and info ~= buffData[1] then
 			upIcon:SetCallback("OnClick", function()
 				moveTrackedBuff(catId, info.id, -1)
-				refresh()
+				tabContainer:ReleaseChildren()
+				addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, groupTabs)
+				scroll:DoLayout()
 			end)
 		else
 			upIcon:SetDisabled(true)
@@ -385,7 +465,9 @@ local function buildTabContent(tabContainer, catId, scroll, groupTabs)
 		if #buffData > 1 and info ~= buffData[#buffData] then
 			downIcon:SetCallback("OnClick", function()
 				moveTrackedBuff(catId, info.id, 1)
-				refresh()
+				tabContainer:ReleaseChildren()
+				addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, groupTabs)
+				scroll:DoLayout()
 			end)
 		else
 			downIcon:SetDisabled(true)
@@ -398,7 +480,7 @@ local function buildTabContent(tabContainer, catId, scroll, groupTabs)
 		gearIcon:SetImageSize(16, 16)
 		gearIcon:SetRelativeWidth(0.1)
 		gearIcon:SetHeight(16)
-		gearIcon:SetCallback("OnClick", function() openBuffConfig(info.id) end)
+		gearIcon:SetCallback("OnClick", function() openBuffConfig(catId, info.id) end)
 		row:AddChild(gearIcon)
 
 		local removeIcon = AceGUI:Create("Icon")
@@ -409,94 +491,17 @@ local function buildTabContent(tabContainer, catId, scroll, groupTabs)
 		removeIcon:SetHeight(16)
 		removeIcon:SetCallback("OnClick", function()
 			removeBuff(catId, info.id)
-			refresh()
+			tabContainer:ReleaseChildren()
+			addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, groupTabs)
+			scroll:DoLayout()
 		end)
 		row:AddChild(removeIcon)
 	end
 
-	buildCategoryOptions(tabContainer, catId, groupTabs, scroll)
+	addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTabs, scroll)
 
 	tabContainer:DoLayout()
 	scroll:DoLayout()
-end
-local function buildCategoryOptions(tabContainer, catId, groupTabs, scroll)
-	local cat = getCategory(catId)
-	local core = addon.functions.createContainer("InlineGroup", "Flow")
-	tabContainer:AddChild(core)
-
-	local enableCB = addon.functions.createCheckboxAce(L["EnableBuffTracker"], addon.db["buffTrackerEnabled"], function(self, _, val)
-		addon.db["buffTrackerEnabled"] = val
-		for id, anchor in pairs(anchors) do
-			if val then
-				anchor:Show()
-			else
-				anchor:Hide()
-			end
-		end
-	end)
-	core:AddChild(enableCB)
-
-	local lockCB = addon.functions.createCheckboxAce(L["buffTrackerLocked"], addon.db["buffTrackerLocked"], function(self, _, val)
-		addon.db["buffTrackerLocked"] = val
-		applyLockState()
-	end)
-	core:AddChild(lockCB)
-
-	local nameEdit = addon.functions.createEditboxAce(L["CategoryName"], cat.name, function(self, _, text)
-		if text ~= "" then cat.name = text end
-		groupTabs:SetTabs(getCategoryTabs())
-		groupTabs:SelectTab(catId)
-	end)
-	core:AddChild(nameEdit)
-
-	local sizeSlider = addon.functions.createSliderAce(L["buffTrackerIconSizeHeadline"] .. ": " .. cat.size, cat.size, 20, 100, 1, function(self, _, val)
-		cat.size = val
-		self:SetLabel(L["buffTrackerIconSizeHeadline"] .. ": " .. val)
-		applySize(catId)
-	end)
-	core:AddChild(sizeSlider)
-
-	local dirDrop = addon.functions.createDropdownAce(L["GrowthDirection"], { LEFT = "LEFT", RIGHT = "RIGHT", UP = "UP", DOWN = "DOWN" }, nil, function(self, _, val)
-		cat.direction = val
-		updatePositions(catId)
-	end)
-	dirDrop:SetValue(cat.direction)
-	dirDrop:SetRelativeWidth(0.4)
-	core:AddChild(dirDrop)
-
-	local spellEdit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
-		local id = tonumber(text)
-		if id then
-			addBuff(catId, id)
-			refresh()
-		end
-		self:SetText("")
-	end)
-	core:AddChild(spellEdit)
-
-	local delBtn = addon.functions.createButtonAce(L["DeleteCategory"], 120, function()
-		addon.db["buffTrackerCategories"][catId] = nil
-		addon.db["buffTrackerOrder"][catId] = nil
-		if anchors[catId] then
-			anchors[catId]:Hide()
-			anchors[catId] = nil
-		end
-		selectedCategory = next(addon.db["buffTrackerCategories"]) or 1
-		groupTabs:SetTabs(getCategoryTabs())
-		groupTabs:SelectTab(selectedCategory)
-	end)
-	core:AddChild(delBtn)
-
-	return core
-end
-
-local function getCategoryTabs()
-	local tabs = {}
-	for id, cat in pairs(addon.db["buffTrackerCategories"]) do
-		table.insert(tabs, { value = id, text = cat.name })
-	end
-	table.sort(tabs, function(a, b) return a.value < b.value end)
-	return tabs
 end
 
 function addon.Aura.functions.addBuffTrackerOptions(container)
@@ -518,7 +523,7 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 		selectedCategory = group
 		addon.db["buffTrackerSelectedCategory"] = group
 		tabContainer:ReleaseChildren()
-		buildTabContent(tabContainer, group, scroll, groupTabs)
+		addon.Aura.functions.buildTabContent(tabContainer, group, scroll, groupTabs)
 	end)
 	groupTabs:SetRelativeWidth(0.9)
 	groupHeader:AddChild(groupTabs)
@@ -540,7 +545,7 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 	scroll:DoLayout()
 end
 
-applyLockState()
 for id in pairs(addon.db["buffTrackerCategories"]) do
 	applySize(id)
 end
+applyLockState()
