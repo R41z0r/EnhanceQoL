@@ -11,7 +11,6 @@ local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_Aura")
 local AceGUI = addon.AceGUI
 
 local selectedCategory = addon.db["buffTrackerSelectedCategory"] or 1
-local activeTabContainer
 
 local anchors = {}
 local activeBuffFrames = {}
@@ -379,7 +378,6 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 end
 
 function addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, groupTabs)
-	activeTabContainer = tabContainer
 
 	local listGroup = addon.functions.createContainer("InlineGroup", "List")
 	listGroup:SetTitle(L["TrackedBuffs"])
