@@ -18,15 +18,22 @@ addon.functions.InitDBValue("personalResourceBarHealthWidth", 100)
 addon.functions.InitDBValue("personalResourceBarHealthHeight", 25)
 addon.functions.InitDBValue("personalResourceBarManaWidth", 100)
 addon.functions.InitDBValue("personalResourceBarManaHeight", 25)
-addon.functions.InitDBValue("buffTrackerList", {})
-addon.functions.InitDBValue("buffTrackerEnabled", false)
-addon.functions.InitDBValue("buffTrackerPoint", "CENTER")
-addon.functions.InitDBValue("buffTrackerX", 0)
-addon.functions.InitDBValue("buffTrackerY", 0)
-addon.functions.InitDBValue("buffTrackerDirection", "RIGHT")
-addon.functions.InitDBValue("buffTrackerSize", 36)
-addon.functions.InitDBValue("buffTrackerLocked", false)
+addon.functions.InitDBValue("buffTrackerCategories", {
+	[1] = {
+		name = "Example",
+		point = "CENTER",
+		x = 0,
+		y = 0,
+		size = 36,
+		direction = "RIGHT",
+		buffs = {},
+	},
+})
+addon.functions.InitDBValue("buffTrackerEnabled", {})
+addon.functions.InitDBValue("buffTrackerLocked", {})
 addon.functions.InitDBValue("buffTrackerHidden", {})
-addon.functions.InitDBValue("buffTrackerSelectedCategory", "offensive")
+addon.functions.InitDBValue("buffTrackerSelectedCategory", 1)
 addon.functions.InitDBValue("buffTrackerOrder", {})
 addon.functions.InitDBValue("buffTrackerSounds", {})
+
+if type(addon.db["buffTrackerSelectedCategory"]) ~= "number" then addon.db["buffTrackerSelectedCategory"] = 1 end
