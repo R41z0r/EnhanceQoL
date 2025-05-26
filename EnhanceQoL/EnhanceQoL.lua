@@ -2105,6 +2105,24 @@ local function addQuestFrame(container, d)
 	groupNPC:AddChild(btnRemoveNPC)
 end
 
+local function addMapFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local cbElement = addon.functions.createCheckboxAce(L["enableWayCommand"], addon.db["enableWayCommand"], function(self, _, value)
+		addon.db["enableWayCommand"] = value
+		if value then
+			addon.functions.registerWayCommand()
+		else
+			addon.variables.requireReload = true
+		end
+	end, L["enableWayCommandDesc"])
+	groupCore:AddChild(cbElement)
+end
+
 local function updateBankButtonInfo()
 	if not addon.db["showIlvlOnBankFrame"] then return end
 
@@ -2519,6 +2537,11 @@ local function initChatFrame()
 		addon.functions.InitDBValue("chatFrameFadeTimeVisible", 120)
 		addon.functions.InitDBValue("chatFrameFadeDuration", 3)
 	end
+end
+
+local function initMap()
+	addon.functions.InitDBValue("enableWayCommand", false)
+	if addon.db["enableWayCommand"] then addon.functions.registerWayCommand() end
 end
 
 local function initUI()
@@ -3286,6 +3309,7 @@ local function CreateUI()
 			{ value = "dungeon", text = L["Dungeon"] },
 			{ value = "misc", text = L["Misc"] },
 			{ value = "quest", text = L["Quest"] },
+			{ value = "map", text = WORLD_MAP },
 			{
 				value = "ui",
 				text = BUG_CATEGORY5,
@@ -3334,6 +3358,8 @@ local function CreateUI()
 			addChatFrame(container)
 		elseif group == "general\001ui\001minimap" then
 			addMinimapFrame(container)
+		elseif group == "general\001map" then
+			addMapFrame(container)
 		elseif group == "profiles" then
 			local sub = AceGUI:Create("SimpleGroup")
 			sub:SetFullWidth(true)
@@ -3526,6 +3552,7 @@ local function setAllHooks()
 	initUI()
 	initUnitFrame()
 	initChatFrame()
+	initMap()
 	initBagsFrame()
 end
 

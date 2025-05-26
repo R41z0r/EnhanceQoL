@@ -846,3 +846,53 @@ function addon.functions.IsQuestRepeatableType(questID)
 	if C_QuestInfoSystem and C_QuestInfoSystem.GetQuestClassification then classification = C_QuestInfoSystem.GetQuestClassification(questID) end
 	return classification == Enum.QuestClassification.Recurring or classification == Enum.QuestClassification.Calling
 end
+
+local function handleWayCommand(msg)
+	local args = {}
+	msg = (msg or ""):gsub(",", " ")
+	for token in string.gmatch(msg, "%S+") do
+		table.insert(args, token)
+	end
+
+	local mapID, x, y
+	if #args == 2 then
+		x = tonumber(args[1])
+		y = tonumber(args[2])
+		mapID = C_Map.GetBestMapForUnit("player")
+	elseif #args == 3 then
+		mapID = tonumber(args[1])
+		x = tonumber(args[2])
+		y = tonumber(args[3])
+	end
+
+	if not mapID or not x or not y then
+		print("|cff00ff98Enhance QoL|r: " .. L["wayUsage"])
+		return
+	end
+
+	local mInfo = C_Map.GetMapInfo(mapID)
+	if not mInfo or nil == mInfo then
+		print("|cff00ff98Enhance QoL|r: " .. L["wayError"]:format(mapID))
+		return
+	end
+
+	if not C_Map.CanSetUserWaypointOnMap(mapID) then
+		print("|cff00ff98Enhance QoL|r: " .. L["wayErrorPlacePing"])
+		return
+	end
+
+	x = x / 100
+	y = y / 100
+
+	local point = UiMapPoint.CreateFromCoordinates(mapID, x, y)
+	C_Map.SetUserWaypoint(point)
+	C_SuperTrack.SetSuperTrackedUserWaypoint(true)
+
+	print("|cff00ff98Enhance QoL|r: " .. string.format(L["waySet"], mInfo.name, x * 100, y * 100))
+end
+
+function addon.functions.registerWayCommand()
+	if SlashCmdList["WAY"] or _G.SLASH_WAY1 then return end
+	SLASH_EQOLWAY1 = "/way"
+	SlashCmdList["EQOLWAY"] = handleWayCommand
+end

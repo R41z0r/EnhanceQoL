@@ -6,6 +6,7 @@
 - **Upgrade-Track Bag Filter** – New filter that groups items by upgrade track (Veteran, Champion, Hero, Mythic, etc.).
 - **Vendor-Sellable Filter** – Quickly show items that can be sold to a vendor.
 - **Auction-House-Sellable Filter** – Quickly show items that can be listed on the Auction House.
+- **/way Command** - Added an Option to automatically place a Map Pin to find your destination.
 
 ### 🐛 Fixed
 - Disabling **Auto-Keystone** no longer triggers Lua errors in edge cases.
