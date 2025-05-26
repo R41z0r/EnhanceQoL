@@ -344,6 +344,8 @@ local function updateButtonInfo(itemButton, bag, slot, frameName)
 								local tier = text:gsub(".+:%s?", ""):gsub("%s?%d/%d", "")
 								if tier then upgradeKey = string.lower(tier) end
 							end
+						elseif v.type == 0 and v.leftText == ITEM_CONJURED then
+							bAuc = true
 						end
 					end
 				end
