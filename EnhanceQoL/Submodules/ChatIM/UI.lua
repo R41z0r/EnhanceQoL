@@ -145,15 +145,15 @@ function ChatIM:CreateTab(sender)
 	eb:SetAutoFocus(false)
 	eb:SetHeight(20)
 	eb:SetFontObject(ChatFontNormal)
-	eb:SetScript("OnEnterPressed", function(self)
-		local txt = self:GetText()
-		self:SetText("")
-		local tgt = sender -- partner name incl. realm
-		if txt ~= "" then
-			SendChatMessage(txt, "WHISPER", nil, tgt)
-			ChatIM:AddMessage(tgt, txt, true) -- echo locally as outbound
-		end
-	end)
+       eb:SetScript("OnEnterPressed", function(self)
+               local txt = self:GetText()
+               self:SetText("")
+               local tgt = ChatIM.activeTab or sender
+               if txt ~= "" and tgt then
+                       SendChatMessage(txt, "WHISPER", nil, tgt)
+                       ChatIM:AddMessage(tgt, txt, true) -- echo locally as outbound
+               end
+       end)
 
 	self.tabs[sender].edit = eb
 
@@ -181,23 +181,12 @@ function ChatIM:AddMessage(partner, text, outbound)
         ChatIM.history[partner] = ChatIM.history[partner] or {}
         table.insert(ChatIM.history[partner], line)
         if #ChatIM.history[partner] > 250 then table.remove(ChatIM.history[partner], 1) end
-        self.tabGroup:SelectTab(partner)
-        self:ScheduleAutoClose(partner)
-end
-
-function ChatIM:ScheduleAutoClose(sender)
-	local tab = self.tabs[sender]
-	if not tab then return end
-	if tab.timer then tab.timer:Cancel() end
-	tab.timer = C_Timer.NewTimer(30, function()
-		if not ChatIM.pinned[sender] then ChatIM:RemoveTab(sender) end
-	end)
+       self.tabGroup:SelectTab(partner)
 end
 
 function ChatIM:RemoveTab(sender)
-	local tab = self.tabs[sender]
-	if not tab then return end
-	if tab.timer then tab.timer:Cancel() end
+       local tab = self.tabs[sender]
+       if not tab then return end
 	if self.activeTab == sender then
 		-- activeGroup *is* tab.group – release it once
 		if self.activeGroup then AceGUI:Release(self.activeGroup) end
@@ -251,10 +240,9 @@ function ChatIM:Flash()
 end
 
 function ChatIM:TogglePin(sender)
-	if self.pinned[sender] then
-		self.pinned[sender] = nil
-		self:ScheduleAutoClose(sender)
-	else
-		self.pinned[sender] = true
-	end
+       if self.pinned[sender] then
+               self.pinned[sender] = nil
+       else
+               self.pinned[sender] = true
+       end
 end
