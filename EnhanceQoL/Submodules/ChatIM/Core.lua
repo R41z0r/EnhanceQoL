@@ -30,10 +30,10 @@ local function whisperFilter()
         return true
 end
 
-ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", whisperFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", whisperFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", whisperFilter)
-ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", whisperFilter)
+-- ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", whisperFilter)
+-- ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", whisperFilter)
+-- ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", whisperFilter)
+-- ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", whisperFilter)
 
 SLASH_EQOLIM1 = "/im"
 SlashCmdList["EQOLIM"] = function() ChatIM:Toggle() end

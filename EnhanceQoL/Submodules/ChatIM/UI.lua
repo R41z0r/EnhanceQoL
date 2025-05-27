@@ -131,29 +131,26 @@ function ChatIM:CreateTab(sender)
 		GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
 		GameTooltip:SetHyperlink(linkData)
 	end)
-        smf:SetScript("OnHyperlinkLeave", GameTooltip_Hide)
+	smf:SetScript("OnHyperlinkLeave", GameTooltip_Hide)
 
-        self.tabs[sender] = { msg = smf }
-        self.tabs[sender].target = sender
-        if ChatIM.history[sender] then
-                for _, line in ipairs(ChatIM.history[sender]) do
-                        smf:AddMessage(line)
-                end
-        end
-        -- will be parented/anchored once the tab becomes active
+	self.tabs[sender] = { msg = smf }
+	self.tabs[sender].target = sender
+	if ChatIM.history[sender] then
+		for _, line in ipairs(ChatIM.history[sender]) do
+			smf:AddMessage(line)
+		end
+	end
+	-- will be parented/anchored once the tab becomes active
 	local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
 	eb:SetAutoFocus(false)
 	eb:SetHeight(20)
 	eb:SetFontObject(ChatFontNormal)
-       eb:SetScript("OnEnterPressed", function(self)
-               local txt = self:GetText()
-               self:SetText("")
-               local tgt = ChatIM.activeTab or sender
-               if txt ~= "" and tgt then
-                       SendChatMessage(txt, "WHISPER", nil, tgt)
-                       ChatIM:AddMessage(tgt, txt, true) -- echo locally as outbound
-               end
-       end)
+	eb:SetScript("OnEnterPressed", function(self)
+		local txt = self:GetText()
+		self:SetText("")
+		local tgt = ChatIM.activeTab or sender
+		if txt ~= "" and tgt then SendChatMessage(txt, "WHISPER", nil, tgt) end
+	end)
 
 	self.tabs[sender].edit = eb
 
@@ -164,29 +161,29 @@ function ChatIM:CreateTab(sender)
 end
 
 function ChatIM:AddMessage(partner, text, outbound)
-        self:CreateTab(partner)
-        -- make sure the main window is visible
-        if self.widget and self.widget.frame and not self.widget.frame:IsShown() then
-                UIFrameFlashStop(self.widget.frame) -- stop any pending flash
-                self.widget.frame:Show()
-        end
-        local tab = self.tabs[partner]
-        -- New message formatting: recolour whole line and show "You" for outbound
-        local timestamp = date("%H:%M")
-        local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
-        local cHex = "ff80ff"
-        local prefix = "|cff999999" .. timestamp .. "|r"
-        local line = prefix .. " |cffff80ff[" .. shortName .. "]: " .. text
-        tab.msg:AddMessage(line)
-        ChatIM.history[partner] = ChatIM.history[partner] or {}
-        table.insert(ChatIM.history[partner], line)
-        if #ChatIM.history[partner] > 250 then table.remove(ChatIM.history[partner], 1) end
-       self.tabGroup:SelectTab(partner)
+	self:CreateTab(partner)
+	-- make sure the main window is visible
+	if self.widget and self.widget.frame and not self.widget.frame:IsShown() then
+		UIFrameFlashStop(self.widget.frame) -- stop any pending flash
+		self.widget.frame:Show()
+	end
+	local tab = self.tabs[partner]
+	-- New message formatting: recolour whole line and show "You" for outbound
+	local timestamp = date("%H:%M")
+	local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
+	local cHex = "ff80ff"
+	local prefix = "|cff999999" .. timestamp .. "|r"
+	local line = prefix .. " |cffff80ff[" .. shortName .. "]: " .. text
+	tab.msg:AddMessage(line)
+	ChatIM.history[partner] = ChatIM.history[partner] or {}
+	table.insert(ChatIM.history[partner], line)
+	if #ChatIM.history[partner] > 250 then table.remove(ChatIM.history[partner], 1) end
+	self.tabGroup:SelectTab(partner)
 end
 
 function ChatIM:RemoveTab(sender)
-       local tab = self.tabs[sender]
-       if not tab then return end
+	local tab = self.tabs[sender]
+	if not tab then return end
 	if self.activeTab == sender then
 		-- activeGroup *is* tab.group – release it once
 		if self.activeGroup then AceGUI:Release(self.activeGroup) end
@@ -240,9 +237,9 @@ function ChatIM:Flash()
 end
 
 function ChatIM:TogglePin(sender)
-       if self.pinned[sender] then
-               self.pinned[sender] = nil
-       else
-               self.pinned[sender] = true
-       end
+	if self.pinned[sender] then
+		self.pinned[sender] = nil
+	else
+		self.pinned[sender] = true
+	end
 end
