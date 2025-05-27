@@ -182,3 +182,5 @@ L["wayMapUnknown"] = "Map unknown – try again outdoors."
 L["persistAuctionHouseFilter"] = "Remember Auction House filters for this session"
 
 L["Excluded NPCs"] = "Excluded NPCs"
+L["Instant Chats"] = "Instant Chats"
+
