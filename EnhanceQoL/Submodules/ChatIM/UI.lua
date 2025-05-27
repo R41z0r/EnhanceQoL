@@ -10,6 +10,8 @@ end
 local AceGUI = addon.AceGUI
 local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL")
 
+local function colorWrap(hex, text) return "|cff" .. hex .. text .. "|r" end
+
 addon.ChatIM = addon.ChatIM or {}
 local ChatIM = addon.ChatIM
 
@@ -29,12 +31,10 @@ function ChatIM:CreateUI()
 	frame:SetCallback("OnClose", function(widget) widget.frame:Hide() end)
 	frame.frame:Hide()
 
-       local tabGroup = AceGUI:Create("TabGroup")
-       tabGroup:SetLayout("Fill")
-       tabGroup:SetCallback("OnGroupSelected", function(widget, _, value)
-               ChatIM:SelectTab(widget, value)
-       end)
-       frame:AddChild(tabGroup)
+	local tabGroup = AceGUI:Create("TabGroup")
+	tabGroup:SetLayout("Fill")
+	tabGroup:SetCallback("OnGroupSelected", function(widget, _, value) ChatIM:SelectTab(widget, value) end)
+	frame:AddChild(tabGroup)
 
 	self.widget = frame
 	self.frame = frame.frame
@@ -61,116 +61,163 @@ function ChatIM:RefreshTabCallbacks()
 end
 
 function ChatIM:SelectTab(widget, value)
-       if self.activeTab == value then return end
+	if self.activeTab == value then return end
 
-       if self.activeGroup then
-               AceGUI:Release(self.activeGroup)
-               self.activeGroup = nil
-       end
+	if self.activeGroup then
+		AceGUI:Release(self.activeGroup)
+		self.activeGroup = nil
+	end
 
-       if self.activeTab then
-               local old = self.tabs[self.activeTab]
-               if old and old.msg then
-                       old.msg:SetParent(self.storage)
-                       old.msg:Hide()
-                       old.group = nil
-               end
-       end
+	if self.activeTab then
+		local old = self.tabs[self.activeTab]
+		if old and old.msg then
+			old.msg:SetParent(self.storage)
+			old.msg:Hide()
+			if old.edit then
+				old.edit:SetParent(ChatIM.storage)
+				old.edit:Hide()
+			end
+			old.group = nil
+		end
+	end
 
-       self.activeTab = value
+	self.activeTab = value
 
-       local tab = self.tabs[value]
-       if not tab then return end
+	local tab = self.tabs[value]
+	if not tab then return end
 
-       local group = AceGUI:Create("SimpleGroup")
-       group:SetFullWidth(true)
-       group:SetFullHeight(true)
-       tab.msg:SetParent(group.frame)
-       tab.msg:Show()
-       widget:AddChild(group)
-       tab.group = group
-       self.activeGroup = group
+	local group = AceGUI:Create("SimpleGroup")
+	group:SetFullWidth(true)
+	group:SetFullHeight(true)
+	tab.msg:SetParent(group.frame)
+	tab.msg:Show()
+	-- ensure the message frame fills the new parent
+	tab.msg:ClearAllPoints()
+	tab.msg:SetPoint("TOPLEFT", group.frame, "TOPLEFT", 0, -2)
+	tab.msg:SetPoint("TOPRIGHT", group.frame, "TOPRIGHT", 0, -2)
+	tab.msg:SetPoint("BOTTOMLEFT", group.frame, "BOTTOMLEFT", 0, 24)
+
+	if tab.edit then
+		tab.edit:SetParent(group.frame)
+		tab.edit:ClearAllPoints()
+		tab.edit:SetPoint("LEFT", group.frame, "LEFT", 0, 2)
+		tab.edit:SetPoint("RIGHT", group.frame, "RIGHT", 0, 2)
+		tab.edit:SetPoint("BOTTOM", group.frame, "BOTTOM", 0, 2)
+		tab.edit:Show()
+	end
+
+	widget:AddChild(group)
+	tab.group = group
+	self.activeGroup = group
 end
 
 function ChatIM:CreateTab(sender)
-       self:CreateUI()
-       if self.tabs[sender] then return end
+	self:CreateUI()
+	if self.tabs[sender] then return end
 
-       local smf = CreateFrame("ScrollingMessageFrame", nil, ChatIM.storage)
-       smf:SetAllPoints(true)
-       smf:SetFontObject(ChatFontNormal)
-       smf:SetJustifyH("LEFT")
-       smf:SetFading(false)
-       smf:SetMaxLines(250)
-       smf:SetHyperlinksEnabled(true)
-       smf:SetScript("OnHyperlinkClick", ChatFrame_OnHyperlinkShow)
+	local displayName = Ambiguate(sender, "short")
+
+	local smf = CreateFrame("ScrollingMessageFrame", nil, ChatIM.storage)
+	-- we'll anchor later when the tab becomes active
+	smf:SetAllPoints(ChatIM.storage)
+	smf:SetFontObject(ChatFontNormal)
+	smf:SetJustifyH("LEFT")
+	smf:SetFading(false)
+	smf:SetMaxLines(250)
+	smf:SetHyperlinksEnabled(true)
+	smf:SetScript("OnHyperlinkClick", ChatFrame_OnHyperlinkShow)
 	smf:SetScript("OnHyperlinkEnter", function(self, linkData)
 		GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
 		GameTooltip:SetHyperlink(linkData)
 	end)
-       smf:SetScript("OnHyperlinkLeave", GameTooltip_Hide)
+	smf:SetScript("OnHyperlinkLeave", GameTooltip_Hide)
 
-       self.tabs[sender] = { msg = smf }
-       table.insert(self.tabList, { text = sender, value = sender })
-       self.tabGroup:SetTabs(self.tabList)
-       self.tabGroup:SelectTab(sender)
-       self:RefreshTabCallbacks()
+	self.tabs[sender] = { msg = smf }
+	self.tabs[sender].target = sender
+	-- will be parented/anchored once the tab becomes active
+	local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
+	eb:SetAutoFocus(false)
+	eb:SetHeight(20)
+	eb:SetFontObject(ChatFontNormal)
+	eb:SetScript("OnEnterPressed", function(self)
+		local txt = self:GetText()
+		self:SetText("")
+		local tgt = sender -- partner name incl. realm
+		if txt ~= "" then
+			SendChatMessage(txt, "WHISPER", nil, tgt)
+			ChatIM:AddMessage(tgt, txt, true) -- echo locally as outbound
+		end
+	end)
+
+	self.tabs[sender].edit = eb
+
+	table.insert(self.tabList, { text = displayName, value = sender })
+	self.tabGroup:SetTabs(self.tabList)
+	self.tabGroup:SelectTab(sender)
+	self:RefreshTabCallbacks()
 end
 
-function ChatIM:AddMessage(sender, text)
-	self:CreateTab(sender)
-	local tab = self.tabs[sender]
-	tab.msg:AddMessage(text)
-	self.tabGroup:SelectTab(sender)
-	self:ScheduleAutoClose(sender)
+function ChatIM:AddMessage(partner, text, outbound)
+	self:CreateTab(partner)
+	-- make sure the main window is visible
+	if self.widget and self.widget.frame and not self.widget.frame:IsShown() then
+		UIFrameFlashStop(self.widget.frame) -- stop any pending flash
+		self.widget.frame:Show()
+	end
+	local tab = self.tabs[partner]
+	-- New message formatting: recolour whole line and show "You" for outbound
+	local timestamp = date("%H:%M")
+	local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
+	local cHex = "ff80ff"
+	local prefix = "|cff999999" .. timestamp .. "|r"
+	local line = prefix .. " |cffff80ff[" .. shortName .. "]: " .. text
+	tab.msg:AddMessage(line)
+	self.tabGroup:SelectTab(partner)
+	self:ScheduleAutoClose(partner)
 end
 
 function ChatIM:ScheduleAutoClose(sender)
-       local tab = self.tabs[sender]
-       if not tab then return end
-       if tab.timer then tab.timer:Cancel() end
-       tab.timer = C_Timer.NewTimer(30, function()
-               if not ChatIM.pinned[sender] then ChatIM:RemoveTab(sender) end
-       end)
+	local tab = self.tabs[sender]
+	if not tab then return end
+	if tab.timer then tab.timer:Cancel() end
+	tab.timer = C_Timer.NewTimer(30, function()
+		if not ChatIM.pinned[sender] then ChatIM:RemoveTab(sender) end
+	end)
 end
 
 function ChatIM:RemoveTab(sender)
-       local tab = self.tabs[sender]
-       if not tab then return end
-       if tab.timer then tab.timer:Cancel() end
-       if self.activeTab == sender then
-               if self.activeGroup then
-                       AceGUI:Release(self.activeGroup)
-                       self.activeGroup = nil
-               end
-               self.activeTab = nil
-       end
+	local tab = self.tabs[sender]
+	if not tab then return end
+	if tab.timer then tab.timer:Cancel() end
+	if self.activeTab == sender then
+		-- activeGroup *is* tab.group – release it once
+		if self.activeGroup then AceGUI:Release(self.activeGroup) end
+		self.activeGroup = nil
+		self.activeTab = nil
+	end
 
-       if tab.group then
-               AceGUI:Release(tab.group)
-       end
-       if tab.msg then
-               tab.msg:SetParent(nil)
-               tab.msg:Hide()
-       end
-       for i, t in ipairs(self.tabList) do
-               if t.value == sender then
-                       table.remove(self.tabList, i)
-                       break
-               end
-       end
-       self.tabs[sender] = nil
-       self.tabGroup:SetTabs(self.tabList)
-       self:RefreshTabCallbacks()
-       if #self.tabList == 0 then
-               self.widget.frame:Hide()
-               UIFrameFlashStop(self.widget.frame)
-       else
-               local last = self.tabList[#self.tabList]
-               if last then
-                       self.tabGroup:SelectTab(last.value)
-               end
-       end
+	tab.group = nil -- avoid accidental double‑release later
+
+	if tab.msg then
+		tab.msg:SetParent(nil)
+		tab.msg:Hide()
+	end
+	for i, t in ipairs(self.tabList) do
+		if t.value == sender then
+			table.remove(self.tabList, i)
+			break
+		end
+	end
+	self.tabs[sender] = nil
+	self.tabGroup:SetTabs(self.tabList)
+	self:RefreshTabCallbacks()
+	if #self.tabList == 0 then
+		self.widget.frame:Hide()
+		UIFrameFlashStop(self.widget.frame)
+	else
+		local last = self.tabList[#self.tabList]
+		if last then self.tabGroup:SelectTab(last.value) end
+	end
 end
 
 function ChatIM:Toggle()
@@ -181,6 +228,12 @@ function ChatIM:Toggle()
 	else
 		UIFrameFlashStop(self.widget.frame)
 		self.widget.frame:Show()
+		-- reselect previously active tab so messages are visible
+		if self.activeTab then
+			self.tabGroup:SelectTab(self.activeTab)
+		elseif self.tabList[1] then
+			self.tabGroup:SelectTab(self.tabList[1].value)
+		end
 	end
 end
 
@@ -189,10 +242,10 @@ function ChatIM:Flash()
 end
 
 function ChatIM:TogglePin(sender)
-       if self.pinned[sender] then
-               self.pinned[sender] = nil
-               self:ScheduleAutoClose(sender)
-       else
-               self.pinned[sender] = true
-       end
+	if self.pinned[sender] then
+		self.pinned[sender] = nil
+		self:ScheduleAutoClose(sender)
+	else
+		self.pinned[sender] = true
+	end
 end

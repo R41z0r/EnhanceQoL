@@ -183,4 +183,3 @@ L["persistAuctionHouseFilter"] = "Remember Auction House filters for this sessio
 
 L["Excluded NPCs"] = "Excluded NPCs"
 L["Instant Chats"] = "Instant Chats"
-
