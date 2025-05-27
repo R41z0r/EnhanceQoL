@@ -14,6 +14,7 @@ local function colorWrap(hex, text) return "|cff" .. hex .. text .. "|r" end
 
 addon.ChatIM = addon.ChatIM or {}
 local ChatIM = addon.ChatIM
+ChatIM.history = ChatIM.history or {}
 
 EnhanceQoL_IMPinned = EnhanceQoL_IMPinned or {}
 ChatIM.pinned = EnhanceQoL_IMPinned
@@ -130,11 +131,16 @@ function ChatIM:CreateTab(sender)
 		GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
 		GameTooltip:SetHyperlink(linkData)
 	end)
-	smf:SetScript("OnHyperlinkLeave", GameTooltip_Hide)
+        smf:SetScript("OnHyperlinkLeave", GameTooltip_Hide)
 
-	self.tabs[sender] = { msg = smf }
-	self.tabs[sender].target = sender
-	-- will be parented/anchored once the tab becomes active
+        self.tabs[sender] = { msg = smf }
+        self.tabs[sender].target = sender
+        if ChatIM.history[sender] then
+                for _, line in ipairs(ChatIM.history[sender]) do
+                        smf:AddMessage(line)
+                end
+        end
+        -- will be parented/anchored once the tab becomes active
 	local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
 	eb:SetAutoFocus(false)
 	eb:SetHeight(20)
@@ -158,22 +164,25 @@ function ChatIM:CreateTab(sender)
 end
 
 function ChatIM:AddMessage(partner, text, outbound)
-	self:CreateTab(partner)
-	-- make sure the main window is visible
-	if self.widget and self.widget.frame and not self.widget.frame:IsShown() then
-		UIFrameFlashStop(self.widget.frame) -- stop any pending flash
-		self.widget.frame:Show()
-	end
-	local tab = self.tabs[partner]
-	-- New message formatting: recolour whole line and show "You" for outbound
-	local timestamp = date("%H:%M")
-	local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
-	local cHex = "ff80ff"
-	local prefix = "|cff999999" .. timestamp .. "|r"
-	local line = prefix .. " |cffff80ff[" .. shortName .. "]: " .. text
-	tab.msg:AddMessage(line)
-	self.tabGroup:SelectTab(partner)
-	self:ScheduleAutoClose(partner)
+        self:CreateTab(partner)
+        -- make sure the main window is visible
+        if self.widget and self.widget.frame and not self.widget.frame:IsShown() then
+                UIFrameFlashStop(self.widget.frame) -- stop any pending flash
+                self.widget.frame:Show()
+        end
+        local tab = self.tabs[partner]
+        -- New message formatting: recolour whole line and show "You" for outbound
+        local timestamp = date("%H:%M")
+        local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
+        local cHex = "ff80ff"
+        local prefix = "|cff999999" .. timestamp .. "|r"
+        local line = prefix .. " |cffff80ff[" .. shortName .. "]: " .. text
+        tab.msg:AddMessage(line)
+        ChatIM.history[partner] = ChatIM.history[partner] or {}
+        table.insert(ChatIM.history[partner], line)
+        if #ChatIM.history[partner] > 250 then table.remove(ChatIM.history[partner], 1) end
+        self.tabGroup:SelectTab(partner)
+        self:ScheduleAutoClose(partner)
 end
 
 function ChatIM:ScheduleAutoClose(sender)

@@ -12,14 +12,28 @@ addon.ChatIM = ChatIM
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("CHAT_MSG_WHISPER")
 frame:RegisterEvent("CHAT_MSG_BN_WHISPER")
+frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
+frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
 frame:SetScript("OnEvent", function(_, event, ...)
-	if event == "CHAT_MSG_WHISPER" or event == "CHAT_MSG_BN_WHISPER" then
-		local msg, sender = ...
-		ChatIM:AddMessage(sender, msg)
-		PlaySound(SOUNDKIT.TELL_MESSAGE)
-		ChatIM:Flash()
-	end
+        if event == "CHAT_MSG_WHISPER" or event == "CHAT_MSG_BN_WHISPER" then
+                local msg, sender = ...
+                ChatIM:AddMessage(sender, msg)
+                PlaySound(SOUNDKIT.TELL_MESSAGE)
+                ChatIM:Flash()
+        elseif event == "CHAT_MSG_WHISPER_INFORM" or event == "CHAT_MSG_BN_WHISPER_INFORM" then
+                local msg, target = ...
+                ChatIM:AddMessage(target, msg, true)
+        end
 end)
+
+local function whisperFilter()
+        return true
+end
+
+ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", whisperFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", whisperFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", whisperFilter)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", whisperFilter)
 
 SLASH_EQOLIM1 = "/im"
 SlashCmdList["EQOLIM"] = function() ChatIM:Toggle() end
