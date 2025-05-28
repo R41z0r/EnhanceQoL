@@ -75,3 +75,19 @@ SLASH_EQOLIM1 = "/eim"
 SlashCmdList["EQOLIM"] = function()
 	if ChatIM.enabled then ChatIM:Toggle() end
 end
+
+function ChatIM:ToggleIgnore(name)
+       if C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) or IsIgnored and IsIgnored(name) then
+               if C_FriendList.DelIgnore then
+                       C_FriendList.DelIgnore(name)
+               else
+                       DelIgnore(name)
+               end
+       else
+               if C_FriendList.AddIgnore then
+                       C_FriendList.AddIgnore(name)
+               else
+                       AddIgnore(name)
+               end
+       end
+end
