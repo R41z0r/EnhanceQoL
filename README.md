@@ -55,6 +55,8 @@ English • German • French • Spanish • Italian • Russian • Korean •
 
 *   Quick-signup in the LFG browser; sort applicants by Raider.IO score.
 *   Keystone helper: auto-insert keystone, ready-check & pull timer (DBM/BigWigs compatible), auto-start on zero.
+*   Keystone helper UI options: polished design with animated status icon or revert to the legacy layout.
+*   Objective-Tracker Auto-Hide when a Mythic+ key starts.
 *   Talent loadout reminders per dungeon.
 *   Combat-rez tracker and party keystone list.
 *   Extended dungeon filter (Bloodlust, Battle Res, role fit, spec duplicates).
