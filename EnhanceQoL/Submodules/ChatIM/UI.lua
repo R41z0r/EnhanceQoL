@@ -18,15 +18,13 @@ ChatIM.history = ChatIM.history or {}
 
 local MU = MenuUtil -- global ab 11.0+
 
-local function PlayerMenuGenerator(_, root, targetName)
+local function PlayerMenuGenerator(_, root, targetName, isBN)
 	root:CreateTitle(targetName)
 	root:CreateDivider()
 
 	root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_INTERACT)
 
-	root:CreateButton(INVITE, function(name) C_PartyInfo.InviteUnit(name) end, targetName)
-
-	root:CreateButton(WHISPER, function(name) ChatFrame_SendTell(name) end, targetName)
+	if not isBN then root:CreateButton(INVITE, function(name) C_PartyInfo.InviteUnit(name) end, targetName) end
 
 	root:CreateDivider()
 
@@ -34,11 +32,11 @@ local function PlayerMenuGenerator(_, root, targetName)
 
 	root:CreateButton(COPY_CHARACTER_NAME, function(name) StaticPopup_Show("EQOL_URL_COPY", nil, nil, name) end, targetName)
 
-	local label = IsIgnored(targetName) and UNIGNORE_QUEST or IGNORE
-	local function toggleIgnore(name)
-	ChatIM:ToggleIgnore(name)
+	if not isBN then
+		local label = C_FriendList.IsIgnored(targetName) and UNIGNORE_QUEST or IGNORE
+		local function toggleIgnore(name) ChatIM:ToggleIgnore(name) end
+		root:CreateButton(label, toggleIgnore, targetName)
 	end
-	root:CreateButton(label, toggleIgnore, targetName)
 end
 
 StaticPopupDialogs["EQOL_URL_COPY"] = {
@@ -223,7 +221,7 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 			StaticPopup_Show("EQOL_URL_COPY", nil, nil, payload)
 		else
 			local name = Ambiguate(payload:match("^[^:]+"), "short")
-			MU.CreateContextMenu(self, PlayerMenuGenerator, name)
+			MU.CreateContextMenu(self, PlayerMenuGenerator, name, isBN)
 		end
 	end)
 	smf:SetScript("OnHyperlinkEnter", function(self, linkData)
