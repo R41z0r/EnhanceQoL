@@ -38,6 +38,7 @@ ChatIM.storage = ChatIM.storage or CreateFrame("Frame")
 ChatIM.activeGroup = nil
 ChatIM.activeTab = nil
 ChatIM.insertLinkHooked = ChatIM.insertLinkHooked or false
+ChatIM.hooksSet = ChatIM.hooksSet or false
 
 function ChatIM:FormatURLs(text)
 	local function repl(url) return "|Hurl:" .. url .. "|h[|cffffffff" .. url .. "|r]|h" end
@@ -79,6 +80,12 @@ function ChatIM:CreateUI()
 	self.tabGroup = tabGroup
 	self.tabs = {}
 	self.tabList = {}
+
+	if not self.hooksSet then
+		self.frame:HookScript("OnMouseDown", ChatIM.ClearEditFocus)
+		WorldFrame:HookScript("OnMouseDown", ChatIM.ClearEditFocus)
+		self.hooksSet = true
+	end
 end
 
 function ChatIM:RefreshTabCallbacks()
@@ -202,6 +209,7 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 			end
 		end
 	end)
+	eb:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 
 	self.tabs[sender].edit = eb
 
@@ -294,4 +302,9 @@ function ChatIM:TogglePin(sender)
 	else
 		self.pinned[sender] = true
 	end
+end
+
+function ChatIM:ClearEditFocus()
+	local tab = ChatIM.activeTab and ChatIM.tabs[ChatIM.activeTab]
+	if tab and tab.edit then tab.edit:ClearFocus() end
 end
