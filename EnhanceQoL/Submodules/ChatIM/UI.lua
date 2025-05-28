@@ -112,7 +112,7 @@ function ChatIM:SelectTab(widget, value)
 	self.activeGroup = group
 end
 
-function ChatIM:CreateTab(sender)
+function ChatIM:CreateTab(sender, isBN, bnetID)
 	self:CreateUI()
 	if self.tabs[sender] then return end
 
@@ -133,7 +133,7 @@ function ChatIM:CreateTab(sender)
 	end)
 	smf:SetScript("OnHyperlinkLeave", GameTooltip_Hide)
 
-	self.tabs[sender] = { msg = smf }
+	self.tabs[sender] = { msg = smf, isBN = isBN, bnetID = bnetID }
 	self.tabs[sender].target = sender
 	if ChatIM.history[sender] then
 		for _, line in ipairs(ChatIM.history[sender]) do
@@ -149,7 +149,14 @@ function ChatIM:CreateTab(sender)
 		local txt = self:GetText()
 		self:SetText("")
 		local tgt = ChatIM.activeTab or sender
-		if txt ~= "" and tgt then SendChatMessage(txt, "WHISPER", nil, tgt) end
+		if txt ~= "" and tgt then
+			local tab = ChatIM.tabs[tgt]
+			if tab and tab.isBN and tab.bnetID then
+				BNSendWhisper(tab.bnetID, txt)
+			else
+				SendChatMessage(txt, "WHISPER", nil, tgt)
+			end
+		end
 	end)
 
 	self.tabs[sender].edit = eb
@@ -160,8 +167,8 @@ function ChatIM:CreateTab(sender)
 	self:RefreshTabCallbacks()
 end
 
-function ChatIM:AddMessage(partner, text, outbound)
-	self:CreateTab(partner)
+function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
+	self:CreateTab(partner, isBN, bnetID)
 	-- make sure the main window is visible
 	if self.widget and self.widget.frame and not self.widget.frame:IsShown() then
 		UIFrameFlashStop(self.widget.frame) -- stop any pending flash
@@ -171,9 +178,9 @@ function ChatIM:AddMessage(partner, text, outbound)
 	-- New message formatting: recolour whole line and show "You" for outbound
 	local timestamp = date("%H:%M")
 	local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
-	local cHex = "ff80ff"
+	local cHex = isBN and "82c5ff" or "ff80ff"
 	local prefix = "|cff999999" .. timestamp .. "|r"
-	local line = prefix .. " |cffff80ff[" .. shortName .. "]: " .. text
+	local line = prefix .. " |cff" .. cHex .. "[" .. shortName .. "]: " .. text
 	tab.msg:AddMessage(line)
 	ChatIM.history[partner] = ChatIM.history[partner] or {}
 	table.insert(ChatIM.history[partner], line)
