@@ -16,9 +16,29 @@ addon.ChatIM = addon.ChatIM or {}
 local ChatIM = addon.ChatIM
 ChatIM.history = ChatIM.history or {}
 
+local MU = MenuUtil -- global ab 11.0+
+
+local function PlayerMenuGenerator(_, root, targetName)
+	root:CreateTitle(targetName)
+	root:CreateDivider()
+
+	root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_INTERACT)
+
+	root:CreateButton(INVITE, function(name) C_PartyInfo.InviteUnit(name) end, targetName)
+
+	root:CreateButton(WHISPER, function(name) ChatFrame_SendTell(name) end, targetName)
+
+	root:CreateDivider()
+
+	root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_OTHER)
+
+	root:CreateButton(COPY_CHARACTER_NAME, function(name) StaticPopup_Show("EQOL_URL_COPY", nil, nil, name) end, targetName)
+	root:CreateButton(IGNORE, function(name) C_FriendList.AddIgnore(name) end, targetName)
+end
+
 StaticPopupDialogs["EQOL_URL_COPY"] = {
-	text = "URL",
-	button1 = "OK",
+	text = CALENDAR_COPY_EVENT,
+	button1 = CLOSE,
 	hasEditBox = true,
 	editBoxWidth = 320,
 	timeout = 0,
@@ -75,7 +95,7 @@ end
 function ChatIM:CreateUI()
 	if self.widget then return end
 	self:HookInsertLink()
-	local frame = AceGUI:Create("Frame")
+	local frame = AceGUI:Create("Window")
 	frame:SetTitle(L["Instant Chats"])
 	frame:SetWidth(400)
 	frame:SetHeight(300)
@@ -85,8 +105,9 @@ function ChatIM:CreateUI()
 	frame.frame:SetAlpha(0.4)
 	frame.frame:HookScript("OnEnter", function() ChatIM:UpdateAlpha() end)
 	frame.frame:HookScript("OnLeave", function()
-		C_Timer.After(2, function() ChatIM:UpdateAlpha() end)
+		C_Timer.After(5, function() ChatIM:UpdateAlpha() end)
 	end)
+	frame.frame:SetFrameStrata("DIALOG")
 	frame.frame:Hide()
 
 	local tabGroup = AceGUI:Create("TabGroup")
@@ -192,11 +213,12 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	smf:SetMaxLines(250)
 	smf:SetHyperlinksEnabled(true)
 	smf:SetScript("OnHyperlinkClick", function(self, linkData, text, button)
-		local linkType, url = linkData:match("^(%a+):(.+)$")
+		local linkType, payload = linkData:match("^(%a+):(.+)$")
 		if linkType == "url" then
-			StaticPopup_Show("EQOL_URL_COPY", nil, nil, url)
+			StaticPopup_Show("EQOL_URL_COPY", nil, nil, payload)
 		else
-			ChatFrame_OnHyperlinkShow(self, linkData, text, button)
+			local name = Ambiguate(payload:match("^[^:]+"), "short")
+			MU.CreateContextMenu(self, PlayerMenuGenerator, name)
 		end
 	end)
 	smf:SetScript("OnHyperlinkEnter", function(self, linkData)
@@ -219,7 +241,7 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	eb:SetFontObject(ChatFontNormal)
 	eb:SetScript("OnEditFocusGained", function() ChatIM:UpdateAlpha() end)
 	eb:SetScript("OnEditFocusLost", function()
-		C_Timer.After(0.1, function() ChatIM:UpdateAlpha() end)
+		C_Timer.After(5, function() ChatIM:UpdateAlpha() end)
 	end)
 	eb:SetScript("OnEnterPressed", function(self)
 		local txt = self:GetText()
@@ -258,7 +280,14 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	local cHex = isBN and "82c5ff" or "ff80ff"
 	local prefix = "|cff999999" .. timestamp .. "|r"
 	text = self:FormatURLs(text)
-	local line = prefix .. " |cff" .. cHex .. "[" .. shortName .. "]: " .. text
+	local nameLink
+	if isBN then
+		nameLink = string.format("|HBNplayer:%s|h[%s]|h", partner, shortName)
+	else
+		nameLink = string.format("|Hplayer:%s|h[%s]|h", partner, shortName)
+	end
+	local line = prefix .. " |cff" .. cHex .. nameLink .. ": " .. text
+	-- local line = prefix .. " |cff" .. cHex .. "[" .. shortName .. "]: " .. text
 	tab.msg:AddMessage(line)
 	ChatIM.history[partner] = ChatIM.history[partner] or {}
 	table.insert(ChatIM.history[partner], line)
