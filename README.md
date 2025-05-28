@@ -84,20 +84,5 @@ Fully configurable per context (combat, dungeon, friendly/enemy): items, item co
 *   Option to hide Raid Tools in party play.
 *   Disable Talking Head frame, plus other minor class-specific bar tweaks.
 
-…and plenty of other small conveniences to keep Azeroth smooth.
-
-## Additional Modules
-
-In addition to the core package the repository contains several optional addons:
-
 * **Instant Messenger** – mini whisper window, toggle with `/eim`.
 * **Gem-Socket Helper** – shows socketable gems below the socket UI.
-* **EnhanceQoLQuery** – view item and auction info on demand.
-* **Drink Macro** – picks the best drink in your bags and sets a macro.
-* **Layout Tools** – utilities for positioning or locking frames.
-* **Mouse** – improved cursor visibility features.
-* **Mythic Plus** – dungeon helper tools.
-* **Sound** – custom sound controls.
-* **Tooltip** – extended tooltip configuration.
-* **Vendor** – smart vendor automation.
-* **Aura** – buff and debuff tracker.
