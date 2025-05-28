@@ -322,14 +322,18 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
 	local cHex = isBN and "82c5ff" or "ff80ff"
 	local prefix = "|cff999999" .. timestamp .. "|r"
-	text = self:FormatURLs(text)
-	local nameLink
-	if isBN then
-		nameLink = string.format("|HBNplayer:%s|h[%s]|h", partner, shortName)
-	else
-		nameLink = string.format("|Hplayer:%s|h[%s]|h", partner, shortName)
-	end
-	local line = prefix .. " |cff" .. cHex .. nameLink .. ": " .. text
+        text = self:FormatURLs(text)
+        local nameLink
+        if isBN then
+                nameLink = string.format("|HBNplayer:%s|h[%s]|h", partner, shortName)
+        else
+                nameLink = string.format("|Hplayer:%s|h[%s]|h", partner, shortName)
+        end
+        if isBN then
+                -- Farbe vor jedem Link schließen und danach wieder öffnen
+                text = text:gsub("(|H[^|]+|h.-|h)", "|r%1|cff" .. cHex)
+        end
+        local line = prefix .. " |cff" .. cHex .. nameLink .. ": " .. text
 	-- local line = prefix .. " |cff" .. cHex .. "[" .. shortName .. "]: " .. text
 	tab.msg:AddMessage(line)
 	ChatIM.history[partner] = ChatIM.history[partner] or {}
