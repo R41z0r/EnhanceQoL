@@ -28,7 +28,8 @@ English • German • French • Spanish • Italian • Russian • Korean •
 ### Bags & Inventory
 
 *   Show item level, gems, enchants and durability on bag icons (bank optional).
-*   Flexible **Bag Filter Window** – filter by slot, rarity, spec-usable, expansion or custom item-level range.
+*   Flexible **Bag Filter Window** – filter by slot, rarity, spec-usable, expansion, upgrade track, vendor-sellable, auction-house-sellable, binding type or custom item-level range.
+*   Use `/way` to drop a map pin from the Bag Filter search.
 *   Hideable Bag Bar (mouse-over).
 *   Money tracker – total gold for all characters in one tooltip.
 *   Alt-inventory cache – counts how many of each item your alts own.
