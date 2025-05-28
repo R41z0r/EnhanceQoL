@@ -33,7 +33,12 @@ local function PlayerMenuGenerator(_, root, targetName)
 	root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_OTHER)
 
 	root:CreateButton(COPY_CHARACTER_NAME, function(name) StaticPopup_Show("EQOL_URL_COPY", nil, nil, name) end, targetName)
-	root:CreateButton(IGNORE, function(name) C_FriendList.AddIgnore(name) end, targetName)
+
+	local label = IsIgnored(targetName) and UNIGNORE_QUEST or IGNORE
+	local function toggleIgnore(name)
+	ChatIM:ToggleIgnore(name)
+	end
+	root:CreateButton(label, toggleIgnore, targetName)
 end
 
 StaticPopupDialogs["EQOL_URL_COPY"] = {
