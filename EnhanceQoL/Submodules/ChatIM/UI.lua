@@ -16,12 +16,35 @@ addon.ChatIM = addon.ChatIM or {}
 local ChatIM = addon.ChatIM
 ChatIM.history = ChatIM.history or {}
 
+StaticPopupDialogs["EQOL_URL_COPY"] = {
+	text = "URL",
+	button1 = "OK",
+	hasEditBox = true,
+	editBoxWidth = 320,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+	OnShow = function(self, data)
+		self.editBox:SetText(data or "")
+		self.editBox:SetFocus()
+		self.editBox:HighlightText()
+	end,
+}
+
 EnhanceQoL_IMPinned = EnhanceQoL_IMPinned or {}
 ChatIM.pinned = EnhanceQoL_IMPinned
 ChatIM.storage = ChatIM.storage or CreateFrame("Frame")
 ChatIM.activeGroup = nil
 ChatIM.activeTab = nil
 ChatIM.insertLinkHooked = ChatIM.insertLinkHooked or false
+
+function ChatIM:FormatURLs(text)
+	local function repl(url) return "|Hurl:" .. url .. "|h[|cffffffff" .. url .. "|r]|h" end
+	text = text:gsub("https?://%S+", repl)
+	text = text:gsub("www%.%S+", repl)
+	return text
+end
 
 function ChatIM:HookInsertLink()
 	if self.insertLinkHooked then return end
@@ -140,7 +163,14 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	smf:SetFading(false)
 	smf:SetMaxLines(250)
 	smf:SetHyperlinksEnabled(true)
-	smf:SetScript("OnHyperlinkClick", ChatFrame_OnHyperlinkShow)
+	smf:SetScript("OnHyperlinkClick", function(self, linkData, text, button)
+		local linkType, url = linkData:match("^(%a+):(.+)$")
+		if linkType == "url" then
+			StaticPopup_Show("EQOL_URL_COPY", nil, nil, url)
+		else
+			ChatFrame_OnHyperlinkShow(self, linkData, text, button)
+		end
+	end)
 	smf:SetScript("OnHyperlinkEnter", function(self, linkData)
 		GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
 		GameTooltip:SetHyperlink(linkData)
@@ -194,6 +224,7 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
 	local cHex = isBN and "82c5ff" or "ff80ff"
 	local prefix = "|cff999999" .. timestamp .. "|r"
+	text = self:FormatURLs(text)
 	local line = prefix .. " |cff" .. cHex .. "[" .. shortName .. "]: " .. text
 	tab.msg:AddMessage(line)
 	ChatIM.history[partner] = ChatIM.history[partner] or {}
