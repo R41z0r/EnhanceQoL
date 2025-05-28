@@ -39,17 +39,18 @@ ChatIM.activeGroup = nil
 ChatIM.activeTab = nil
 ChatIM.insertLinkHooked = ChatIM.insertLinkHooked or false
 ChatIM.hooksSet = ChatIM.hooksSet or false
-ChatIM.inactiveAlpha = 0.4
+ChatIM.inactiveAlpha = 0.6
 
 function ChatIM:UpdateAlpha()
-       if not self.frame then return end
-       local tab = self.activeTab and self.tabs[self.activeTab]
-       local focus = MouseIsOver(self.frame) or (tab and tab.edit and tab.edit:HasFocus())
-       if focus then
-               self.frame:SetAlpha(1)
-       else
-               self.frame:SetAlpha(self.inactiveAlpha)
-       end
+	if not addon.db["enableChatIMFade"] then return end
+	if not self.frame then return end
+	local tab = self.activeTab and self.tabs[self.activeTab]
+	local focus = MouseIsOver(self.frame) or (tab and tab.edit and tab.edit:HasFocus())
+	if focus then
+		self.frame:SetAlpha(1)
+	else
+		self.frame:SetAlpha(self.inactiveAlpha)
+	end
 end
 
 function ChatIM:FormatURLs(text)
@@ -72,19 +73,21 @@ function ChatIM:HookInsertLink()
 end
 
 function ChatIM:CreateUI()
-        if self.widget then return end
-        self:HookInsertLink()
-        local frame = AceGUI:Create("Frame")
-        frame:SetTitle(L["Instant Chats"])
-        frame:SetWidth(400)
-        frame:SetHeight(300)
-        frame:SetLayout("Fill")
-        frame:SetCallback("OnClose", function(widget) widget.frame:Hide() end)
-       frame:SetStatusTable(addon.db.chatIMFrameData)
-       frame.frame:SetAlpha(0.4)
-       frame.frame:HookScript("OnEnter", function() ChatIM:UpdateAlpha() end)
-       frame.frame:HookScript("OnLeave", function() C_Timer.After(0.1, function() ChatIM:UpdateAlpha() end) end)
-        frame.frame:Hide()
+	if self.widget then return end
+	self:HookInsertLink()
+	local frame = AceGUI:Create("Frame")
+	frame:SetTitle(L["Instant Chats"])
+	frame:SetWidth(400)
+	frame:SetHeight(300)
+	frame:SetLayout("Fill")
+	frame:SetCallback("OnClose", function(widget) widget.frame:Hide() end)
+	frame:SetStatusTable(addon.db.chatIMFrameData)
+	frame.frame:SetAlpha(0.4)
+	frame.frame:HookScript("OnEnter", function() ChatIM:UpdateAlpha() end)
+	frame.frame:HookScript("OnLeave", function()
+		C_Timer.After(2, function() ChatIM:UpdateAlpha() end)
+	end)
+	frame.frame:Hide()
 
 	local tabGroup = AceGUI:Create("TabGroup")
 	tabGroup:SetLayout("Fill")
@@ -97,13 +100,13 @@ function ChatIM:CreateUI()
 	self.tabs = {}
 	self.tabList = {}
 
-       if not self.hooksSet then
-               self.frame:HookScript("OnMouseDown", ChatIM.ClearEditFocus)
-               WorldFrame:HookScript("OnMouseDown", ChatIM.ClearEditFocus)
-               self.hooksSet = true
-       end
+	if not self.hooksSet then
+		self.frame:HookScript("OnMouseDown", ChatIM.ClearEditFocus)
+		WorldFrame:HookScript("OnMouseDown", ChatIM.ClearEditFocus)
+		self.hooksSet = true
+	end
 
-       self:UpdateAlpha()
+	self:UpdateAlpha()
 end
 
 function ChatIM:RefreshTabCallbacks()
@@ -210,15 +213,17 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 		end
 	end
 	-- will be parented/anchored once the tab becomes active
-       local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
-       eb:SetAutoFocus(false)
-       eb:SetHeight(20)
-       eb:SetFontObject(ChatFontNormal)
-       eb:SetScript("OnEditFocusGained", function() ChatIM:UpdateAlpha() end)
-       eb:SetScript("OnEditFocusLost", function() C_Timer.After(0.1, function() ChatIM:UpdateAlpha() end) end)
-       eb:SetScript("OnEnterPressed", function(self)
-               local txt = self:GetText()
-               self:SetText("")
+	local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
+	eb:SetAutoFocus(false)
+	eb:SetHeight(20)
+	eb:SetFontObject(ChatFontNormal)
+	eb:SetScript("OnEditFocusGained", function() ChatIM:UpdateAlpha() end)
+	eb:SetScript("OnEditFocusLost", function()
+		C_Timer.After(0.1, function() ChatIM:UpdateAlpha() end)
+	end)
+	eb:SetScript("OnEnterPressed", function(self)
+		local txt = self:GetText()
+		self:SetText("")
 		local tgt = ChatIM.activeTab or sender
 		if txt ~= "" and tgt then
 			local tab = ChatIM.tabs[tgt]
@@ -296,21 +301,21 @@ function ChatIM:RemoveTab(sender)
 end
 
 function ChatIM:Toggle()
-        self:CreateUI()
-        if self.widget.frame:IsShown() then
-                UIFrameFlashStop(self.widget.frame)
-                self.widget.frame:Hide()
-        else
-                UIFrameFlashStop(self.widget.frame)
-                self.widget.frame:Show()
-                -- reselect previously active tab so messages are visible
-                if self.activeTab then
-                        self.tabGroup:SelectTab(self.activeTab)
-                elseif self.tabList[1] then
-                        self.tabGroup:SelectTab(self.tabList[1].value)
-                end
-               self:UpdateAlpha()
-        end
+	self:CreateUI()
+	if self.widget.frame:IsShown() then
+		UIFrameFlashStop(self.widget.frame)
+		self.widget.frame:Hide()
+	else
+		UIFrameFlashStop(self.widget.frame)
+		self.widget.frame:Show()
+		-- reselect previously active tab so messages are visible
+		if self.activeTab then
+			self.tabGroup:SelectTab(self.activeTab)
+		elseif self.tabList[1] then
+			self.tabGroup:SelectTab(self.tabList[1].value)
+		end
+		self:UpdateAlpha()
+	end
 end
 
 function ChatIM:Flash()
