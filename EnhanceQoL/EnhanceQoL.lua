@@ -926,7 +926,35 @@ local function addChatFrame(container)
 				addChatFrame(container)
 			end,
 		},
+		{
+			var = "enableChatIM",
+			text = L["enableChatIM"],
+			type = "CheckBox",
+			desc = L["enableChatIMDesc"],
+			func = function(self, _, value)
+				addon.db["enableChatIM"] = value
+				if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(value) end
+				if not value then addon.variables.requireReload = true end
+				container:ReleaseChildren()
+				addChatFrame(container)
+			end,
+		},
 	}
+
+	if addon.db["enableChatIM"] then
+		table.insert(data, {
+			var = "enableChatIMFade",
+			text = L["enableChatIMFade"],
+			type = "CheckBox",
+			desc = L["enableChatIMFadeDesc"],
+			func = function(self, _, value)
+				addon.db["enableChatIMFade"] = value
+				if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:UpdateAlpha() end
+				container:ReleaseChildren()
+				addChatFrame(container)
+			end,
+		})
+	end
 
 	table.sort(data, function(a, b) return a.text < b.text end)
 
@@ -2551,6 +2579,11 @@ local function initChatFrame()
 		addon.functions.InitDBValue("chatFrameFadeTimeVisible", 120)
 		addon.functions.InitDBValue("chatFrameFadeDuration", 3)
 	end
+
+	addon.functions.InitDBValue("enableChatIM", false)
+	addon.functions.InitDBValue("enableChatIMFade", false)
+	addon.functions.InitDBValue("chatIMFrameData", {})
+	if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(addon.db["enableChatIM"]) end
 end
 
 local function initMap()

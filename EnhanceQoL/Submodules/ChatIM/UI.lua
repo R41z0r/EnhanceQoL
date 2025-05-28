@@ -39,6 +39,19 @@ ChatIM.activeGroup = nil
 ChatIM.activeTab = nil
 ChatIM.insertLinkHooked = ChatIM.insertLinkHooked or false
 ChatIM.hooksSet = ChatIM.hooksSet or false
+ChatIM.inactiveAlpha = 0.6
+
+function ChatIM:UpdateAlpha()
+	if not addon.db["enableChatIMFade"] then return end
+	if not self.frame then return end
+	local tab = self.activeTab and self.tabs[self.activeTab]
+	local focus = MouseIsOver(self.frame) or (tab and tab.edit and tab.edit:HasFocus())
+	if focus then
+		self.frame:SetAlpha(1)
+	else
+		self.frame:SetAlpha(self.inactiveAlpha)
+	end
+end
 
 function ChatIM:FormatURLs(text)
 	local function repl(url) return "|Hurl:" .. url .. "|h[|cffffffff" .. url .. "|r]|h" end
@@ -68,6 +81,12 @@ function ChatIM:CreateUI()
 	frame:SetHeight(300)
 	frame:SetLayout("Fill")
 	frame:SetCallback("OnClose", function(widget) widget.frame:Hide() end)
+	frame:SetStatusTable(addon.db.chatIMFrameData)
+	frame.frame:SetAlpha(0.4)
+	frame.frame:HookScript("OnEnter", function() ChatIM:UpdateAlpha() end)
+	frame.frame:HookScript("OnLeave", function()
+		C_Timer.After(2, function() ChatIM:UpdateAlpha() end)
+	end)
 	frame.frame:Hide()
 
 	local tabGroup = AceGUI:Create("TabGroup")
@@ -86,6 +105,8 @@ function ChatIM:CreateUI()
 		WorldFrame:HookScript("OnMouseDown", ChatIM.ClearEditFocus)
 		self.hooksSet = true
 	end
+
+	self:UpdateAlpha()
 end
 
 function ChatIM:RefreshTabCallbacks()
@@ -196,6 +217,10 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	eb:SetAutoFocus(false)
 	eb:SetHeight(20)
 	eb:SetFontObject(ChatFontNormal)
+	eb:SetScript("OnEditFocusGained", function() ChatIM:UpdateAlpha() end)
+	eb:SetScript("OnEditFocusLost", function()
+		C_Timer.After(0.1, function() ChatIM:UpdateAlpha() end)
+	end)
 	eb:SetScript("OnEnterPressed", function(self)
 		local txt = self:GetText()
 		self:SetText("")
@@ -289,6 +314,7 @@ function ChatIM:Toggle()
 		elseif self.tabList[1] then
 			self.tabGroup:SelectTab(self.tabList[1].value)
 		end
+		self:UpdateAlpha()
 	end
 end
 
