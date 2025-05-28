@@ -8,6 +8,25 @@ end
 
 local ChatIM = addon.ChatIM or {}
 addon.ChatIM = ChatIM
+ChatIM.enabled = false
+
+local function updateRegistration()
+       if ChatIM.enabled then
+               frame:RegisterEvent("CHAT_MSG_WHISPER")
+               frame:RegisterEvent("CHAT_MSG_BN_WHISPER")
+               frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
+               frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
+       else
+               frame:UnregisterAllEvents()
+               if ChatIM.widget and ChatIM.widget.frame then ChatIM.widget.frame:Hide() end
+       end
+end
+
+function ChatIM:SetEnabled(val)
+       self.enabled = val and true or false
+       if self.enabled then self:CreateUI() end
+       updateRegistration()
+end
 
 local function focusTab(target)
 	ChatIM:CreateTab(target)
@@ -23,16 +42,13 @@ local function focusTab(target)
 end
 
 local frame = CreateFrame("Frame")
-frame:RegisterEvent("CHAT_MSG_WHISPER")
-frame:RegisterEvent("CHAT_MSG_BN_WHISPER")
-frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
-frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
 frame:SetScript("OnEvent", function(_, event, ...)
-	if event == "CHAT_MSG_WHISPER" then
-		local msg, sender = ...
-		ChatIM:AddMessage(sender, msg)
-		PlaySound(SOUNDKIT.TELL_MESSAGE)
-		ChatIM:Flash()
+       if not ChatIM.enabled then return end
+       if event == "CHAT_MSG_WHISPER" then
+               local msg, sender = ...
+               ChatIM:AddMessage(sender, msg)
+               PlaySound(SOUNDKIT.TELL_MESSAGE)
+               ChatIM:Flash()
 	elseif event == "CHAT_MSG_BN_WHISPER" then
 		local msg, sender, _, _, _, _, _, _, _, _, _, _, bnetID = ...
 		ChatIM:AddMessage(sender, msg, nil, true, bnetID)
@@ -55,4 +71,6 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", whisperFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", whisperFilter)
 
 SLASH_EQOLIM1 = "/im"
-SlashCmdList["EQOLIM"] = function() ChatIM:Toggle() end
+SlashCmdList["EQOLIM"] = function()
+       if ChatIM.enabled then ChatIM:Toggle() end
+end

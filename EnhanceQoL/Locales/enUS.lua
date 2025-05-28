@@ -160,6 +160,8 @@ L["UnitFrameHideExplain"] = "Hide the element and only show it on mouseover"
 L["chatFrameFadeEnabled"] = "Enable chat fading"
 L["chatFrameFadeTimeVisibleText"] = "Text remains visible for"
 L["chatFrameFadeDurationText"] = "Fade animation duration"
+L["enableChatIM"] = "Enable Instant Messenger"
+L["enableChatIMDesc"] = "Use a small IM window for whisper conversations"
 
 L["enableLootspecQuickswitch"] = "Enable quick switching for loot and active specializations on the Minimap"
 L["enableLootspecQuickswitchDesc"] = "Left-click a specialization to set your loot spec, or right-click to change your active specialization."

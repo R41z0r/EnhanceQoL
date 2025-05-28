@@ -914,19 +914,34 @@ local function addChatFrame(container)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local data = {
-		{
-			var = "chatFrameFadeEnabled",
-			text = L["chatFrameFadeEnabled"],
-			type = "CheckBox",
-			func = function(self, _, value)
-				addon.db["chatFrameFadeEnabled"] = value
-				if ChatFrame1 then ChatFrame1:SetFading(value) end
-				container:ReleaseChildren()
-				addChatFrame(container)
-			end,
-		},
-	}
+       local data = {
+               {
+                       var = "chatFrameFadeEnabled",
+                       text = L["chatFrameFadeEnabled"],
+                       type = "CheckBox",
+                       func = function(self, _, value)
+                               addon.db["chatFrameFadeEnabled"] = value
+                               if ChatFrame1 then ChatFrame1:SetFading(value) end
+                               container:ReleaseChildren()
+                               addChatFrame(container)
+                       end,
+               },
+               {
+                       var = "enableChatIM",
+                       text = L["enableChatIM"],
+                       type = "CheckBox",
+                       func = function(self, _, value)
+                               addon.db["enableChatIM"] = value
+                               if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(value) end
+                               if not value then
+                                       addon.variables.requireReload = true
+                                       addon.functions.checkReloadFrame()
+                               end
+                               container:ReleaseChildren()
+                               addChatFrame(container)
+                       end,
+               },
+       }
 
 	table.sort(data, function(a, b) return a.text < b.text end)
 
@@ -2538,19 +2553,23 @@ local function initBagsFrame()
 end
 
 local function initChatFrame()
-	if ChatFrame1 then
-		addon.functions.InitDBValue("chatFrameFadeEnabled", ChatFrame1:GetFading())
-		addon.functions.InitDBValue("chatFrameFadeTimeVisible", ChatFrame1:GetTimeVisible())
-		addon.functions.InitDBValue("chatFrameFadeDuration", ChatFrame1:GetFadeDuration())
+       if ChatFrame1 then
+               addon.functions.InitDBValue("chatFrameFadeEnabled", ChatFrame1:GetFading())
+               addon.functions.InitDBValue("chatFrameFadeTimeVisible", ChatFrame1:GetTimeVisible())
+               addon.functions.InitDBValue("chatFrameFadeDuration", ChatFrame1:GetFadeDuration())
 
-		ChatFrame1:SetFading(addon.db["chatFrameFadeEnabled"])
-		ChatFrame1:SetTimeVisible(addon.db["chatFrameFadeTimeVisible"])
-		ChatFrame1:SetFadeDuration(addon.db["chatFrameFadeDuration"])
-	else
-		addon.functions.InitDBValue("chatFrameFadeEnabled", true)
-		addon.functions.InitDBValue("chatFrameFadeTimeVisible", 120)
-		addon.functions.InitDBValue("chatFrameFadeDuration", 3)
-	end
+               ChatFrame1:SetFading(addon.db["chatFrameFadeEnabled"])
+               ChatFrame1:SetTimeVisible(addon.db["chatFrameFadeTimeVisible"])
+               ChatFrame1:SetFadeDuration(addon.db["chatFrameFadeDuration"])
+       else
+               addon.functions.InitDBValue("chatFrameFadeEnabled", true)
+               addon.functions.InitDBValue("chatFrameFadeTimeVisible", 120)
+               addon.functions.InitDBValue("chatFrameFadeDuration", 3)
+       end
+
+       addon.functions.InitDBValue("enableChatIM", false)
+       addon.functions.InitDBValue("chatIMFrameData", {})
+       if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(addon.db["enableChatIM"]) end
 end
 
 local function initMap()
