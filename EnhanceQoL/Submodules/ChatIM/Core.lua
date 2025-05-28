@@ -56,7 +56,3 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", whisperFilter)
 
 SLASH_EQOLIM1 = "/im"
 SlashCmdList["EQOLIM"] = function() ChatIM:Toggle() end
-
--- save original whisper handlers and replace with wrappers
-ChatIM.origWhisper = SlashCmdList["WHISPER"]
-ChatIM.origReply = SlashCmdList["REPLY"]
