@@ -15,20 +15,26 @@ frame:RegisterEvent("CHAT_MSG_BN_WHISPER")
 frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
 frame:SetScript("OnEvent", function(_, event, ...)
-        if event == "CHAT_MSG_WHISPER" or event == "CHAT_MSG_BN_WHISPER" then
-                local msg, sender = ...
-                ChatIM:AddMessage(sender, msg)
-                PlaySound(SOUNDKIT.TELL_MESSAGE)
-                ChatIM:Flash()
-        elseif event == "CHAT_MSG_WHISPER_INFORM" or event == "CHAT_MSG_BN_WHISPER_INFORM" then
-                local msg, target = ...
-                ChatIM:AddMessage(target, msg, true)
-        end
+	if event == "CHAT_MSG_WHISPER" then
+		local msg, sender = ...
+		ChatIM:AddMessage(sender, msg)
+		PlaySound(SOUNDKIT.TELL_MESSAGE)
+		ChatIM:Flash()
+	elseif event == "CHAT_MSG_BN_WHISPER" then
+		local msg, sender, _, _, _, _, _, _, _, _, _, _, bnetID = ...
+		ChatIM:AddMessage(sender, msg, nil, true, bnetID)
+		PlaySound(SOUNDKIT.TELL_MESSAGE)
+		ChatIM:Flash()
+	elseif event == "CHAT_MSG_WHISPER_INFORM" then
+		local msg, target = ...
+		ChatIM:AddMessage(target, msg, true)
+	elseif event == "CHAT_MSG_BN_WHISPER_INFORM" then
+		local msg, target, _, _, _, _, _, _, _, _, _, _, bnetID = ...
+		ChatIM:AddMessage(target, msg, true, true, bnetID)
+	end
 end)
 
-local function whisperFilter()
-        return true
-end
+local function whisperFilter() return true end
 
 -- ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", whisperFilter)
 -- ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", whisperFilter)
