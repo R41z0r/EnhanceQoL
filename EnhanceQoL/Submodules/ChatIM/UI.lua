@@ -21,9 +21,23 @@ ChatIM.pinned = EnhanceQoL_IMPinned
 ChatIM.storage = ChatIM.storage or CreateFrame("Frame")
 ChatIM.activeGroup = nil
 ChatIM.activeTab = nil
+ChatIM.insertLinkHooked = ChatIM.insertLinkHooked or false
+
+function ChatIM:HookInsertLink()
+	if self.insertLinkHooked then return end
+	hooksecurefunc("ChatEdit_InsertLink", function(link)
+		local tab = ChatIM.activeTab and ChatIM.tabs[ChatIM.activeTab]
+		if link and tab and tab.edit and tab.edit:HasFocus() then
+			tab.edit:Insert(link)
+			return true
+		end
+	end)
+	self.insertLinkHooked = true
+end
 
 function ChatIM:CreateUI()
 	if self.widget then return end
+	self:HookInsertLink()
 	local frame = AceGUI:Create("Frame")
 	frame:SetTitle(L["Instant Chats"])
 	frame:SetWidth(400)
