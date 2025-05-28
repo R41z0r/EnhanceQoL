@@ -2,11 +2,9 @@
 
 ## [3.17.0] – 2025-05-28
 ### ✨ Added
-- **Instant Messenger** – Incoming and outgoing whispers appear in a compact IM window.
+- **Instant Messenger** – Option to enable  incoming and outgoing whispers to appear in a compact IM window.
   • Each conversation opens in its own tab, which flashes on new messages.
   • Use `/eim` to toggle the window; it can fade when losing focus.
-  • Tabs can be pinned so they stay open as you switch characters.
-  • Right-click a name to copy it or quickly ignore/unignore that player.
 
 ## [3.16.0] – 2025-05-26
 ### ✨ Added
