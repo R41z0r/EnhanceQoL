@@ -40,7 +40,7 @@ ChatIM.activeTab = nil
 ChatIM.insertLinkHooked = ChatIM.insertLinkHooked or false
 
 function ChatIM:FormatURLs(text)
-	local function repl(url) return "|Hurl:" .. url .. "|h[" .. url .. "]|h" end
+	local function repl(url) return "|Hurl:" .. url .. "|h[|cffffffff" .. url .. "|r]|h" end
 	text = text:gsub("https?://%S+", repl)
 	text = text:gsub("www%.%S+", repl)
 	return text
