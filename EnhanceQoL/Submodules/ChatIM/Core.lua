@@ -71,7 +71,7 @@ function ChatIM:SetEnabled(val)
 	if self.enabled then self:CreateUI() end
 	updateRegistration()
 end
-SLASH_EQOLIM1 = "/im"
+SLASH_EQOLIM1 = "/eim"
 SlashCmdList["EQOLIM"] = function()
 	if ChatIM.enabled then ChatIM:Toggle() end
 end
