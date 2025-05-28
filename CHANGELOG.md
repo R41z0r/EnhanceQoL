@@ -3,8 +3,8 @@
 ## [3.17.0] – 2025-05-28
 ### ✨ Added
 - **Instant Messenger** – Option to enable  incoming and outgoing whispers to appear in a compact IM window.
-  • Each conversation opens in its own tab, which flashes on new messages.
-  • Use `/eim` to toggle the window; it can fade when losing focus.
+  - Each conversation opens in its own tab, which flashes on new messages.
+  - Use `/eim` to toggle the window; it can fade when losing focus.
 
 ## [3.16.0] – 2025-05-26
 ### ✨ Added
