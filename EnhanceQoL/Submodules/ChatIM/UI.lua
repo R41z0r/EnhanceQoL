@@ -174,27 +174,27 @@ function ChatIM:CreateUI()
 end
 
 function ChatIM:RefreshTabCallbacks()
-	if not self.tabGroup or not self.tabGroup.tabs then return end
-        for _, btn in ipairs(self.tabGroup.tabs) do
-                if not btn.hooked then
-                        local orig = btn:GetScript("OnClick")
-                        btn:SetScript("OnClick", function(frame, button)
-                                if button == "RightButton" then
-                                        ChatIM:TogglePin(frame.value)
-                                elseif button == "MiddleButton" then
-                                        ChatIM:RemoveTab(frame.value)
-                                else
-                                        orig(frame)
-                                end
-                        end)
-                        btn.hooked = true
-                end
-                -- update text for unread indicator
-                local data = ChatIM.tabs[btn.value]
-                if data and data.label then
-                        btn:SetText(data.label)
-                end
-        end
+       if not self.tabGroup or not self.tabGroup.tabs then return end
+       for _, btn in ipairs(self.tabGroup.tabs) do
+               if not btn.hooked then
+                       local orig = btn:GetScript("OnClick")
+                       btn:SetScript("OnClick", function(frame, button)
+                               if button == "RightButton" then
+                                       ChatIM:RemoveTab(frame.value)
+                               elseif button == "MiddleButton" then
+                                       ChatIM:TogglePin(frame.value)
+                               else
+                                       orig(frame)
+                               end
+                       end)
+                       btn.hooked = true
+               end
+               -- update text for unread indicator
+               local data = ChatIM.tabs[btn.value]
+               if data and data.label then
+                       btn:SetText(data.label)
+               end
+       end
 end
 
 function ChatIM:SelectTab(widget, value)
@@ -220,9 +220,10 @@ function ChatIM:SelectTab(widget, value)
 
         self.activeTab = value
 
-        local tab = self.tabs[value]
-        if not tab then return end
-        tab.unread = false
+       local tab = self.tabs[value]
+       if not tab then return end
+       tab.unread = false
+       self:StopTabFlash(value)
 
 	local group = AceGUI:Create("SimpleGroup")
 	group:SetFullWidth(true)
@@ -355,20 +356,22 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
         ChatIM.history[partner] = ChatIM.history[partner] or {}
         table.insert(ChatIM.history[partner], line)
         if #ChatIM.history[partner] > 250 then table.remove(ChatIM.history[partner], 1) end
-        if self.activeTab ~= partner then
-                tab.unread = true
-                self:UpdateTabLabel(partner)
-        end
+       if self.activeTab ~= partner then
+               tab.unread = true
+               self:UpdateTabLabel(partner)
+               self:StartTabFlash(partner)
+       end
 end
 
 function ChatIM:RemoveTab(sender)
-	local tab = self.tabs[sender]
-	if not tab then return end
-	if self.activeTab == sender then
-		-- activeGroup *is* tab.group – release it once
-		if self.activeGroup then AceGUI:Release(self.activeGroup) end
-		self.activeGroup = nil
-		self.activeTab = nil
+        local tab = self.tabs[sender]
+        if not tab then return end
+       self:StopTabFlash(sender)
+        if self.activeTab == sender then
+                -- activeGroup *is* tab.group – release it once
+                if self.activeGroup then AceGUI:Release(self.activeGroup) end
+                self.activeGroup = nil
+                self.activeTab = nil
 	end
 
 	tab.group = nil -- avoid accidental double‑release later
@@ -423,6 +426,26 @@ function ChatIM:TogglePin(sender)
         else
                 self.pinned[sender] = true
         end
+end
+
+function ChatIM:StartTabFlash(sender)
+       if not self.tabGroup or not self.tabGroup.tabs then return end
+       for _, btn in ipairs(self.tabGroup.tabs) do
+               if btn.value == sender then
+                       if not UIFrameIsFlashing(btn) then UIFrameFlash(btn, 0.2, 0.8, -1, true, 0, 1) end
+                       break
+               end
+       end
+end
+
+function ChatIM:StopTabFlash(sender)
+       if not self.tabGroup or not self.tabGroup.tabs then return end
+       for _, btn in ipairs(self.tabGroup.tabs) do
+               if btn.value == sender then
+                       UIFrameFlashStop(btn)
+                       break
+               end
+       end
 end
 
 function ChatIM:UpdateTabLabel(sender)
