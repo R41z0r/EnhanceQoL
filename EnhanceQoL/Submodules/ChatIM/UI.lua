@@ -107,6 +107,17 @@ StaticPopupDialogs["EQOL_URL_COPY"] = {
 	end,
 }
 
+StaticPopupDialogs["EQOL_LINK_WARNING"] = {
+	text = L["communityWarningLink"],
+	button1 = CLOSE,
+	hasEditBox = false,
+	editBoxWidth = 320,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+}
+
 ChatIM.storage = ChatIM.storage or CreateFrame("Frame")
 ChatIM.activeGroup = nil
 ChatIM.activeTab = nil
@@ -301,19 +312,23 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	smf:SetScript("OnHyperlinkClick", function(frame, linkData, text, button)
 		local linkType, payload = linkData:match("^(%a+):(.+)$")
 
-		-- URL → eigenes Copy‑Popup
 		if linkType == "url" then
 			StaticPopup_Show("EQOL_URL_COPY", nil, nil, payload)
 			return
 		end
 
-		-- Rechtsklick auf Spieler‑Links → eigenes Menü
 		if linkType == "player" or linkType == "BNplayer" then
 			if button == "RightButton" then
 				local name = Ambiguate(payload:match("^[^:]+"), "none")
 				local bn = linkType == "BNplayer"
 				MU.CreateContextMenu(frame, PlayerMenuGenerator, name, bn, bnetID)
 			end
+			return
+		end
+		if linkType == "clubTicket" then
+			-- Special case - because of Taint need to funnel it through blizzard frame
+			StaticPopup_Show("EQOL_LINK_WARNING", nil, nil, payload)
+			DEFAULT_CHAT_FRAME:AddMessage(text)
 			return
 		end
 
