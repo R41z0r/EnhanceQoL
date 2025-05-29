@@ -332,6 +332,16 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 			return
 		end
 
+		if linkType == "censoredmessage" then
+			local _, censorID = string.split(":", linkData)
+			if censorID then
+				_G.C_ChatInfo.UncensorChatLine(censorID)
+				local text = C_ChatInfo.GetChatLineText(lineID)
+				if not text then return end
+			end
+			return
+		end
+
 		-- Alles andere an Blizzard weiterreichen
 		ChatFrame_OnHyperlinkShow(frame, linkData, text, button)
 	end)
