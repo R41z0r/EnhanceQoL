@@ -1022,6 +1022,28 @@ local function addChatFrame(container)
 				addChatFrame(container)
 			end,
 		})
+		table.insert(data, {
+			var = "chatIMHideInCombat",
+			text = L["chatIMHideInCombat"],
+			type = "CheckBox",
+			desc = L["chatIMHideInCombatDesc"],
+			func = function(self, _, value)
+				addon.db["chatIMHideInCombat"] = value
+				container:ReleaseChildren()
+				addChatFrame(container)
+			end,
+		})
+		table.insert(data, {
+			var = "chatIMUseAnimation",
+			text = L["chatIMUseAnimation"],
+			type = "CheckBox",
+			desc = L["chatIMUseAnimationDesc"],
+			func = function(self, _, value)
+				addon.db["chatIMUseAnimation"] = value
+				container:ReleaseChildren()
+				addChatFrame(container)
+			end,
+		})
 	end
 	table.sort(data, function(a, b) return a.text < b.text end)
 
@@ -2707,6 +2729,8 @@ local function initChatFrame()
 	addon.functions.InitDBValue("chatIMCustomSoundFile", "")
 	addon.functions.InitDBValue("chatIMMaxHistory", 250)
 	addon.functions.InitDBValue("chatIMFrameData", {})
+	addon.functions.InitDBValue("chatIMHideInCombat", false)
+	addon.functions.InitDBValue("chatIMUseAnimation", true)
 	if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(addon.db["enableChatIM"]) end
 end
 

@@ -113,6 +113,10 @@ ChatIM.activeTab = nil
 ChatIM.insertLinkHooked = ChatIM.insertLinkHooked or false
 ChatIM.hooksSet = ChatIM.hooksSet or false
 ChatIM.inactiveAlpha = 0.6
+ChatIM.pendingShow = false
+ChatIM.wasOpenBeforeCombat = false
+ChatIM.soundQueue = {}
+ChatIM.inCombat = false
 
 function ChatIM:UpdateAlpha()
 	if not addon.db["enableChatIMFade"] then return end
@@ -164,7 +168,7 @@ function ChatIM:CreateUI()
 	frame:SetWidth(400)
 	frame:SetHeight(300)
 	frame:SetLayout("Fill")
-	frame:SetCallback("OnClose", function(widget) widget.frame:Hide() end)
+	frame:SetCallback("OnClose", function() ChatIM:HideWindow() end)
 	frame:SetStatusTable(addon.db.chatIMFrameData)
 	frame.frame:SetAlpha(0.4)
 	frame.frame:HookScript("OnEnter", function() ChatIM:UpdateAlpha() end)
@@ -378,8 +382,12 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	self:CreateTab(partner, isBN, bnetID)
 	-- make sure the main window is visible
 	if self.widget and self.widget.frame and not self.widget.frame:IsShown() then
-		UIFrameFlashStop(self.widget.frame) -- stop any pending flash
-		self.widget.frame:Show()
+		if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
+			ChatIM.pendingShow = true
+		else
+			UIFrameFlashStop(self.widget.frame) -- stop any pending flash
+			ChatIM:ShowWindow()
+		end
 	end
 	local tab = self.tabs[partner]
 	-- New message formatting: recolour whole line and show "You" for outbound
@@ -441,7 +449,7 @@ function ChatIM:RemoveTab(sender)
 	self.tabGroup:SetTabs(self.tabList)
 	self:RefreshTabCallbacks()
 	if #self.tabList == 0 then
-		self.widget.frame:Hide()
+		self:HideWindow()
 		UIFrameFlashStop(self.widget.frame)
 	else
 		local last = self.tabList[#self.tabList]
@@ -453,10 +461,10 @@ function ChatIM:Toggle()
 	self:CreateUI()
 	if self.widget.frame:IsShown() then
 		UIFrameFlashStop(self.widget.frame)
-		self.widget.frame:Hide()
+		self:HideWindow()
 	else
 		UIFrameFlashStop(self.widget.frame)
-		self.widget.frame:Show()
+		self:ShowWindow()
 		-- reselect previously active tab so messages are visible
 		if self.activeTab then
 			self.tabGroup:SelectTab(self.activeTab)
@@ -513,4 +521,59 @@ end
 function ChatIM:ClearEditFocus()
 	local tab = ChatIM.activeTab and ChatIM.tabs[ChatIM.activeTab]
 	if tab and tab.edit then tab.edit:ClearFocus() end
+end
+
+local ANIM_OFFSET = 80
+
+function ChatIM:EnsureAnimations()
+	if not self.widget or not self.widget.frame or self.widget.frame.slideIn then return end
+	local frame = self.widget.frame
+	frame.slideIn = frame:CreateAnimationGroup()
+	local sin = frame.slideIn:CreateAnimation("Translation")
+	sin:SetDuration(0.25)
+	sin:SetSmoothing("OUT")
+	frame.slideInTrans = sin
+
+	frame.slideOut = frame:CreateAnimationGroup()
+	local sout = frame.slideOut:CreateAnimation("Translation")
+	sout:SetDuration(0.25)
+	sout:SetSmoothing("IN")
+	frame.slideOutTrans = sout
+	frame.slideOut:SetScript("OnFinished", function()
+		frame:Hide()
+		if ChatIM.animFinal then frame:SetPoint(unpack(ChatIM.animFinal)) end
+	end)
+end
+
+function ChatIM:ShowWindow()
+	self:CreateUI()
+	if not self.widget or not self.widget.frame or self.widget.frame:IsShown() then return end
+	UIFrameFlashStop(self.widget.frame)
+	if addon.db and addon.db["chatIMUseAnimation"] then
+		self:EnsureAnimations()
+		local point, rel, relPoint, x, y = self.widget.frame:GetPoint()
+		self.animFinal = { point, rel, relPoint, x, y }
+		self.widget.frame:ClearAllPoints()
+		self.widget.frame:SetPoint(point, rel, relPoint, x + ANIM_OFFSET, y)
+		self.widget.frame:Show()
+		self.widget.frame.slideInTrans:SetOffset(-ANIM_OFFSET, 0)
+		self.widget.frame.slideIn:SetScript("OnFinished", function() self.widget.frame:SetPoint(point, rel, relPoint, x, y) end)
+		self.widget.frame.slideIn:Play()
+	else
+		self.widget.frame:Show()
+	end
+end
+
+function ChatIM:HideWindow()
+	if not self.widget or not self.widget.frame or not self.widget.frame:IsShown() then return end
+	UIFrameFlashStop(self.widget.frame)
+	if addon.db and addon.db["chatIMUseAnimation"] then
+		self:EnsureAnimations()
+		local point, rel, relPoint, x, y = self.widget.frame:GetPoint()
+		self.animFinal = { point, rel, relPoint, x, y }
+		self.widget.frame.slideOutTrans:SetOffset(ANIM_OFFSET, 0)
+		self.widget.frame.slideOut:Play()
+	else
+		self.widget.frame:Hide()
+	end
 end
