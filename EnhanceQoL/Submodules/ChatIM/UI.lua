@@ -175,19 +175,26 @@ end
 
 function ChatIM:RefreshTabCallbacks()
 	if not self.tabGroup or not self.tabGroup.tabs then return end
-	for _, btn in ipairs(self.tabGroup.tabs) do
-		if not btn.hooked then
-			local orig = btn:GetScript("OnClick")
-			btn:SetScript("OnClick", function(frame, button)
-				if button == "RightButton" then
-					ChatIM:TogglePin(frame.value)
-				else
-					orig(frame)
-				end
-			end)
-			btn.hooked = true
-		end
-	end
+        for _, btn in ipairs(self.tabGroup.tabs) do
+                if not btn.hooked then
+                        local orig = btn:GetScript("OnClick")
+                        btn:SetScript("OnClick", function(frame, button)
+                                if button == "RightButton" then
+                                        ChatIM:TogglePin(frame.value)
+                                elseif button == "MiddleButton" then
+                                        ChatIM:RemoveTab(frame.value)
+                                else
+                                        orig(frame)
+                                end
+                        end)
+                        btn.hooked = true
+                end
+                -- update text for unread indicator
+                local data = ChatIM.tabs[btn.value]
+                if data and data.label then
+                        btn:SetText(data.label)
+                end
+        end
 end
 
 function ChatIM:SelectTab(widget, value)
@@ -211,10 +218,11 @@ function ChatIM:SelectTab(widget, value)
 		end
 	end
 
-	self.activeTab = value
+        self.activeTab = value
 
-	local tab = self.tabs[value]
-	if not tab then return end
+        local tab = self.tabs[value]
+        if not tab then return end
+        tab.unread = false
 
 	local group = AceGUI:Create("SimpleGroup")
 	group:SetFullWidth(true)
@@ -236,16 +244,17 @@ function ChatIM:SelectTab(widget, value)
 		tab.edit:Show()
 	end
 
-	widget:AddChild(group)
-	tab.group = group
-	self.activeGroup = group
+        widget:AddChild(group)
+        tab.group = group
+        self.activeGroup = group
+        self:UpdateTabLabel(value)
 end
 
 function ChatIM:CreateTab(sender, isBN, bnetID)
-	self:CreateUI()
-	if self.tabs[sender] then return end
+        self:CreateUI()
+        if self.tabs[sender] then return end
 
-	local displayName = Ambiguate(sender, "short")
+        local displayName = Ambiguate(sender, "short")
 
 	local smf = CreateFrame("ScrollingMessageFrame", nil, ChatIM.storage)
 	-- we'll anchor later when the tab becomes active
@@ -270,8 +279,14 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	end)
 	smf:SetScript("OnHyperlinkLeave", GameTooltip_Hide)
 
-	self.tabs[sender] = { msg = smf, isBN = isBN, bnetID = bnetID }
-	self.tabs[sender].target = sender
+        self.tabs[sender] = {
+                msg = smf,
+                isBN = isBN,
+                bnetID = bnetID,
+                displayName = displayName,
+                unread = false,
+        }
+        self.tabs[sender].target = sender
 	if ChatIM.history[sender] then
 		for _, line in ipairs(ChatIM.history[sender]) do
 			smf:AddMessage(line)
@@ -301,12 +316,13 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	end)
 	eb:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
 
-	self.tabs[sender].edit = eb
+        self.tabs[sender].edit = eb
 
-	table.insert(self.tabList, { text = displayName, value = sender })
-	self.tabGroup:SetTabs(self.tabList)
-	self.tabGroup:SelectTab(sender)
-	self:RefreshTabCallbacks()
+        table.insert(self.tabList, { text = displayName, value = sender })
+        self.tabGroup:SetTabs(self.tabList)
+        if not self.activeTab then self.tabGroup:SelectTab(sender) end
+        self:RefreshTabCallbacks()
+        self:UpdateTabLabel(sender)
 end
 
 function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
@@ -322,20 +338,27 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
 	local cHex = isBN and "82c5ff" or "ff80ff"
 	local prefix = "|cff999999" .. timestamp .. "|r"
-	text = self:FormatURLs(text)
-	local nameLink
-	if isBN then
-		nameLink = string.format("|HBNplayer:%s|h[%s]|h", partner, shortName)
-	else
-		nameLink = string.format("|Hplayer:%s|h[%s]|h", partner, shortName)
-	end
-	local line = prefix .. " |cff" .. cHex .. nameLink .. ": " .. text
+        text = self:FormatURLs(text)
+        local nameLink
+        if isBN then
+                nameLink = string.format("|HBNplayer:%s|h[%s]|h", partner, shortName)
+        else
+                nameLink = string.format("|Hplayer:%s|h[%s]|h", partner, shortName)
+        end
+        if isBN then
+                -- Farbe vor jedem Link schließen und danach wieder öffnen
+                text = text:gsub("(|H[^|]+|h.-|h)", "|r%1|cff" .. cHex)
+        end
+        local line = prefix .. " |cff" .. cHex .. nameLink .. ": " .. text
 	-- local line = prefix .. " |cff" .. cHex .. "[" .. shortName .. "]: " .. text
-	tab.msg:AddMessage(line)
-	ChatIM.history[partner] = ChatIM.history[partner] or {}
-	table.insert(ChatIM.history[partner], line)
-	if #ChatIM.history[partner] > 250 then table.remove(ChatIM.history[partner], 1) end
-	self.tabGroup:SelectTab(partner)
+        tab.msg:AddMessage(line)
+        ChatIM.history[partner] = ChatIM.history[partner] or {}
+        table.insert(ChatIM.history[partner], line)
+        if #ChatIM.history[partner] > 250 then table.remove(ChatIM.history[partner], 1) end
+        if self.activeTab ~= partner then
+                tab.unread = true
+                self:UpdateTabLabel(partner)
+        end
 end
 
 function ChatIM:RemoveTab(sender)
@@ -395,11 +418,30 @@ function ChatIM:Flash()
 end
 
 function ChatIM:TogglePin(sender)
-	if self.pinned[sender] then
-		self.pinned[sender] = nil
-	else
-		self.pinned[sender] = true
-	end
+        if self.pinned[sender] then
+                self.pinned[sender] = nil
+        else
+                self.pinned[sender] = true
+        end
+end
+
+function ChatIM:UpdateTabLabel(sender)
+        if not self.tabGroup or not self.tabList then return end
+        local tab = self.tabs[sender]
+        if not tab then return end
+        local baseName = tab.displayName or Ambiguate(sender, "short")
+        local label = tab.unread and ("* " .. baseName) or baseName
+        tab.label = label
+        for _, t in ipairs(self.tabList) do
+                if t.value == sender then
+                        t.text = label
+                        break
+                end
+        end
+        local current = self.activeTab
+        self.tabGroup:SetTabs(self.tabList)
+        if current then self.tabGroup:SelectTab(current) end
+        self:RefreshTabCallbacks()
 end
 
 function ChatIM:ClearEditFocus()
