@@ -265,14 +265,25 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 			end
 		end
 	end)
-	smf:SetScript("OnHyperlinkClick", function(self, linkData, text, button)
+	smf:SetScript("OnHyperlinkClick", function(frame, linkData, text, button)
 		local linkType, payload = linkData:match("^(%a+):(.+)$")
+
+		-- URL → eigenes Copy‑Popup
 		if linkType == "url" then
 			StaticPopup_Show("EQOL_URL_COPY", nil, nil, payload)
-		else
-			local name = Ambiguate(payload:match("^[^:]+"), "short")
-			MU.CreateContextMenu(self, PlayerMenuGenerator, sender, isBN, bnetID)
+			return
 		end
+
+		-- Rechtsklick auf Spieler‑Links → eigenes Menü
+		if button == "RightButton" and (linkType == "player" or linkType == "BNplayer") then
+			local name = Ambiguate(payload:match("^[^:]+"), "none")
+			local bn = linkType == "BNplayer"
+			MU.CreateContextMenu(frame, PlayerMenuGenerator, name, bn, bnetID)
+			return
+		end
+
+		-- Alles andere an Blizzard weiterreichen
+		ChatFrame_OnHyperlinkShow(frame, linkData, text, button)
 	end)
 	smf:SetScript("OnHyperlinkEnter", function(self, linkData)
 		GameTooltip:SetOwner(self, "ANCHOR_CURSOR")
@@ -341,21 +352,20 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	-- New message formatting: recolour whole line and show "You" for outbound
 	local timestamp = date("%H:%M")
 	local shortName = outbound and AUCTION_HOUSE_SELLER_YOU or Ambiguate(partner, "short")
-	local cHex = isBN and "82c5ff" or "ff80ff"
 	local prefix = "|cff999999" .. timestamp .. "|r"
 	text = self:FormatURLs(text)
-	local nameLink
+	local nameLink, colorInfo
 	if isBN then
 		nameLink = string.format("|HBNplayer:%s|h[%s]|h", partner, shortName)
+		colorInfo = outbound and ChatTypeInfo.BN_WHISPER_INFORM or ChatTypeInfo.BN_WHISPER
 	else
 		nameLink = string.format("|Hplayer:%s|h[%s]|h", partner, shortName)
+		colorInfo = outbound and ChatTypeInfo.WHISPER_INFORM or ChatTypeInfo.WHISPER
 	end
-	if isBN then
-		-- Farbe vor jedem Link schließen und danach wieder öffnen
-		text = text:gsub("(|H[^|]+|h.-|h)", "|r%1|cff" .. cHex)
-	end
-	local line = prefix .. " |cff" .. cHex .. nameLink .. ": " .. text
-	-- local line = prefix .. " |cff" .. cHex .. "[" .. shortName .. "]: " .. text
+	local cHex = ("%02x%02x%02x"):format(colorInfo.r * 255, colorInfo.g * 255, colorInfo.b * 255)
+
+	-- plain line (no |cff…) so embedded hyperlinks keep native colours
+	local line = string.format("%s |cff%s%s|r: |cff%s%s|r", prefix, cHex, nameLink, cHex, text)
 	tab.msg:AddMessage(line)
 	ChatIM.history[partner] = ChatIM.history[partner] or {}
 	table.insert(ChatIM.history[partner], line)
