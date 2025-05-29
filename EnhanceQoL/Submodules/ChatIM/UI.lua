@@ -24,7 +24,7 @@ local regionKey = regionTable[GetCurrentRegion()] or "EU" -- or EU for PTR becau
 local function PlayerMenuGenerator(_, root, targetName, isBN, bnetID)
 	root:CreateTitle(targetName)
 
-	-- if not isBN then
+	local unit, riolink
 	if isBN and bnetID then
 		local info = C_BattleNet.GetAccountInfoByID(bnetID)
 		if info and info.gameAccountInfo then
@@ -35,47 +35,41 @@ local function PlayerMenuGenerator(_, root, targetName, isBN, bnetID)
 				and BNET_CLIENT_WOW == info.gameAccountInfo.clientProgram
 				and info.gameAccountInfo.regionID == GetCurrentRegion()
 			then
-				root:CreateDivider()
-				root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_INTERACT)
-				local unit = info.gameAccountInfo.characterName .. "-" .. info.gameAccountInfo.realmName
-				root:CreateButton(INVITE, function(unit) C_PartyInfo.InviteUnit(unit) end, unit)
-				root:CreateDivider()
-				root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_OTHER)
-				root:CreateButton(COPY_CHARACTER_NAME, function(unit) StaticPopup_Show("EQOL_URL_COPY", nil, nil, unit) end, unit)
-				root:CreateDivider()
-				root:CreateTitle("RaiderIO")
-				local riolink = "https://raider.io/characters/"
+				unit = info.gameAccountInfo.characterName .. "-" .. info.gameAccountInfo.realmName
+				riolink = "https://raider.io/characters/"
 					.. string.lower(regionKey)
 					.. "/"
 					.. string.lower(info.gameAccountInfo.realmDisplayName:gsub("%s", "-"))
 					.. "/"
 					.. info.gameAccountInfo.characterName
-				root:CreateButton(L["RaiderIOUrl"], function(riolink) StaticPopup_Show("EQOL_URL_COPY", nil, nil, riolink) end, riolink)
 			end
 		end
 	else
-		root:CreateDivider()
-		root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_INTERACT)
-		root:CreateButton(INVITE, function(name) C_PartyInfo.InviteUnit(name) end, targetName)
-		root:CreateDivider()
-		root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_OTHER)
-		root:CreateButton(COPY_CHARACTER_NAME, function(name) StaticPopup_Show("EQOL_URL_COPY", nil, nil, name) end, targetName)
+		unit = targetName
 		if targetName:match("-") then
 			local char, realm = targetName:match("^([^%-]+)%-(.+)$")
-			if char and realm then
-				root:CreateDivider()
-				root:CreateTitle("RaiderIO")
-				local riolink = "https://raider.io/characters/" .. string.lower(regionKey) .. "/" .. string.lower(realm:gsub("%s+", "-")) .. "/" .. char
-				root:CreateButton(L["RaiderIOUrl"], function(link) StaticPopup_Show("EQOL_URL_COPY", nil, nil, link) end, riolink)
-			end
+			if char and realm then riolink = "https://raider.io/characters/" .. string.lower(regionKey) .. "/" .. string.lower(realm:gsub("%s+", "-")) .. "/" .. char end
 		end
 	end
-	-- end
+	if unit then
+		root:CreateDivider()
+		root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_INTERACT)
+		root:CreateButton(INVITE, function(unit) C_PartyInfo.InviteUnit(unit) end, unit)
+		root:CreateDivider()
+		root:CreateTitle(UNIT_FRAME_DROPDOWN_SUBSECTION_TITLE_OTHER)
+		root:CreateButton(COPY_CHARACTER_NAME, function(unit) StaticPopup_Show("EQOL_URL_COPY", nil, nil, unit) end, unit)
+	end
 
-	if not isBN then
+	if not isBN and unit then
 		local label = C_FriendList.IsIgnored(targetName) and UNIGNORE_QUEST or IGNORE
 		local function toggleIgnore(name) ChatIM:ToggleIgnore(name) end
 		root:CreateButton(label, toggleIgnore, targetName)
+	end
+
+	if riolink then
+		root:CreateDivider()
+		root:CreateTitle("RaiderIO")
+		root:CreateButton(L["RaiderIOUrl"], function(link) StaticPopup_Show("EQOL_URL_COPY", nil, nil, link) end, riolink)
 	end
 end
 
