@@ -103,19 +103,11 @@ frame:SetScript("OnEvent", function(_, event, ...)
 	elseif event == "CHAT_MSG_WHISPER_INFORM" then
 		local msg, target = ...
 		ChatIM:AddMessage(target, msg, true)
-		if ChatIM.inCombat then
-			ChatIM.pendingShow = true
-		else
-			focusTab(target)
-		end
+		focusTab(target)
 	elseif event == "CHAT_MSG_BN_WHISPER_INFORM" then
 		local msg, target, _, _, _, _, _, _, _, _, _, _, bnetID = ...
 		ChatIM:AddMessage(target, msg, true, true, bnetID)
-		if ChatIM.inCombat then
-			ChatIM.pendingShow = true
-		else
-			focusTab(target)
-		end
+		focusTab(target)
 	end
 end)
 

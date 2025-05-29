@@ -976,6 +976,7 @@ globals = {
 	"C_LFGList.SetApplicantMemberRole",
 	"C_LFGList.UpdateListing",
 	"C_LootHistory",
+	"ChatFrame_OnHyperlinkShow",
 	"C_LootHistory.CanMasterLoot",
 	"C_LootHistory.GetExpiration",
 	"C_LootHistory.GetItem",

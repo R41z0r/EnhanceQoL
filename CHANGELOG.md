@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.17.0] – 2025-05-28
+## [3.17.0] – 2025-05-29
 ### ✨ Added
 - **Instant Messenger** – Option to enable  incoming and outgoing whispers to appear in a compact IM window.
   - Each conversation opens in its own tab, which flashes on new messages.
