@@ -971,7 +971,7 @@ local function addChatFrame(container)
 
 	local groupCoreSetting = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCoreSetting)
-	local data = {
+	data = {
 		{
 			var = "enableChatIM",
 			text = L["enableChatIM"],
@@ -1011,7 +1011,6 @@ local function addChatFrame(container)
 	end
 
 	if addon.db["enableChatIM"] then
-
 		groupCoreSetting:AddChild(addon.functions.createSpacerAce())
 
 		local hint = AceGUI:Create("Label")
