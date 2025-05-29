@@ -1012,6 +1012,16 @@ local function addChatFrame(container)
 			type = "CheckBox",
 			func = function(self, _, value) addon.db["enableChatIMWCL"] = value end,
 		})
+		table.insert(data, {
+			var = "chatIMUseCustomSound",
+			text = L["enableChatIMCustomSound"],
+			type = "CheckBox",
+			func = function(self, _, value)
+				addon.db["chatIMUseCustomSound"] = value
+				container:ReleaseChildren()
+				addChatFrame(container)
+			end,
+		})
 	end
 	table.sort(data, function(a, b) return a.text < b.text end)
 
@@ -1024,6 +1034,23 @@ local function addChatFrame(container)
 
 	if addon.db["enableChatIM"] then
 		groupCoreSetting:AddChild(addon.functions.createSpacerAce())
+
+		if addon.db["chatIMUseCustomSound"] then
+			local soundList = {}
+			for name in pairs(addon.ChatIM.availableSounds or {}) do
+				soundList[name] = name
+			end
+			local list, order = addon.functions.prepareListForDropdown(soundList)
+			local dropSound = addon.functions.createDropdownAce(L["ChatIMCustomSound"], list, order, function(self, _, val)
+				addon.db["chatIMCustomSoundFile"] = val
+				self:SetValue(val)
+				local file = addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[val]
+				if file then PlaySoundFile(file, "Master") end
+			end)
+			dropSound:SetValue(addon.db["chatIMCustomSoundFile"])
+			groupCoreSetting:AddChild(dropSound)
+			groupCoreSetting:AddChild(addon.functions.createSpacerAce())
+		end
 
 		local sliderHistory = addon.functions.createSliderAce(L["ChatIMHistoryLimit"] .. ": " .. addon.db["chatIMMaxHistory"], addon.db["chatIMMaxHistory"], 0, 1000, 1, function(self, _, value)
 			addon.db["chatIMMaxHistory"] = value
@@ -2676,6 +2703,8 @@ local function initChatFrame()
 
 	addon.functions.InitDBValue("enableChatIM", false)
 	addon.functions.InitDBValue("enableChatIMFade", false)
+	addon.functions.InitDBValue("chatIMUseCustomSound", false)
+	addon.functions.InitDBValue("chatIMCustomSoundFile", "")
 	addon.functions.InitDBValue("chatIMMaxHistory", 250)
 	addon.functions.InitDBValue("chatIMFrameData", {})
 	if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(addon.db["enableChatIM"]) end

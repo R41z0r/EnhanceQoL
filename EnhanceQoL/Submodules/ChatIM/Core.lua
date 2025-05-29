@@ -9,6 +9,38 @@ end
 local ChatIM = addon.ChatIM or {}
 addon.ChatIM = ChatIM
 ChatIM.enabled = false
+ChatIM.soundPath = "Interface\\AddOns\\" .. parentAddonName .. "\\Sounds\\ChatIM\\"
+ChatIM.availableSounds = {
+	Bell = ChatIM.soundPath .. "Bell.ogg",
+	Cheerfull = ChatIM.soundPath .. "Cheerfull.ogg",
+	["For the Horde"] = "Interface\\AddOns\\" .. parentAddonName .. "\\Sounds\\bloodlust.ogg",
+	Laughing = ChatIM.soundPath .. "Laughing.ogg",
+	Metallic = ChatIM.soundPath .. "LightMetallic.ogg",
+	Ping = ChatIM.soundPath .. "Ping.ogg",
+	Ring = ChatIM.soundPath .. "Ring.ogg",
+	Sonarr = ChatIM.soundPath .. "Sonarr.ogg",
+}
+
+local function shouldPlaySound(sender)
+	if not ChatIM.widget or not ChatIM.widget.frame:IsShown() then return true end
+	if ChatIM.activeTab ~= sender then return true end
+	local tab = ChatIM.tabs[sender]
+	if not tab or not tab.edit or not tab.edit:HasFocus() then return true end
+	return false
+end
+
+local function playIncomingSound(sender)
+	if not shouldPlaySound(sender) then return end
+	if addon.db and addon.db["chatIMUseCustomSound"] then
+		local key = addon.db["chatIMCustomSoundFile"]
+		local file = key and ChatIM.availableSounds[key]
+		if file then
+			PlaySoundFile(file, "Master")
+			return
+		end
+	end
+	PlaySound(SOUNDKIT.TELL_MESSAGE)
+end
 
 local function whisperFilter() return true end
 
@@ -31,12 +63,12 @@ frame:SetScript("OnEvent", function(_, event, ...)
 	if event == "CHAT_MSG_WHISPER" then
 		local msg, sender = ...
 		ChatIM:AddMessage(sender, msg)
-		PlaySound(SOUNDKIT.TELL_MESSAGE)
+		playIncomingSound(sender)
 		ChatIM:Flash()
 	elseif event == "CHAT_MSG_BN_WHISPER" then
 		local msg, sender, _, _, _, _, _, _, _, _, _, _, bnetID = ...
 		ChatIM:AddMessage(sender, msg, nil, true, bnetID)
-		PlaySound(SOUNDKIT.TELL_MESSAGE)
+		playIncomingSound(sender)
 		ChatIM:Flash()
 	elseif event == "CHAT_MSG_WHISPER_INFORM" then
 		local msg, target = ...
