@@ -176,6 +176,8 @@ L["enableChatIMRaiderIO"] = "Enable Raider.IO link in Context Menu"
 L["enableChatIMWCL"] = "Enable Warcraftlogs link in Context Menu"
 L["RaiderIOUrl"] = "Copy Raider.IO URL"
 L["WCLUrl"] = "Copy Warcraftlogs URL"
+L["enableChatIMCustomSound"] = "Use custom whisper sound"
+L["ChatIMCustomSound"] = "Whisper sound"
 
 L["enableLootspecQuickswitch"] = "Enable quick switching for loot and active specializations on the Minimap"
 L["enableLootspecQuickswitchDesc"] = "Left-click a specialization to set your loot spec, or right-click to change your active specialization."

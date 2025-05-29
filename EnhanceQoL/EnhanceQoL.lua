@@ -987,33 +987,43 @@ local function addChatFrame(container)
 		},
 	}
 
-	if addon.db["enableChatIM"] then
-		table.insert(data, {
-			var = "enableChatIMFade",
-			text = L["enableChatIMFade"],
-			type = "CheckBox",
-			desc = L["enableChatIMFadeDesc"],
-			func = function(self, _, value)
-				addon.db["enableChatIMFade"] = value
-				if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:UpdateAlpha() end
-				container:ReleaseChildren()
-				addChatFrame(container)
-			end,
-		})
-		table.insert(data, {
-			var = "enableChatIMRaiderIO",
-			text = L["enableChatIMRaiderIO"],
-			type = "CheckBox",
-			func = function(self, _, value) addon.db["enableChatIMRaiderIO"] = value end,
-		})
-		table.insert(data, {
-			var = "enableChatIMWCL",
-			text = L["enableChatIMWCL"],
-			type = "CheckBox",
-			func = function(self, _, value) addon.db["enableChatIMWCL"] = value end,
-		})
-	end
-	table.sort(data, function(a, b) return a.text < b.text end)
+        if addon.db["enableChatIM"] then
+                table.insert(data, {
+                        var = "enableChatIMFade",
+                        text = L["enableChatIMFade"],
+                        type = "CheckBox",
+                        desc = L["enableChatIMFadeDesc"],
+                        func = function(self, _, value)
+                                addon.db["enableChatIMFade"] = value
+                                if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:UpdateAlpha() end
+                                container:ReleaseChildren()
+                                addChatFrame(container)
+                        end,
+                })
+                table.insert(data, {
+                        var = "enableChatIMRaiderIO",
+                        text = L["enableChatIMRaiderIO"],
+                        type = "CheckBox",
+                        func = function(self, _, value) addon.db["enableChatIMRaiderIO"] = value end,
+                })
+                table.insert(data, {
+                        var = "enableChatIMWCL",
+                        text = L["enableChatIMWCL"],
+                        type = "CheckBox",
+                        func = function(self, _, value) addon.db["enableChatIMWCL"] = value end,
+                })
+                table.insert(data, {
+                        var = "chatIMUseCustomSound",
+                        text = L["enableChatIMCustomSound"],
+                        type = "CheckBox",
+                        func = function(self, _, value)
+                                addon.db["chatIMUseCustomSound"] = value
+                                container:ReleaseChildren()
+                                addChatFrame(container)
+                        end,
+                })
+        end
+        table.sort(data, function(a, b) return a.text < b.text end)
 
 	for _, cbData in ipairs(data) do
 		local desc
@@ -1022,8 +1032,25 @@ local function addChatFrame(container)
 		groupCoreSetting:AddChild(cbElement)
 	end
 
-	if addon.db["enableChatIM"] then
-		groupCoreSetting:AddChild(addon.functions.createSpacerAce())
+        if addon.db["enableChatIM"] then
+                groupCoreSetting:AddChild(addon.functions.createSpacerAce())
+
+                if addon.db["chatIMUseCustomSound"] then
+                        local soundList = {}
+                        for name in pairs(addon.ChatIM.availableSounds or {}) do
+                                soundList[name] = name
+                        end
+                        local list, order = addon.functions.prepareListForDropdown(soundList)
+                        local dropSound = addon.functions.createDropdownAce(L["ChatIMCustomSound"], list, order, function(self, _, val)
+                                addon.db["chatIMCustomSoundFile"] = val
+                                self:SetValue(val)
+                                local file = addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[val]
+                                if file then PlaySoundFile(file, "Master") end
+                        end)
+                        dropSound:SetValue(addon.db["chatIMCustomSoundFile"])
+                        groupCoreSetting:AddChild(dropSound)
+                        groupCoreSetting:AddChild(addon.functions.createSpacerAce())
+                end
 
 		local sliderHistory = addon.functions.createSliderAce(L["ChatIMHistoryLimit"] .. ": " .. addon.db["chatIMMaxHistory"], addon.db["chatIMMaxHistory"], 0, 1000, 1, function(self, _, value)
 			addon.db["chatIMMaxHistory"] = value
@@ -2674,10 +2701,12 @@ local function initChatFrame()
 		addon.functions.InitDBValue("chatFrameFadeDuration", 3)
 	end
 
-	addon.functions.InitDBValue("enableChatIM", false)
-	addon.functions.InitDBValue("enableChatIMFade", false)
-	addon.functions.InitDBValue("chatIMMaxHistory", 250)
-	addon.functions.InitDBValue("chatIMFrameData", {})
+        addon.functions.InitDBValue("enableChatIM", false)
+        addon.functions.InitDBValue("enableChatIMFade", false)
+        addon.functions.InitDBValue("chatIMUseCustomSound", false)
+        addon.functions.InitDBValue("chatIMCustomSoundFile", "")
+        addon.functions.InitDBValue("chatIMMaxHistory", 250)
+        addon.functions.InitDBValue("chatIMFrameData", {})
 	if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(addon.db["enableChatIM"]) end
 end
 
