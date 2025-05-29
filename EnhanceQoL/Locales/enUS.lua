@@ -166,6 +166,7 @@ L["enableChatIMFade"] = "Fade Instant Messenger when unfocused"
 L["enableChatIMFadeDesc"] = "Reduce the window’s opacity when it loses focus"
 L["Instant Chats"] = "Instant Chats"
 L["RaiderIOUrl"] = "Copy Raider.IO URL"
+L["RightClickCloseTab"] = "Right-click a tab to close it"
 
 L["enableLootspecQuickswitch"] = "Enable quick switching for loot and active specializations on the Minimap"
 L["enableLootspecQuickswitchDesc"] = "Left-click a specialization to set your loot spec, or right-click to change your active specialization."

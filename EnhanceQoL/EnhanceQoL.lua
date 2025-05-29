@@ -926,6 +926,52 @@ local function addChatFrame(container)
 				addChatFrame(container)
 			end,
 		},
+	}
+
+	table.sort(data, function(a, b) return a.text < b.text end)
+
+	for _, cbData in ipairs(data) do
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func, desc)
+		groupCore:AddChild(cbElement)
+	end
+
+	if addon.db["chatFrameFadeEnabled"] then
+		local sliderTimeVisible = addon.functions.createSliderAce(
+			L["chatFrameFadeTimeVisibleText"] .. ": " .. addon.db["chatFrameFadeTimeVisible"] .. "s",
+			addon.db["chatFrameFadeTimeVisible"],
+			1,
+			300,
+			1,
+			function(self, _, value2)
+				addon.db["chatFrameFadeTimeVisible"] = value2
+				if ChatFrame1 then ChatFrame1:SetTimeVisible(value2) end
+				self:SetLabel(L["chatFrameFadeTimeVisibleText"] .. ": " .. value2 .. "s")
+			end
+		)
+		groupCore:AddChild(sliderTimeVisible)
+
+		groupCore:AddChild(addon.functions.createSpacerAce())
+
+		local sliderFadeDuration = addon.functions.createSliderAce(
+			L["chatFrameFadeDurationText"] .. ": " .. addon.db["chatFrameFadeDuration"] .. "s",
+			addon.db["chatFrameFadeDuration"],
+			1,
+			60,
+			1,
+			function(self, _, value2)
+				addon.db["chatFrameFadeDuration"] = value2
+				if ChatFrame1 then ChatFrame1:SetFadeDuration(value2) end
+				self:SetLabel(L["chatFrameFadeDurationText"] .. ": " .. value2 .. "s")
+			end
+		)
+		groupCore:AddChild(sliderFadeDuration)
+	end
+
+	local groupCoreSetting = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCoreSetting)
+	local data = {
 		{
 			var = "enableChatIM",
 			text = L["enableChatIM"],
@@ -955,49 +1001,24 @@ local function addChatFrame(container)
 			end,
 		})
 	end
-
 	table.sort(data, function(a, b) return a.text < b.text end)
 
 	for _, cbData in ipairs(data) do
 		local desc
 		if cbData.desc then desc = cbData.desc end
 		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], cbData.func, desc)
-		groupCore:AddChild(cbElement)
+		groupCoreSetting:AddChild(cbElement)
 	end
 
-	if addon.db["chatFrameFadeEnabled"] then
-		local groupCoreSetting = addon.functions.createContainer("InlineGroup", "List")
-		wrapper:AddChild(groupCoreSetting)
-
-		local sliderTimeVisible = addon.functions.createSliderAce(
-			L["chatFrameFadeTimeVisibleText"] .. ": " .. addon.db["chatFrameFadeTimeVisible"] .. "s",
-			addon.db["chatFrameFadeTimeVisible"],
-			1,
-			300,
-			1,
-			function(self, _, value2)
-				addon.db["chatFrameFadeTimeVisible"] = value2
-				if ChatFrame1 then ChatFrame1:SetTimeVisible(value2) end
-				self:SetLabel(L["chatFrameFadeTimeVisibleText"] .. ": " .. value2 .. "s")
-			end
-		)
-		groupCoreSetting:AddChild(sliderTimeVisible)
+	if addon.db["enableChatIM"] then
 
 		groupCoreSetting:AddChild(addon.functions.createSpacerAce())
 
-		local sliderFadeDuration = addon.functions.createSliderAce(
-			L["chatFrameFadeDurationText"] .. ": " .. addon.db["chatFrameFadeDuration"] .. "s",
-			addon.db["chatFrameFadeDuration"],
-			1,
-			60,
-			1,
-			function(self, _, value2)
-				addon.db["chatFrameFadeDuration"] = value2
-				if ChatFrame1 then ChatFrame1:SetFadeDuration(value2) end
-				self:SetLabel(L["chatFrameFadeDurationText"] .. ": " .. value2 .. "s")
-			end
-		)
-		groupCoreSetting:AddChild(sliderFadeDuration)
+		local hint = AceGUI:Create("Label")
+		hint:SetFullWidth(true)
+		hint:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+		hint:SetText("|cffffd700" .. L["RightClickCloseTab"] .. "|r ")
+		groupCoreSetting:AddChild(hint)
 	end
 end
 

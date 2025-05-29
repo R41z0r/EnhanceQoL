@@ -177,15 +177,8 @@ function ChatIM:RefreshTabCallbacks()
 	if not self.tabGroup or not self.tabGroup.tabs then return end
 	for _, btn in ipairs(self.tabGroup.tabs) do
 		if not btn.hooked then
-			local orig = btn:GetScript("OnClick")
-			btn:SetScript("OnClick", function(frame, button)
-				if button == "RightButton" then
-					ChatIM:RemoveTab(frame.value)
-				elseif button == "MiddleButton" then
-					ChatIM:TogglePin(frame.value)
-				else
-					orig(frame)
-				end
+			btn:SetScript("OnMouseDown", function(frame, button)
+				if button == "RightButton" then ChatIM:RemoveTab(frame.value) end
 			end)
 			btn.hooked = true
 		end
