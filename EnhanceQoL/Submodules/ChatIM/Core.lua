@@ -77,17 +77,17 @@ SlashCmdList["EQOLIM"] = function()
 end
 
 function ChatIM:ToggleIgnore(name)
-       if C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) or IsIgnored and IsIgnored(name) then
-               if C_FriendList.DelIgnore then
-                       C_FriendList.DelIgnore(name)
-               else
-                       DelIgnore(name)
-               end
-       else
-               if C_FriendList.AddIgnore then
-                       C_FriendList.AddIgnore(name)
-               else
-                       AddIgnore(name)
-               end
-       end
+	if C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) or IsIgnored and IsIgnored(name) then
+		if C_FriendList.DelIgnore then
+			C_FriendList.DelIgnore(name)
+		else
+			DelIgnore(name)
+		end
+	else
+		if C_FriendList.AddIgnore then
+			C_FriendList.AddIgnore(name)
+		else
+			AddIgnore(name)
+		end
+	end
 end
