@@ -1029,8 +1029,7 @@ local function addChatFrame(container)
 			desc = L["chatIMHideInCombatDesc"],
 			func = function(self, _, value)
 				addon.db["chatIMHideInCombat"] = value
-				container:ReleaseChildren()
-				addChatFrame(container)
+				if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(true) end
 			end,
 		})
 		table.insert(data, {
@@ -1038,11 +1037,7 @@ local function addChatFrame(container)
 			text = L["chatIMUseAnimation"],
 			type = "CheckBox",
 			desc = L["chatIMUseAnimationDesc"],
-			func = function(self, _, value)
-				addon.db["chatIMUseAnimation"] = value
-				container:ReleaseChildren()
-				addChatFrame(container)
-			end,
+			func = function(self, _, value) addon.db["chatIMUseAnimation"] = value end,
 		})
 	end
 	table.sort(data, function(a, b) return a.text < b.text end)
