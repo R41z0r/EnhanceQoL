@@ -539,41 +539,59 @@ function ChatIM:EnsureAnimations()
 	sout:SetDuration(0.25)
 	sout:SetSmoothing("IN")
 	frame.slideOutTrans = sout
-	frame.slideOut:SetScript("OnFinished", function()
-		frame:Hide()
-		if ChatIM.animFinal then frame:SetPoint(unpack(ChatIM.animFinal)) end
-	end)
+        frame.slideOut:SetScript("OnFinished", function()
+                frame:Hide()
+                if ChatIM.animFinal then
+                        frame:ClearAllPoints()
+                        for i, p in ipairs(ChatIM.animFinal) do frame:SetPoint(unpack(p)) end
+                end
+        end)
 end
 
 function ChatIM:ShowWindow()
 	self:CreateUI()
 	if not self.widget or not self.widget.frame or self.widget.frame:IsShown() then return end
 	UIFrameFlashStop(self.widget.frame)
-	if addon.db and addon.db["chatIMUseAnimation"] then
-		self:EnsureAnimations()
-		local point, rel, relPoint, x, y = self.widget.frame:GetPoint()
-		self.animFinal = { point, rel, relPoint, x, y }
-		self.widget.frame:ClearAllPoints()
-		self.widget.frame:SetPoint(point, rel, relPoint, x + ANIM_OFFSET, y)
-		self.widget.frame:Show()
-		self.widget.frame.slideInTrans:SetOffset(-ANIM_OFFSET, 0)
-		self.widget.frame.slideIn:SetScript("OnFinished", function() self.widget.frame:SetPoint(point, rel, relPoint, x, y) end)
-		self.widget.frame.slideIn:Play()
-	else
-		self.widget.frame:Show()
-	end
+        if addon.db and addon.db["chatIMUseAnimation"] then
+                self:EnsureAnimations()
+                local frame = self.widget.frame
+                self.animFinal = {}
+                for i = 1, frame:GetNumPoints() do
+                        self.animFinal[i] = { frame:GetPoint(i) }
+                end
+                frame:ClearAllPoints()
+                for i, p in ipairs(self.animFinal) do
+                        if i == 1 then
+                                frame:SetPoint(p[1], p[2], p[3], (p[4] or 0) + ANIM_OFFSET, p[5])
+                        else
+                                frame:SetPoint(unpack(p))
+                        end
+                end
+                frame:Show()
+                frame.slideInTrans:SetOffset(-ANIM_OFFSET, 0)
+                frame.slideIn:SetScript("OnFinished", function()
+                        frame:ClearAllPoints()
+                        for _, p in ipairs(ChatIM.animFinal) do frame:SetPoint(unpack(p)) end
+                end)
+                frame.slideIn:Play()
+        else
+                self.widget.frame:Show()
+        end
 end
 
 function ChatIM:HideWindow()
 	if not self.widget or not self.widget.frame or not self.widget.frame:IsShown() then return end
 	UIFrameFlashStop(self.widget.frame)
-	if addon.db and addon.db["chatIMUseAnimation"] then
-		self:EnsureAnimations()
-		local point, rel, relPoint, x, y = self.widget.frame:GetPoint()
-		self.animFinal = { point, rel, relPoint, x, y }
-		self.widget.frame.slideOutTrans:SetOffset(ANIM_OFFSET, 0)
-		self.widget.frame.slideOut:Play()
-	else
-		self.widget.frame:Hide()
-	end
+        if addon.db and addon.db["chatIMUseAnimation"] then
+                self:EnsureAnimations()
+                local frame = self.widget.frame
+                self.animFinal = {}
+                for i = 1, frame:GetNumPoints() do
+                        self.animFinal[i] = { frame:GetPoint(i) }
+                end
+                frame.slideOutTrans:SetOffset(ANIM_OFFSET, 0)
+                frame.slideOut:Play()
+        else
+                self.widget.frame:Hide()
+        end
 end
