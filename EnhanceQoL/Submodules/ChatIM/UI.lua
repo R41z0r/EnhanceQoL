@@ -332,15 +332,36 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 			return
 		end
 
-		if linkType == "censoredmessage" then
-			local _, censorID = string.split(":", linkData)
-			if censorID then
-				_G.C_ChatInfo.UncensorChatLine(censorID)
-				local text = C_ChatInfo.GetChatLineText(lineID)
-				if not text then return end
-			end
-			return
-		end
+               if linkType == "censoredmessage" then
+                        local _, censorID = string.split(":", linkData)
+                        if censorID then
+                                _G.C_ChatInfo.UncensorChatLine(censorID)
+                                local text = C_ChatInfo.GetChatLineText(censorID)
+                                if text then
+                                        text = ChatIM:FormatURLs(text)
+                                        local pattern = ("|Hcensoredmessage:%s|h.-|h"):format(censorID)
+                                        pattern = pattern:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1")
+                                        local history = ChatIM.history[sender]
+                                        local replaced
+                                        if history then
+                                                for i, line in ipairs(history) do
+                                                        if line:find(pattern) then
+                                                                history[i] = line:gsub(pattern, text)
+                                                                replaced = true
+                                                                break
+                                                        end
+                                                end
+                                        end
+                                        if replaced and history then
+                                                frame:Clear()
+                                                for _, line in ipairs(history) do
+                                                        frame:AddMessage(line)
+                                                end
+                                        end
+                                end
+                        end
+                        return
+                end
 
 		-- Alles andere an Blizzard weiterreichen
 		ChatFrame_OnHyperlinkShow(frame, linkData, text, button)
