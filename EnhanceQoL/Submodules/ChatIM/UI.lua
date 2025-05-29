@@ -275,10 +275,12 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 		end
 
 		-- Rechtsklick auf Spieler‑Links → eigenes Menü
-		if button == "RightButton" and (linkType == "player" or linkType == "BNplayer") then
-			local name = Ambiguate(payload:match("^[^:]+"), "none")
-			local bn = linkType == "BNplayer"
-			MU.CreateContextMenu(frame, PlayerMenuGenerator, name, bn, bnetID)
+		if linkType == "player" or linkType == "BNplayer" then
+			if button == "RightButton" then
+				local name = Ambiguate(payload:match("^[^:]+"), "none")
+				local bn = linkType == "BNplayer"
+				MU.CreateContextMenu(frame, PlayerMenuGenerator, name, bn, bnetID)
+			end
 			return
 		end
 
