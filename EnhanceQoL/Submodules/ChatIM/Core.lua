@@ -55,11 +55,15 @@ local function updateRegistration()
 		frame:RegisterEvent("CHAT_MSG_BN_WHISPER")
 		frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 		frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
+		frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
 
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", whisperFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", whisperFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", whisperFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", whisperFilter)
+
+		EnhanceQoL_IMHistory = EnhanceQoL_IMHistory or {}
+		ChatIM.history = EnhanceQoL_IMHistory
 	else
 		frame:UnregisterAllEvents()
 		if ChatIM.widget and ChatIM.widget.frame then ChatIM.widget.frame:Hide() end

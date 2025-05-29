@@ -1,4 +1,3 @@
--- luacheck: globals EnhanceQoL_IMPinned ChatFrame_OnHyperlinkShow
 local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 if _G[parentAddonName] then
@@ -13,8 +12,9 @@ local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL")
 local function colorWrap(hex, text) return "|cff" .. hex .. text .. "|r" end
 
 addon.ChatIM = addon.ChatIM or {}
+
+local MAX_HISTORY_LINES = 250
 local ChatIM = addon.ChatIM
-ChatIM.history = ChatIM.history or {}
 
 local MU = MenuUtil -- global ab 11.0+
 
@@ -95,8 +95,6 @@ StaticPopupDialogs["EQOL_URL_COPY"] = {
 	end,
 }
 
-EnhanceQoL_IMPinned = EnhanceQoL_IMPinned or {}
-ChatIM.pinned = EnhanceQoL_IMPinned
 ChatIM.storage = ChatIM.storage or CreateFrame("Frame")
 ChatIM.activeGroup = nil
 ChatIM.activeTab = nil
@@ -256,6 +254,23 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	smf:SetFading(false)
 	smf:SetMaxLines(250)
 	smf:SetHyperlinksEnabled(true)
+	-- enable wheel scrolling
+	smf:EnableMouseWheel(true)
+	smf:SetScript("OnMouseWheel", function(frame, delta)
+		if delta > 0 then
+			if IsShiftKeyDown() then
+				frame:ScrollToTop()
+			else
+				frame:ScrollUp()
+			end
+		elseif delta < 0 then
+			if IsShiftKeyDown() then
+				frame:ScrollToBottom()
+			else
+				frame:ScrollDown()
+			end
+		end
+	end)
 	smf:SetScript("OnHyperlinkClick", function(self, linkData, text, button)
 		local linkType, payload = linkData:match("^(%a+):(.+)$")
 		if linkType == "url" then
@@ -280,6 +295,10 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	}
 	self.tabs[sender].target = sender
 	if ChatIM.history[sender] then
+		-- purge excessive saved lines on load
+		while #ChatIM.history[sender] > MAX_HISTORY_LINES do
+			table.remove(ChatIM.history[sender], 1)
+		end
 		for _, line in ipairs(ChatIM.history[sender]) do
 			smf:AddMessage(line)
 		end
@@ -346,7 +365,9 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	tab.msg:AddMessage(line)
 	ChatIM.history[partner] = ChatIM.history[partner] or {}
 	table.insert(ChatIM.history[partner], line)
-	if #ChatIM.history[partner] > 250 then table.remove(ChatIM.history[partner], 1) end
+	while #ChatIM.history[partner] > MAX_HISTORY_LINES do
+		table.remove(ChatIM.history[partner], 1)
+	end
 	if self.activeTab ~= partner then
 		tab.unread = true
 		self:UpdateTabLabel(partner)
@@ -409,14 +430,6 @@ end
 
 function ChatIM:Flash()
 	if self.widget and not self.widget.frame:IsShown() then UIFrameFlash(self.widget.frame, 0.2, 0.8, 1, false, 0, 1) end
-end
-
-function ChatIM:TogglePin(sender)
-	if self.pinned[sender] then
-		self.pinned[sender] = nil
-	else
-		self.pinned[sender] = true
-	end
 end
 
 function ChatIM:StartTabFlash(sender)

@@ -16,7 +16,7 @@
 ## Notes-koKR: 사소한 편의 기능으로 게임 품질을 향상합니다
 ## Notes-zhCN: 一些小调整，以改善您的游戏体验
 ## Notes-zhTW: 一些小調整，以改善您的遊戲體驗
-## SavedVariables: EnhanceQoLDB, EnhanceQoL_IMPinned
+## SavedVariables: EnhanceQoLDB, EnhanceQoL_IMHistory
 ## X-Wago-ID: aN0Ykv6j
 ## X-Curse-Project-ID: 1076354
 ## Retail: true
