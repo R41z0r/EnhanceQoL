@@ -48,7 +48,7 @@ local function focusTab(target)
 	ChatIM:CreateTab(target)
 	if ChatIM.widget and ChatIM.widget.frame and not ChatIM.widget.frame:IsShown() then
 		UIFrameFlashStop(ChatIM.widget.frame)
-		ChatIM.widget.frame:Show()
+		ChatIM:ShowWindow()
 	end
 	local tab = ChatIM.tabs[target]
 	if tab and tab.edit then
@@ -60,24 +60,62 @@ end
 local frame = CreateFrame("Frame")
 frame:SetScript("OnEvent", function(_, event, ...)
 	if not ChatIM.enabled then return end
-	if event == "CHAT_MSG_WHISPER" then
+	if event == "PLAYER_REGEN_DISABLED" then
+		ChatIM.inCombat = true
+		if addon.db and addon.db["chatIMHideInCombat"] then
+			if ChatIM.widget and ChatIM.widget.frame:IsShown() then
+				ChatIM.wasOpenBeforeCombat = true
+				ChatIM:HideWindow()
+			else
+				ChatIM.wasOpenBeforeCombat = false
+			end
+		end
+	elseif event == "PLAYER_REGEN_ENABLED" then
+		ChatIM.inCombat = false
+		if addon.db and addon.db["chatIMHideInCombat"] then
+			if (ChatIM.wasOpenBeforeCombat or ChatIM.pendingShow) and ChatIM.widget then ChatIM:ShowWindow() end
+			for _, snd in ipairs(ChatIM.soundQueue or {}) do
+				playIncomingSound(snd)
+			end
+			ChatIM.pendingShow = false
+			ChatIM.soundQueue = {}
+		end
+	elseif event == "CHAT_MSG_WHISPER" then
 		local msg, sender = ...
 		ChatIM:AddMessage(sender, msg)
-		playIncomingSound(sender)
-		ChatIM:Flash()
+		if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
+			table.insert(ChatIM.soundQueue, sender)
+			ChatIM.pendingShow = true
+		else
+			playIncomingSound(sender)
+			ChatIM:Flash()
+		end
 	elseif event == "CHAT_MSG_BN_WHISPER" then
 		local msg, sender, _, _, _, _, _, _, _, _, _, _, bnetID = ...
 		ChatIM:AddMessage(sender, msg, nil, true, bnetID)
-		playIncomingSound(sender)
-		ChatIM:Flash()
+		if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
+			table.insert(ChatIM.soundQueue, sender)
+			ChatIM.pendingShow = true
+		else
+			playIncomingSound(sender)
+			ChatIM:Flash()
+		end
 	elseif event == "CHAT_MSG_WHISPER_INFORM" then
 		local msg, target = ...
 		ChatIM:AddMessage(target, msg, true)
-		focusTab(target)
+		if ChatIM.inCombat then
+			ChatIM.pendingShow = true
+		else
+			focusTab(target)
+		end
 	elseif event == "CHAT_MSG_BN_WHISPER_INFORM" then
 		local msg, target, _, _, _, _, _, _, _, _, _, _, bnetID = ...
 		ChatIM:AddMessage(target, msg, true, true, bnetID)
-		focusTab(target)
+		if ChatIM.inCombat then
+			ChatIM.pendingShow = true
+		else
+			focusTab(target)
+		end
 	end
 end)
 
@@ -88,6 +126,13 @@ local function updateRegistration()
 		frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 		frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
 		frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
+		if addon.db and addon.db["chatIMHideInCombat"] then
+			frame:RegisterEvent("PLAYER_REGEN_DISABLED")
+			frame:RegisterEvent("PLAYER_REGEN_ENABLED")
+		else
+			frame:UnregisterEvent("PLAYER_REGEN_DISABLED")
+			frame:UnregisterEvent("PLAYER_REGEN_ENABLED")
+		end
 
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", whisperFilter)
 		ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER", whisperFilter)
@@ -98,7 +143,7 @@ local function updateRegistration()
 		ChatIM.history = EnhanceQoL_IMHistory
 	else
 		frame:UnregisterAllEvents()
-		if ChatIM.widget and ChatIM.widget.frame then ChatIM.widget.frame:Hide() end
+		if ChatIM.widget and ChatIM.widget.frame then ChatIM:HideWindow() end
 	end
 end
 
