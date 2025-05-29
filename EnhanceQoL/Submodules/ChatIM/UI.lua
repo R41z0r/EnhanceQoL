@@ -13,8 +13,8 @@ local function colorWrap(hex, text) return "|cff" .. hex .. text .. "|r" end
 
 addon.ChatIM = addon.ChatIM or {}
 
-local MAX_HISTORY_LINES = 250
 local ChatIM = addon.ChatIM
+ChatIM.maxHistoryLines = ChatIM.maxHistoryLines or (addon.db and addon.db["chatIMMaxHistory"]) or 250
 
 local MU = MenuUtil -- global ab 11.0+
 
@@ -24,7 +24,7 @@ local regionKey = regionTable[GetCurrentRegion()] or "EU" -- or EU for PTR becau
 local function PlayerMenuGenerator(_, root, targetName, isBN, bnetID)
 	root:CreateTitle(targetName)
 
-	local unit, riolink
+	local unit, riolink, wclLink
 	if isBN and bnetID then
 		local info = C_BattleNet.GetAccountInfoByID(bnetID)
 		if info and info.gameAccountInfo then
@@ -42,13 +42,26 @@ local function PlayerMenuGenerator(_, root, targetName, isBN, bnetID)
 					.. string.lower(info.gameAccountInfo.realmDisplayName:gsub("%s", "-"))
 					.. "/"
 					.. info.gameAccountInfo.characterName
+				wclLink = "https://www.warcraftlogs.com/character/"
+					.. string.lower(regionKey)
+					.. "/"
+					.. string.lower(info.gameAccountInfo.realmDisplayName:gsub("%s", "-"))
+					.. "/"
+					.. info.gameAccountInfo.characterName
 			end
 		end
 	else
+		if nil == targetName:match("-") then
+			-- no minus means same realm so get my realm and add it
+			targetName = targetName .. "-" .. (GetRealmName()):gsub("%s", "")
+		end
 		unit = targetName
 		if targetName:match("-") then
 			local char, realm = targetName:match("^([^%-]+)%-(.+)$")
-			if char and realm then riolink = "https://raider.io/characters/" .. string.lower(regionKey) .. "/" .. string.lower(realm:gsub("%s+", "-")) .. "/" .. char end
+			if char and realm then
+				riolink = "https://raider.io/characters/" .. string.lower(regionKey) .. "/" .. string.lower(realm:gsub("%s+", "-")) .. "/" .. char
+				wclLink = "https://www.warcraftlogs.com/character/" .. string.lower(regionKey) .. "/" .. string.lower(realm:gsub("%s+", "-")) .. "/" .. char
+			end
 		end
 	end
 	if unit then
@@ -66,10 +79,15 @@ local function PlayerMenuGenerator(_, root, targetName, isBN, bnetID)
 		root:CreateButton(label, toggleIgnore, targetName)
 	end
 
-	if riolink then
+	if riolink and addon.db["enableChatIMRaiderIO"] then
 		root:CreateDivider()
 		root:CreateTitle("RaiderIO")
 		root:CreateButton(L["RaiderIOUrl"], function(link) StaticPopup_Show("EQOL_URL_COPY", nil, nil, link) end, riolink)
+	end
+	if wclLink and addon.db["enableChatIMWCL"] then
+		root:CreateDivider()
+		root:CreateTitle("Warcraftlogs")
+		root:CreateButton(L["WCLUrl"], function(link) StaticPopup_Show("EQOL_URL_COPY", nil, nil, link) end, wclLink)
 	end
 end
 
@@ -105,6 +123,17 @@ function ChatIM:UpdateAlpha()
 		self.frame:SetAlpha(1)
 	else
 		self.frame:SetAlpha(self.inactiveAlpha)
+	end
+end
+
+function ChatIM:SetMaxHistoryLines(val)
+	self.maxHistoryLines = val or self.maxHistoryLines or 250
+	if self.history then
+		for partner, lines in pairs(self.history) do
+			while #lines > self.maxHistoryLines do
+				table.remove(lines, 1)
+			end
+		end
 	end
 end
 
@@ -246,7 +275,7 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	smf:SetFontObject(ChatFontNormal)
 	smf:SetJustifyH("LEFT")
 	smf:SetFading(false)
-	smf:SetMaxLines(250)
+	smf:SetMaxLines(ChatIM.maxHistoryLines)
 	smf:SetHyperlinksEnabled(true)
 	-- enable wheel scrolling
 	smf:EnableMouseWheel(true)
@@ -303,9 +332,11 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 	self.tabs[sender].target = sender
 	if ChatIM.history[sender] then
 		-- purge excessive saved lines on load
-		while #ChatIM.history[sender] > MAX_HISTORY_LINES do
+		while #ChatIM.history[sender] > ChatIM.maxHistoryLines do
 			table.remove(ChatIM.history[sender], 1)
 		end
+		smf:SetMaxLines(ChatIM.maxHistoryLines)
+
 		for _, line in ipairs(ChatIM.history[sender]) do
 			smf:AddMessage(line)
 		end
@@ -371,9 +402,11 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	tab.msg:AddMessage(line)
 	ChatIM.history[partner] = ChatIM.history[partner] or {}
 	table.insert(ChatIM.history[partner], line)
-	while #ChatIM.history[partner] > MAX_HISTORY_LINES do
+	while #ChatIM.history[partner] > ChatIM.maxHistoryLines do
 		table.remove(ChatIM.history[partner], 1)
 	end
+	tab.msg:SetMaxLines(ChatIM.maxHistoryLines)
+
 	if self.activeTab ~= partner then
 		tab.unread = true
 		self:UpdateTabLabel(partner)

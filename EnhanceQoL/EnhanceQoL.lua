@@ -1000,6 +1000,18 @@ local function addChatFrame(container)
 				addChatFrame(container)
 			end,
 		})
+		table.insert(data, {
+			var = "enableChatIMRaiderIO",
+			text = L["enableChatIMRaiderIO"],
+			type = "CheckBox",
+			func = function(self, _, value) addon.db["enableChatIMRaiderIO"] = value end,
+		})
+		table.insert(data, {
+			var = "enableChatIMWCL",
+			text = L["enableChatIMWCL"],
+			type = "CheckBox",
+			func = function(self, _, value) addon.db["enableChatIMWCL"] = value end,
+		})
 	end
 	table.sort(data, function(a, b) return a.text < b.text end)
 
@@ -1013,12 +1025,74 @@ local function addChatFrame(container)
 	if addon.db["enableChatIM"] then
 		groupCoreSetting:AddChild(addon.functions.createSpacerAce())
 
+		local sliderHistory = addon.functions.createSliderAce(L["ChatIMHistoryLimit"] .. ": " .. addon.db["chatIMMaxHistory"], addon.db["chatIMMaxHistory"], 0, 1000, 1, function(self, _, value)
+			addon.db["chatIMMaxHistory"] = value
+			if addon.ChatIM and addon.ChatIM.SetMaxHistoryLines then addon.ChatIM:SetMaxHistoryLines(value) end
+			self:SetLabel(L["ChatIMHistoryLimit"] .. ": " .. value)
+		end)
+		groupCoreSetting:AddChild(sliderHistory)
+
+		local historyList = {}
+		for name in pairs(EnhanceQoL_IMHistory or {}) do
+			historyList[name] = name
+		end
+		local list, order = addon.functions.prepareListForDropdown(historyList)
+		local dropHistory = addon.functions.createDropdownAce(L["ChatIMHistoryPlayer"], list, order, function(self, _, val) self:SetValue(val) end)
+		local btnDelete = addon.functions.createButtonAce(L["ChatIMHistoryDelete"], 140, function()
+			local target = dropHistory:GetValue()
+			if not target then return end
+			StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"] = StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"]
+				or {
+					text = L["ChatIMHistoryDeleteConfirm"],
+					button1 = YES,
+					button2 = CANCEL,
+					timeout = 0,
+					whileDead = true,
+					hideOnEscape = true,
+					preferredIndex = 3,
+				}
+			StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"].OnAccept = function()
+				EnhanceQoL_IMHistory[target] = nil
+				if addon.ChatIM and addon.ChatIM.history then addon.ChatIM.history[target] = nil end
+				container:ReleaseChildren()
+				addChatFrame(container)
+			end
+			StaticPopup_Show("EQOL_DELETE_IM_HISTORY", target)
+		end)
+
+		local btnClear = addon.functions.createButtonAce(L["ChatIMHistoryClearAll"], 140, function()
+			StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"] = StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"]
+				or {
+					text = L["ChatIMHistoryClearConfirm"],
+					button1 = YES,
+					button2 = CANCEL,
+					timeout = 0,
+					whileDead = true,
+					hideOnEscape = true,
+					preferredIndex = 3,
+				}
+			StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"].OnAccept = function()
+				wipe(EnhanceQoL_IMHistory)
+				if addon.ChatIM then addon.ChatIM.history = EnhanceQoL_IMHistory end
+				container:ReleaseChildren()
+				addChatFrame(container)
+			end
+			StaticPopup_Show("EQOL_CLEAR_IM_HISTORY")
+		end)
+
+		groupCoreSetting:AddChild(dropHistory)
+		groupCoreSetting:AddChild(btnDelete)
+		groupCoreSetting:AddChild(btnClear)
+
+		groupCoreSetting:AddChild(addon.functions.createSpacerAce())
+
 		local hint = AceGUI:Create("Label")
 		hint:SetFullWidth(true)
 		hint:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 		hint:SetText("|cffffd700" .. L["RightClickCloseTab"] .. "|r ")
 		groupCoreSetting:AddChild(hint)
 	end
+	scroll:DoLayout()
 end
 
 local function addMinimapFrame(container)
@@ -2602,6 +2676,7 @@ local function initChatFrame()
 
 	addon.functions.InitDBValue("enableChatIM", false)
 	addon.functions.InitDBValue("enableChatIMFade", false)
+	addon.functions.InitDBValue("chatIMMaxHistory", 250)
 	addon.functions.InitDBValue("chatIMFrameData", {})
 	if addon.ChatIM and addon.ChatIM.SetEnabled then addon.ChatIM:SetEnabled(addon.db["enableChatIM"]) end
 end

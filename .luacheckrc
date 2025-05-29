@@ -864,6 +864,7 @@ globals = {
 	"C_Garrison.IsUsingPartyGarrison",
 	"C_Garrison.IsVisitGarrisonAvailable",
 	"C_Garrison.MarkMissionComplete",
+	"ChatTypeInfo",
 	"C_Garrison.MissionBonusRoll",
 	"C_Garrison.PlaceBuilding",
 	"C_Garrison.RecruitFollower",

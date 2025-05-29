@@ -72,7 +72,10 @@ end
 
 function ChatIM:SetEnabled(val)
 	self.enabled = val and true or false
-	if self.enabled then self:CreateUI() end
+	if self.enabled then
+		self:SetMaxHistoryLines(addon.db and addon.db["chatIMMaxHistory"])
+		self:CreateUI()
+	end
 	updateRegistration()
 end
 SLASH_EQOLIM1 = "/eim"
