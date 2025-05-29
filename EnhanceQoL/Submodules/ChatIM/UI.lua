@@ -13,8 +13,8 @@ local function colorWrap(hex, text) return "|cff" .. hex .. text .. "|r" end
 
 addon.ChatIM = addon.ChatIM or {}
 
-local MAX_HISTORY_LINES = 250
 local ChatIM = addon.ChatIM
+ChatIM.maxHistoryLines = ChatIM.maxHistoryLines or (addon.db and addon.db["chatIMMaxHistory"]) or 250
 
 local MU = MenuUtil -- global ab 11.0+
 
@@ -106,6 +106,17 @@ function ChatIM:UpdateAlpha()
 	else
 		self.frame:SetAlpha(self.inactiveAlpha)
 	end
+end
+
+function ChatIM:SetMaxHistoryLines(val)
+       self.maxHistoryLines = val or self.maxHistoryLines or 250
+       if self.history then
+               for partner, lines in pairs(self.history) do
+                       while #lines > self.maxHistoryLines do
+                               table.remove(lines, 1)
+                       end
+               end
+       end
 end
 
 function ChatIM:FormatURLs(text)
@@ -299,14 +310,14 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 		unread = false,
 	}
 	self.tabs[sender].target = sender
-	if ChatIM.history[sender] then
-		-- purge excessive saved lines on load
-		while #ChatIM.history[sender] > MAX_HISTORY_LINES do
-			table.remove(ChatIM.history[sender], 1)
-		end
-		for _, line in ipairs(ChatIM.history[sender]) do
-			smf:AddMessage(line)
-		end
+       if ChatIM.history[sender] then
+               -- purge excessive saved lines on load
+               while #ChatIM.history[sender] > ChatIM.maxHistoryLines do
+                       table.remove(ChatIM.history[sender], 1)
+               end
+               for _, line in ipairs(ChatIM.history[sender]) do
+                       smf:AddMessage(line)
+               end
 	end
 	-- will be parented/anchored once the tab becomes active
 	local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
@@ -367,11 +378,11 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	-- plain line (no |cff…) so embedded hyperlinks keep native colours
 	local line = string.format("%s |cff%s%s|r: |cff%s%s|r", prefix, cHex, nameLink, cHex, text)
 	tab.msg:AddMessage(line)
-	ChatIM.history[partner] = ChatIM.history[partner] or {}
-	table.insert(ChatIM.history[partner], line)
-	while #ChatIM.history[partner] > MAX_HISTORY_LINES do
-		table.remove(ChatIM.history[partner], 1)
-	end
+       ChatIM.history[partner] = ChatIM.history[partner] or {}
+       table.insert(ChatIM.history[partner], line)
+       while #ChatIM.history[partner] > ChatIM.maxHistoryLines do
+               table.remove(ChatIM.history[partner], 1)
+       end
 	if self.activeTab ~= partner then
 		tab.unread = true
 		self:UpdateTabLabel(partner)

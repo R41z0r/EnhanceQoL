@@ -71,9 +71,12 @@ local function updateRegistration()
 end
 
 function ChatIM:SetEnabled(val)
-	self.enabled = val and true or false
-	if self.enabled then self:CreateUI() end
-	updateRegistration()
+        self.enabled = val and true or false
+       if self.enabled then
+               self:SetMaxHistoryLines(addon.db and addon.db["chatIMMaxHistory"])
+               self:CreateUI()
+       end
+        updateRegistration()
 end
 SLASH_EQOLIM1 = "/eim"
 SlashCmdList["EQOLIM"] = function()
