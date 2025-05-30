@@ -1,3 +1,4 @@
+-- luacheck: globals CENSORED_MESSAGE_HIDDEN CENSORED_MESSAGE_REPORT
 local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
 if _G[parentAddonName] then
@@ -336,8 +337,31 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 			local _, censorID = string.split(":", linkData)
 			if censorID then
 				_G.C_ChatInfo.UncensorChatLine(censorID)
-				local text = C_ChatInfo.GetChatLineText(lineID)
-				if not text then return end
+				local text = C_ChatInfo.GetChatLineText(censorID)
+				if text then
+					text = ChatIM:FormatURLs(text)
+					local hidden = CENSORED_MESSAGE_HIDDEN:format(sender, censorID)
+					local report = CENSORED_MESSAGE_REPORT:format(censorID)
+					local history = ChatIM.history[sender]
+					local replaced
+					if history then
+						for i, line in ipairs(history) do
+							if line:find(hidden, 1, true) then
+								local escHidden = hidden:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1")
+								local escReport = report:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1")
+								history[i] = line:gsub(escHidden, text, 1):gsub(escReport, "", 1)
+								replaced = true
+								break
+							end
+						end
+					end
+					if replaced and history then
+						frame:Clear()
+						for _, line in ipairs(history) do
+							frame:AddMessage(line)
+						end
+					end
+				end
 			end
 			return
 		end
