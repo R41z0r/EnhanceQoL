@@ -1,14 +1,12 @@
 # Changelog
 
-## [Unreleased]
-### ✨ Changed
-- Instant Messenger now stores Battle.net message history by BattleTag to keep chat logs across sessions.
-
-## [3.17.0] – 2025-05-29
-### ✨ Added
-- **Instant Messenger** – Option to enable  incoming and outgoing whispers to appear in a compact IM window.
-  - Each conversation opens in its own tab, which flashes on new messages.
-  - Use `/eim` to toggle the window; it can fade when losing focus.
+## [3.17.0] – 2025-05-29  
+### ✨ Added  
+- **Instant Messenger** – Option to show incoming **and** outgoing whispers in a compact IM-style window.
+  - Each conversation opens in its own tab, which flashes when a new message arrives.
+  - Toggle the window with `/eim`; it can optionally fade when it loses focus.
+  - Persistent history stores up to **1,000 messages per player**
+    - History can be cleared per player or wiped entirely via the options panel.
 
 ## [3.16.0] – 2025-05-26
 ### ✨ Added

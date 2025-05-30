@@ -406,7 +406,7 @@ function ChatIM:CreateTab(sender, isBN, bnetID, battleTag)
 
 		for _, line in ipairs(ChatIM.history[historyKey]) do
 			if isBN then
-				smf:AddMessage(string.format(line, sender))
+				smf:AddMessage(string.format(line, sender, sender))
 			else
 				smf:AddMessage(line)
 			end
@@ -483,7 +483,12 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	local historyKey = isBN and tab.battleTag or partner
 	local storeLine
 	if isBN then
-		local nameLinkFmt = string.format("|HBNplayer:%%s|h[%s]|h", shortName)
+		local nameLinkFmt
+		if outbound then
+			nameLinkFmt = "|HBNplayer:%s|h[" .. AUCTION_HOUSE_SELLER_YOU .. "]|h"
+		else
+			nameLinkFmt = "|HBNplayer:%s|h[%s]|h"
+		end
 		storeLine = string.format("%s |cff%s%s|r: |cff%s%s|r", prefix, cHex, nameLinkFmt, cHex, text)
 	else
 		storeLine = line
