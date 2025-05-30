@@ -1334,20 +1334,20 @@ local function addUnitFrame(container)
 end
 
 local function addDynamicFlightFrame(container)
-       local data = {
-               {
-                       parent = "",
-                       var = "hideDynamicFlightBar",
-                       text = L["hideDynamicFlightBar"],
-                       type = "CheckBox",
-                       callback = function(self, _, value)
-                               addon.db["hideDynamicFlightBar"] = value
-                               addon.functions.toggleDynamicFlightBar(addon.db["hideDynamicFlightBar"])
-                       end,
-               },
-       }
+	local data = {
+		{
+			parent = "",
+			var = "hideDynamicFlightBar",
+			text = L["hideDynamicFlightBar"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideDynamicFlightBar"] = value
+				addon.functions.toggleDynamicFlightBar(addon.db["hideDynamicFlightBar"])
+			end,
+		},
+	}
 
-       addon.functions.createWrapperData(data, container, L)
+	addon.functions.createWrapperData(data, container, L)
 end
 
 local function addAuctionHouseFrame(container)
@@ -2768,8 +2768,8 @@ local function initUI()
 	addon.functions.InitDBValue("minimapSinkHoleData", {})
 	addon.functions.InitDBValue("hideQuickJoinToast", false)
 	addon.functions.InitDBValue("enableSquareMinimap", false)
-addon.functions.InitDBValue("persistAuctionHouseFilter", false)
-addon.functions.InitDBValue("hideDynamicFlightBar", false)
+	addon.functions.InitDBValue("persistAuctionHouseFilter", false)
+	addon.functions.InitDBValue("hideDynamicFlightBar", false)
 
 	table.insert(addon.variables.unitFrameNames, {
 		name = "MicroMenu",
@@ -2823,31 +2823,28 @@ addon.functions.InitDBValue("hideDynamicFlightBar", false)
 	end
 	addon.functions.toggleMicroMenu(addon.db["hideMicroMenu"])
 
-function addon.functions.toggleQuickJoinToastButton(value)
-if value == false then
-QuickJoinToastButton:Show()
-else
-QuickJoinToastButton:Hide()
-end
-end
-addon.functions.toggleQuickJoinToastButton(addon.db["hideQuickJoinToast"])
+	function addon.functions.toggleQuickJoinToastButton(value)
+		if value == false then
+			QuickJoinToastButton:Show()
+		else
+			QuickJoinToastButton:Hide()
+		end
+	end
+	addon.functions.toggleQuickJoinToastButton(addon.db["hideQuickJoinToast"])
 
-function addon.functions.toggleDynamicFlightBar(value)
-local bar = UIWidgetPowerBarContainerFrame
-if not bar then
-return
-end
-if value then
-if not bar.alphaDriverSet then
-RegisterAttributeDriver(bar, "state-visibility", "[flying]show;hide;")
-bar.alphaDriverSet = true
-end
-else
-UnregisterAttributeDriver(bar, "state-visibility")
-bar.alphaDriverSet = nil
-end
-end
-addon.functions.toggleDynamicFlightBar(addon.db["hideDynamicFlightBar"])
+	function addon.functions.toggleDynamicFlightBar(value)
+		local bar = UIWidgetPowerBarContainerFrame
+		if not bar then return end
+		if value then
+			if not bar.alphaDriverSet then
+				RegisterAttributeDriver(bar, "state-visibility", "[flying]show;hide;")
+				bar.alphaDriverSet = true
+			end
+		else
+			addon.variables.requireReload = true
+		end
+	end
+	if addon.db["hideDynamicFlightBar"] then addon.functions.toggleDynamicFlightBar(addon.db["hideDynamicFlightBar"]) end
 
 	local eventFrame = CreateFrame("Frame")
 	eventFrame:SetScript("OnUpdate", function(self)
@@ -3547,17 +3544,17 @@ local function CreateUI()
 			{
 				value = "ui",
 				text = BUG_CATEGORY5,
-children = {
-{ value = "auctionhouse", text = BUTTON_LAG_AUCTIONHOUSE },
-{ value = "actionbar", text = ACTIONBARS_LABEL },
-{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
-{ value = "minimap", text = MINIMAP_LABEL },
-{ value = "unitframe", text = UNITFRAME_LABEL },
-{ value = "dynamicflight", text = L["DYNAMIC_FLIGHT"] },
-},
-},
-},
-})
+				children = {
+					{ value = "auctionhouse", text = BUTTON_LAG_AUCTIONHOUSE },
+					{ value = "actionbar", text = ACTIONBARS_LABEL },
+					{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
+					{ value = "minimap", text = MINIMAP_LABEL },
+					{ value = "unitframe", text = UNITFRAME_LABEL },
+					{ value = "dynamicflight", text = L["DYNAMIC_FLIGHT"] },
+				},
+			},
+		},
+	})
 	table.insert(addon.treeGroupData, {
 		value = "profiles",
 		text = L["Profiles"],
@@ -3587,12 +3584,12 @@ children = {
 			addAuctionHouseFrame(container)
 		elseif group == "general\001ui\001actionbar" then
 			addActionBarFrame(container)
-elseif group == "general\001ui\001unitframe" then
-addUnitFrame(container)
-elseif group == "general\001ui\001dynamicflight" then
-addDynamicFlightFrame(container)
-elseif group == "general\001ui\001chatframe" then
-addChatFrame(container)
+		elseif group == "general\001ui\001unitframe" then
+			addUnitFrame(container)
+		elseif group == "general\001ui\001dynamicflight" then
+			addDynamicFlightFrame(container)
+		elseif group == "general\001ui\001chatframe" then
+			addChatFrame(container)
 		elseif group == "general\001ui\001minimap" then
 			addMinimapFrame(container)
 		elseif group == "general\001map" then
