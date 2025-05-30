@@ -187,7 +187,7 @@ function ChatIM:CreateUI()
 	frame.frame:HookScript("OnLeave", function()
 		C_Timer.After(5, function() ChatIM:UpdateAlpha() end)
 	end)
-	frame.frame:SetFrameStrata("DIALOG")
+	frame.frame:SetFrameStrata("MEDIUM")
 	frame.frame:Hide()
 
 	local tabGroup = AceGUI:Create("TabGroup")
@@ -501,6 +501,20 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 		end
 	end
 	tab.msg:SetMaxLines(ChatIM.maxHistoryLines)
+
+	if outbound then
+		if isBN then
+			ChatEdit_SetLastToldTarget(partner, "BN_WHISPER")
+		else
+			ChatEdit_SetLastToldTarget(partner, "WHISPER")
+		end
+	else
+		if isBN then
+			ChatEdit_SetLastTellTarget(partner, "BN_WHISPER")
+		else
+			ChatEdit_SetLastTellTarget(partner, "WHISPER")
+		end
+	end
 
 	if self.activeTab ~= partner then
 		tab.unread = true
