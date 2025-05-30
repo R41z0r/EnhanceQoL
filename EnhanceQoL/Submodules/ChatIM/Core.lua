@@ -118,7 +118,6 @@ local function updateRegistration()
 		frame:RegisterEvent("CHAT_MSG_BN_WHISPER")
 		frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 		frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
-		frame:RegisterEvent("CHAT_MSG_BN_WHISPER_INFORM")
 		if addon.db and addon.db["chatIMHideInCombat"] then
 			frame:RegisterEvent("PLAYER_REGEN_DISABLED")
 			frame:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -149,6 +148,19 @@ function ChatIM:SetEnabled(val)
 			hooksecurefunc("ChatFrame_SendTell", function(name)
 				if not ChatIM.enabled then return end
 				if name then ChatIM:StartWhisper(name) end
+			end)
+			hooksecurefunc("ChatFrame_SendBNetTell", function(target)
+				if not ChatIM.enabled then return end
+				local bnetID = nil
+				local plain = BNTokenFindName(target) or target
+				bnetID = BNet_GetBNetIDAccount(plain)
+				target = plain
+				if bnetID then
+					local accountTag
+					local info = C_BattleNet.GetAccountInfoByID(bnetID)
+					if info then accountTag = info.battleTag end
+					if accountTag then ChatIM:StartWhisper(target, bnetID, accountTag) end
+				end
 			end)
 			self.whisperHooked = true
 		end

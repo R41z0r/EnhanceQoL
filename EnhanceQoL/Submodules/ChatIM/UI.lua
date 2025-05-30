@@ -701,9 +701,13 @@ function ChatIM:HideWindow()
 	end
 end
 
-function ChatIM:StartWhisper(target)
+function ChatIM:StartWhisper(target, bnetID, accountTag)
 	if not target then return end
-	self:CreateTab(target)
+	if bnetID then
+		self:CreateTab(target, true, bnetID, accountTag)
+	else
+		self:CreateTab(target)
+	end
 	if self.widget and self.widget.frame and not self.widget.frame:IsShown() then self:ShowWindow() end
 	if not self.tabGroup then return end
 	self.tabGroup:SelectTab(target)

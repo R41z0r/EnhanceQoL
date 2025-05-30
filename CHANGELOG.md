@@ -1,12 +1,12 @@
 # Changelog
 
-## [3.17.0] – 2025-05-29  
+## [3.17.1] – 2025-05-30
 ### 🐛 Fixed
 - Frame Strata of ChatIM was to high
 - Some letter like "g" where slightly overlapped by the editbox
 - /r and Shift+r didn't work with ChatIM enabled
 
-## [3.17.0] – 2025-05-29  
+## [3.17.0] – 2025-05-29
 ### ✨ Added  
 - **Instant Messenger** – Option to show incoming **and** outgoing whispers in a compact IM-style window.
   - Each conversation opens in its own tab, which flashes when a new message arrives.
