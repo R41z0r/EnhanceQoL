@@ -147,7 +147,13 @@ function ChatIM:SetEnabled(val)
 		if not self.whisperHooked then
 			hooksecurefunc("ChatFrame_SendTell", function(name)
 				if not ChatIM.enabled then return end
-				if name then ChatIM:StartWhisper(name) end
+				if name then
+					if nil == name:match("-") then
+						-- no minus means same realm so get my realm and add it
+						name = name .. "-" .. (GetRealmName()):gsub("%s", "")
+					end
+					ChatIM:StartWhisper(name)
+				end
 			end)
 			hooksecurefunc("ChatFrame_SendBNetTell", function(target)
 				if not ChatIM.enabled then return end

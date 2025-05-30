@@ -2,9 +2,10 @@
 
 ## [3.17.1] – 2025-05-30
 ### 🐛 Fixed
-- Frame Strata of ChatIM was to high
-- Some letter like "g" where slightly overlapped by the editbox
-- /r and Shift+r didn't work with ChatIM enabled
+- ChatIM frame strata was too high.
+- Descenders (e.g. “g”) were slightly clipped by the edit box.
+- `/r` and **Shift + R** no longer broke when ChatIM was enabled.
+- Inspect now shows the correct item level for scaling items (heirlooms, artifacts).
 
 ## [3.17.0] – 2025-05-29
 ### ✨ Added  

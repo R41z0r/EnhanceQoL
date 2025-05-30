@@ -592,7 +592,7 @@ addon.variables.itemSlotSide = { -- 0 = Text to right side, 1 = Text to left sid
 	[16] = 1,
 	[17] = 2,
 }
-
+addon.variables.itemLevelPattern = ITEM_LEVEL:gsub("%%d", "(%%d+)")
 addon.variables.allowedSockets = {
 	["EMPTY_SOCKET_BLUE"] = true,
 	["EMPTY_SOCKET_COGWHEEL"] = true,

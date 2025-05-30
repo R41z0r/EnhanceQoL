@@ -613,6 +613,15 @@ local function onInspect(arg1)
 
 							local color = eItem:GetItemQualityColor()
 							local itemLevelText = eItem:GetCurrentItemLevel()
+
+							-- Getting real ilvl from tooltip - Heirlooms sometimes are wrong so use tooltip information instead
+							for i, v in pairs(C_TooltipInfo.GetHyperlink(itemLink).lines) do
+								if v.type == 41 then
+									local num = v.leftText:match(addon.variables.itemLevelPattern)
+									if num then itemLevelText = tonumber(num) end
+								end
+							end
+
 							ilvlSum = ilvlSum + itemLevelText
 							element.ilvl:SetFormattedText(itemLevelText)
 							element.ilvl:SetTextColor(color.r, color.g, color.b, 1)
