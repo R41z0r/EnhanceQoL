@@ -262,7 +262,7 @@ function ChatIM:SelectTab(widget, value)
 	tab.msg:ClearAllPoints()
 	tab.msg:SetPoint("TOPLEFT", group.frame, "TOPLEFT", 0, -2)
 	tab.msg:SetPoint("TOPRIGHT", group.frame, "TOPRIGHT", 0, -2)
-	tab.msg:SetPoint("BOTTOMLEFT", group.frame, "BOTTOMLEFT", 0, 24)
+	tab.msg:SetPoint("BOTTOMLEFT", group.frame, "BOTTOMLEFT", 0, 28)
 
 	if tab.edit then
 		tab.edit:SetParent(group.frame)
