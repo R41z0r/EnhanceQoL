@@ -13,6 +13,8 @@ local function colorWrap(hex, text) return "|cff" .. hex .. text .. "|r" end
 
 addon.ChatIM = addon.ChatIM or {}
 
+-- luacheck: globals CENSORED_MESSAGE_HIDDEN CENSORED_MESSAGE_REPORT
+
 local ChatIM = addon.ChatIM
 ChatIM.maxHistoryLines = ChatIM.maxHistoryLines or (addon.db and addon.db["chatIMMaxHistory"]) or 250
 
@@ -332,15 +334,43 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 			return
 		end
 
-		if linkType == "censoredmessage" then
-			local _, censorID = string.split(":", linkData)
-			if censorID then
-				_G.C_ChatInfo.UncensorChatLine(censorID)
-				local text = C_ChatInfo.GetChatLineText(lineID)
-				if not text then return end
-			end
-			return
-		end
+               if linkType == "censoredmessage" then
+                        local _, censorID = string.split(":", linkData)
+                        if censorID then
+                                _G.C_ChatInfo.UncensorChatLine(censorID)
+                                local text = C_ChatInfo.GetChatLineText(censorID)
+                                if text and not text:find(("|Hcensoredmessage:%s|h"):format(censorID), 1, true) then
+                                        text = ChatIM:FormatURLs(text)
+                                        local reportLink = CENSORED_MESSAGE_REPORT:format(censorID)
+                                        local replacement = text .. reportLink
+                                        local placeholder = CENSORED_MESSAGE_HIDDEN:format(sender, censorID) .. reportLink
+                                        local escaped = placeholder:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1")
+
+                                        local history = ChatIM.history[sender]
+                                        local replaced
+                                        if history then
+                                                for i, line in ipairs(history) do
+                                                        if line:find(("|Hcensoredmessage:%s|h"):format(censorID), 1, true) then
+                                                                local newLine, n = line:gsub(escaped, replacement)
+                                                                if n > 0 then
+                                                                        history[i] = newLine
+                                                                        replaced = true
+                                                                        break
+                                                                end
+                                                        end
+                                                end
+                                        end
+
+                                        if replaced and history then
+                                                frame:Clear()
+                                                for _, l in ipairs(history) do
+                                                        frame:AddMessage(l)
+                                                end
+                                        end
+                                end
+                        end
+                        return
+                end
 
 		-- Alles andere an Blizzard weiterreichen
 		ChatFrame_OnHyperlinkShow(frame, linkData, text, button)
