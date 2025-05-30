@@ -1333,6 +1333,23 @@ local function addUnitFrame(container)
 	end
 end
 
+local function addDynamicFlightFrame(container)
+	local data = {
+		{
+			parent = "",
+			var = "hideDynamicFlightBar",
+			text = L["hideDynamicFlightBar"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideDynamicFlightBar"] = value
+				addon.functions.toggleDynamicFlightBar(addon.db["hideDynamicFlightBar"])
+			end,
+		},
+	}
+
+	addon.functions.createWrapperData(data, container, L)
+end
+
 local function addAuctionHouseFrame(container)
 	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
 	scroll:SetFullWidth(true)
@@ -2752,6 +2769,7 @@ local function initUI()
 	addon.functions.InitDBValue("hideQuickJoinToast", false)
 	addon.functions.InitDBValue("enableSquareMinimap", false)
 	addon.functions.InitDBValue("persistAuctionHouseFilter", false)
+	addon.functions.InitDBValue("hideDynamicFlightBar", false)
 
 	table.insert(addon.variables.unitFrameNames, {
 		name = "MicroMenu",
@@ -2813,6 +2831,20 @@ local function initUI()
 		end
 	end
 	addon.functions.toggleQuickJoinToastButton(addon.db["hideQuickJoinToast"])
+
+	function addon.functions.toggleDynamicFlightBar(value)
+		local bar = UIWidgetPowerBarContainerFrame
+		if not bar then return end
+		if value then
+			if not bar.alphaDriverSet then
+				RegisterAttributeDriver(bar, "state-visibility", "[flying]show;hide;")
+				bar.alphaDriverSet = true
+			end
+		else
+			addon.variables.requireReload = true
+		end
+	end
+	if addon.db["hideDynamicFlightBar"] then addon.functions.toggleDynamicFlightBar(addon.db["hideDynamicFlightBar"]) end
 
 	local eventFrame = CreateFrame("Frame")
 	eventFrame:SetScript("OnUpdate", function(self)
@@ -3518,6 +3550,7 @@ local function CreateUI()
 					{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
 					{ value = "minimap", text = MINIMAP_LABEL },
 					{ value = "unitframe", text = UNITFRAME_LABEL },
+					{ value = "dynamicflight", text = L["DYNAMIC_FLIGHT"] },
 				},
 			},
 		},
@@ -3553,6 +3586,8 @@ local function CreateUI()
 			addActionBarFrame(container)
 		elseif group == "general\001ui\001unitframe" then
 			addUnitFrame(container)
+		elseif group == "general\001ui\001dynamicflight" then
+			addDynamicFlightFrame(container)
 		elseif group == "general\001ui\001chatframe" then
 			addChatFrame(container)
 		elseif group == "general\001ui\001minimap" then
