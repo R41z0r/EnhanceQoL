@@ -19784,6 +19784,8 @@ globals = {
 	"ZOOM_OUT_BUTTON_TEXT",
 	"_RECORDING_WARNING_CORRUPTED",
 	"AUCTION_HOUSE_SELLER_YOU",
-	"COPY_CHARACTER_NAME",
-	"ChatFrame_SendTell",
+        "COPY_CHARACTER_NAME",
+        "ChatFrame_SendTell",
+        "ChatEdit_SetLastTellTarget",
+        "ChatEdit_SetLastToldTarget",
 }
