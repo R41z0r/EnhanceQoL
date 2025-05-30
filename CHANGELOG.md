@@ -1,5 +1,9 @@
 # Changelog
 
+## [Unreleased]
+### ✨ Changed
+- Instant Messenger now stores Battle.net message history by BattleTag to keep chat logs across sessions.
+
 ## [3.17.0] – 2025-05-29
 ### ✨ Added
 - **Instant Messenger** – Option to enable  incoming and outgoing whispers to appear in a compact IM window.

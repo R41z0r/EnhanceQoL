@@ -279,11 +279,16 @@ function ChatIM:SelectTab(widget, value)
 	self:UpdateTabLabel(value)
 end
 
-function ChatIM:CreateTab(sender, isBN, bnetID)
+function ChatIM:CreateTab(sender, isBN, bnetID, battleTag)
 	self:CreateUI()
 	if self.tabs[sender] then return end
 
 	local displayName = Ambiguate(sender, "short")
+
+	if isBN and not battleTag and bnetID then
+		local info = C_BattleNet.GetAccountInfoByID(bnetID)
+		if info then battleTag = info.battleTag end
+	end
 
 	local smf = CreateFrame("ScrollingMessageFrame", nil, ChatIM.storage)
 	-- we'll anchor later when the tab becomes active
@@ -342,7 +347,9 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 					text = ChatIM:FormatURLs(text)
 					local hidden = CENSORED_MESSAGE_HIDDEN:format(sender, censorID)
 					local report = CENSORED_MESSAGE_REPORT:format(censorID)
-					local history = ChatIM.history[sender]
+					local tabData = ChatIM.tabs[sender]
+					local key = tabData and tabData.isBN and tabData.battleTag or sender
+					local history = key and ChatIM.history[key]
 					local replaced
 					if history then
 						for i, line in ipairs(history) do
@@ -358,7 +365,11 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 					if replaced and history then
 						frame:Clear()
 						for _, line in ipairs(history) do
-							frame:AddMessage(line)
+							if tabData and tabData.isBN then
+								frame:AddMessage(string.format(line, sender))
+							else
+								frame:AddMessage(line)
+							end
 						end
 					end
 				end
@@ -379,19 +390,26 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 		msg = smf,
 		isBN = isBN,
 		bnetID = bnetID,
+		battleTag = battleTag,
 		displayName = displayName,
 		unread = false,
 	}
 	self.tabs[sender].target = sender
-	if ChatIM.history[sender] then
+
+	local historyKey = isBN and battleTag or sender
+	if historyKey and ChatIM.history[historyKey] then
 		-- purge excessive saved lines on load
-		while #ChatIM.history[sender] > ChatIM.maxHistoryLines do
-			table.remove(ChatIM.history[sender], 1)
+		while #ChatIM.history[historyKey] > ChatIM.maxHistoryLines do
+			table.remove(ChatIM.history[historyKey], 1)
 		end
 		smf:SetMaxLines(ChatIM.maxHistoryLines)
 
-		for _, line in ipairs(ChatIM.history[sender]) do
-			smf:AddMessage(line)
+		for _, line in ipairs(ChatIM.history[historyKey]) do
+			if isBN then
+				smf:AddMessage(string.format(line, sender))
+			else
+				smf:AddMessage(line)
+			end
 		end
 	end
 	-- will be parented/anchored once the tab becomes active
@@ -428,7 +446,12 @@ function ChatIM:CreateTab(sender, isBN, bnetID)
 end
 
 function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
-	self:CreateTab(partner, isBN, bnetID)
+	local accountTag
+	if isBN and bnetID then
+		local info = C_BattleNet.GetAccountInfoByID(bnetID)
+		if info then accountTag = info.battleTag end
+	end
+	self:CreateTab(partner, isBN, bnetID, accountTag)
 	-- make sure the main window is visible
 	if self.widget and self.widget.frame and not self.widget.frame:IsShown() then
 		if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
@@ -457,10 +480,20 @@ function ChatIM:AddMessage(partner, text, outbound, isBN, bnetID)
 	-- plain line (no |cff…) so embedded hyperlinks keep native colours
 	local line = string.format("%s |cff%s%s|r: |cff%s%s|r", prefix, cHex, nameLink, cHex, text)
 	tab.msg:AddMessage(line)
-	ChatIM.history[partner] = ChatIM.history[partner] or {}
-	table.insert(ChatIM.history[partner], line)
-	while #ChatIM.history[partner] > ChatIM.maxHistoryLines do
-		table.remove(ChatIM.history[partner], 1)
+	local historyKey = isBN and tab.battleTag or partner
+	local storeLine
+	if isBN then
+		local nameLinkFmt = string.format("|HBNplayer:%%s|h[%s]|h", shortName)
+		storeLine = string.format("%s |cff%s%s|r: |cff%s%s|r", prefix, cHex, nameLinkFmt, cHex, text)
+	else
+		storeLine = line
+	end
+	if historyKey then
+		ChatIM.history[historyKey] = ChatIM.history[historyKey] or {}
+		table.insert(ChatIM.history[historyKey], storeLine)
+		while #ChatIM.history[historyKey] > ChatIM.maxHistoryLines do
+			table.remove(ChatIM.history[historyKey], 1)
+		end
 	end
 	tab.msg:SetMaxLines(ChatIM.maxHistoryLines)
 
