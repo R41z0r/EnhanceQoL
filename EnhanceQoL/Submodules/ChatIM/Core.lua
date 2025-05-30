@@ -9,6 +9,7 @@ end
 local ChatIM = addon.ChatIM or {}
 addon.ChatIM = ChatIM
 ChatIM.enabled = false
+ChatIM.whisperHooked = ChatIM.whisperHooked or false
 ChatIM.soundPath = "Interface\\AddOns\\" .. parentAddonName .. "\\Sounds\\ChatIM\\"
 ChatIM.availableSounds = {
 	Bell = ChatIM.soundPath .. "Bell.ogg",
@@ -144,6 +145,13 @@ function ChatIM:SetEnabled(val)
 	if self.enabled then
 		self:SetMaxHistoryLines(addon.db and addon.db["chatIMMaxHistory"])
 		self:CreateUI()
+		if not self.whisperHooked then
+			hooksecurefunc("ChatFrame_SendTell", function(name)
+				if not ChatIM.enabled then return end
+				if name then ChatIM:StartWhisper(name) end
+			end)
+			self.whisperHooked = true
+		end
 	end
 	updateRegistration()
 end

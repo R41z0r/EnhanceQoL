@@ -700,3 +700,13 @@ function ChatIM:HideWindow()
 		self.widget.frame:Hide()
 	end
 end
+
+function ChatIM:StartWhisper(target)
+	if not target then return end
+	self:CreateTab(target)
+	if self.widget and self.widget.frame and not self.widget.frame:IsShown() then self:ShowWindow() end
+	if not self.tabGroup then return end
+	self.tabGroup:SelectTab(target)
+	local tab = self.tabs[target]
+	if tab and tab.edit then tab.edit:SetFocus() end
+end
