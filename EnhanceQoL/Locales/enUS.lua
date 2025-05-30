@@ -182,7 +182,7 @@ L["chatIMHideInCombat"] = "Hide Instant Messenger in combat"
 L["chatIMHideInCombatDesc"] = "Suppress the IM window and sounds while you are in combat"
 L["chatIMUseAnimation"] = "Animate window"
 L["chatIMUseAnimationDesc"] = "Slide the window in and out when showing or hiding"
-L["communityWarningLink"] = "This link must be opened in Blizzard’s default chat. It has been added to the chat frame."
+L["communityWarningLink"] = "This link must be opened in Blizzard’s default chat. It has been added to your chat frame."
 
 L["enableLootspecQuickswitch"] = "Enable quick switching for loot and active specializations on the Minimap"
 L["enableLootspecQuickswitchDesc"] = "Left-click a specialization to set your loot spec, or right-click to change your active specialization."
