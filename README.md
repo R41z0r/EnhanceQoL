@@ -86,3 +86,4 @@ Fully configurable per context (combat, dungeon, friendly/enemy): items, item co
 
 * **Instant Messenger** – mini whisper window, toggle with `/eim`.
 * **Gem-Socket Helper** – shows socketable gems below the socket UI.
+For a full list of configuration checkboxes see [docs/OptionsReference.md](docs/OptionsReference.md).
