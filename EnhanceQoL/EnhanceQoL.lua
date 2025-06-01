@@ -3763,9 +3763,8 @@ local function setAllHooks()
 
 				if applicantInfo2 == nil then return true end
 
-				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore1 = C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1)
-
-				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore2 = C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1)
+				local _, _, localizedClass1, _, itemLevel1, _, tank1, healer1, damage1, assignedRole1, relationship1, dungeonScore1 = C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1)
+				local _, _, localizedClass2, _, itemLevel2, _, tank2, healer2, damage2, assignedRole2, relationship2, dungeonScore2 = C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1)
 
 				return dungeonScore1 > dungeonScore2
 			end
