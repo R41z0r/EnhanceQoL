@@ -147,7 +147,7 @@ function addon.MythicPlus.functions.addRCButton()
 			end)
 		end
 	end)
-	rcButton:SetFrameStrata("DIALOG")
+	rcButton:SetFrameStrata("HIGH")
 
 	local icon = rcButton:CreateTexture(nil, "ARTWORK", nil, 0)
 	icon:SetPoint("CENTER", rcButton, "CENTER")
@@ -282,7 +282,7 @@ function addon.MythicPlus.functions.addPullButton()
 		local duration = (button == "RightButton") and addon.db["pullTimerShortTime"] or addon.db["pullTimerLongTime"]
 		startPull(self, duration)
 	end)
-	rcButton:SetFrameStrata("DIALOG")
+	rcButton:SetFrameStrata("HIGH")
 
 	local icon = rcButton:CreateTexture(nil, "ARTWORK", nil, 0)
 	icon:SetPoint("CENTER", rcButton, "CENTER")

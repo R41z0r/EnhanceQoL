@@ -9,6 +9,8 @@
   - **Skip Mythic‑track items** – new checkbox that omits Mythic‑track gear when using *Epic‑track vendoring*.
 
 ### 🐛 Fixed
+- **Mythic Plus**
+  - Fixed frame strata of Readycheck and Pulltimer to not overlap other frames
 - **Vendor**
   - Upgrade-track items were no longer ignored after patch 11.1.5. This has been corrected.
 
