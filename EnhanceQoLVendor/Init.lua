@@ -45,10 +45,17 @@ for key, value in pairs(addon.Vendor.variables.tabNames) do
 	addon.functions.InitDBValue("vendor" .. value .. "IgnoreBoE", true)
 	addon.functions.InitDBValue("vendor" .. value .. "AbsolutIlvl", false)
 
-	if key ~= 1 then addon.functions.InitDBValue("vendor" .. value .. "IgnoreUpgradable", false) end
+	if key ~= 1 then
+		addon.functions.InitDBValue("vendor" .. value .. "IgnoreUpgradable", false)
+		if key == 4 then
+			addon.functions.InitDBValue("vendor" .. value .. "IgnoreHeroicTrack", false)
+			addon.functions.InitDBValue("vendor" .. value .. "IgnoreMythTrack", false)
+		end
+	end
 
 	addon.Vendor.variables.itemQualityFilter[key] = addon.db["vendor" .. value .. "Enable"]
 	addon.Vendor.variables.itemBindTypeQualityFilter[key] = {
+
 		[0] = true, -- None
 		[1] = true, -- Bind on Pickup
 		[2] = not addon.db["vendor" .. value .. "IgnoreBoE"], -- Bind on Equip

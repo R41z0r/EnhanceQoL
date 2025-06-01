@@ -4606,6 +4606,7 @@ globals = {
 	"tContains",
 	"tDeleteItem",
 	"tostringall",
+	"UIWidgetPowerBarContainerFrame",
 
 	-- Constants.lua
 	"EXPANSION_LEVEL_CLASSIC",
@@ -14349,7 +14350,7 @@ globals = {
 	"PAIN_COST_PER_TIME",
 	"PAIN_COST_PER_TIME_NO_BASE",
 	"PALADIN_HOLY_CORE_ABILITY_1",
-	"PALADIN_HOLY_CORE_ABILITY_2",
+	DYNAMIC_FLIGHT("PALADIN_HOLY_CORE_ABILITY_2"),
 	"PALADIN_HOLY_CORE_ABILITY_3",
 	"PALADIN_HOLY_CORE_ABILITY_4",
 	"PALADIN_HOLY_CORE_ABILITY_5",
@@ -15822,6 +15823,7 @@ globals = {
 	"SINGLE_DAMAGE_TEMPLATE_WITH_SCHOOL",
 	"SINGLE_PAGE_RESULTS_TEMPLATE",
 	"SKILL",
+	"DYNAMIC_FLIGHT",
 	"SKILLS",
 	"SKILLS_ABBR",
 	"SKILLUPS",
@@ -19785,8 +19787,8 @@ globals = {
 	"ZOOM_OUT_BUTTON_TEXT",
 	"_RECORDING_WARNING_CORRUPTED",
 	"AUCTION_HOUSE_SELLER_YOU",
-        "COPY_CHARACTER_NAME",
-        "ChatFrame_SendTell",
-        "ChatEdit_SetLastTellTarget",
-        "ChatEdit_SetLastToldTarget",
+	"COPY_CHARACTER_NAME",
+	"ChatFrame_SendTell",
+	"ChatEdit_SetLastTellTarget",
+	"ChatEdit_SetLastToldTarget",
 }

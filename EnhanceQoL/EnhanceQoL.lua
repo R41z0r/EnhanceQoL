@@ -1338,7 +1338,7 @@ local function addDynamicFlightFrame(container)
 		{
 			parent = "",
 			var = "hideDynamicFlightBar",
-			text = L["hideDynamicFlightBar"],
+			text = L["hideDynamicFlightBar"]:format(DYNAMIC_FLIGHT),
 			type = "CheckBox",
 			callback = function(self, _, value)
 				addon.db["hideDynamicFlightBar"] = value
@@ -3550,7 +3550,7 @@ local function CreateUI()
 					{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
 					{ value = "minimap", text = MINIMAP_LABEL },
 					{ value = "unitframe", text = UNITFRAME_LABEL },
-					{ value = "dynamicflight", text = L["DYNAMIC_FLIGHT"] },
+					{ value = "dynamicflight", text = DYNAMIC_FLIGHT },
 				},
 			},
 		},

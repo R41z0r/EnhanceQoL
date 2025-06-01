@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.18.0] – 2025-06-01
+### ✨ Added
+- **Skyriding**
+  - new checkbox that hides the Vigor-bar while on the ground
+- **Vendor**
+  - **Skip Heroic‑track items** – new checkbox that omits Heroic‑track gear when using *Epic‑track vendoring*.
+  - **Skip Mythic‑track items** – new checkbox that omits Mythic‑track gear when using *Epic‑track vendoring*.
+
+### 🐛 Fixed
+- **Vendor**
+  - Upgrade-track items were no longer ignored after patch 11.1.5. This has been corrected.
+
 ## [3.17.1] – 2025-05-30
 ### 🐛 Fixed
 - ChatIM frame strata was too high.

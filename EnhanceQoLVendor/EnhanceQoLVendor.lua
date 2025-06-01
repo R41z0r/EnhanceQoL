@@ -69,6 +69,7 @@ local function checkItem()
 
 								local bType = nil
 								local canUpgrade = false
+								local isIgnoredUpgradeTrack = false
 								local data = C_TooltipInfo.GetBagItem(bag, slot)
 								if nil ~= data then
 									for i, v in pairs(data.lines) do
@@ -81,12 +82,30 @@ local function checkItem()
 												bType = 7
 											end
 											break
-										elseif v.type == 0 and addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "IgnoreUpgradable"] then
-											if strmatch(v.leftText, addon.Vendor.variables.upgradePattern) then
-												local color = v.leftColor
-												if color and color.r and color.g and color.b then
-													if not (color.r > 0.5 and color.g > 0.5 and color.b > 0.5) then -- gray upgrade text = old item upgradable --> not = ignore gray
-														canUpgrade = true
+										elseif v.type == 42 then
+											local text = v.rightText or v.leftText
+											if text then
+												if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "IgnoreUpgradable"] then
+													local color = v.leftColor
+													if color and color.r and color.g and color.b then
+														if not (color.r > 0.5 and color.g > 0.5 and color.b > 0.5) then -- gray upgrade text = old item upgradable --> not = ignore gray
+															canUpgrade = true
+														end
+													end
+												end
+												local tier = text:gsub(".+:%s?", ""):gsub("%s?%d/%d", "")
+												if tier then
+													if
+														(
+															addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "IgnoreMythTrack"]
+															and string.lower(L["upgradeLevelMythic"]) == string.lower(tier)
+														)
+														or (
+															addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "IgnoreHeroicTrack"]
+															and string.lower(L["upgradeLevelHero"]) == string.lower(tier)
+														)
+													then
+														isIgnoredUpgradeTrack = true
 													end
 												end
 											end
@@ -100,7 +119,7 @@ local function checkItem()
 									and (not addon.Vendor.variables.itemSubTypeFilter[classID] or (addon.Vendor.variables.itemSubTypeFilter[classID] and addon.Vendor.variables.itemSubTypeFilter[classID][subclassID]))
 									and addon.Vendor.variables.itemBindTypeQualityFilter[containerInfo.quality][bindType]
 								then -- Check if classID is allowed for AutoSell
-									if not canUpgrade then
+									if not canUpgrade and not isIgnoredUpgradeTrack then
 										local rIlvl = (avgItemLevelEquipped - addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"])
 										if addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "AbsolutIlvl"] then
 											rIlvl = addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "MinIlvlDif"]
@@ -177,17 +196,25 @@ frameLoad:SetScript("OnEvent", eventHandler)
 
 local function addVendorFrame(container, type)
 	local text = {}
+	local uText = {} -- Text for upgrade track
 	local value = addon.Vendor.variables.tabNames[type]
 	local labelHeadlineExplain
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 	container:AddChild(wrapper)
 
+	local iqColor = ITEM_QUALITY_COLORS[type].hex .. _G["ITEM_QUALITY" .. type .. "_DESC"] .. "|r"
+
 	local function updateLegend(sValue, sValue2)
 		if not addon.aceFrame:IsShown() then return end
 		local text = {}
+		local uText = {}
 		if addon.db["vendor" .. sValue .. "IgnoreWarbound"] then table.insert(text, L["vendorIgnoreWarbound"]) end
 		if addon.db["vendor" .. sValue .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
 		if addon.db["vendor" .. sValue .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
+
+		if addon.db["vendor" .. sValue .. "IgnoreHeroicTrack"] then table.insert(uText, L["upgradeLevelHero"]) end
+		if addon.db["vendor" .. sValue .. "IgnoreMythTrack"] then table.insert(uText, L["upgradeLevelMythic"]) end
+		if #uText > 0 then table.insert(text, L["vendorIgnoreTrackItems"]:format(table.concat(uText, "/"))) end
 
 		local lIlvl
 		if addon.db["vendor" .. value .. "AbsolutIlvl"] then
@@ -196,27 +223,23 @@ local function addVendorFrame(container, type)
 			lIlvl = addon.Vendor.variables.avgItemLevelEquipped - sValue2
 		end
 
-		labelHeadlineExplain:SetText("|cffffd700" .. string.format(L["labelExplainedline"], lIlvl, table.concat(text, " " .. L["andWord"] .. " ")) .. "|r")
+		labelHeadlineExplain:SetText("|cffffd700" .. L["labelExplainedline"]:format(iqColor, lIlvl, table.concat(text, " " .. L["andWord"] .. " ")) .. "|r")
 		wrapper:DoLayout()
 	end
 
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
-	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["labelItemQualityline"]:format(ITEM_QUALITY_COLORS[type].hex .. _G["ITEM_QUALITY" .. type .. "_DESC"] .. "|r"), nil, nil, 14)
+	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["labelItemQualityline"]:format(iqColor), nil, nil, 14)
 	groupCore:AddChild(labelHeadline)
 	labelHeadline:SetFullWidth(true)
 
-	local vendorEnable = addon.functions.createCheckboxAce(
-		L["vendorEnable"]:format(ITEM_QUALITY_COLORS[type].hex .. _G["ITEM_QUALITY" .. type .. "_DESC"] .. "|r"),
-		addon.db["vendor" .. value .. "Enable"],
-		function(self, _, checked)
-			addon.db["vendor" .. value .. "Enable"] = checked
-			addon.Vendor.variables.itemQualityFilter[type] = checked
+	local vendorEnable = addon.functions.createCheckboxAce(L["vendorEnable"]:format(iqColor), addon.db["vendor" .. value .. "Enable"], function(self, _, checked)
+		addon.db["vendor" .. value .. "Enable"] = checked
+		addon.Vendor.variables.itemQualityFilter[type] = checked
 
-			container:ReleaseChildren()
-			addVendorFrame(container, type)
-		end
-	)
+		container:ReleaseChildren()
+		addVendorFrame(container, type)
+	end)
 	groupCore:AddChild(vendorEnable)
 
 	if addon.Vendor.variables.itemQualityFilter[type] then
@@ -231,7 +254,13 @@ local function addVendorFrame(container, type)
 			{ text = L["vendorIgnoreBoE"], var = "vendor" .. value .. "IgnoreBoE", filter = { 2 } },
 			{ text = L["vendorIgnoreWarbound"], var = "vendor" .. value .. "IgnoreWarbound", filter = { 7, 8, 9 } },
 		}
-		if type ~= 1 then table.insert(data, { text = L["vendorIgnoreUpgradable"], var = "vendor" .. value .. "IgnoreUpgradable" }) end
+		if type ~= 1 then
+			table.insert(data, { text = L["vendorIgnoreUpgradable"], var = "vendor" .. value .. "IgnoreUpgradable" })
+			if type == 4 then
+				table.insert(data, { text = L["vendorIgnoreHeroicTrack"], var = "vendor" .. value .. "IgnoreHeroicTrack" })
+				table.insert(data, { text = L["vendorIgnoreMythTrack"], var = "vendor" .. value .. "IgnoreMythTrack" })
+			end
+		end
 
 		table.sort(data, function(a, b) return a.text < b.text end)
 
@@ -269,16 +298,15 @@ local function addVendorFrame(container, type)
 		if addon.db["vendor" .. value .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
 		if addon.db["vendor" .. value .. "IgnoreUpgradable"] then table.insert(text, L["vendorIgnoreUpgradable"]) end
 
+		if addon.db["vendor" .. value .. "IgnoreHeroicTrack"] then table.insert(uText, L["upgradeLevelHero"]) end
+		if addon.db["vendor" .. value .. "IgnoreMythTrack"] then table.insert(uText, L["upgradeLevelMythic"]) end
+		if #uText > 0 then table.insert(text, L["vendorIgnoreTrackItems"]:format(table.concat(uText, "/"))) end
+
 		local groupInfo = addon.functions.createContainer("InlineGroup", "List")
 		groupInfo:SetTitle(INFO)
 		wrapper:AddChild(groupInfo)
 
-		labelHeadlineExplain = addon.functions.createLabelAce(
-			"|cffffd700" .. L["labelExplainedline"]:format(ITEM_QUALITY_COLORS[type].hex .. _G["ITEM_QUALITY" .. type .. "_DESC"] .. "|r", lIlvl, table.concat(text, " and ") .. "|r"),
-			nil,
-			nil,
-			14
-		)
+		labelHeadlineExplain = addon.functions.createLabelAce("|cffffd700" .. L["labelExplainedline"]:format(iqColor, lIlvl, table.concat(text, " and ") .. "|r"), nil, nil, 14)
 		groupInfo:AddChild(labelHeadlineExplain)
 		groupInfo:SetFullWidth(true)
 		labelHeadlineExplain:SetFullWidth(true)

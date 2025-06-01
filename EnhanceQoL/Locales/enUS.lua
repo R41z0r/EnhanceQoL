@@ -205,5 +205,4 @@ L["wayMapUnknown"] = "Map unknown – try again outdoors."
 L["persistAuctionHouseFilter"] = "Remember Auction House filters for this session"
 
 L["Excluded NPCs"] = "Excluded NPCs"
-L["DYNAMIC_FLIGHT"] = "Dynamic Flight"
-L["hideDynamicFlightBar"] = "Hide Dynamic Flight power bar while on the ground"
+L["hideDynamicFlightBar"] = "Hide %s Vigor bar while on the ground"
