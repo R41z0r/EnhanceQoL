@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.18.1] – 2025-06-02
+### ✨ Added
+- **Alt Item Tracker**
+  - Central item database caches metadata for all tracked items.
+  - Search window lists items per character via `/eqolitems` with item names and counts.
+
 ## [3.18.0] – 2025-06-01
 ### ✨ Added
 - **Skyriding**

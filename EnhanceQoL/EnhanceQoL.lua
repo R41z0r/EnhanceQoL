@@ -1750,21 +1750,46 @@ local function addBagFrame(container)
 				end
 			end,
 		},
-		{
-			parent = BAGSLOT,
-			var = "enableMoneyTracker",
-			text = L["enableMoneyTracker"],
-			desc = L["enableMoneyTrackerDesc"],
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["enableMoneyTracker"] = value
-				container:ReleaseChildren()
-				addBagFrame(container)
-			end,
-		},
-		{
-			parent = BAGSLOT,
-			var = "showIlvlOnBankFrame",
+                {
+                        parent = BAGSLOT,
+                        var = "enableMoneyTracker",
+                        text = L["enableMoneyTracker"],
+                        desc = L["enableMoneyTrackerDesc"],
+                        type = "CheckBox",
+                        callback = function(self, _, value)
+                                addon.db["enableMoneyTracker"] = value
+                                container:ReleaseChildren()
+                                addBagFrame(container)
+                        end,
+                },
+                {
+                        parent = BAGSLOT,
+                        var = "enableAltItemTracker",
+                        text = L["enableAltItemTracker"],
+                        desc = L["enableAltItemTrackerDesc"],
+                        type = "CheckBox",
+                        callback = function(self, _, value)
+                                addon.db["enableAltItemTracker"] = value
+                        end,
+                },
+                {
+                        parent = BAGSLOT,
+                        var = "showAltItemCountTooltip",
+                        text = L["TooltipShowAltItemCount"],
+                        type = "CheckBox",
+                        callback = function(self, _, value)
+                                addon.db["showAltItemCountTooltip"] = value
+                        end,
+                },
+                {
+                        parent = BAGSLOT,
+                        type = "Button",
+                        text = L["AltItemSearch"],
+                        callback = function() if addon.AltItemCache then addon.AltItemCache:ToggleWindow() end end,
+                },
+                {
+                        parent = BAGSLOT,
+                        var = "showIlvlOnBankFrame",
 			text = L["showIlvlOnBankFrame"],
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -2667,10 +2692,12 @@ local function initUnitFrame()
 end
 
 local function initBagsFrame()
-	addon.functions.InitDBValue("moneyTracker", {})
-	addon.functions.InitDBValue("enableMoneyTracker", false)
-	addon.functions.InitDBValue("showOnlyGoldOnMoney", false)
-	if addon.db["moneyTracker"][UnitGUID("player")] == nil or type(addon.db["moneyTracker"][UnitGUID("player")]) ~= "table" then addon.db["moneyTracker"][UnitGUID("player")] = {} end
+        addon.functions.InitDBValue("moneyTracker", {})
+        addon.functions.InitDBValue("enableMoneyTracker", false)
+        addon.functions.InitDBValue("showOnlyGoldOnMoney", false)
+        addon.functions.InitDBValue("enableAltItemTracker", false)
+        addon.functions.InitDBValue("showAltItemCountTooltip", false)
+        if addon.db["moneyTracker"][UnitGUID("player")] == nil or type(addon.db["moneyTracker"][UnitGUID("player")]) ~= "table" then addon.db["moneyTracker"][UnitGUID("player")] = {} end
 	local moneyFrame = ContainerFrameCombinedBags.MoneyFrame
 	local otherMoney = {}
 

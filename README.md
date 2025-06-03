@@ -32,7 +32,7 @@ English • German • French • Spanish • Italian • Russian • Korean •
 *   Use `/way` to drop a map pin from the Bag Filter search.
 *   Hideable Bag Bar (mouse-over).
 *   Money tracker – total gold for all characters in one tooltip.
-*   Alt-inventory cache – counts how many of each item your alts own.
+*   Alt-inventory cache – counts items across characters via a central item database and offers a `/eqolitems` search window that lists item names and counts.
 
 ### Character & Inspect
 

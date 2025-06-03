@@ -24,6 +24,8 @@ This document lists the checkboxes found in EnhanceQoL.lua and briefly explains 
 - **Display ilvl on equipment in all bags** (Display ilvl on equipment in all bags).
 - **Enable item filter in bags** (Enable item filter in bags – drag with <kbd>Shift</kbd> to move).
 - **Enable money tracker** (Enable to track your money across all characters): track gold across all characters.
+- **Enable alt item tracker** (Track items across all characters via a central database and open the search window. Results show item names and counts).
+- If the alt tracker is enabled: **Show alt item counts in tooltips** (Display per-character item counts in item tooltips).
 - **Display item level on the Bank Frame** (Display item level on the Bank Frame).
 - **Display bind type on bag items** (Display %s (BoE), %s (WuE), and %s (WB) as an addition to item level on items).
 - **Fade profession quality icons during search** (Fade profession quality icons during search and filtering).
