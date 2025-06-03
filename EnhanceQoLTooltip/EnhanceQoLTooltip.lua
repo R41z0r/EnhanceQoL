@@ -268,12 +268,12 @@ local function checkItem(tooltip, id, name)
 			tooltip:AddDoubleLine(name, id)
 		end
 	end
-	if addon.db["TooltipShowItemCount"] then
-		if id then
-			local rBankCount = CheckReagentBankCount(id)
-			local bagCount = C_Item.GetItemCount(id)
-			local bankCount = C_Item.GetItemCount(id, true)
-			local totalCount = rBankCount + bankCount
+        if addon.db["TooltipShowItemCount"] then
+                if id then
+                        local rBankCount = CheckReagentBankCount(id)
+                        local bagCount = C_Item.GetItemCount(id)
+                        local bankCount = C_Item.GetItemCount(id, true)
+                        local totalCount = rBankCount + bankCount
 
 			if addon.db["TooltipShowSeperateItemCount"] then
 				if bagCount > 0 then
@@ -283,11 +283,28 @@ local function checkItem(tooltip, id, name)
 				if bankCount > 0 then tooltip:AddDoubleLine(L["Bank"], bankCount) end
 				if rBankCount > 0 then tooltip:AddDoubleLine(L["Reagentbank"], rBankCount) end
 			else
-				tooltip:AddDoubleLine(L["Itemcount"], totalCount)
-			end
-		end
-	end
-	if addon.db["TooltipItemHideType"] == 1 then return end -- only hide when ON
+                                tooltip:AddDoubleLine(L["Itemcount"], totalCount)
+                        end
+                end
+        end
+        if addon.db["showAltItemCountTooltip"] and EnhanceQoL_ItemCache then
+                local playerGUID = UnitGUID("player")
+                local any = false
+                for guid, data in pairs(EnhanceQoL_ItemCache) do
+                        if guid ~= playerGUID and data.itemsByID and data.itemsByID[id] then
+                                if not any then
+                                        tooltip:AddLine(" ")
+                                        any = true
+                                end
+                                local col = (CUSTOM_CLASS_COLORS or RAID_CLASS_COLORS)[data.class] or { r = 1, g = 1, b = 1 }
+                                local name = data.name
+                                if data.realm and data.realm ~= GetRealmName() then name = name .. "-" .. data.realm end
+                                local disp = string.format("|cff%02x%02x%02x%s|r", col.r * 255, col.g * 255, col.b * 255, name)
+                                tooltip:AddDoubleLine(disp, data.itemsByID[id])
+                        end
+                end
+        end
+        if addon.db["TooltipItemHideType"] == 1 then return end -- only hide when ON
 	if addon.db["TooltipItemHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
 	if addon.db["TooltipItemHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
 	tooltip:Hide()
@@ -416,8 +433,9 @@ local function addItemFrame(container)
 		{ text = L["TooltipItemHideInCombat"], var = "TooltipItemHideInCombat" },
 		{ text = L["TooltipItemHideInDungeon"], var = "TooltipItemHideInDungeon" },
 		{ text = L["TooltipShowItemID"], var = "TooltipShowItemID" },
-		{ text = L["TooltipShowItemCount"], var = "TooltipShowItemCount" },
-		{ text = L["TooltipShowSeperateItemCount"], var = "TooltipShowSeperateItemCount" },
+                { text = L["TooltipShowItemCount"], var = "TooltipShowItemCount" },
+                { text = L["TooltipShowSeperateItemCount"], var = "TooltipShowSeperateItemCount" },
+                { text = L["TooltipShowAltItemCount"], var = "showAltItemCountTooltip" },
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)

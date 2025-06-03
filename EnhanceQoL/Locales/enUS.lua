@@ -58,6 +58,11 @@ L["UnitFrame"] = "UnitFrame"
 L["SellJunkIgnoredBag"] = "You have ignored junk on %d bags.\nThis may prevent selling all junk items automatically."
 L["enableGemHelper"] = "Enable Gem-Socket Helper"
 L["enableGemHelperDesc"] = "Displays a helper panel when you open the socketing UI.\nLeft-click a gem to pick it up."
+L["enableAltItemTracker"] = "Enable Alt Item Tracker"
+L["enableAltItemTrackerDesc"] = "Track items across all characters via a central database and open the search window with /eqolitems"
+L["TooltipShowAltItemCount"] = "Show alt item counts in tooltips"
+L["AltItemSearch"] = "Alt Item Search"
+L["Search"] = "Search"
 
 L["deleteItemFillDialog"] = 'Add "%s" to the "Delete confirmation Popup"'
 L["confirmPatronOrderDialog"] = "Automatically confirm to use own materials on %s crafting orders"
