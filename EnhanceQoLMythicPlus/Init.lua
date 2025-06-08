@@ -134,7 +134,33 @@ function addon.MythicPlus.functions.addRCButton()
 				self.iconPulse:Stop() -- stop pulsing, restore full alpha
 				self.icon:SetAlpha(1)
 			end
-			if not self.notReady then self.icon:SetVertexColor(0, 1, 0.3) end
+
+			local allReady = true
+
+			local function checkUnit(unit)
+				local status = GetReadyCheckStatus(unit)
+				if status ~= "ready" then allReady = false end
+			end
+
+			if IsInRaid() then
+				for i = 1, GetNumGroupMembers() do
+					checkUnit("raid" .. i)
+				end
+			else
+				checkUnit("player")
+				for i = 1, GetNumSubgroupMembers() do
+					checkUnit("party" .. i)
+				end
+			end
+
+			self.notReady = not allReady
+
+			if self.notReady then
+				self.icon:SetVertexColor(1, 0.2, 0.2)
+			else
+				self.icon:SetVertexColor(0, 1, 0.3)
+			end
+
 			self.readyCheckRunning = false
 			C_Timer.After(2, function()
 				if self.readyCheckRunning then return end
