@@ -53,7 +53,7 @@ local function performAdd(name, note)
 end
 
 IgnoreList.performAdd = performAdd
-function IgnoreList:AddIgnore(name) StaticPopup_Show("EQOL_ADD_IGNORE_NOTE", nil, nil, name) end
+function IgnoreList:AddIgnore(name) StaticPopup_Show("EQOL_ADD_IGNORE_NOTE", name, nil, name) end
 
 function IgnoreList:DelIgnore(name)
 	name = normalize(name)

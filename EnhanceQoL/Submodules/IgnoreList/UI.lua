@@ -182,7 +182,7 @@ function IgnoreList.CreateUI()
 	local btnEdit = addon.functions.createButtonAce(EDIT, 100, function()
 		if IgnoreList.selected then
 			local data = IgnoreList.db[IgnoreList.selected] or {}
-			StaticPopup_Show("EQOL_EDIT_IGNORE_NOTE", nil, nil, { name = IgnoreList.selected, note = data.note })
+			StaticPopup_Show("EQOL_EDIT_IGNORE_NOTE", IgnoreList.selected, nil, { name = IgnoreList.selected, note = data.note })
 		end
 	end)
 	btnGroup:AddChild(btnEdit)
