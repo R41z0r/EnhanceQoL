@@ -2333,6 +2333,26 @@ local function addMapFrame(container)
 	groupCore:AddChild(cbElement)
 end
 
+local function addIgnoreFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{ var = "enableExtendedIgnore", text = L["enableExtendedIgnore"] },
+		{ var = "ignoreFilterYell", text = L["ignoreFilterYell"] },
+		{ var = "ignoreFilterEmote", text = L["ignoreFilterEmote"] },
+		{ var = "ignoreFilterSay", text = L["ignoreFilterSay"] },
+	}
+
+	for _, cbData in ipairs(data) do
+		local cb = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, value) addon.db[cbData.var] = value end)
+		groupCore:AddChild(cb)
+	end
+end
+
 local function updateBankButtonInfo()
 	if not addon.db["showIlvlOnBankFrame"] then return end
 
@@ -2762,6 +2782,13 @@ end
 local function initMap()
 	addon.functions.InitDBValue("enableWayCommand", false)
 	if addon.db["enableWayCommand"] then addon.functions.registerWayCommand() end
+end
+
+local function initIgnoreList()
+	addon.functions.InitDBValue("enableExtendedIgnore", false)
+	addon.functions.InitDBValue("ignoreFilterYell", false)
+	addon.functions.InitDBValue("ignoreFilterEmote", false)
+	addon.functions.InitDBValue("ignoreFilterSay", false)
 end
 
 local function initUI()
@@ -3560,6 +3587,10 @@ local function CreateUI()
 		},
 	})
 	table.insert(addon.treeGroupData, {
+		value = "ignore",
+		text = L["Ignore List"],
+	})
+	table.insert(addon.treeGroupData, {
 		value = "profiles",
 		text = L["Profiles"],
 	})
@@ -3598,6 +3629,8 @@ local function CreateUI()
 			addMinimapFrame(container)
 		elseif group == "general\001map" then
 			addMapFrame(container)
+		elseif group == "ignore" then
+			addIgnoreFrame(container)
 		elseif group == "profiles" then
 			local sub = AceGUI:Create("SimpleGroup")
 			sub:SetFullWidth(true)
@@ -3624,6 +3657,7 @@ local function CreateUI()
 	end)
 	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
 	addon.variables.statusTable.groups["general\001ui"] = true
+	addon.variables.statusTable.groups["ignore"] = true
 	frame:AddChild(addon.treeGroup)
 
 	-- Select the first group by default
@@ -3790,6 +3824,7 @@ local function setAllHooks()
 	initUnitFrame()
 	initChatFrame()
 	initMap()
+	initIgnoreList()
 	initBagsFrame()
 end
 
