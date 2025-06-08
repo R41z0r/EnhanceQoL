@@ -1,5 +1,9 @@
 local addonName, addon = ...
 
+-- ensure ignore list database exists and is accessible
+EnhanceQoL_IgnoreDB = EnhanceQoL_IgnoreDB or {}
+addon.IgnoreDB = EnhanceQoL_IgnoreDB
+
 local LDB = LibStub("LibDataBroker-1.1")
 local LDBIcon = LibStub("LibDBIcon-1.0")
 local AceGUI = LibStub("AceGUI-3.0")

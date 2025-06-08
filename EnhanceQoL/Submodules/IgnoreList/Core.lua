@@ -9,6 +9,8 @@ end
 local IgnoreList = addon.IgnoreList or {}
 addon.IgnoreList = IgnoreList
 EnhanceQoL_IgnoreDB = EnhanceQoL_IgnoreDB or {}
+addon.IgnoreDB = EnhanceQoL_IgnoreDB
+IgnoreList.db = EnhanceQoL_IgnoreDB
 
 local function normalize(name)
 if not name then return end
