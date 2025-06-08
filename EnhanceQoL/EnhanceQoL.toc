@@ -43,5 +43,7 @@ EnhanceQoL.lua
 Submodules\GemHelper.lua
 Submodules\\ChatIM\\UI.lua
 Submodules\\ChatIM\\Core.lua
+Submodules\IgnoreList\UI.lua
+Submodules\IgnoreList\Core.lua
 
 

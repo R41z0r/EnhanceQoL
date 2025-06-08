@@ -56,6 +56,7 @@ globals = {
 	-- misc custom
 	"AchievementObjectiveTracker",
 	"EnhanceQoL_IMHistory",
+        "EnhanceQoL_IgnoreDB",
 	"MinimapCompassTexture",
 	"AdventureObjectiveTracker",
 	"BonusObjectiveTracker",
@@ -67,6 +68,7 @@ globals = {
 	"HUD_EDIT_MODE_OBJECTIVE_TRACKER_LABEL",
 	"WorldQuestObjectiveTracker",
 	"AceGUIWeakAurasMultiLineEditBoxInsertLink",
+        "GetNormalizedRealmName",
 	"AceGUIWeakAurasMultiLineEditBoxWithEnterInsertLink",
 	"AceGUIWidgetLSMlists",
 	"CUSTOM_CLASS_COLORS",
