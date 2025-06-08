@@ -110,43 +110,65 @@ function addon.MythicPlus.functions.addRCButton()
 			DoReadyCheck()
 		end
 	end)
-	rcButton:RegisterEvent("READY_CHECK")
-	rcButton:RegisterEvent("READY_CHECK_CONFIRM")
-	rcButton:RegisterEvent("READY_CHECK_FINISHED")
-	rcButton:SetScript("OnEvent", function(self, event, ...)
-		if event == "READY_CHECK" then
-			self.icon:SetVertexColor(1, 0.8, 0)
-			self.icon:SetDesaturated(false)
-			self.spin:Play()
-			-- pulse animation for "waiting" state
-			if self.iconPulse and not self.iconPulse:IsPlaying() then
-				self.iconPulse:Play() -- start pulsing while we wait
-			end
-			self.readyCheckRunning = true
-		elseif event == "READY_CHECK_CONFIRM" then
-			local unit, ready = ...
-			if not ready then
-				self.notReady = true
-				self.icon:SetVertexColor(1, 0.2, 0.2)
-			end
-		elseif event == "READY_CHECK_FINISHED" then
-			if self.iconPulse and self.iconPulse:IsPlaying() then
-				self.iconPulse:Stop() -- stop pulsing, restore full alpha
-				self.icon:SetAlpha(1)
-			end
-			if not self.notReady then self.icon:SetVertexColor(0, 1, 0.3) end
-			self.readyCheckRunning = false
-			C_Timer.After(2, function()
-				if self.readyCheckRunning then return end
-				self.icon:SetVertexColor(1, 1, 1)
-				self.notReady = false
-				if not MouseIsOver(rcButton) then
-					self.spin:Stop()
-					self.ring:SetRotation(0)
-				end
-			end)
-		end
-	end)
+       rcButton:RegisterEvent("READY_CHECK")
+       rcButton:RegisterEvent("READY_CHECK_CONFIRM")
+       rcButton:RegisterEvent("READY_CHECK_FINISHED")
+       rcButton:SetScript("OnEvent", function(self, event, ...)
+               if event == "READY_CHECK" then
+                       self.icon:SetVertexColor(1, 0.8, 0)
+                       self.icon:SetDesaturated(false)
+                       self.spin:Play()
+                       if self.iconPulse and not self.iconPulse:IsPlaying() then
+                               self.iconPulse:Play() -- start pulsing while we wait
+                       end
+                       self.readyCheckRunning = true
+                       self.notReady = false
+                       self.responses = {}
+               elseif event == "READY_CHECK_CONFIRM" then
+                       local unit, ready = ...
+                       self.responses[unit] = true
+                       if not ready then
+                               self.notReady = true
+                               self.icon:SetVertexColor(1, 0.2, 0.2)
+                       end
+               elseif event == "READY_CHECK_FINISHED" then
+                       if self.iconPulse and self.iconPulse:IsPlaying() then
+                               self.iconPulse:Stop() -- stop pulsing, restore full alpha
+                               self.icon:SetAlpha(1)
+                       end
+
+                       local groupMembers
+                       if IsInRaid() then
+                               groupMembers = GetNumGroupMembers()
+                       else
+                               groupMembers = GetNumSubgroupMembers() + 1
+                       end
+
+                       local responded = 0
+                       for _ in pairs(self.responses or {}) do
+                               responded = responded + 1
+                       end
+
+                       if self.notReady or responded < groupMembers then
+                               self.notReady = true
+                               self.icon:SetVertexColor(1, 0.2, 0.2)
+                       else
+                               self.icon:SetVertexColor(0, 1, 0.3)
+                       end
+
+                       self.readyCheckRunning = false
+                       C_Timer.After(2, function()
+                               if self.readyCheckRunning then return end
+                               self.icon:SetVertexColor(1, 1, 1)
+                               self.notReady = false
+                               self.responses = nil
+                               if not MouseIsOver(rcButton) then
+                                       self.spin:Stop()
+                                       self.ring:SetRotation(0)
+                               end
+                       end)
+               end
+       end)
 	rcButton:SetFrameStrata("HIGH")
 
 	local icon = rcButton:CreateTexture(nil, "ARTWORK", nil, 0)
