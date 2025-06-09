@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.18.0] – 2025-06-09
+### 🔁 Changed
+- **Shared Media**
+  - Changed ChatIM sounds to LibSharedMedia to have more sounds available
+
 ## [3.18.0] – 2025-06-01
 ### ✨ Added
 - **Skyriding**

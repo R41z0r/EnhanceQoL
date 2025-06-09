@@ -16,6 +16,7 @@ exclude_files = {
 	"EnhanceQoL/libs/AceConfig-3.0/AceConfigCmd-3.0/AceConfigCmd-3.0.lua",
 	"EnhanceQoL/libs/AceConfig-3.0/AceConfigDialog-3.0/AceConfigDialog-3.0.lua",
 	"EnhanceQoL/libs/AceConfig-3.0/AceConfigRegistry-3.0/AceConfigRegistry-3.0.lua",
+	"EnhanceQoL/libs/LibSharedMedia-3.0/LibSharedMedia-3.0.lua",
 	"LibStub.lua",
 	"EnhanceQoL/libs/AceLocale-3.0/AceLocale-3.0.lua",
 	"EnhanceQoL/libs/LibOpenRaid/Deprecated.lua",

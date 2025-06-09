@@ -4186,6 +4186,7 @@ local eventHandlers = {
 			money = GetMoney(),
 			class = select(2, UnitClass("player")),
 		}
+		if addon.ChatIM then addon.ChatIM:BuildSoundTable() end
 	end,
 	["PLAYER_MONEY"] = function()
 		if addon.db["showDurabilityOnCharframe"] then calculateDurability() end

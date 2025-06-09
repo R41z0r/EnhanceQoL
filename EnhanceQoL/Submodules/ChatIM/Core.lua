@@ -5,22 +5,31 @@ if _G[parentAddonName] then
 else
 	error(parentAddonName .. " is not loaded")
 end
+local LSM = LibStub("LibSharedMedia-3.0")
 
 local ChatIM = addon.ChatIM or {}
 addon.ChatIM = ChatIM
 ChatIM.enabled = false
 ChatIM.whisperHooked = ChatIM.whisperHooked or false
 ChatIM.soundPath = "Interface\\AddOns\\" .. parentAddonName .. "\\Sounds\\ChatIM\\"
-ChatIM.availableSounds = {
-	Bell = ChatIM.soundPath .. "Bell.ogg",
-	Cheerfull = ChatIM.soundPath .. "Cheerfull.ogg",
-	["For the Horde"] = "Interface\\AddOns\\" .. parentAddonName .. "\\Sounds\\bloodlust.ogg",
-	Laughing = ChatIM.soundPath .. "Laughing.ogg",
-	Metallic = ChatIM.soundPath .. "LightMetallic.ogg",
-	Ping = ChatIM.soundPath .. "Ping.ogg",
-	Ring = ChatIM.soundPath .. "Ring.ogg",
-	Sonarr = ChatIM.soundPath .. "Sonarr.ogg",
-}
+LSM:Register("sound", "Bell", ChatIM.soundPath .. "Bell.ogg")
+LSM:Register("sound", "Cheerfull", ChatIM.soundPath .. "Cheerfull.ogg")
+LSM:Register("sound", "For the Horde", "Interface\\AddOns\\EnhanceQoL\\Sounds\\bloodlust.ogg")
+LSM:Register("sound", "Laughing", ChatIM.soundPath .. "Laughing.ogg")
+LSM:Register("sound", "LightMetallic", ChatIM.soundPath .. "LightMetallic.ogg")
+LSM:Register("sound", "Ping", ChatIM.soundPath .. "Ping.ogg")
+LSM:Register("sound", "Ring", ChatIM.soundPath .. "Ring.ogg")
+LSM:Register("sound", "Sonarr", ChatIM.soundPath .. "Sonarr.ogg")
+
+function ChatIM:BuildSoundTable()
+	local result = {}
+
+	-- LSM:HashTable("sound")  →  { ["Bell"]="path", ["blah"]="path", ... }
+	for name, path in pairs(LSM:HashTable("sound")) do
+		result[name] = path
+	end
+	ChatIM.availableSounds = result -- { "Bell","Cheerfull",... },   { name → path }
+end
 
 local function shouldPlaySound(sender)
 	if not ChatIM.widget or not ChatIM.widget.frame:IsShown() then return true end
@@ -133,6 +142,11 @@ local function updateRegistration()
 
 		EnhanceQoL_IMHistory = EnhanceQoL_IMHistory or {}
 		ChatIM.history = EnhanceQoL_IMHistory
+
+		LSM:RegisterCallback("LibSharedMedia_Registered", function(mediaType)
+			if mediaType == "sound" then ChatIM:BuildSoundTable() end
+		end)
+		ChatIM:BuildSoundTable()
 	else
 		frame:UnregisterAllEvents()
 		if ChatIM.widget and ChatIM.widget.frame then ChatIM:HideWindow() end

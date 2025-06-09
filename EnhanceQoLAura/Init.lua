@@ -9,6 +9,7 @@ end
 addon.Aura = {}
 addon.Aura.functions = {}
 addon.Aura.variables = {}
+addon.Aura.sounds = {}
 addon.LAura = {} -- Locales for aura
 
 addon.functions.InitDBValue("AuraCooldownTrackerBarHeight", 30)
@@ -35,5 +36,6 @@ addon.functions.InitDBValue("buffTrackerHidden", {})
 addon.functions.InitDBValue("buffTrackerSelectedCategory", 1)
 addon.functions.InitDBValue("buffTrackerOrder", {})
 addon.functions.InitDBValue("buffTrackerSounds", {})
+addon.functions.InitDBValue("buffTrackerSoundsEnabled", {})
 
 if type(addon.db["buffTrackerSelectedCategory"]) ~= "number" then addon.db["buffTrackerSelectedCategory"] = 1 end

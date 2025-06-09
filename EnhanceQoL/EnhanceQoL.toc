@@ -37,6 +37,7 @@ libs\LibOpenRaid\lib.xml
 libs\AceDB-3.0\lib.xml
 libs\AceConfig-3.0\AceConfig-3.0.xml
 libs\AceDBOptions-3.0\lib.xml
+libs\LibSharedMedia-3.0\lib.xml
 Bindings\Slider.xml
 General\functions.lua
 EnhanceQoL.lua

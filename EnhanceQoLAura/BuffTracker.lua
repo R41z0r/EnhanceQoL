@@ -15,6 +15,18 @@ local selectedCategory = addon.db["buffTrackerSelectedCategory"] or 1
 local anchors = {}
 local activeBuffFrames = {}
 
+local LSM = LibStub("LibSharedMedia-3.0")
+
+function addon.Aura.functions.BuildSoundTable()
+	local result = {}
+
+	for name, path in pairs(LSM:HashTable("sound")) do
+		result[name] = path
+	end
+	addon.Aura.sounds = result
+end
+addon.Aura.functions.BuildSoundTable()
+
 local function getCategory(id) return addon.db["buffTrackerCategories"][id] end
 
 local function ensureAnchor(id)
@@ -141,12 +153,15 @@ local function createBuffFrame(icon, parent, size)
 end
 
 local function playBuffSound(catId, id)
-	local sound = addon.db["buffTrackerSounds"][catId][id]
-	if not sound then return end
-	if tonumber(sound) then
-		PlaySound(tonumber(sound), "Master")
-	else
-		PlaySoundFile(sound, "Master")
+	if addon.db["buffTrackerSoundsEnabled"] and addon.db["buffTrackerSoundsEnabled"][catId] and addon.db["buffTrackerSoundsEnabled"][catId][id] then
+		local sound = addon.db["buffTrackerSounds"][catId][id]
+		if not sound then return end
+
+		local file = addon.Aura.sounds[sound]
+		if file then
+			PlaySoundFile(file, "Master")
+			return
+		end
 	end
 end
 
@@ -201,6 +216,7 @@ eventFrame:SetScript("OnEvent", function(_, event, unit)
 				anchor:Hide()
 			end
 		end
+		addon.Aura.functions.BuildSoundTable()
 	end
 	scanBuffs()
 end)
@@ -227,13 +243,20 @@ local function moveTrackedBuff(catId, id, direction)
 	table.insert(list, newIndex, id)
 end
 
+local openedFrames = {}
+
 local function openBuffConfig(catId, id)
 	local frame = AceGUI:Create("Frame")
 	frame:SetTitle(L["BuffTracker"])
 	frame:SetWidth(400)
 	frame:SetHeight(180)
 	frame:SetLayout("List")
-	frame:SetCallback("OnClose", function(widget) AceGUI:Release(widget) end)
+	frame:SetCallback("OnClose", function(widget)
+		AceGUI:Release(widget)
+		openedFrames[catId][id] = nil
+	end)
+	openedFrames[catId] = {}
+	openedFrames[catId][id] = true
 
 	local label = AceGUI:Create("Label")
 	local name = addon.db["buffTrackerCategories"][catId]["buffs"][id].name
@@ -241,19 +264,30 @@ local function openBuffConfig(catId, id)
 	frame:AddChild(label)
 
 	addon.db["buffTrackerSounds"][catId] = addon.db["buffTrackerSounds"][catId] or {}
+	addon.db["buffTrackerSoundsEnabled"][catId] = addon.db["buffTrackerSoundsEnabled"][catId] or {}
 
-	local edit = addon.functions.createEditboxAce(L["SoundFile"], addon.db["buffTrackerSounds"][catId][id] or "", function(self, _, text)
-		if text == "" then
-			addon.db["buffTrackerSounds"][catId][id] = nil
-		else
-			addon.db["buffTrackerSounds"][catId][id] = text
-		end
+	local cbElement = addon.functions.createCheckboxAce(
+		L["buffTrackerSoundsEnabled"],
+		addon.db["buffTrackerSoundsEnabled"][catId][id],
+		function(val) addon.db["buffTrackerSoundsEnabled"][catId][id] = val end
+	)
+	frame:AddChild(cbElement)
+
+	local soundList = {}
+	for name in pairs(addon.Aura.sounds or {}) do
+		soundList[name] = name
+	end
+	local list, order = addon.functions.prepareListForDropdown(soundList)
+	local dropSound = addon.functions.createDropdownAce(L["SoundFile"], list, order, function(self, _, val)
+		addon.db["buffTrackerSounds"][catId][id] = val
+		self:SetValue(val)
+		local file = addon.Aura.sounds and addon.Aura.sounds[val]
+		if file then PlaySoundFile(file, "Master") end
 	end)
-	edit:SetFullWidth(true)
-	frame:AddChild(edit)
+	dropSound:SetValue(addon.db["buffTrackerSounds"][catId][id])
 
-	local playButton = addon.functions.createButtonAce(L["Play"], 80, function() playBuffSound(catId, id) end)
-	frame:AddChild(playButton)
+	frame:AddChild(dropSound)
+	frame:AddChild(addon.functions.createSpacerAce())
 end
 
 local function addBuff(catId, id)
@@ -334,7 +368,7 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	end)
 	core:AddChild(nameEdit)
 
-	local sizeSlider = addon.functions.createSliderAce(L["buffTrackerIconSizeHeadline"] .. ": " .. cat.size, cat.size, 20, 100, 1, function(self, _, val)
+	local sizeSlider = addon.functions.createSliderAce(L["buffTrackerIconSizeHeadline"] .. ": " .. cat.size, cat.size, 0, 100, 1, function(self, _, val)
 		cat.size = val
 		self:SetLabel(L["buffTrackerIconSizeHeadline"] .. ": " .. val)
 		applySize(catId)
@@ -378,7 +412,6 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 end
 
 function addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, groupTabs)
-
 	local listGroup = addon.functions.createContainer("InlineGroup", "List")
 	listGroup:SetTitle(L["TrackedBuffs"])
 
@@ -478,7 +511,10 @@ function addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, group
 		gearIcon:SetImageSize(16, 16)
 		gearIcon:SetRelativeWidth(0.1)
 		gearIcon:SetHeight(16)
-		gearIcon:SetCallback("OnClick", function() openBuffConfig(catId, info.id) end)
+		gearIcon:SetCallback("OnClick", function()
+			if openedFrames[catId] and openedFrames[catId][info.id] then return end
+			openBuffConfig(catId, info.id)
+		end)
 		row:AddChild(gearIcon)
 
 		local removeIcon = AceGUI:Create("Icon")
