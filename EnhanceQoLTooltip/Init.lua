@@ -9,6 +9,7 @@ end
 addon.functions.InitDBValue("TooltipAnchorType", 1)
 addon.functions.InitDBValue("TooltipAnchorOffsetX", 0)
 addon.functions.InitDBValue("TooltipAnchorOffsetY", 0)
+addon.functions.InitDBValue("TooltipShowWowheadLink", false)
 
 addon.functions.InitDBValue("TooltipUnitHideType", 1)
 addon.functions.InitDBValue("TooltipUnitHideInCombat", true)

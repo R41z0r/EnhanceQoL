@@ -74,3 +74,4 @@ L["Itemcount"] = "Conteggio oggetti"
 L["TooltipShowQuestID"] = "Mostra ID della missione"
 
 L["TooltipShowCurrencyAccountWide"] = "Mostra le valute dell’account nel tooltip"
+L["TooltipShowWowheadLink"] = "Show Wowhead link"

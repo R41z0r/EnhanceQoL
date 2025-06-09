@@ -75,3 +75,4 @@ L["Itemcount"] = "Gegenstandszahl"
 L["TooltipShowQuestID"] = "Quest-ID anzeigen"
 
 L["TooltipShowCurrencyAccountWide"] = "Accountweite Währungen im Tooltip anzeigen"
+L["TooltipShowWowheadLink"] = "Show Wowhead link"

@@ -74,3 +74,4 @@ L["Itemcount"] = "Количество предметов"
 L["TooltipShowQuestID"] = "Показать ID задания"
 
 L["TooltipShowCurrencyAccountWide"] = "Показывать валюту аккаунта во всплывающей подсказке"
+L["TooltipShowWowheadLink"] = "Show Wowhead link"

@@ -74,3 +74,4 @@ L["Itemcount"] = "物品数量"
 L["TooltipShowQuestID"] = "显示任务ID"
 
 L["TooltipShowCurrencyAccountWide"] = "在鼠标提示中显示账号通用货币"
+L["TooltipShowWowheadLink"] = "Show Wowhead link"

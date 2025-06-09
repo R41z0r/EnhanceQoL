@@ -22,11 +22,24 @@ local function GetNPCIDFromGUID(guid)
 end
 
 local function fmtNum(n)
-	if BreakUpLargeNumbers then
-		return BreakUpLargeNumbers(n or 0)
-	else
-		return tostring(n or 0)
-	end
+        if BreakUpLargeNumbers then
+                return BreakUpLargeNumbers(n or 0)
+        else
+                return tostring(n or 0)
+        end
+end
+
+local function addWowheadLink(tooltip, kind, id)
+        if not addon.db["TooltipShowWowheadLink"] then return end
+        if not id then return end
+        local typeMap = { item = "item", spell = "spell", quest = "quest" }
+        local t = typeMap[kind]
+        if not t then return end
+        local url = string.format("https://www.wowhead.com/%s=%d", t, id)
+        tooltip:SetHyperlinksEnabled(true)
+        tooltip:AddLine(" ")
+        tooltip:AddLine("|Hurl:" .. url .. "|h[Wowhead]|h")
+        tooltip:Show()
 end
 
 local function checkCurrency(tooltip, id)
@@ -90,10 +103,11 @@ local function checkSpell(tooltip, id, name)
 			tooltip:AddDoubleLine(name, id)
 		end
 	end
-	if addon.db["TooltipSpellHideType"] == 1 then return end -- only hide when ON
-	if addon.db["TooltipSpellHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
-	if addon.db["TooltipSpellHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
-	tooltip:Hide()
+       addWowheadLink(tooltip, "spell", id)
+       if addon.db["TooltipSpellHideType"] == 1 then return end -- only hide when ON
+       if addon.db["TooltipSpellHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
+       if addon.db["TooltipSpellHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
+       tooltip:Hide()
 end
 
 local function checkAdditionalTooltip(tooltip)
@@ -287,7 +301,8 @@ local function checkItem(tooltip, id, name)
 			end
 		end
 	end
-	if addon.db["TooltipItemHideType"] == 1 then return end -- only hide when ON
+       addWowheadLink(tooltip, "item", id)
+       if addon.db["TooltipItemHideType"] == 1 then return end -- only hide when ON
 	if addon.db["TooltipItemHideInDungeon"] and select(1, IsInInstance()) == false then return end -- only hide in dungeons
 	if addon.db["TooltipItemHideInCombat"] and UnitAffectingCombat("player") == false then return end -- only hide in combat
 	tooltip:Hide()
@@ -523,10 +538,10 @@ local function addGeneralFrame(container)
 	end)
 	dropTooltipUnitHideType:SetValue(addon.db["TooltipAnchorType"])
 	dropTooltipUnitHideType:SetFullWidth(false)
-	dropTooltipUnitHideType:SetWidth(200)
-	groupCore:AddChild(dropTooltipUnitHideType)
+        dropTooltipUnitHideType:SetWidth(200)
+        groupCore:AddChild(dropTooltipUnitHideType)
 
-	if addon.db["TooltipAnchorType"] > 1 then
+        if addon.db["TooltipAnchorType"] > 1 then
 		local sliderOffsetX = addon.functions.createSliderAce(
 			L["TooltipAnchorOffsetX"] .. ": " .. addon.db["TooltipAnchorOffsetX"],
 			addon.db["TooltipAnchorOffsetX"],
@@ -551,8 +566,13 @@ local function addGeneralFrame(container)
 				self:SetLabel(L["TooltipAnchorOffsetY"] .. ": " .. value2)
 			end
 		)
-		groupCore:AddChild(sliderOffsetY)
-	end
+                groupCore:AddChild(sliderOffsetY)
+        end
+
+        local cbWowhead = addon.functions.createCheckboxAce(L["TooltipShowWowheadLink"], addon.db["TooltipShowWowheadLink"], function(self, _, value)
+                addon.db["TooltipShowWowheadLink"] = value
+        end)
+        groupCore:AddChild(cbWowhead)
 end
 
 local function addCurrencyFrame(container)
@@ -601,10 +621,36 @@ end
 hooksecurefunc("QuestMapLogTitleButton_OnEnter", function(self)
 	if addon.db["TooltipShowQuestID"] then
 		if self then
-			if self.questID and GameTooltip:IsShown() then
-				GameTooltip:AddDoubleLine(ID, self.questID)
-				GameTooltip:Show()
-			end
+               if self.questID and GameTooltip:IsShown() then
+                       GameTooltip:AddDoubleLine(ID, self.questID)
+                       addWowheadLink(GameTooltip, "quest", self.questID)
+                       GameTooltip:Show()
+               end
 		end
 	end
+end)
+
+if not StaticPopupDialogs["EQOL_URL_COPY"] then
+       StaticPopupDialogs["EQOL_URL_COPY"] = {
+               text = CALENDAR_COPY_EVENT,
+               button1 = CLOSE,
+               hasEditBox = true,
+               editBoxWidth = 320,
+               timeout = 0,
+               whileDead = true,
+               hideOnEscape = true,
+               preferredIndex = 3,
+               OnShow = function(self, data)
+                       self.editBox:SetText(data or "")
+                       self.editBox:SetFocus()
+                       self.editBox:HighlightText()
+               end,
+       }
+end
+
+GameTooltip:HookScript("OnHyperlinkClick", function(_, link)
+       local linkType, payload = link:match("^(%a+):(.+)$")
+       if linkType == "url" then
+               StaticPopup_Show("EQOL_URL_COPY", nil, nil, payload)
+       end
 end)
