@@ -856,16 +856,20 @@ local function handleWayCommand(msg)
 		table.insert(args, token)
 	end
 
-	local mapID, x, y
-	if #args == 2 then
-		x = tonumber(args[1])
-		y = tonumber(args[2])
-		mapID = C_Map.GetBestMapForUnit("player")
-	elseif #args == 3 then
-		mapID = tonumber(args[1])
-		x = tonumber(args[2])
-		y = tonumber(args[3])
-	end
+       local mapID, x, y
+       if #args >= 2 then
+               local first = args[1]
+               if first:sub(1, 1) == "#" then first = first:sub(2) end
+               if tonumber(first) and args[3] then
+                       mapID = tonumber(first)
+                       x = tonumber(args[2])
+                       y = tonumber(args[3])
+               else
+                       x = tonumber(args[1])
+                       y = tonumber(args[2])
+                       mapID = C_Map.GetBestMapForUnit("player")
+               end
+       end
 
 	if not mapID or not x or not y then
 		print("|cff00ff98Enhance QoL|r: " .. L["wayUsage"])
