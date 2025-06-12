@@ -20,16 +20,16 @@ addon.functions.InitDBValue("personalResourceBarHealthHeight", 25)
 addon.functions.InitDBValue("personalResourceBarManaWidth", 100)
 addon.functions.InitDBValue("personalResourceBarManaHeight", 25)
 addon.functions.InitDBValue("buffTrackerCategories", {
-        [1] = {
-                name = "Example",
-                point = "CENTER",
-                x = 0,
-                y = 0,
-                size = 36,
-                direction = "RIGHT",
-                trackType = "BUFF",
-                buffs = {},
-        },
+	[1] = {
+		name = "Example",
+		point = "CENTER",
+		x = 0,
+		y = 0,
+		size = 36,
+		direction = "RIGHT",
+		trackType = "BUFF",
+		buffs = {},
+	},
 })
 addon.functions.InitDBValue("buffTrackerEnabled", {})
 addon.functions.InitDBValue("buffTrackerLocked", {})
@@ -42,5 +42,5 @@ addon.functions.InitDBValue("buffTrackerSoundsEnabled", {})
 if type(addon.db["buffTrackerSelectedCategory"]) ~= "number" then addon.db["buffTrackerSelectedCategory"] = 1 end
 
 for _, cat in pairs(addon.db["buffTrackerCategories"]) do
-       if not cat.trackType then cat.trackType = "BUFF" end
+	if not cat.trackType then cat.trackType = "BUFF" end
 end

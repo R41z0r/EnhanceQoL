@@ -13,7 +13,7 @@ local AceGUI = addon.AceGUI
 local selectedCategory = addon.db["buffTrackerSelectedCategory"] or 1
 
 for _, cat in pairs(addon.db["buffTrackerCategories"]) do
-       if not cat.trackType then cat.trackType = "BUFF" end
+	if not cat.trackType then cat.trackType = "BUFF" end
 end
 
 local anchors = {}
@@ -170,9 +170,15 @@ local function playBuffSound(catId, id)
 end
 
 local function updateBuff(catId, id)
-       local cat = getCategory(catId)
-       local filter = cat and cat.trackType == "DEBUFF" and "HARMFUL" or "HELPFUL"
-       local aura = C_UnitAuras.GetPlayerAuraBySpellID(id, filter)
+	local cat = getCategory(catId)
+	local aura = C_UnitAuras.GetPlayerAuraBySpellID(id)
+	if aura then
+		if cat and cat.trackType == "DEBUFF" and not aura.isHarmful then
+			aura = nil
+		elseif cat and cat.trackType == "BUFF" and not aura.isHelpful then
+			aura = nil
+		end
+	end
 
 	activeBuffFrames[catId] = activeBuffFrames[catId] or {}
 	local frame = activeBuffFrames[catId][id]
@@ -381,26 +387,26 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	end)
 	core:AddChild(sizeSlider)
 
-       local dirDrop = addon.functions.createDropdownAce(L["GrowthDirection"], { LEFT = "LEFT", RIGHT = "RIGHT", UP = "UP", DOWN = "DOWN" }, nil, function(self, _, val)
-               cat.direction = val
-               updatePositions(catId)
-       end)
-       dirDrop:SetValue(cat.direction)
-       dirDrop:SetRelativeWidth(0.4)
-       core:AddChild(dirDrop)
+	local dirDrop = addon.functions.createDropdownAce(L["GrowthDirection"], { LEFT = "LEFT", RIGHT = "RIGHT", UP = "UP", DOWN = "DOWN" }, nil, function(self, _, val)
+		cat.direction = val
+		updatePositions(catId)
+	end)
+	dirDrop:SetValue(cat.direction)
+	dirDrop:SetRelativeWidth(0.4)
+	core:AddChild(dirDrop)
 
-       local typeDrop = addon.functions.createDropdownAce(L["TrackType"], { BUFF = L["Buff"], DEBUFF = L["Debuff"] }, nil, function(self, _, val)
-               cat.trackType = val
-               if activeBuffFrames[catId] then
-                       for _, frame in pairs(activeBuffFrames[catId]) do
-                               frame:Hide()
-                       end
-               end
-               scanBuffs()
-       end)
-       typeDrop:SetValue(cat.trackType or "BUFF")
-       typeDrop:SetRelativeWidth(0.4)
-       core:AddChild(typeDrop)
+	local typeDrop = addon.functions.createDropdownAce(L["TrackType"], { BUFF = L["Buff"], DEBUFF = L["Debuff"] }, nil, function(self, _, val)
+		cat.trackType = val
+		if activeBuffFrames[catId] then
+			for _, frame in pairs(activeBuffFrames[catId]) do
+				frame:Hide()
+			end
+		end
+		scanBuffs()
+	end)
+	typeDrop:SetValue(cat.trackType or "BUFF")
+	typeDrop:SetRelativeWidth(0.4)
+	core:AddChild(typeDrop)
 
 	local spellEdit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
 		local id = tonumber(text)
@@ -586,17 +592,17 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 	addIcon:SetImageSize(24, 24)
 	addIcon:SetRelativeWidth(0.1)
 	addIcon:SetCallback("OnClick", function()
-               local newId = (#addon.db["buffTrackerCategories"] or 0) + 1
-               addon.db["buffTrackerCategories"][newId] = {
-                       name = "New",
-                       point = "CENTER",
-                       x = 0,
-                       y = 0,
-                       size = 36,
-                       direction = "RIGHT",
-                       trackType = "BUFF",
-                       buffs = {},
-               }
+		local newId = (#addon.db["buffTrackerCategories"] or 0) + 1
+		addon.db["buffTrackerCategories"][newId] = {
+			name = "New",
+			point = "CENTER",
+			x = 0,
+			y = 0,
+			size = 36,
+			direction = "RIGHT",
+			trackType = "BUFF",
+			buffs = {},
+		}
 		ensureAnchor(newId)
 		groupTabs:SetTabs(getCategoryTabs())
 		groupTabs:SelectTab(newId)
