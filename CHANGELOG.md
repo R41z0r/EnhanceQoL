@@ -1,6 +1,20 @@
 # Changelog
 
-## [3.18.0] – 2025-06-09
+## [3.20.0] – 2025-06-12  
+### ✨ Added  
+- **Hide buffs on raid frames**  
+  - New checkbox to hide *all* buff icons on raid-style party frames (General → Party).  
+- **Hide player frame**  
+  - Option to hide your own unit frame while **“Show Party Frame in Solo Content”** is active (General → Party).  
+- **Hide dot in cursor ring**  
+  - Checkbox to remove the centre dot from the mouse cursor ring (Mouse → General).  
+
+### 🔄 Changed  
+- **/way command improvements**  
+  - The `/way` slash command now **accepts TomTom-style syntax**, e.g.  
+    `/way #2403 47.6 74.5 …`
+
+## [3.19.0] – 2025-06-09
 ### 🔁 Changed
 - **Shared Media**
   - Changed ChatIM sounds to LibSharedMedia to have more sounds available
