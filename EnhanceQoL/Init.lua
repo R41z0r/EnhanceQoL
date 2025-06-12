@@ -2,6 +2,7 @@ local addonName, addon = ...
 _G[addonName] = addon
 addon.saveVariables = {} -- Cross-Module variables for DB Save
 addon.saveVariables["hidePlayerFrame"] = false -- Default for hiding the Player Frame
+addon.saveVariables["hideRaidFrameBuffs"] = false -- Default for hiding buffs on raid-style frames
 addon.gossip = {}
 addon.gossip.variables = {}
 addon.variables = {}
