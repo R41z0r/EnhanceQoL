@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.20.1] – 2025-06-12  
+### 🐛 Fixed
+- Fixed an issue in groups with **Hide buffs on raid frames**
+
 ## [3.20.0] – 2025-06-12  
 ### ✨ Added  
 - **Hide buffs on raid frames**  

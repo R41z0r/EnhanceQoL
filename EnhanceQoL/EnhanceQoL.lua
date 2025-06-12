@@ -1606,6 +1606,7 @@ local function addPartyFrame(container)
 			callback = function(self, _, value)
 				addon.db["hideRaidFrameBuffs"] = value
 				addon.functions.updateRaidFrameBuffs()
+				addon.variables.requireReload = true
 			end,
 		},
 		{
@@ -2700,12 +2701,14 @@ local function initUnitFrame()
 	addon.functions.togglePlayerFrame(addon.db["hidePlayerFrame"])
 
 	local function handleRaidFrameBuffs(frame)
-		if not frame or not frame.GetName then return end
-		local frameName = frame:GetName()
-		if not frameName then return end
-		for i = 1, 8, 1 do
-			local bFrame = _G[frame:GetName() .. "Buff" .. i]
-			if bFrame then bFrame:SetShown(not addon.db["hideRaidFrameBuffs"]) end
+		if type(frame) ~= "table" or type(frame.GetName) ~= "function" then return end
+
+		local ok, frameName = pcall(frame.GetName, frame)
+		if not ok or not frameName then return end
+
+		for i = 1, 8 do
+			local buffFrame = _G[frameName .. "Buff" .. i]
+			if buffFrame then buffFrame:SetShown(not addon.db["hideRaidFrameBuffs"]) end
 		end
 	end
 
@@ -2720,9 +2723,11 @@ local function initUnitFrame()
 		end
 	end
 
-	if DefaultCompactUnitFrameSetup then hooksecurefunc("DefaultCompactUnitFrameSetup", handleRaidFrameBuffs) end
-	if CompactUnitFrame_UpdateAuras then hooksecurefunc("CompactUnitFrame_UpdateAuras", handleRaidFrameBuffs) end
-	addon.functions.updateRaidFrameBuffs()
+	if addon.db["hideRaidFrameBuffs"] then
+		if DefaultCompactUnitFrameSetup then hooksecurefunc("DefaultCompactUnitFrameSetup", handleRaidFrameBuffs) end
+		if CompactUnitFrame_UpdateAuras then hooksecurefunc("CompactUnitFrame_UpdateAuras", handleRaidFrameBuffs) end
+		addon.functions.updateRaidFrameBuffs()
+	end
 
 	for _, cbData in ipairs(addon.variables.unitFrameNames) do
 		if cbData.var and cbData.name then
