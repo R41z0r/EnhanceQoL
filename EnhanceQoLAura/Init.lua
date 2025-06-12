@@ -43,4 +43,7 @@ if type(addon.db["buffTrackerSelectedCategory"]) ~= "number" then addon.db["buff
 
 for _, cat in pairs(addon.db["buffTrackerCategories"]) do
 	if not cat.trackType then cat.trackType = "BUFF" end
+	for _, buff in pairs(cat.buffs or {}) do
+		if not buff.altIDs then buff.altIDs = {} end
+	end
 end

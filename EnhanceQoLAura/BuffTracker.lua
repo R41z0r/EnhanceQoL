@@ -171,7 +171,14 @@ end
 
 local function updateBuff(catId, id)
 	local cat = getCategory(catId)
+	local buff = cat and cat.buffs and cat.buffs[id]
 	local aura = C_UnitAuras.GetPlayerAuraBySpellID(id)
+	if not aura and buff and buff.altIDs then
+		for _, altId in ipairs(buff.altIDs) do
+			aura = C_UnitAuras.GetPlayerAuraBySpellID(altId)
+			if aura then break end
+		end
+	end
 	if aura then
 		if cat and cat.trackType == "DEBUFF" and not aura.isHarmful then
 			aura = nil
@@ -184,7 +191,7 @@ local function updateBuff(catId, id)
 	local frame = activeBuffFrames[catId][id]
 	local wasShown = frame and frame:IsShown()
 	if aura then
-		local icon = aura.icon
+		local icon = buff and buff.icon or aura.icon
 		if not frame then
 			frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
 			activeBuffFrames[catId][id] = frame
@@ -267,39 +274,88 @@ local function openBuffConfig(catId, id)
 		AceGUI:Release(widget)
 		openedFrames[catId][id] = nil
 	end)
-	openedFrames[catId] = {}
+	openedFrames[catId] = openedFrames[catId] or {}
 	openedFrames[catId][id] = true
 
-	local label = AceGUI:Create("Label")
-	local name = addon.db["buffTrackerCategories"][catId]["buffs"][id].name
-	label:SetText((name or "") .. " (" .. id .. ")")
-	frame:AddChild(label)
+	local function rebuild()
+		frame:ReleaseChildren()
 
-	addon.db["buffTrackerSounds"][catId] = addon.db["buffTrackerSounds"][catId] or {}
-	addon.db["buffTrackerSoundsEnabled"][catId] = addon.db["buffTrackerSoundsEnabled"][catId] or {}
+		local buff = addon.db["buffTrackerCategories"][catId]["buffs"][id]
 
-	local cbElement = addon.functions.createCheckboxAce(
-		L["buffTrackerSoundsEnabled"],
-		addon.db["buffTrackerSoundsEnabled"][catId][id],
-		function(val) addon.db["buffTrackerSoundsEnabled"][catId][id] = val end
-	)
-	frame:AddChild(cbElement)
+		local label = AceGUI:Create("Label")
+		local name = buff.name
+		label:SetText((name or "") .. " (" .. id .. ")")
+		frame:AddChild(label)
 
-	local soundList = {}
-	for name in pairs(addon.Aura.sounds or {}) do
-		soundList[name] = name
+		addon.db["buffTrackerSounds"][catId] = addon.db["buffTrackerSounds"][catId] or {}
+		addon.db["buffTrackerSoundsEnabled"][catId] = addon.db["buffTrackerSoundsEnabled"][catId] or {}
+
+		local cbElement = addon.functions.createCheckboxAce(
+			L["buffTrackerSoundsEnabled"],
+			addon.db["buffTrackerSoundsEnabled"][catId][id],
+			function(val) addon.db["buffTrackerSoundsEnabled"][catId][id] = val end
+		)
+		frame:AddChild(cbElement)
+
+		local soundList = {}
+		for sname in pairs(addon.Aura.sounds or {}) do
+			soundList[sname] = sname
+		end
+		local list, order = addon.functions.prepareListForDropdown(soundList)
+		local dropSound = addon.functions.createDropdownAce(L["SoundFile"], list, order, function(self, _, val)
+			addon.db["buffTrackerSounds"][catId][id] = val
+			self:SetValue(val)
+			local file = addon.Aura.sounds and addon.Aura.sounds[val]
+			if file then PlaySoundFile(file, "Master") end
+		end)
+		dropSound:SetValue(addon.db["buffTrackerSounds"][catId][id])
+
+		frame:AddChild(dropSound)
+
+		-- alternative spell ids
+		buff.altIDs = buff.altIDs or {}
+		for _, altId in ipairs(buff.altIDs) do
+			local row = addon.functions.createContainer("SimpleGroup", "Flow")
+			row:SetFullWidth(true)
+			local lbl = AceGUI:Create("Label")
+			lbl:SetText(L["AltSpellIDs"] .. ": " .. altId)
+			lbl:SetRelativeWidth(0.7)
+			row:AddChild(lbl)
+
+			local removeIcon = AceGUI:Create("Icon")
+			removeIcon:SetLabel("")
+			removeIcon:SetImage("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+			removeIcon:SetImageSize(16, 16)
+			removeIcon:SetRelativeWidth(0.3)
+			removeIcon:SetHeight(16)
+			removeIcon:SetCallback("OnClick", function()
+				for i, v in ipairs(buff.altIDs) do
+					if v == altId then
+						table.remove(buff.altIDs, i)
+						break
+					end
+				end
+				rebuild()
+			end)
+			row:AddChild(removeIcon)
+
+			frame:AddChild(row)
+		end
+
+		local altEdit = addon.functions.createEditboxAce(L["AddAltSpellID"], nil, function(self, _, text)
+			local alt = tonumber(text)
+			if alt then
+				if not tContains(buff.altIDs, alt) then table.insert(buff.altIDs, alt) end
+				self:SetText("")
+				rebuild()
+			end
+		end)
+		frame:AddChild(altEdit)
+
+		frame:AddChild(addon.functions.createSpacerAce())
 	end
-	local list, order = addon.functions.prepareListForDropdown(soundList)
-	local dropSound = addon.functions.createDropdownAce(L["SoundFile"], list, order, function(self, _, val)
-		addon.db["buffTrackerSounds"][catId][id] = val
-		self:SetValue(val)
-		local file = addon.Aura.sounds and addon.Aura.sounds[val]
-		if file then PlaySoundFile(file, "Master") end
-	end)
-	dropSound:SetValue(addon.db["buffTrackerSounds"][catId][id])
 
-	frame:AddChild(dropSound)
-	frame:AddChild(addon.functions.createSpacerAce())
+	rebuild()
 end
 
 local function addBuff(catId, id)
@@ -310,7 +366,7 @@ local function addBuff(catId, id)
 	local cat = getCategory(catId)
 	if not cat then return end
 
-	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID }
+	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {} }
 
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	if not tContains(addon.db["buffTrackerOrder"][catId], id) then table.insert(addon.db["buffTrackerOrder"][catId], id) end
