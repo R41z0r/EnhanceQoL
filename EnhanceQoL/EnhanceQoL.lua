@@ -1597,25 +1597,31 @@ local function addPartyFrame(container)
 				end
 			end,
 		},
-                {
-                        parent = "",
-                        var = "showPartyFrameInSoloContent",
-                        type = "CheckBox",
-                        callback = function(self, _, value)
-                                addon.db["showPartyFrameInSoloContent"] = value
-                                addon.variables.requireReload = true
-                        end,
-                },
-                {
-                        parent = "",
-                        var = "hidePlayerFrame",
-                        type = "CheckBox",
-                        callback = function(self, _, value)
-                                addon.db["hidePlayerFrame"] = value
-                                addon.functions.togglePlayerFrame(addon.db["hidePlayerFrame"])
-                        end,
-                },
-        }
+		{
+			parent = "",
+			var = "showPartyFrameInSoloContent",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showPartyFrameInSoloContent"] = value
+				addon.variables.requireReload = true
+				container:ReleaseChildren()
+				addPartyFrame(container)
+				addon.functions.togglePlayerFrame(addon.db["hidePlayerFrame"])
+			end,
+		},
+	}
+
+	if addon.db["showPartyFrameInSoloContent"] then
+		table.insert(data, {
+			parent = "",
+			var = "hidePlayerFrame",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hidePlayerFrame"] = value
+				addon.functions.togglePlayerFrame(addon.db["hidePlayerFrame"])
+			end,
+		})
+	end
 
 	if addon.db["autoAcceptGroupInvite"] == true then
 		table.insert(data, {
@@ -2660,26 +2666,26 @@ local function initMisc()
 end
 
 local function initUnitFrame()
-        addon.functions.InitDBValue("hideHitIndicatorPlayer", false)
-        addon.functions.InitDBValue("hideHitIndicatorPet", false)
-        addon.functions.InitDBValue("hidePlayerFrame", false)
-        if addon.db["hideHitIndicatorPlayer"] then PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide() end
+	addon.functions.InitDBValue("hideHitIndicatorPlayer", false)
+	addon.functions.InitDBValue("hideHitIndicatorPet", false)
+	addon.functions.InitDBValue("hidePlayerFrame", false)
+	if addon.db["hideHitIndicatorPlayer"] then PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide() end
 
-        if PetHitIndicator then hooksecurefunc(PetHitIndicator, "Show", function(self)
-                if addon.db["hideHitIndicatorPet"] then PetHitIndicator:Hide() end
-        end) end
+	if PetHitIndicator then hooksecurefunc(PetHitIndicator, "Show", function(self)
+		if addon.db["hideHitIndicatorPet"] then PetHitIndicator:Hide() end
+	end) end
 
-        function addon.functions.togglePlayerFrame(value)
-                if value then
-                        PlayerFrame:Hide()
-                else
-                        PlayerFrame:Show()
-                end
-        end
-        PlayerFrame:HookScript("OnShow", function(self)
-                if addon.db["hidePlayerFrame"] then self:Hide() end
-        end)
-        addon.functions.togglePlayerFrame(addon.db["hidePlayerFrame"])
+	function addon.functions.togglePlayerFrame(value)
+		if addon.db["showPartyFrameInSoloContent"] and value then
+			PlayerFrame:Hide()
+		else
+			PlayerFrame:Show()
+		end
+	end
+	PlayerFrame:HookScript("OnShow", function(self)
+		if addon.db["showPartyFrameInSoloContent"] and addon.db["hidePlayerFrame"] then self:Hide() end
+	end)
+	addon.functions.togglePlayerFrame(addon.db["hidePlayerFrame"])
 
 	for _, cbData in ipairs(addon.variables.unitFrameNames) do
 		if cbData.var and cbData.name then
