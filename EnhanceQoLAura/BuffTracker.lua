@@ -391,6 +391,12 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 
        local typeDrop = addon.functions.createDropdownAce(L["TrackType"], { BUFF = L["Buff"], DEBUFF = L["Debuff"] }, nil, function(self, _, val)
                cat.trackType = val
+               if activeBuffFrames[catId] then
+                       for _, frame in pairs(activeBuffFrames[catId]) do
+                               frame:Hide()
+                       end
+               end
+               scanBuffs()
        end)
        typeDrop:SetValue(cat.trackType or "BUFF")
        typeDrop:SetRelativeWidth(0.4)
