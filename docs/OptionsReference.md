@@ -72,6 +72,7 @@ Each action bar can be set to appear only on mouseover:
   - **Friends** (Friends).
 - **Show leader icon on raid-style party frames** (Show leader icon on raid-style party frames).
 - **Show Party Frames in Solo Content** (Show Party Frames in Solo Content).
+- **Hide Player Frame** (Hide Player Frame).
 
 ## Dungeon / Mythic+
 - **Hide the group finder text 'Your group is currently forming'** (Hide the group finder text "Your group is currently forming").

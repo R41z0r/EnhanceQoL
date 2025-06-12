@@ -170,15 +170,19 @@ local function createMouseRing()
 			texture1:SetVertexColor(1, 1, 1, 1)
 		end
 
-		local texture2 = imageFrame:CreateTexture(nil, "BACKGROUND")
-		texture2:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Icons\\Dot.tga")
-		texture2:SetSize(10, 10)
-		texture2:SetPoint("CENTER", imageFrame, "CENTER", 0, 0)
+               local texture2
+               if not addon.db["mouseRingHideDot"] then
+                       texture2 = imageFrame:CreateTexture(nil, "BACKGROUND")
+                       texture2:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Icons\\Dot.tga")
+                       texture2:SetSize(10, 10)
+                       texture2:SetPoint("CENTER", imageFrame, "CENTER", 0, 0)
+               end
 
 		imageFrame:Show()
 		addon.mousePointer = imageFrame
-		addon.mousePointer.texture1 = texture1
-	end
+               addon.mousePointer.texture1 = texture1
+               addon.mousePointer.dot = texture2
+       end
 end
 
 local function removeMouseRing()
@@ -196,22 +200,42 @@ local function addGeneralFrame(container)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local data = {
-		{
-			text = L["mouseRingEnabled"],
-			var = "mouseRingEnabled",
-			func = function(self, _, value)
-				addon.db["mouseRingEnabled"] = value
-				if value then
-					createMouseRing()
-				else
-					removeMouseRing()
-				end
-				container:ReleaseChildren()
-				addGeneralFrame(container)
-			end,
-		},
-	}
+        local data = {
+                {
+                        text = L["mouseRingEnabled"],
+                        var = "mouseRingEnabled",
+                        func = function(self, _, value)
+                                addon.db["mouseRingEnabled"] = value
+                                if value then
+                                        createMouseRing()
+                                else
+                                        removeMouseRing()
+                                end
+                                container:ReleaseChildren()
+                                addGeneralFrame(container)
+                        end,
+                },
+                {
+                        text = L["mouseRingHideDot"],
+                        var = "mouseRingHideDot",
+                        func = function(self, _, value)
+                                addon.db["mouseRingHideDot"] = value
+                                if addon.mousePointer and addon.mousePointer.dot then
+                                        if value then
+                                                addon.mousePointer.dot:Hide()
+                                        else
+                                                addon.mousePointer.dot:Show()
+                                        end
+                                elseif addon.mousePointer and not value then
+                                        local dot = addon.mousePointer:CreateTexture(nil, "BACKGROUND")
+                                        dot:SetTexture("Interface\\AddOns\\" .. addonName .. "\\Icons\\Dot.tga")
+                                        dot:SetSize(10, 10)
+                                        dot:SetPoint("CENTER", addon.mousePointer, "CENTER", 0, 0)
+                                        addon.mousePointer.dot = dot
+                                end
+                        end,
+                },
+        }
 
 	table.sort(data, function(a, b) return a.text < b.text end)
 
