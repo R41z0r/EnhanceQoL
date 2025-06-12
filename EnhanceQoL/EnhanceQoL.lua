@@ -1,3 +1,4 @@
+-- luacheck: globals DefaultCompactUnitFrameSetup CompactUnitFrame_UpdateAuras
 local addonName, addon = ...
 
 local LDB = LibStub("LibDataBroker-1.1")
@@ -1597,6 +1598,16 @@ local function addPartyFrame(container)
 				end
 			end,
 		},
+
+		{
+			parent = "",
+			var = "hideRaidFrameBuffs",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["hideRaidFrameBuffs"] = value
+				addon.functions.updateRaidFrameBuffs()
+			end,
+		},
 		{
 			parent = "",
 			var = "showPartyFrameInSoloContent",
@@ -2669,6 +2680,7 @@ local function initUnitFrame()
 	addon.functions.InitDBValue("hideHitIndicatorPlayer", false)
 	addon.functions.InitDBValue("hideHitIndicatorPet", false)
 	addon.functions.InitDBValue("hidePlayerFrame", false)
+	addon.functions.InitDBValue("hideRaidFrameBuffs", false)
 	if addon.db["hideHitIndicatorPlayer"] then PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HitIndicator:Hide() end
 
 	if PetHitIndicator then hooksecurefunc(PetHitIndicator, "Show", function(self)
@@ -2686,6 +2698,31 @@ local function initUnitFrame()
 		if addon.db["showPartyFrameInSoloContent"] and addon.db["hidePlayerFrame"] then self:Hide() end
 	end)
 	addon.functions.togglePlayerFrame(addon.db["hidePlayerFrame"])
+
+	local function handleRaidFrameBuffs(frame)
+		if not frame or not frame.GetName then return end
+		local frameName = frame:GetName()
+		if not frameName then return end
+		for i = 1, 8, 1 do
+			local bFrame = _G[frame:GetName() .. "Buff" .. i]
+			if bFrame then bFrame:SetShown(not addon.db["hideRaidFrameBuffs"]) end
+		end
+	end
+
+	function addon.functions.updateRaidFrameBuffs()
+		for i = 1, 5 do
+			local f = _G["CompactPartyFrameMember" .. i]
+			if f then handleRaidFrameBuffs(f) end
+		end
+		for i = 1, 40 do
+			local f = _G["CompactRaidFrame" .. i]
+			if f then handleRaidFrameBuffs(f) end
+		end
+	end
+
+	if DefaultCompactUnitFrameSetup then hooksecurefunc("DefaultCompactUnitFrameSetup", handleRaidFrameBuffs) end
+	if CompactUnitFrame_UpdateAuras then hooksecurefunc("CompactUnitFrame_UpdateAuras", handleRaidFrameBuffs) end
+	addon.functions.updateRaidFrameBuffs()
 
 	for _, cbData in ipairs(addon.variables.unitFrameNames) do
 		if cbData.var and cbData.name then
