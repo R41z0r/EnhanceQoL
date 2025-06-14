@@ -190,22 +190,38 @@ local function updateBuff(catId, id)
 	activeBuffFrames[catId] = activeBuffFrames[catId] or {}
 	local frame = activeBuffFrames[catId][id]
 	local wasShown = frame and frame:IsShown()
-	if aura then
-		local icon = buff and buff.icon or aura.icon
-		if not frame then
-			frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
-			activeBuffFrames[catId][id] = frame
-		end
-		frame.icon:SetTexture(icon)
-		if aura.duration and aura.duration > 0 then
-			frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+	if buff and buff.showWhenMissing then
+		if aura then
+			if frame then frame:Hide() end
 		else
+			local icon = buff.icon
+			if not frame then
+				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+				activeBuffFrames[catId][id] = frame
+			end
+			frame.icon:SetTexture(icon)
 			frame.cd:Clear()
+			if not wasShown then playBuffSound(catId, id) end
+			frame:Show()
 		end
-		if not wasShown then playBuffSound(catId, id) end
-		frame:Show()
 	else
-		if frame then frame:Hide() end
+		if aura then
+			local icon = buff and buff.icon or aura.icon
+			if not frame then
+				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+				activeBuffFrames[catId][id] = frame
+			end
+			frame.icon:SetTexture(icon)
+			if aura.duration and aura.duration > 0 then
+				frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+			else
+				frame.cd:Clear()
+			end
+			if not wasShown then playBuffSound(catId, id) end
+			frame:Show()
+		else
+			if frame then frame:Hide() end
+		end
 	end
 end
 
@@ -312,6 +328,12 @@ local function openBuffConfig(catId, id)
 
 		frame:AddChild(dropSound)
 
+		local cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(val)
+			buff.showWhenMissing = val
+			scanBuffs()
+		end)
+		frame:AddChild(cbMissing)
+
 		-- alternative spell ids
 		buff.altIDs = buff.altIDs or {}
 		for _, altId in ipairs(buff.altIDs) do
@@ -366,7 +388,7 @@ local function addBuff(catId, id)
 	local cat = getCategory(catId)
 	if not cat then return end
 
-	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {} }
+	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false }
 
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	if not tContains(addon.db["buffTrackerOrder"][catId], id) then table.insert(addon.db["buffTrackerOrder"][catId], id) end
@@ -549,6 +571,13 @@ function addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, group
 		end)
 		cbSpell.frame:HookScript("OnLeave", function() GameTooltip:Hide() end)
 		row:AddChild(cbSpell)
+
+		local cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], cat.buffs[info.id].showWhenMissing, function(self, _, val)
+			cat.buffs[info.id].showWhenMissing = val
+			updateBuff(catId, info.id)
+		end)
+		cbMissing:SetRelativeWidth(0.1)
+		row:AddChild(cbMissing)
 
 		local upIcon = AceGUI:Create("Icon")
 		upIcon:SetLabel("")
