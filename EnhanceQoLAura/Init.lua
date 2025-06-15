@@ -53,5 +53,6 @@ for _, cat in pairs(addon.db["buffTrackerCategories"]) do
 		if not buff.altIDs then buff.altIDs = {} end
 		if buff.showWhenMissing == nil then buff.showWhenMissing = false end
 		if buff.showAlways == nil then buff.showAlways = false end
+		if buff.glow == nil then buff.glow = false end
 	end
 end
