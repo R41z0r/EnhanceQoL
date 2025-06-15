@@ -9,7 +9,6 @@ exclude_files = {
 	"CallbackHandler-1.0.lua",
 	"EnhanceQoLAura.lua",
 	"EnhanceQoLMythicPlus/DungeonFilter.lua",
-	"EnhanceQoL/libs/LibOpenRaid/LibOpenRaid.lua",
 	"EnhanceQoL/libs/AceDB-3.0/AceDB-3.0.lua",
 	"EnhanceQoL/libs/AceDBOptions-3.0/AceDBOptions-3.0.lua",
 	"EnhanceQoL/libs/AceConfig-3.0/AceConfig-3.0.lua",
@@ -19,15 +18,7 @@ exclude_files = {
 	"EnhanceQoL/libs/LibSharedMedia-3.0/LibSharedMedia-3.0.lua",
 	"LibStub.lua",
 	"EnhanceQoL/libs/AceLocale-3.0/AceLocale-3.0.lua",
-	"EnhanceQoL/libs/LibOpenRaid/Deprecated.lua",
-	"EnhanceQoL/libs/LibOpenRaid/Functions.lua",
-	"EnhanceQoL/libs/LibOpenRaid/GetPlayerInformation.lua",
-	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Wrath.lua",
-	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_WarWithin.lua",
-	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Shadowlands.lua",
-	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Dragonflight.lua",
-	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Era.lua",
-	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Cata.lua",
+        "EnhanceQoL/libs/LibSimpleKeystone/LibSimpleKeystone.lua",
 }
 ignore = {
 	"11./SLASH_.*", -- Setting an undefined (Slash handler) global variable
