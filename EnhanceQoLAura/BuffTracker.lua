@@ -224,42 +224,69 @@ local function updateBuff(catId, id)
 		end
 	end
 
-	activeBuffFrames[catId] = activeBuffFrames[catId] or {}
-	local frame = activeBuffFrames[catId][id]
-	local wasShown = frame and frame:IsShown()
-	if buff and buff.showWhenMissing then
-		if aura then
-			if frame then frame:Hide() end
-		else
-			local icon = buff.icon
-			if not frame then
-				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
-				activeBuffFrames[catId][id] = frame
-			end
-			frame.icon:SetTexture(icon)
-			frame.cd:Clear()
-			if not wasShown then playBuffSound(catId, id, triggeredId) end
-			frame:Show()
-		end
-	else
-		if aura then
-			local icon = buff and buff.icon or aura.icon
-			if not frame then
-				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
-				activeBuffFrames[catId][id] = frame
-			end
-			frame.icon:SetTexture(icon)
-			if aura.duration and aura.duration > 0 then
-				frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
-			else
-				frame.cd:Clear()
-			end
-			if not wasShown then playBuffSound(catId, id, triggeredId) end
-			frame:Show()
-		else
-			if frame then frame:Hide() end
-		end
-	end
+       activeBuffFrames[catId] = activeBuffFrames[catId] or {}
+       local frame = activeBuffFrames[catId][id]
+       local wasShown = frame and frame:IsShown()
+       local wasActive = frame and frame.isActive
+
+       if buff and buff.showAlways then
+               local icon = buff.icon or (aura and aura.icon)
+               if not frame then
+                       frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+                       activeBuffFrames[catId][id] = frame
+               end
+               frame.icon:SetTexture(icon)
+               if aura then
+                       if aura.duration and aura.duration > 0 then
+                               frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+                       else
+                               frame.cd:Clear()
+                       end
+                       frame.icon:SetDesaturated(false)
+                       frame.icon:SetAlpha(1)
+                       if not wasActive then playBuffSound(catId, id, triggeredId) end
+                       frame.isActive = true
+               else
+                       frame.cd:Clear()
+                       frame.icon:SetDesaturated(true)
+                       frame.icon:SetAlpha(0.5)
+                       frame.isActive = false
+               end
+               frame:Show()
+       elseif buff and buff.showWhenMissing then
+               if aura then
+                       if frame then frame:Hide() end
+               else
+                       local icon = buff.icon
+                       if not frame then
+                               frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+                               activeBuffFrames[catId][id] = frame
+                       end
+                       frame.icon:SetTexture(icon)
+                       frame.cd:Clear()
+                       if not wasShown then playBuffSound(catId, id, triggeredId) end
+                       frame:Show()
+               end
+       else
+               if aura then
+                       local icon = buff and buff.icon or aura.icon
+                       if not frame then
+                               frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+                               activeBuffFrames[catId][id] = frame
+                       end
+                       frame.icon:SetTexture(icon)
+                       if aura.duration and aura.duration > 0 then
+                               frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+                       else
+                               frame.cd:Clear()
+                       end
+                       if not wasShown then playBuffSound(catId, id, triggeredId) end
+                       frame:Show()
+               else
+                       if frame then frame:Hide() end
+               end
+               if frame then frame.isActive = aura ~= nil end
+       end
 end
 
 local function scanBuffs()
@@ -389,11 +416,26 @@ local function openBuffConfig(catId, id)
 
 		wrapper:AddChild(dropSound)
 
-		local cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(_, _, val)
-			buff.showWhenMissing = val
-			scanBuffs()
-		end)
-		wrapper:AddChild(cbMissing)
+               local cbMissing, cbAlways
+               cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(_, _, val)
+                       buff.showWhenMissing = val
+                       if val then
+                               buff.showAlways = false
+                               if cbAlways then cbAlways:SetValue(false) end
+                       end
+                       scanBuffs()
+               end)
+               wrapper:AddChild(cbMissing)
+
+               cbAlways = addon.functions.createCheckboxAce(L["buffTrackerAlwaysShow"], buff.showAlways, function(_, _, val)
+                       buff.showAlways = val
+                       if val then
+                               buff.showWhenMissing = false
+                               if cbMissing then cbMissing:SetValue(false) end
+                       end
+                       scanBuffs()
+               end)
+               wrapper:AddChild(cbAlways)
 
 		-- alternative spell ids
 		buff.altIDs = buff.altIDs or {}
@@ -451,7 +493,7 @@ local function addBuff(catId, id)
 	local cat = getCategory(catId)
 	if not cat then return end
 
-	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false }
+       cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false, showAlways = false }
 
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	if not tContains(addon.db["buffTrackerOrder"][catId], id) then table.insert(addon.db["buffTrackerOrder"][catId], id) end
