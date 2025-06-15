@@ -5,6 +5,9 @@
 - **Bag-Filter Reset**  
   - One-click button that clears all active bag-filter settings.
 
+### 🔄 Changed
+- Reduced some required libs
+
 ## [3.20.1] – 2025-06-12
 ### 🐛 Fixed
 - Fixed an issue in groups with **Hide buffs on raid frames**
