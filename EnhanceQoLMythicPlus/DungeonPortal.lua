@@ -7,7 +7,7 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
-local openRaidLib = LibStub:GetLibrary("LibSimpleKeystone-1.0", true)
+local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0", true)
 local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_MythicPlus")
 
 local cModeIDs
@@ -745,6 +745,7 @@ local function calculateMaxWidth(dataTable)
 	local maxWidth = 0
 	for key, data in pairs(dataTable) do
 		if UnitInParty(key) or key == UnitName("player") then
+			if not measureFontString then return end
 			local widthMap = 0
 			if data.challengeMapID and data.challengeMapID > 0 then
 				local mapData = mapInfo[data.challengeMapID]

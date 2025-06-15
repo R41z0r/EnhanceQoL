@@ -20,7 +20,7 @@
 ## LoadOnDemand: 1
 ## Globe-Main: EnhanceQoL
 
-..\EnhanceQoL\libs\LibSimpleKeystone\lib.xml
+..\EnhanceQoL\libs\LibOpenRaid\lib.xml
 
 Init.lua
 locales.xml
