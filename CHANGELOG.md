@@ -1,6 +1,10 @@
 # Changelog
 
-## [3.20.1] – 2025-06-12  
+## [3.20.2] – 2025-06-13
+### 🐛 Fixed
+- Fixed the Buff Tracker mistakenly triggering "missing" alerts on login by delaying the initial scan.
+
+## [3.20.1] – 2025-06-12
 ### 🐛 Fixed
 - Fixed an issue in groups with **Hide buffs on raid frames**
 

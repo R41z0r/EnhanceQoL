@@ -27,6 +27,9 @@ addon.functions.InitDBValue("buffTrackerCategories", {
 		y = 0,
 		size = 36,
 		direction = "RIGHT",
+		trackType = "BUFF",
+		allowedSpecs = {},
+		allowedClasses = {},
 		buffs = {},
 	},
 })
@@ -39,3 +42,13 @@ addon.functions.InitDBValue("buffTrackerSounds", {})
 addon.functions.InitDBValue("buffTrackerSoundsEnabled", {})
 
 if type(addon.db["buffTrackerSelectedCategory"]) ~= "number" then addon.db["buffTrackerSelectedCategory"] = 1 end
+
+for _, cat in pairs(addon.db["buffTrackerCategories"]) do
+	if not cat.trackType then cat.trackType = "BUFF" end
+	if not cat.allowedSpecs then cat.allowedSpecs = {} end
+	if not cat.allowedClasses then cat.allowedClasses = {} end
+	for _, buff in pairs(cat.buffs or {}) do
+		if not buff.altIDs then buff.altIDs = {} end
+		if buff.showWhenMissing == nil then buff.showWhenMissing = false end
+	end
+end
