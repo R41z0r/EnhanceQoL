@@ -263,6 +263,8 @@ local function updateBuff(catId, id)
                                activeBuffFrames[catId][id] = frame
                        end
                        frame.icon:SetTexture(icon)
+                       frame.icon:SetDesaturated(false)
+                       frame.icon:SetAlpha(1)
                        frame.cd:Clear()
                        if not wasShown then playBuffSound(catId, id, triggeredId) end
                        frame:Show()
@@ -275,6 +277,8 @@ local function updateBuff(catId, id)
                                activeBuffFrames[catId][id] = frame
                        end
                        frame.icon:SetTexture(icon)
+                       frame.icon:SetDesaturated(false)
+                       frame.icon:SetAlpha(1)
                        if aura.duration and aura.duration > 0 then
                                frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
                        else
