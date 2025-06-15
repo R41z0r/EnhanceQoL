@@ -186,38 +186,36 @@ local function createBuffFrame(icon, parent, size)
 end
 
 local function playBuffSound(catId, baseId, altId)
-    if not addon.db["buffTrackerSoundsEnabled"] then return end
-    if not addon.db["buffTrackerSoundsEnabled"][catId] then return end
+	if not addon.db["buffTrackerSoundsEnabled"] then return end
+	if not addon.db["buffTrackerSoundsEnabled"][catId] then return end
 
-    local function getSound(id)
-        if addon.db["buffTrackerSoundsEnabled"][catId][id] then
-            return addon.db["buffTrackerSounds"][catId][id]
-        end
-    end
+	local function getSound(id)
+		if addon.db["buffTrackerSoundsEnabled"][catId][id] then return addon.db["buffTrackerSounds"][catId][id] end
+	end
 
-    local sound = altId and getSound(altId) or nil
-    if not sound then sound = getSound(baseId) end
+	local sound = altId and getSound(altId) or nil
+	if not sound then sound = getSound(baseId) end
 
-    if not sound then return end
+	if not sound then return end
 
-    local file = addon.Aura.sounds[sound]
-    if file then PlaySoundFile(file, "Master") end
+	local file = addon.Aura.sounds[sound]
+	if file then PlaySoundFile(file, "Master") end
 end
 
 local function updateBuff(catId, id)
-        local cat = getCategory(catId)
-        local buff = cat and cat.buffs and cat.buffs[id]
-        local aura = C_UnitAuras.GetPlayerAuraBySpellID(id)
-        local triggeredId = id
-        if not aura and buff and buff.altIDs then
-                for _, altId in ipairs(buff.altIDs) do
-                        aura = C_UnitAuras.GetPlayerAuraBySpellID(altId)
-                        if aura then
-                                triggeredId = altId
-                                break
-                        end
-                end
-        end
+	local cat = getCategory(catId)
+	local buff = cat and cat.buffs and cat.buffs[id]
+	local aura = C_UnitAuras.GetPlayerAuraBySpellID(id)
+	local triggeredId = id
+	if not aura and buff and buff.altIDs then
+		for _, altId in ipairs(buff.altIDs) do
+			aura = C_UnitAuras.GetPlayerAuraBySpellID(altId)
+			if aura then
+				triggeredId = altId
+				break
+			end
+		end
+	end
 	if aura then
 		if cat and cat.trackType == "DEBUFF" and not aura.isHarmful then
 			aura = nil
@@ -239,8 +237,8 @@ local function updateBuff(catId, id)
 				activeBuffFrames[catId][id] = frame
 			end
 			frame.icon:SetTexture(icon)
-                        frame.cd:Clear()
-                        if not wasShown then playBuffSound(catId, id, triggeredId) end
+			frame.cd:Clear()
+			if not wasShown then playBuffSound(catId, id, triggeredId) end
 			frame:Show()
 		end
 	else
@@ -251,12 +249,12 @@ local function updateBuff(catId, id)
 				activeBuffFrames[catId][id] = frame
 			end
 			frame.icon:SetTexture(icon)
-                        if aura.duration and aura.duration > 0 then
-                                frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
-                        else
-                                frame.cd:Clear()
-                        end
-                        if not wasShown then playBuffSound(catId, id, triggeredId) end
+			if aura.duration and aura.duration > 0 then
+				frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+			else
+				frame.cd:Clear()
+			end
+			if not wasShown then playBuffSound(catId, id, triggeredId) end
 			frame:Show()
 		else
 			if frame then frame:Hide() end
@@ -336,35 +334,35 @@ end
 local openedFrames = {}
 
 local function openBuffConfig(catId, id)
-        local frame = AceGUI:Create("Frame")
-        frame:SetTitle(L["BuffTracker"])
-        frame:SetWidth(400)
-        frame:SetHeight(180)
-        frame:SetLayout("Fill")
-        frame:SetCallback("OnClose", function(widget)
-                AceGUI:Release(widget)
-                openedFrames[catId][id] = nil
-        end)
-        openedFrames[catId] = openedFrames[catId] or {}
-        openedFrames[catId][id] = true
+	local frame = AceGUI:Create("Frame")
+	frame:SetTitle(L["BuffTracker"])
+	frame:SetWidth(400)
+	frame:SetHeight(180)
+	frame:SetLayout("Fill")
+	frame:SetCallback("OnClose", function(widget)
+		AceGUI:Release(widget)
+		openedFrames[catId][id] = nil
+	end)
+	openedFrames[catId] = openedFrames[catId] or {}
+	openedFrames[catId][id] = true
 
-        local scroll = addon.functions.createContainer("ScrollFrame", "List")
-        scroll:SetFullWidth(true)
-        scroll:SetFullHeight(true)
-        frame:AddChild(scroll)
+	local scroll = addon.functions.createContainer("ScrollFrame", "List")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	frame:AddChild(scroll)
 
-        local wrapper = addon.functions.createContainer("SimpleGroup", "List")
-        scroll:AddChild(wrapper)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "List")
+	scroll:AddChild(wrapper)
 
-        local function rebuild()
-                wrapper:ReleaseChildren()
+	local function rebuild()
+		wrapper:ReleaseChildren()
 
 		local buff = addon.db["buffTrackerCategories"][catId]["buffs"][id]
 
 		local label = AceGUI:Create("Label")
 		local name = buff.name
 		label:SetText((name or "") .. " (" .. id .. ")")
-                wrapper:AddChild(label)
+		wrapper:AddChild(label)
 
 		addon.db["buffTrackerSounds"][catId] = addon.db["buffTrackerSounds"][catId] or {}
 		addon.db["buffTrackerSoundsEnabled"][catId] = addon.db["buffTrackerSoundsEnabled"][catId] or {}
@@ -374,7 +372,7 @@ local function openBuffConfig(catId, id)
 			addon.db["buffTrackerSoundsEnabled"][catId][id],
 			function(_, _, val) addon.db["buffTrackerSoundsEnabled"][catId][id] = val end
 		)
-                wrapper:AddChild(cbElement)
+		wrapper:AddChild(cbElement)
 
 		local soundList = {}
 		for sname in pairs(addon.Aura.sounds or {}) do
@@ -389,13 +387,13 @@ local function openBuffConfig(catId, id)
 		end)
 		dropSound:SetValue(addon.db["buffTrackerSounds"][catId][id])
 
-                wrapper:AddChild(dropSound)
+		wrapper:AddChild(dropSound)
 
 		local cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(_, _, val)
 			buff.showWhenMissing = val
 			scanBuffs()
 		end)
-                wrapper:AddChild(cbMissing)
+		wrapper:AddChild(cbMissing)
 
 		-- alternative spell ids
 		buff.altIDs = buff.altIDs or {}
@@ -424,7 +422,7 @@ local function openBuffConfig(catId, id)
 			end)
 			row:AddChild(removeIcon)
 
-                        wrapper:AddChild(row)
+			wrapper:AddChild(row)
 		end
 
 		local altEdit = addon.functions.createEditboxAce(L["AddAltSpellID"], nil, function(self, _, text)
@@ -435,12 +433,12 @@ local function openBuffConfig(catId, id)
 				rebuild()
 			end
 		end)
-                wrapper:AddChild(altEdit)
+		wrapper:AddChild(altEdit)
 
-                wrapper:AddChild(addon.functions.createSpacerAce())
-                scroll:DoLayout()
-                wrapper:DoLayout()
-        end
+		wrapper:AddChild(addon.functions.createSpacerAce())
+		scroll:DoLayout()
+		wrapper:DoLayout()
+	end
 
 	rebuild()
 end

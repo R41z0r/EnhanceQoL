@@ -610,40 +610,40 @@ local function CreateFilterMenu()
 		frame:SetPoint("TOPRIGHT", ContainerFrameCombinedBags, "TOPLEFT", -10, 0)
 	end
 
-        -- Scrollbarer Bereich
-        local scrollContainer = AceGUI:Create("ScrollFrame")
-        scrollContainer:SetLayout("Flow")
-        scrollContainer:SetFullWidth(true)
-        scrollContainer:SetFullHeight(true)
+	-- Scrollbarer Bereich
+	local scrollContainer = AceGUI:Create("ScrollFrame")
+	scrollContainer:SetLayout("Flow")
+	scrollContainer:SetFullWidth(true)
+	scrollContainer:SetFullHeight(true)
 
-        scrollContainer.frame:SetParent(frame)
-        scrollContainer.frame:ClearAllPoints()
-        scrollContainer.frame:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -10)
-        scrollContainer.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
+	scrollContainer.frame:SetParent(frame)
+	scrollContainer.frame:ClearAllPoints()
+	scrollContainer.frame:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -10)
+	scrollContainer.frame:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
 
-        frame.widgets = {}
+	frame.widgets = {}
 
-        local function AnyFilterActive()
-                for _, v in pairs(addon.itemBagFilters) do
-                        if v then return true end
-                end
-                for _, tbl in ipairs({ addon.itemBagFiltersQuality, addon.itemBagFiltersBound, addon.itemBagFiltersUpgrade }) do
-                        for _, v in pairs(tbl) do
-                                if v then return true end
-                        end
-                end
-                return false
-        end
+	local function AnyFilterActive()
+		for _, v in pairs(addon.itemBagFilters) do
+			if v then return true end
+		end
+		for _, tbl in ipairs({ addon.itemBagFiltersQuality, addon.itemBagFiltersBound, addon.itemBagFiltersUpgrade }) do
+			for _, v in pairs(tbl) do
+				if v then return true end
+			end
+		end
+		return false
+	end
 
-        local function UpdateResetButton()
-                if frame.btnReset then
-                        if AnyFilterActive() then
-                                frame.btnReset:Show()
-                        else
-                                frame.btnReset:Hide()
-                        end
-                end
-        end
+	local function UpdateResetButton()
+		if frame.btnReset then
+			if AnyFilterActive() then
+				frame.btnReset:Show()
+			else
+				frame.btnReset:Hide()
+			end
+		end
+	end
 
 	local longestWidth = 200
 	local math_max = math.max
@@ -662,16 +662,16 @@ local function CreateFilterMenu()
 		for _, item in ipairs(section.child) do
 			local widget
 
-                        if item.type == "CheckBox" then
-                                widget = AceGUI:Create("CheckBox")
-                                widget:SetLabel(item.label)
-                                widget:SetValue(addon.itemBagFilters[item.key])
-                                widget:SetCallback("OnValueChanged", function(_, _, value)
-                                        addon.itemBagFilters[item.key] = value
-                                        if item.qFilter then
-                                                addon.itemBagFiltersQuality[item.qFilter] = value
-                                                checkActiveQualityFilter()
-                                        end
+			if item.type == "CheckBox" then
+				widget = AceGUI:Create("CheckBox")
+				widget:SetLabel(item.label)
+				widget:SetValue(addon.itemBagFilters[item.key])
+				widget:SetCallback("OnValueChanged", function(_, _, value)
+					addon.itemBagFilters[item.key] = value
+					if item.qFilter then
+						addon.itemBagFiltersQuality[item.qFilter] = value
+						checkActiveQualityFilter()
+					end
 					if item.bFilter then
 						addon.itemBagFiltersBound[item.bFilter] = value
 						checkActiveBindFilter()
@@ -693,20 +693,20 @@ local function CreateFilterMenu()
 							if itemButton then addon.functions.updateBank(itemButton, -1, slot) end
 						end
 					end
-                                        if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
+					if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
 
-                                        UpdateResetButton()
-                                end)
-                                if item.tooltip then
-                                        widget:SetCallback("OnEnter", function(self)
-                                                GameTooltip:SetOwner(self.frame, "ANCHOR_RIGHT")
-                                                GameTooltip:ClearLines()
-                                                GameTooltip:AddLine(item.tooltip)
-                                                GameTooltip:Show()
-                                        end)
-                                        widget:SetCallback("OnLeave", function(self) GameTooltip:Hide() end)
-                                end
-                        elseif item.type == "EditBox" then
+					UpdateResetButton()
+				end)
+				if item.tooltip then
+					widget:SetCallback("OnEnter", function(self)
+						GameTooltip:SetOwner(self.frame, "ANCHOR_RIGHT")
+						GameTooltip:ClearLines()
+						GameTooltip:AddLine(item.tooltip)
+						GameTooltip:Show()
+					end)
+					widget:SetCallback("OnLeave", function(self) GameTooltip:Hide() end)
+				end
+			elseif item.type == "EditBox" then
 				-- separate label so it aligns nicely above half‑width boxes
 				local eLabel = AceGUI:Create("Label")
 				eLabel:SetText(item.label)
@@ -732,12 +732,12 @@ local function CreateFilterMenu()
 					end
 				end)
 
-                                widget:SetCallback("OnEnterPressed", function(self, _, text)
-                                        addon.itemBagFilters[item.key] = tonumber(text)
-                                        addon.functions.updateBags(ContainerFrameCombinedBags)
-                                        for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
-                                                addon.functions.updateBags(frame)
-                                        end
+				widget:SetCallback("OnEnterPressed", function(self, _, text)
+					addon.itemBagFilters[item.key] = tonumber(text)
+					addon.functions.updateBags(ContainerFrameCombinedBags)
+					for _, frame in ipairs(ContainerFrameContainer.ContainerFrames) do
+						addon.functions.updateBags(frame)
+					end
 
 					if BankFrame and BankFrame:IsShown() and addon.db["showIlvlOnBankFrame"] then
 						for slot = 1, NUM_BANKGENERIC_SLOTS do
@@ -745,26 +745,26 @@ local function CreateFilterMenu()
 							if itemButton then addon.functions.updateBank(itemButton, -1, slot) end
 						end
 					end
-                                        if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
+					if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
 
-                                        UpdateResetButton()
-                                        self:ClearFocus()
-                                end)
-                        end
+					UpdateResetButton()
+					self:ClearFocus()
+				end)
+			end
 
-                        if widget then
-                                if item.type ~= "EditBox" or (item.key ~= "minLevel" and item.key ~= "maxLevel") then widget:SetFullWidth(true) end
-                                scrollContainer:AddChild(widget)
-                                table.insert(frame.widgets, widget)
-                                if widget.text and widget.text.GetStringWidth then longestWidth = math_max(widget.text:GetStringWidth(), longestWidth) end
-                        end
-                end
+			if widget then
+				if item.type ~= "EditBox" or (item.key ~= "minLevel" and item.key ~= "maxLevel") then widget:SetFullWidth(true) end
+				scrollContainer:AddChild(widget)
+				table.insert(frame.widgets, widget)
+				if widget.text and widget.text.GetStringWidth then longestWidth = math_max(widget.text:GetStringWidth(), longestWidth) end
+			end
+		end
 	end
 	frame:SetSize(longestWidth + 60, 280) -- Feste Größe
 
-        local btnDock = CreateFrame("Button", "InventoryFilterPanelDock", frame)
-        btnDock:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -30, -5)
-        btnDock:SetText("Dock")
+	local btnDock = CreateFrame("Button", "InventoryFilterPanelDock", frame)
+	btnDock:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -30, -5)
+	btnDock:SetText("Dock")
 	btnDock.isDocked = addon.db["bagFilterDockFrame"]
 	btnDock:SetScript("OnClick", function(self)
 		self.isDocked = not self.isDocked
@@ -798,49 +798,49 @@ local function CreateFilterMenu()
 		end
 		GameTooltip:Show()
 	end)
-        btnDock:SetScript("OnLeave", function() GameTooltip:Hide() end)
+	btnDock:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-        local btnReset = CreateFrame("Button", "InventoryFilterPanelReset", frame)
-        btnReset:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -50, -5)
-        btnReset:SetSize(16, 16)
-        btnReset:SetNormalTexture("Interface\\Buttons\\UI-RefreshButton")
-        btnReset:Hide()
-        frame.btnReset = btnReset
-        btnReset:SetScript("OnClick", function()
-                addon.itemBagFilters = {}
-                addon.itemBagFiltersQuality = {}
-                addon.itemBagFiltersBound = {}
-                addon.itemBagFiltersUpgrade = {}
+	local btnReset = CreateFrame("Button", "InventoryFilterPanelReset", frame)
+	btnReset:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -50, -5)
+	btnReset:SetSize(16, 16)
+	btnReset:SetNormalTexture("Interface\\Buttons\\UI-RefreshButton")
+	btnReset:Hide()
+	frame.btnReset = btnReset
+	btnReset:SetScript("OnClick", function()
+		addon.itemBagFilters = {}
+		addon.itemBagFiltersQuality = {}
+		addon.itemBagFiltersBound = {}
+		addon.itemBagFiltersUpgrade = {}
 
-                for _, widget in ipairs(frame.widgets) do
-                        if widget.SetValue then widget:SetValue(false) end
-                        if widget.SetText then widget:SetText("") end
-                end
+		for _, widget in ipairs(frame.widgets) do
+			if widget.SetValue then widget:SetValue(false) end
+			if widget.SetText then widget:SetText("") end
+		end
 
-                addon.functions.updateBags(ContainerFrameCombinedBags)
-                for _, cframe in ipairs(ContainerFrameContainer.ContainerFrames) do
-                        addon.functions.updateBags(cframe)
-                end
+		addon.functions.updateBags(ContainerFrameCombinedBags)
+		for _, cframe in ipairs(ContainerFrameContainer.ContainerFrames) do
+			addon.functions.updateBags(cframe)
+		end
 
-                if BankFrame and BankFrame:IsShown() and addon.db["showIlvlOnBankFrame"] then
-                        for slot = 1, NUM_BANKGENERIC_SLOTS do
-                                local itemButton = _G["BankFrameItem" .. slot]
-                                if itemButton then addon.functions.updateBank(itemButton, -1, slot) end
-                        end
-                end
-                if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
+		if BankFrame and BankFrame:IsShown() and addon.db["showIlvlOnBankFrame"] then
+			for slot = 1, NUM_BANKGENERIC_SLOTS do
+				local itemButton = _G["BankFrameItem" .. slot]
+				if itemButton then addon.functions.updateBank(itemButton, -1, slot) end
+			end
+		end
+		if _G.AccountBankPanel and _G.AccountBankPanel:IsShown() then addon.functions.updateBags(_G.AccountBankPanel) end
 
-                UpdateResetButton()
-        end)
-        btnReset:SetScript("OnEnter", function(self)
-                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                GameTooltip:SetText(L["bagFilterResetFilters"])
-                GameTooltip:Show()
-        end)
-        btnReset:SetScript("OnLeave", function() GameTooltip:Hide() end)
+		UpdateResetButton()
+	end)
+	btnReset:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:SetText(L["bagFilterResetFilters"])
+		GameTooltip:Show()
+	end)
+	btnReset:SetScript("OnLeave", function() GameTooltip:Hide() end)
 
-        UpdateResetButton()
-        return frame
+	UpdateResetButton()
+	return frame
 end
 
 local function ToggleFilterMenu(self)
@@ -925,20 +925,20 @@ local function handleWayCommand(msg)
 		table.insert(args, token)
 	end
 
-       local mapID, x, y
-       if #args >= 2 then
-               local first = args[1]
-               if first:sub(1, 1) == "#" then first = first:sub(2) end
-               if tonumber(first) and args[3] then
-                       mapID = tonumber(first)
-                       x = tonumber(args[2])
-                       y = tonumber(args[3])
-               else
-                       x = tonumber(args[1])
-                       y = tonumber(args[2])
-                       mapID = C_Map.GetBestMapForUnit("player")
-               end
-       end
+	local mapID, x, y
+	if #args >= 2 then
+		local first = args[1]
+		if first:sub(1, 1) == "#" then first = first:sub(2) end
+		if tonumber(first) and args[3] then
+			mapID = tonumber(first)
+			x = tonumber(args[2])
+			y = tonumber(args[3])
+		else
+			x = tonumber(args[1])
+			y = tonumber(args[2])
+			mapID = C_Map.GetBestMapForUnit("player")
+		end
+	end
 
 	if not mapID or not x or not y then
 		print("|cff00ff98Enhance QoL|r: " .. L["wayUsage"])
