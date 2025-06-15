@@ -347,11 +347,13 @@ local function openBuffConfig(catId, id)
 		addon.db["buffTrackerSounds"][catId] = addon.db["buffTrackerSounds"][catId] or {}
 		addon.db["buffTrackerSoundsEnabled"][catId] = addon.db["buffTrackerSoundsEnabled"][catId] or {}
 
-		local cbElement = addon.functions.createCheckboxAce(
-			L["buffTrackerSoundsEnabled"],
-			addon.db["buffTrackerSoundsEnabled"][catId][id],
-			function(val) addon.db["buffTrackerSoundsEnabled"][catId][id] = val end
-		)
+               local cbElement = addon.functions.createCheckboxAce(
+                       L["buffTrackerSoundsEnabled"],
+                       addon.db["buffTrackerSoundsEnabled"][catId][id],
+                       function(_, _, val)
+                               addon.db["buffTrackerSoundsEnabled"][catId][id] = val
+                       end
+               )
 		frame:AddChild(cbElement)
 
 		local soundList = {}
@@ -369,10 +371,14 @@ local function openBuffConfig(catId, id)
 
 		frame:AddChild(dropSound)
 
-		local cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(val)
-			buff.showWhenMissing = val
-			scanBuffs()
-		end)
+               local cbMissing = addon.functions.createCheckboxAce(
+                       L["buffTrackerShowWhenMissing"],
+                       buff.showWhenMissing,
+                       function(_, _, val)
+                               buff.showWhenMissing = val
+                               scanBuffs()
+                       end
+               )
 		frame:AddChild(cbMissing)
 
 		-- alternative spell ids
@@ -416,6 +422,7 @@ local function openBuffConfig(catId, id)
 		frame:AddChild(altEdit)
 
 		frame:AddChild(addon.functions.createSpacerAce())
+		frame:DoLayout()
 	end
 
 	rebuild()
@@ -536,6 +543,7 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	for specID, val in pairs(cat.allowedSpecs or {}) do
 		if val then specDrop:SetItemValue(specID, true) end
 	end
+	specDrop:SetRelativeWidth(0.5)
 	core:AddChild(specDrop)
 
 	local classDrop = addon.functions.createDropdownAce(L["ShowForClass"], classNames, nil, function(self, event, key, checked)
@@ -547,6 +555,7 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	for c, val in pairs(cat.allowedClasses or {}) do
 		if val then classDrop:SetItemValue(c, true) end
 	end
+	classDrop:SetRelativeWidth(0.5)
 	core:AddChild(classDrop)
 
 	local spellEdit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
@@ -634,13 +643,6 @@ function addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, group
 		end)
 		cbSpell.frame:HookScript("OnLeave", function() GameTooltip:Hide() end)
 		row:AddChild(cbSpell)
-
-		local cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], cat.buffs[info.id].showWhenMissing, function(self, _, val)
-			cat.buffs[info.id].showWhenMissing = val
-			updateBuff(catId, info.id)
-		end)
-		cbMissing:SetRelativeWidth(0.1)
-		row:AddChild(cbMissing)
 
 		local upIcon = AceGUI:Create("Icon")
 		upIcon:SetLabel("")
