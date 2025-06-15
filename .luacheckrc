@@ -4187,6 +4187,8 @@ globals = {
 	"AbbreviateNumbers",
 	"ActionButtonDown",
 	"ActionButtonUp",
+	"ActionButton_HideOverlayGlow",
+	"ActionButton_ShowOverlayGlow",
 	"AddFrameLock",
 	"AddToAutoHide",
 	"AnimateTexCoords",
