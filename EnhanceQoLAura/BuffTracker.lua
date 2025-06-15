@@ -185,29 +185,39 @@ local function createBuffFrame(icon, parent, size)
 	return frame
 end
 
-local function playBuffSound(catId, id)
-	if addon.db["buffTrackerSoundsEnabled"] and addon.db["buffTrackerSoundsEnabled"][catId] and addon.db["buffTrackerSoundsEnabled"][catId][id] then
-		local sound = addon.db["buffTrackerSounds"][catId][id]
-		if not sound then return end
+local function playBuffSound(catId, baseId, altId)
+    if not addon.db["buffTrackerSoundsEnabled"] then return end
+    if not addon.db["buffTrackerSoundsEnabled"][catId] then return end
 
-		local file = addon.Aura.sounds[sound]
-		if file then
-			PlaySoundFile(file, "Master")
-			return
-		end
-	end
+    local function getSound(id)
+        if addon.db["buffTrackerSoundsEnabled"][catId][id] then
+            return addon.db["buffTrackerSounds"][catId][id]
+        end
+    end
+
+    local sound = altId and getSound(altId) or nil
+    if not sound then sound = getSound(baseId) end
+
+    if not sound then return end
+
+    local file = addon.Aura.sounds[sound]
+    if file then PlaySoundFile(file, "Master") end
 end
 
 local function updateBuff(catId, id)
-	local cat = getCategory(catId)
-	local buff = cat and cat.buffs and cat.buffs[id]
-	local aura = C_UnitAuras.GetPlayerAuraBySpellID(id)
-	if not aura and buff and buff.altIDs then
-		for _, altId in ipairs(buff.altIDs) do
-			aura = C_UnitAuras.GetPlayerAuraBySpellID(altId)
-			if aura then break end
-		end
-	end
+        local cat = getCategory(catId)
+        local buff = cat and cat.buffs and cat.buffs[id]
+        local aura = C_UnitAuras.GetPlayerAuraBySpellID(id)
+        local triggeredId = id
+        if not aura and buff and buff.altIDs then
+                for _, altId in ipairs(buff.altIDs) do
+                        aura = C_UnitAuras.GetPlayerAuraBySpellID(altId)
+                        if aura then
+                                triggeredId = altId
+                                break
+                        end
+                end
+        end
 	if aura then
 		if cat and cat.trackType == "DEBUFF" and not aura.isHarmful then
 			aura = nil
@@ -229,8 +239,8 @@ local function updateBuff(catId, id)
 				activeBuffFrames[catId][id] = frame
 			end
 			frame.icon:SetTexture(icon)
-			frame.cd:Clear()
-			if not wasShown then playBuffSound(catId, id) end
+                        frame.cd:Clear()
+                        if not wasShown then playBuffSound(catId, id, triggeredId) end
 			frame:Show()
 		end
 	else
@@ -241,12 +251,12 @@ local function updateBuff(catId, id)
 				activeBuffFrames[catId][id] = frame
 			end
 			frame.icon:SetTexture(icon)
-			if aura.duration and aura.duration > 0 then
-				frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
-			else
-				frame.cd:Clear()
-			end
-			if not wasShown then playBuffSound(catId, id) end
+                        if aura.duration and aura.duration > 0 then
+                                frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+                        else
+                                frame.cd:Clear()
+                        end
+                        if not wasShown then playBuffSound(catId, id, triggeredId) end
 			frame:Show()
 		else
 			if frame then frame:Hide() end
