@@ -27,15 +27,32 @@ local LSM = LibStub("LibSharedMedia-3.0")
 local specNames = {}
 local classNames = {}
 for classID = 1, GetNumClasses() do
-	local className = select(1, GetClassInfo(classID))
+	local className, classTag = select(1, GetClassInfo(classID))
 	local numSpecs = C_SpecializationInfo.GetNumSpecializationsForClassID(classID)
 	for i = 1, numSpecs do
-		local specID, specName = GetSpecializationInfoForClassID(classID, i)
-		specNames[specID] = specName .. " (" .. className .. ")"
+		local specID, specName, _, specIcon = GetSpecializationInfoForClassID(classID, i)
+		specNames[specID] = string.format("|T%s:14:14|t %s (%s)", specIcon, specName, className)
 	end
-	local _, classTag = GetClassInfo(classID)
-	classNames[classTag] = className
+	local coords = CLASS_ICON_TCOORDS[classTag]
+	if coords then
+		classNames[classTag] = string.format(
+			"|TInterface\\GLUES\\CHARACTERCREATE\\UI-CharacterCreate-Classes:14:14:0:0:256:256:%d:%d:%d:%d|t %s",
+			coords[1] * 256,
+			coords[2] * 256,
+			coords[3] * 256,
+			coords[4] * 256,
+			className
+		)
+	else
+		classNames[classTag] = className
+	end
 end
+
+local roleNames = {
+	TANK = INLINE_TANK_ICON .. " " .. TANK,
+	HEALER = INLINE_HEALER_ICON .. " " .. HEALER,
+	DAMAGER = INLINE_DAMAGER_ICON .. " " .. DAMAGER,
+}
 
 local function categoryAllowed(cat)
 	if cat.allowedClasses and next(cat.allowedClasses) then
@@ -46,6 +63,11 @@ local function categoryAllowed(cat)
 		if not specIndex then return false end
 		local currentSpecID = GetSpecializationInfo(specIndex)
 		if not cat.allowedSpecs[currentSpecID] then return false end
+	end
+	if cat.allowedRoles and next(cat.allowedRoles) then
+		local role = UnitGroupRolesAssigned("player")
+		if role == "NONE" then role = addon.variables.unitRole end
+		if not role or not cat.allowedRoles[role] then return false end
 	end
 	return true
 end
@@ -224,73 +246,73 @@ local function updateBuff(catId, id)
 		end
 	end
 
-       activeBuffFrames[catId] = activeBuffFrames[catId] or {}
-       local frame = activeBuffFrames[catId][id]
-       local wasShown = frame and frame:IsShown()
-       local wasActive = frame and frame.isActive
+	activeBuffFrames[catId] = activeBuffFrames[catId] or {}
+	local frame = activeBuffFrames[catId][id]
+	local wasShown = frame and frame:IsShown()
+	local wasActive = frame and frame.isActive
 
-       if buff and buff.showAlways then
-               local icon = buff.icon or (aura and aura.icon)
-               if not frame then
-                       frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
-                       activeBuffFrames[catId][id] = frame
-               end
-               frame.icon:SetTexture(icon)
-               if aura then
-                       if aura.duration and aura.duration > 0 then
-                               frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
-                       else
-                               frame.cd:Clear()
-                       end
-                       frame.icon:SetDesaturated(false)
-                       frame.icon:SetAlpha(1)
-                       if not wasActive then playBuffSound(catId, id, triggeredId) end
-                       frame.isActive = true
-               else
-                       frame.cd:Clear()
-                       frame.icon:SetDesaturated(true)
-                       frame.icon:SetAlpha(0.5)
-                       frame.isActive = false
-               end
-               frame:Show()
-       elseif buff and buff.showWhenMissing then
-               if aura then
-                       if frame then frame:Hide() end
-               else
-                       local icon = buff.icon
-                       if not frame then
-                               frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
-                               activeBuffFrames[catId][id] = frame
-                       end
-                       frame.icon:SetTexture(icon)
-                       frame.icon:SetDesaturated(false)
-                       frame.icon:SetAlpha(1)
-                       frame.cd:Clear()
-                       if not wasShown then playBuffSound(catId, id, triggeredId) end
-                       frame:Show()
-               end
-       else
-               if aura then
-                       local icon = buff and buff.icon or aura.icon
-                       if not frame then
-                               frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
-                               activeBuffFrames[catId][id] = frame
-                       end
-                       frame.icon:SetTexture(icon)
-                       frame.icon:SetDesaturated(false)
-                       frame.icon:SetAlpha(1)
-                       if aura.duration and aura.duration > 0 then
-                               frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
-                       else
-                               frame.cd:Clear()
-                       end
-                       if not wasShown then playBuffSound(catId, id, triggeredId) end
-                       frame:Show()
-               else
-                       if frame then frame:Hide() end
-               end
-               if frame then frame.isActive = aura ~= nil end
-       end
+	if buff and buff.showAlways then
+		local icon = buff.icon or (aura and aura.icon)
+		if not frame then
+			frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+			activeBuffFrames[catId][id] = frame
+		end
+		frame.icon:SetTexture(icon)
+		if aura then
+			if aura.duration and aura.duration > 0 then
+				frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+			else
+				frame.cd:Clear()
+			end
+			frame.icon:SetDesaturated(false)
+			frame.icon:SetAlpha(1)
+			if not wasActive then playBuffSound(catId, id, triggeredId) end
+			frame.isActive = true
+		else
+			frame.cd:Clear()
+			frame.icon:SetDesaturated(true)
+			frame.icon:SetAlpha(0.5)
+			frame.isActive = false
+		end
+		frame:Show()
+	elseif buff and buff.showWhenMissing then
+		if aura then
+			if frame then frame:Hide() end
+		else
+			local icon = buff.icon
+			if not frame then
+				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+				activeBuffFrames[catId][id] = frame
+			end
+			frame.icon:SetTexture(icon)
+			frame.icon:SetDesaturated(false)
+			frame.icon:SetAlpha(1)
+			frame.cd:Clear()
+			if not wasShown then playBuffSound(catId, id, triggeredId) end
+			frame:Show()
+		end
+	else
+		if aura then
+			local icon = buff and buff.icon or aura.icon
+			if not frame then
+				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+				activeBuffFrames[catId][id] = frame
+			end
+			frame.icon:SetTexture(icon)
+			frame.icon:SetDesaturated(false)
+			frame.icon:SetAlpha(1)
+			if aura.duration and aura.duration > 0 then
+				frame.cd:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
+			else
+				frame.cd:Clear()
+			end
+			if not wasShown then playBuffSound(catId, id, triggeredId) end
+			frame:Show()
+		else
+			if frame then frame:Hide() end
+		end
+		if frame then frame.isActive = aura ~= nil end
+	end
 end
 
 local function scanBuffs()
@@ -420,26 +442,26 @@ local function openBuffConfig(catId, id)
 
 		wrapper:AddChild(dropSound)
 
-               local cbMissing, cbAlways
-               cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(_, _, val)
-                       buff.showWhenMissing = val
-                       if val then
-                               buff.showAlways = false
-                               if cbAlways then cbAlways:SetValue(false) end
-                       end
-                       scanBuffs()
-               end)
-               wrapper:AddChild(cbMissing)
+		local cbMissing, cbAlways
+		cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(_, _, val)
+			buff.showWhenMissing = val
+			if val then
+				buff.showAlways = false
+				if cbAlways then cbAlways:SetValue(false) end
+			end
+			scanBuffs()
+		end)
+		wrapper:AddChild(cbMissing)
 
-               cbAlways = addon.functions.createCheckboxAce(L["buffTrackerAlwaysShow"], buff.showAlways, function(_, _, val)
-                       buff.showAlways = val
-                       if val then
-                               buff.showWhenMissing = false
-                               if cbMissing then cbMissing:SetValue(false) end
-                       end
-                       scanBuffs()
-               end)
-               wrapper:AddChild(cbAlways)
+		cbAlways = addon.functions.createCheckboxAce(L["buffTrackerAlwaysShow"], buff.showAlways, function(_, _, val)
+			buff.showAlways = val
+			if val then
+				buff.showWhenMissing = false
+				if cbMissing then cbMissing:SetValue(false) end
+			end
+			scanBuffs()
+		end)
+		wrapper:AddChild(cbAlways)
 
 		-- alternative spell ids
 		buff.altIDs = buff.altIDs or {}
@@ -497,7 +519,7 @@ local function addBuff(catId, id)
 	local cat = getCategory(catId)
 	if not cat then return end
 
-       cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false, showAlways = false }
+	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false, showAlways = false }
 
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	if not tContains(addon.db["buffTrackerOrder"][catId], id) then table.insert(addon.db["buffTrackerOrder"][catId], id) end
@@ -618,6 +640,18 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	end
 	classDrop:SetRelativeWidth(0.5)
 	core:AddChild(classDrop)
+
+	local roleDrop = addon.functions.createDropdownAce(L["ShowForRole"], roleNames, nil, function(self, event, key, checked)
+		cat.allowedRoles = cat.allowedRoles or {}
+		cat.allowedRoles[key] = checked or nil
+		scanBuffs()
+	end)
+	roleDrop:SetMultiselect(true)
+	for r, val in pairs(cat.allowedRoles or {}) do
+		if val then roleDrop:SetItemValue(r, true) end
+	end
+	roleDrop:SetRelativeWidth(0.5)
+	core:AddChild(roleDrop)
 
 	local spellEdit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
 		local id = tonumber(text)
@@ -814,6 +848,7 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 			trackType = "BUFF",
 			allowedSpecs = {},
 			allowedClasses = {},
+			allowedRoles = {},
 			buffs = {},
 		}
 		ensureAnchor(newId)
