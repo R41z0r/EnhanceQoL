@@ -14,12 +14,41 @@ local selectedCategory = addon.db["buffTrackerSelectedCategory"] or 1
 
 for _, cat in pairs(addon.db["buffTrackerCategories"]) do
 	if not cat.trackType then cat.trackType = "BUFF" end
+	if not cat.allowedSpecs then cat.allowedSpecs = {} end
+	if not cat.allowedClasses then cat.allowedClasses = {} end
 end
 
 local anchors = {}
 local activeBuffFrames = {}
 
 local LSM = LibStub("LibSharedMedia-3.0")
+
+-- build list of all specialization IDs with their names
+local specNames = {}
+local classNames = {}
+for classID = 1, GetNumClasses() do
+	local className = select(1, GetClassInfo(classID))
+	local numSpecs = C_SpecializationInfo.GetNumSpecializationsForClassID(classID)
+	for i = 1, numSpecs do
+		local specID, specName = GetSpecializationInfoForClassID(classID, i)
+		specNames[specID] = specName .. " (" .. className .. ")"
+	end
+	local _, classTag = GetClassInfo(classID)
+	classNames[classTag] = className
+end
+
+local function categoryAllowed(cat)
+	if cat.allowedClasses and next(cat.allowedClasses) then
+		if not cat.allowedClasses[addon.variables.unitClass] then return false end
+	end
+	if cat.allowedSpecs and next(cat.allowedSpecs) then
+		local specIndex = addon.variables.unitSpec
+		if not specIndex then return false end
+		local currentSpecID = GetSpecializationInfo(specIndex)
+		if not cat.allowedSpecs[currentSpecID] then return false end
+	end
+	return true
+end
 
 function addon.Aura.functions.BuildSoundTable()
 	local result = {}
@@ -227,14 +256,24 @@ end
 
 local function scanBuffs()
 	for catId, cat in pairs(addon.db["buffTrackerCategories"]) do
-		for id in pairs(cat.buffs) do
-			if not addon.db["buffTrackerHidden"][id] then
-				updateBuff(catId, id)
-			elseif activeBuffFrames[catId] and activeBuffFrames[catId][id] then
-				activeBuffFrames[catId][id]:Hide()
+		if addon.db["buffTrackerEnabled"][catId] and categoryAllowed(cat) then
+			for id in pairs(cat.buffs) do
+				if not addon.db["buffTrackerHidden"][id] then
+					updateBuff(catId, id)
+				elseif activeBuffFrames[catId] and activeBuffFrames[catId][id] then
+					activeBuffFrames[catId][id]:Hide()
+				end
+			end
+			updatePositions(catId)
+			if anchors[catId] then anchors[catId]:Show() end
+		else
+			if anchors[catId] then anchors[catId]:Hide() end
+			if activeBuffFrames[catId] then
+				for _, frame in pairs(activeBuffFrames[catId]) do
+					frame:Hide()
+				end
 			end
 		end
-		updatePositions(catId)
 	end
 end
 
@@ -243,20 +282,22 @@ addon.Aura.scanBuffs = scanBuffs
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:SetScript("OnEvent", function(_, event, unit)
-	if event == "PLAYER_LOGIN" then
+	if event == "PLAYER_LOGIN" or event == "ACTIVE_PLAYER_SPECIALIZATION_CHANGED" then
 		for id, anchor in pairs(anchors) do
-			if addon.db["buffTrackerEnabled"][id] then
+			local cat = getCategory(id)
+			if addon.db["buffTrackerEnabled"][id] and categoryAllowed(cat) then
 				anchor:Show()
 			else
 				anchor:Hide()
 			end
 		end
-		addon.Aura.functions.BuildSoundTable()
+		if event == "PLAYER_LOGIN" then addon.Aura.functions.BuildSoundTable() end
 	end
 	scanBuffs()
 end)
 eventFrame:RegisterUnitEvent("UNIT_AURA", "player")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
+eventFrame:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
 
 local function moveTrackedBuff(catId, id, direction)
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
@@ -486,6 +527,28 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	typeDrop:SetRelativeWidth(0.4)
 	core:AddChild(typeDrop)
 
+	local specDrop = addon.functions.createDropdownAce(L["ShowForSpec"], specNames, nil, function(self, event, key, checked)
+		cat.allowedSpecs = cat.allowedSpecs or {}
+		cat.allowedSpecs[key] = checked or nil
+		scanBuffs()
+	end)
+	specDrop:SetMultiselect(true)
+	for specID, val in pairs(cat.allowedSpecs or {}) do
+		if val then specDrop:SetItemValue(specID, true) end
+	end
+	core:AddChild(specDrop)
+
+	local classDrop = addon.functions.createDropdownAce(L["ShowForClass"], classNames, nil, function(self, event, key, checked)
+		cat.allowedClasses = cat.allowedClasses or {}
+		cat.allowedClasses[key] = checked or nil
+		scanBuffs()
+	end)
+	classDrop:SetMultiselect(true)
+	for c, val in pairs(cat.allowedClasses or {}) do
+		if val then classDrop:SetItemValue(c, true) end
+	end
+	core:AddChild(classDrop)
+
 	local spellEdit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
 		local id = tonumber(text)
 		if id then
@@ -686,6 +749,8 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 			size = 36,
 			direction = "RIGHT",
 			trackType = "BUFF",
+			allowedSpecs = {},
+			allowedClasses = {},
 			buffs = {},
 		}
 		ensureAnchor(newId)
