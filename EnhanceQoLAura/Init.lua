@@ -28,6 +28,8 @@ addon.functions.InitDBValue("buffTrackerCategories", {
 		size = 36,
 		direction = "RIGHT",
 		trackType = "BUFF",
+		classes = {},
+		specs = {},
 		buffs = {},
 	},
 })
@@ -43,6 +45,8 @@ if type(addon.db["buffTrackerSelectedCategory"]) ~= "number" then addon.db["buff
 
 for _, cat in pairs(addon.db["buffTrackerCategories"]) do
 	if not cat.trackType then cat.trackType = "BUFF" end
+	if not cat.classes then cat.classes = {} end
+	if not cat.specs then cat.specs = {} end
 	for _, buff in pairs(cat.buffs or {}) do
 		if not buff.altIDs then buff.altIDs = {} end
 	end

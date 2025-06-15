@@ -175,6 +175,21 @@ function addon.functions.createDropdownAce(text, list, order, callBack)
 	return dropdown
 end
 
+function addon.functions.createMultiselectDropdownAce(text, list, order, values, callBack)
+	local dropdown = addon.functions.createDropdownAce(text, list, order, nil)
+	dropdown:SetMultiselect(true)
+
+	if callBack then dropdown:SetCallback("OnValueChanged", function(self, _, key, checked) callBack(self, key, checked) end) end
+
+	if values then
+		for k, v in pairs(values) do
+			dropdown:SetItemValue(k, v)
+		end
+	end
+
+	return dropdown
+end
+
 function addon.functions.createWrapperData(data, container, L)
 	local sortedParents = {}
 	for _, checkbox in ipairs(data) do
@@ -856,20 +871,20 @@ local function handleWayCommand(msg)
 		table.insert(args, token)
 	end
 
-       local mapID, x, y
-       if #args >= 2 then
-               local first = args[1]
-               if first:sub(1, 1) == "#" then first = first:sub(2) end
-               if tonumber(first) and args[3] then
-                       mapID = tonumber(first)
-                       x = tonumber(args[2])
-                       y = tonumber(args[3])
-               else
-                       x = tonumber(args[1])
-                       y = tonumber(args[2])
-                       mapID = C_Map.GetBestMapForUnit("player")
-               end
-       end
+	local mapID, x, y
+	if #args >= 2 then
+		local first = args[1]
+		if first:sub(1, 1) == "#" then first = first:sub(2) end
+		if tonumber(first) and args[3] then
+			mapID = tonumber(first)
+			x = tonumber(args[2])
+			y = tonumber(args[3])
+		else
+			x = tonumber(args[1])
+			y = tonumber(args[2])
+			mapID = C_Map.GetBestMapForUnit("player")
+		end
+	end
 
 	if not mapID or not x or not y then
 		print("|cff00ff98Enhance QoL|r: " .. L["wayUsage"])

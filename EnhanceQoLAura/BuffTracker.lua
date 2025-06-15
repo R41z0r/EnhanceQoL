@@ -14,6 +14,8 @@ local selectedCategory = addon.db["buffTrackerSelectedCategory"] or 1
 
 for _, cat in pairs(addon.db["buffTrackerCategories"]) do
 	if not cat.trackType then cat.trackType = "BUFF" end
+	if not cat.classes then cat.classes = {} end
+	if not cat.specs then cat.specs = {} end
 end
 
 local anchors = {}
@@ -32,6 +34,17 @@ end
 addon.Aura.functions.BuildSoundTable()
 
 local function getCategory(id) return addon.db["buffTrackerCategories"][id] end
+
+local function categoryMatches(cat)
+	if not cat then return false end
+	if cat.classes and next(cat.classes) then
+		if not cat.classes[addon.variables.unitClass] then return false end
+	end
+	if cat.specs and next(cat.specs) then
+		if not cat.specs[addon.variables.unitSpec] then return false end
+	end
+	return true
+end
 
 local function ensureAnchor(id)
 	if anchors[id] then return anchors[id] end
@@ -211,14 +224,25 @@ end
 
 local function scanBuffs()
 	for catId, cat in pairs(addon.db["buffTrackerCategories"]) do
-		for id in pairs(cat.buffs) do
-			if not addon.db["buffTrackerHidden"][id] then
-				updateBuff(catId, id)
-			elseif activeBuffFrames[catId] and activeBuffFrames[catId][id] then
-				activeBuffFrames[catId][id]:Hide()
+		local showCat = addon.db["buffTrackerEnabled"][catId] and categoryMatches(cat)
+		if showCat then
+			for id in pairs(cat.buffs) do
+				if not addon.db["buffTrackerHidden"][id] then
+					updateBuff(catId, id)
+				elseif activeBuffFrames[catId] and activeBuffFrames[catId][id] then
+					activeBuffFrames[catId][id]:Hide()
+				end
+			end
+			updatePositions(catId)
+			if anchors[catId] then anchors[catId]:Show() end
+		else
+			if anchors[catId] then anchors[catId]:Hide() end
+			if activeBuffFrames[catId] then
+				for _, frame in pairs(activeBuffFrames[catId]) do
+					frame:Hide()
+				end
 			end
 		end
-		updatePositions(catId)
 	end
 end
 
@@ -229,7 +253,8 @@ local eventFrame = CreateFrame("Frame")
 eventFrame:SetScript("OnEvent", function(_, event, unit)
 	if event == "PLAYER_LOGIN" then
 		for id, anchor in pairs(anchors) do
-			if addon.db["buffTrackerEnabled"][id] then
+			local cat = getCategory(id)
+			if addon.db["buffTrackerEnabled"][id] and categoryMatches(cat) then
 				anchor:Show()
 			else
 				anchor:Hide()
@@ -464,6 +489,27 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	typeDrop:SetRelativeWidth(0.4)
 	core:AddChild(typeDrop)
 
+	local specList, specOrder = {}, {}
+	local classID = addon.variables.unitClassID
+	local totalSpecs = C_SpecializationInfo.GetNumSpecializationsForClassID(classID)
+	for i = 1, totalSpecs do
+		local specID, specName = GetSpecializationInfoForClassID(classID, i)
+		specList[specID] = specName
+		table.insert(specOrder, specID)
+	end
+
+	local specDrop = addon.functions.createMultiselectDropdownAce(L["ShowForSpec"], specList, specOrder, cat.specs, function(_, key, checked)
+		cat.specs = cat.specs or {}
+		if checked then
+			cat.specs[key] = true
+		else
+			cat.specs[key] = nil
+		end
+		scanBuffs()
+	end)
+	specDrop:SetRelativeWidth(0.8)
+	core:AddChild(specDrop)
+
 	local spellEdit = addon.functions.createEditboxAce(L["SpellID"], nil, function(self, _, text)
 		local id = tonumber(text)
 		if id then
@@ -657,6 +703,8 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 			size = 36,
 			direction = "RIGHT",
 			trackType = "BUFF",
+			classes = {},
+			specs = {},
 			buffs = {},
 		}
 		ensureAnchor(newId)
