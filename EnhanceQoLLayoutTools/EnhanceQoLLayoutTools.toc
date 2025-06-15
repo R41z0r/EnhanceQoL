@@ -2,17 +2,18 @@
 ## Title: Layout
 ## Author: R41Z0R
 ## Version: @project-version@
-## Notes: Tooltip modifies the visibility in different situations
-## Notes-deDE: Tooltip passt die Sichtbarkeit in verschiedenen Situationen an
-## Notes-esES: El tooltip modifica la visibilidad en diferentes situaciones
-## Notes-esMX: El tooltip modifica la visibilidad en distintas situaciones
-## Notes-frFR: Le tooltip modifie la visibilité dans différentes situations
-## Notes-itIT: Il tooltip modifica la visibilità in diverse situazioni
-## Notes-ptBR: O tooltip modifica a visibilidade em diferentes situações
-## Notes-ruRU: Подсказка изменяет видимость в различных ситуациях
-## Notes-koKR: 툴팁은 다양한 상황에서 표시 여부를 수정합니다
-## Notes-zhCN: 提示信息在不同情况下更改可见性
-## Notes-zhTW: 提示在不同情況下修改可見性## Dependencies: EnhanceQoL
+## Notes: Move and scale frames
+## Notes-deDE: Verschieben und Skalieren von Frames
+## Notes-esES: Permite mover y escalar marcos
+## Notes-esMX: Permite mover y escalar marcos
+## Notes-frFR: Permet de déplacer et de mettre à l'échelle les cadres
+## Notes-itIT: Consente di spostare e ridimensionare i frame
+## Notes-ptBR: Permite mover e dimensionar quadros
+## Notes-ruRU: Позволяет перемещать и масштабировать фреймы
+## Notes-koKR: 프레임을 이동하고 크기를 조절합니다
+## Notes-zhCN: 允许移动和缩放框体
+## Notes-zhTW: 允許移動和縮放框體
+## Dependencies: EnhanceQoL
 ## IconTexture: Interface\AddOns\EnhanceQoLLayoutTools\Icons\Icon.tga
 ## Dependencies: EnhanceQoL
 ## Retail: true
