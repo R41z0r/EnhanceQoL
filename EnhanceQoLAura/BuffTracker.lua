@@ -185,6 +185,7 @@ local function applySize(id)
 	for _, frame in pairs(activeBuffFrames[id]) do
 		frame:SetSize(size, size)
 		frame.cd:SetAllPoints(frame)
+		if frame.glow then frame.glow:SetSize(size * 1.5, size * 1.5) end
 	end
 	updatePositions(id)
 end
@@ -203,6 +204,14 @@ local function createBuffFrame(icon, parent, size)
 	cd:SetAllPoints(frame)
 	cd:SetDrawEdge(false)
 	frame.cd = cd
+
+	local glow = frame:CreateTexture(nil, "OVERLAY")
+	glow:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
+	glow:SetBlendMode("ADD")
+	glow:SetPoint("CENTER")
+	glow:SetSize(size * 1.5, size * 1.5)
+	glow:Hide()
+	frame.glow = glow
 
 	return frame
 end
@@ -274,10 +283,15 @@ local function updateBuff(catId, id)
 			frame.icon:SetAlpha(0.5)
 			frame.isActive = false
 		end
+		if frame.glow then frame.glow:SetShown(buff.glow and frame.isActive) end
 		frame:Show()
 	elseif buff and buff.showWhenMissing then
 		if aura then
-			if frame then frame:Hide() end
+			if frame then
+				frame.isActive = false
+				if frame.glow then frame.glow:Hide() end
+				frame:Hide()
+			end
 		else
 			local icon = buff.icon
 			if not frame then
@@ -289,6 +303,8 @@ local function updateBuff(catId, id)
 			frame.icon:SetAlpha(1)
 			frame.cd:Clear()
 			if not wasShown then playBuffSound(catId, id, triggeredId) end
+			frame.isActive = true
+			if frame.glow then frame.glow:SetShown(buff.glow) end
 			frame:Show()
 		end
 	else
@@ -307,11 +323,16 @@ local function updateBuff(catId, id)
 				frame.cd:Clear()
 			end
 			if not wasShown then playBuffSound(catId, id, triggeredId) end
+			frame.isActive = true
+			if frame.glow then frame.glow:SetShown(buff.glow) end
 			frame:Show()
 		else
-			if frame then frame:Hide() end
+			if frame then
+				frame.isActive = false
+				if frame.glow then frame.glow:Hide() end
+				frame:Hide()
+			end
 		end
-		if frame then frame.isActive = aura ~= nil end
 	end
 end
 
@@ -463,6 +484,12 @@ local function openBuffConfig(catId, id)
 		end)
 		wrapper:AddChild(cbAlways)
 
+		local cbGlow = addon.functions.createCheckboxAce(L["buffTrackerGlow"], buff.glow, function(_, _, val)
+			buff.glow = val
+			scanBuffs()
+		end)
+		wrapper:AddChild(cbGlow)
+
 		-- alternative spell ids
 		buff.altIDs = buff.altIDs or {}
 		for _, altId in ipairs(buff.altIDs) do
@@ -519,7 +546,7 @@ local function addBuff(catId, id)
 	local cat = getCategory(catId)
 	if not cat then return end
 
-	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false, showAlways = false }
+	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false, showAlways = false, glow = false }
 
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	if not tContains(addon.db["buffTrackerOrder"][catId], id) then table.insert(addon.db["buffTrackerOrder"][catId], id) end
