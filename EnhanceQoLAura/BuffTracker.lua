@@ -326,27 +326,35 @@ end
 local openedFrames = {}
 
 local function openBuffConfig(catId, id)
-	local frame = AceGUI:Create("Frame")
-	frame:SetTitle(L["BuffTracker"])
-	frame:SetWidth(400)
-	frame:SetHeight(180)
-	frame:SetLayout("List")
-	frame:SetCallback("OnClose", function(widget)
-		AceGUI:Release(widget)
-		openedFrames[catId][id] = nil
-	end)
-	openedFrames[catId] = openedFrames[catId] or {}
-	openedFrames[catId][id] = true
+        local frame = AceGUI:Create("Frame")
+        frame:SetTitle(L["BuffTracker"])
+        frame:SetWidth(400)
+        frame:SetHeight(180)
+        frame:SetLayout("Fill")
+        frame:SetCallback("OnClose", function(widget)
+                AceGUI:Release(widget)
+                openedFrames[catId][id] = nil
+        end)
+        openedFrames[catId] = openedFrames[catId] or {}
+        openedFrames[catId][id] = true
 
-	local function rebuild()
-		frame:ReleaseChildren()
+        local scroll = addon.functions.createContainer("ScrollFrame", "List")
+        scroll:SetFullWidth(true)
+        scroll:SetFullHeight(true)
+        frame:AddChild(scroll)
+
+        local wrapper = addon.functions.createContainer("SimpleGroup", "List")
+        scroll:AddChild(wrapper)
+
+        local function rebuild()
+                wrapper:ReleaseChildren()
 
 		local buff = addon.db["buffTrackerCategories"][catId]["buffs"][id]
 
 		local label = AceGUI:Create("Label")
 		local name = buff.name
 		label:SetText((name or "") .. " (" .. id .. ")")
-		frame:AddChild(label)
+                wrapper:AddChild(label)
 
 		addon.db["buffTrackerSounds"][catId] = addon.db["buffTrackerSounds"][catId] or {}
 		addon.db["buffTrackerSoundsEnabled"][catId] = addon.db["buffTrackerSoundsEnabled"][catId] or {}
@@ -356,7 +364,7 @@ local function openBuffConfig(catId, id)
 			addon.db["buffTrackerSoundsEnabled"][catId][id],
 			function(_, _, val) addon.db["buffTrackerSoundsEnabled"][catId][id] = val end
 		)
-		frame:AddChild(cbElement)
+                wrapper:AddChild(cbElement)
 
 		local soundList = {}
 		for sname in pairs(addon.Aura.sounds or {}) do
@@ -371,13 +379,13 @@ local function openBuffConfig(catId, id)
 		end)
 		dropSound:SetValue(addon.db["buffTrackerSounds"][catId][id])
 
-		frame:AddChild(dropSound)
+                wrapper:AddChild(dropSound)
 
 		local cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(_, _, val)
 			buff.showWhenMissing = val
 			scanBuffs()
 		end)
-		frame:AddChild(cbMissing)
+                wrapper:AddChild(cbMissing)
 
 		-- alternative spell ids
 		buff.altIDs = buff.altIDs or {}
@@ -406,7 +414,7 @@ local function openBuffConfig(catId, id)
 			end)
 			row:AddChild(removeIcon)
 
-			frame:AddChild(row)
+                        wrapper:AddChild(row)
 		end
 
 		local altEdit = addon.functions.createEditboxAce(L["AddAltSpellID"], nil, function(self, _, text)
@@ -417,11 +425,12 @@ local function openBuffConfig(catId, id)
 				rebuild()
 			end
 		end)
-		frame:AddChild(altEdit)
+                wrapper:AddChild(altEdit)
 
-		frame:AddChild(addon.functions.createSpacerAce())
-		frame:DoLayout()
-	end
+                wrapper:AddChild(addon.functions.createSpacerAce())
+                scroll:DoLayout()
+                wrapper:DoLayout()
+        end
 
 	rebuild()
 end
