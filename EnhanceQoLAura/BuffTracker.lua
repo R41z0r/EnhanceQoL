@@ -347,11 +347,13 @@ local function openBuffConfig(catId, id)
 		addon.db["buffTrackerSounds"][catId] = addon.db["buffTrackerSounds"][catId] or {}
 		addon.db["buffTrackerSoundsEnabled"][catId] = addon.db["buffTrackerSoundsEnabled"][catId] or {}
 
-		local cbElement = addon.functions.createCheckboxAce(
-			L["buffTrackerSoundsEnabled"],
-			addon.db["buffTrackerSoundsEnabled"][catId][id],
-			function(val) addon.db["buffTrackerSoundsEnabled"][catId][id] = val end
-		)
+               local cbElement = addon.functions.createCheckboxAce(
+                       L["buffTrackerSoundsEnabled"],
+                       addon.db["buffTrackerSoundsEnabled"][catId][id],
+                       function(_, _, val)
+                               addon.db["buffTrackerSoundsEnabled"][catId][id] = val
+                       end
+               )
 		frame:AddChild(cbElement)
 
 		local soundList = {}
@@ -369,10 +371,14 @@ local function openBuffConfig(catId, id)
 
 		frame:AddChild(dropSound)
 
-		local cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(val)
-			buff.showWhenMissing = val
-			scanBuffs()
-		end)
+               local cbMissing = addon.functions.createCheckboxAce(
+                       L["buffTrackerShowWhenMissing"],
+                       buff.showWhenMissing,
+                       function(_, _, val)
+                               buff.showWhenMissing = val
+                               scanBuffs()
+                       end
+               )
 		frame:AddChild(cbMissing)
 
 		-- alternative spell ids
