@@ -30,28 +30,28 @@ if savedFont and fonts[savedFont] then addon.variables.defaultFont = fonts[saved
 
 if addon.db["lfgListingColor"] and not addon.db["lfgListingColorActivity"] then
 	addon.db["lfgListingColorActivity"] = addon.db["lfgListingColor"]
-	addon.db["lfgListingColorName"] = addon.db["lfgListingColor"]
-	addon.db["lfgListingColorComment"] = addon.db["lfgListingColor"]
+	addon.db["lfgListingColorCustom"] = addon.db["lfgListingColor"]
+end
+
+local function colorRegions(frame, c)
+	if not frame then return end
+	for i = 1, select("#", frame:GetRegions()) do
+		local reg = select(i, frame:GetRegions())
+		if reg and reg:IsObjectType("Texture") then reg:SetVertexColor(c.r, c.g, c.b) end
+	end
 end
 
 local function updateLFGBackground()
-	if not addon.db["lfgAccessibilityEnabled"] then
-		if addon.Accessibility.bgFrame then addon.Accessibility.bgFrame:Hide() end
-		return
-	end
+	if not LFGListFrame or not LFGListFrame.SearchPanel then return end
 	local c = addon.db["lfgBackgroundColor"] or { r = 0, g = 0, b = 0 }
-	if not addon.Accessibility.bgFrame and LFGListFrame and LFGListFrame.SearchPanel then
-		local f = CreateFrame("Frame", nil, LFGListFrame.SearchPanel)
-		f:SetAllPoints()
-		f:SetFrameLevel(LFGListFrame.SearchPanel:GetFrameLevel() - 1)
-		local tex = f:CreateTexture(nil, "BACKGROUND")
-		tex:SetAllPoints()
-		addon.Accessibility.bgFrame = f
-		addon.Accessibility.bgTexture = tex
-	end
-	if addon.Accessibility.bgTexture then
-		addon.Accessibility.bgTexture:SetColorTexture(c.r, c.g, c.b, 1)
-		addon.Accessibility.bgFrame:Show()
+	if addon.db["lfgAccessibilityEnabled"] then
+		colorRegions(LFGListFrame.SearchPanel, c)
+		if LFGListFrame.SearchPanel.ScrollBox then colorRegions(LFGListFrame.SearchPanel.ScrollBox, c) end
+	else
+		c = { r = 1, g = 1, b = 1 }
+		colorRegions(LFGListFrame.SearchPanel, c)
+		if LFGListFrame.SearchPanel.ScrollBox then colorRegions(LFGListFrame.SearchPanel.ScrollBox, c) end
+
 	end
 end
 
@@ -77,11 +77,10 @@ end
 local function applyListingColor(entry)
 	if not addon.db["lfgAccessibilityEnabled"] or not entry then return end
 	local act = addon.db["lfgListingColorActivity"]
-	local name = addon.db["lfgListingColorName"]
-	local comment = addon.db["lfgListingColorComment"]
+	local name = addon.db["lfgListingColorCustom"]
 	if entry.ActivityName and act then entry.ActivityName:SetTextColor(act.r, act.g, act.b) end
 	if entry.Name and name then entry.Name:SetTextColor(name.r, name.g, name.b) end
-	if entry.Comment and comment then entry.Comment:SetTextColor(comment.r, comment.g, comment.b) end
+
 end
 
 hooksecurefunc("LFGListSearchEntry_Update", applyListingColor)
@@ -114,18 +113,11 @@ local function addLFGFrame(container)
 	group:AddChild(cp1)
 
 	local cp2 = AceGUI:Create("ColorPicker")
-	cp2:SetLabel(L["Listing player name color"])
-	local c2 = addon.db["lfgListingColorName"] or { r = 1, g = 1, b = 1 }
+	cp2:SetLabel(L["Listing custom text color"])
+	local c2 = addon.db["lfgListingColorCustom"] or { r = 1, g = 1, b = 1 }
 	cp2:SetColor(c2.r, c2.g, c2.b)
-	cp2:SetCallback("OnValueChanged", function(widget, event, r, g, b) addon.db["lfgListingColorName"] = { r = r, g = g, b = b } end)
+	cp2:SetCallback("OnValueChanged", function(widget, event, r, g, b) addon.db["lfgListingColorCustom"] = { r = r, g = g, b = b } end)
 	group:AddChild(cp2)
-
-	local cp3 = AceGUI:Create("ColorPicker")
-	cp3:SetLabel(L["Listing comment color"])
-	local c3 = addon.db["lfgListingColorComment"] or { r = 1, g = 1, b = 1 }
-	cp3:SetColor(c3.r, c3.g, c3.b)
-	cp3:SetCallback("OnValueChanged", function(widget, event, r, g, b) addon.db["lfgListingColorComment"] = { r = r, g = g, b = b } end)
-	group:AddChild(cp3)
 
 	local cpBg = AceGUI:Create("ColorPicker")
 	cpBg:SetLabel(L["Listing background color"])
