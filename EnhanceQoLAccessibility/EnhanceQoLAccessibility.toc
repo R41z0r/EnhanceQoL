@@ -1,0 +1,26 @@
+## Interface: 110000, 110002, 110005, 110007, 110100, 110105
+## Title: Accessibility
+## Author: R41Z0R
+## Version: @project-version@
+## Notes: Options to improve accessibility like font and color adjustments
+## Notes-deDE: Optionen zur Verbesserung der Barrierefreiheit wie Schrift- und Farbänderungen
+## Notes-esES: Opciones para mejorar la accesibilidad como ajustes de fuentes y colores
+## Notes-esMX: Opciones para mejorar la accesibilidad como ajustes de fuentes y colores
+## Notes-frFR: Options pour améliorer l'accessibilité telles que la police et les couleurs
+## Notes-itIT: Opzioni per migliorare l'accessibilità come font e colori
+## Notes-ptBR: Opções para melhorar a acessibilidade, como ajustes de fontes e cores
+## Notes-ruRU: Настройки для улучшения доступности, например изменение шрифта и цвета
+## Notes-koKR: 글꼴 및 색상 조정 등 접근성 향상 옵션
+## Notes-zhCN: 改善无障碍的选项，如字体和颜色调整
+## Notes-zhTW: 改善無障礙的選項，例如字體和顏色調整
+## IconTexture: Interface\AddOns\EnhanceQoLAccessibility\Icons\Icon.tga
+## Dependencies: EnhanceQoL
+## Retail: true
+## X-Compatible-With: retail
+## LoadOnDemand: 1
+## Globe-Main: EnhanceQoL
+
+Init.lua
+locales.xml
+
+EnhanceQoLAccessibility.lua
