@@ -51,6 +51,7 @@ local function updateLFGBackground()
 		c = { r = 1, g = 1, b = 1 }
 		colorRegions(LFGListFrame.SearchPanel, c)
 		if LFGListFrame.SearchPanel.ScrollBox then colorRegions(LFGListFrame.SearchPanel.ScrollBox, c) end
+
 	end
 end
 
@@ -79,6 +80,7 @@ local function applyListingColor(entry)
 	local name = addon.db["lfgListingColorCustom"]
 	if entry.ActivityName and act then entry.ActivityName:SetTextColor(act.r, act.g, act.b) end
 	if entry.Name and name then entry.Name:SetTextColor(name.r, name.g, name.b) end
+
 end
 
 hooksecurefunc("LFGListSearchEntry_Update", applyListingColor)
