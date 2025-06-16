@@ -3670,6 +3670,8 @@ local function CreateUI()
 			sub:SetFullHeight(true)
 			container:AddChild(sub)
 			AceConfigDlg:Open("EQOL_Profiles", sub)
+		elseif string.match(group, "^accessibility") then 
+			addon.Accessibility.functions.treeCallback(container, group)
 		elseif string.match(group, "^tooltip") then
 			addon.Tooltip.functions.treeCallback(container, group)
 		elseif string.match(group, "^vendor") then

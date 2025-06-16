@@ -51,8 +51,8 @@ local function applyListingColor(entry)
     local color = addon.db["lfgListingColor"]
     if not color or not entry then return end
     if entry.ActivityName then entry.ActivityName:SetTextColor(color.r, color.g, color.b) end
-    if entry.Name then entry.Name:SetTextColor(color.r, color.g, color.b) end
-    if entry.Comment then entry.Comment:SetTextColor(color.r, color.g, color.b) end
+    -- if entry.Name then entry.Name:SetTextColor(color.r, color.g, color.b) end
+    -- if entry.Comment then entry.Comment:SetTextColor(color.r, color.g, color.b) end
 end
 
 hooksecurefunc("LFGListSearchEntry_Update", applyListingColor)
