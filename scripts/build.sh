@@ -15,6 +15,7 @@ EnhanceQoL_MYTHIC_PLUS_QUERY_DIR="$WOW_ADDON_DIR/EnhanceQoLMythicPlus"
 EnhanceQoL_SOUND_QUERY_DIR="$WOW_ADDON_DIR/EnhanceQoLSound"
 EnhanceQoL_TOOLTIP_QUERY_DIR="$WOW_ADDON_DIR/EnhanceQoLTooltip"
 EnhanceQoL_VENDOR_QUERY_DIR="$WOW_ADDON_DIR/EnhanceQoLVendor"
+EnhanceQoL_ACCESSIBILITY_DIR="$WOW_ADDON_DIR/EnhanceQoLAccessibility"
 
 VERSION=$(git describe --tags --always)
 
@@ -29,6 +30,7 @@ rm -rf "$EnhanceQoL_MYTHIC_PLUS_QUERY_DIR"
 rm -rf "$EnhanceQoL_SOUND_QUERY_DIR"
 rm -rf "$EnhanceQoL_TOOLTIP_QUERY_DIR"
 rm -rf "$EnhanceQoL_VENDOR_QUERY_DIR"
+rm -rf "$EnhanceQoL_ACCESSIBILITY_DIR"
 
 # Erstelle die Addon-Verzeichnisse neu
 mkdir -p "$EnhanceQoL_ADDON_DIR"
@@ -41,6 +43,7 @@ mkdir -p "$EnhanceQoL_MYTHIC_PLUS_QUERY_DIR"
 mkdir -p "$EnhanceQoL_SOUND_QUERY_DIR"
 mkdir -p "$EnhanceQoL_TOOLTIP_QUERY_DIR"
 mkdir -p "$EnhanceQoL_VENDOR_QUERY_DIR"
+mkdir -p "$EnhanceQoL_ACCESSIBILITY_DIR"
 
 echo "$ROOT_DIR"
 
@@ -55,6 +58,7 @@ cp -r "$ROOT_DIR/EnhanceQoLMythicPlus/"* "$EnhanceQoL_MYTHIC_PLUS_QUERY_DIR/"
 cp -r "$ROOT_DIR/EnhanceQoLSound/"* "$EnhanceQoL_SOUND_QUERY_DIR/"
 cp -r "$ROOT_DIR/EnhanceQoLTooltip/"* "$EnhanceQoL_TOOLTIP_QUERY_DIR/"
 cp -r "$ROOT_DIR/EnhanceQoLVendor/"* "$EnhanceQoL_VENDOR_QUERY_DIR/"
+cp -r "$ROOT_DIR/EnhanceQoLAccessibility/"* "$EnhanceQoL_ACCESSIBILITY_DIR/"
 
 # Version in den .toc-Dateien ersetzen
 sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_ADDON_DIR/EnhanceQoL.toc"
@@ -67,5 +71,6 @@ sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_MYTHIC_PLUS_QUERY_DIR/Enh
 sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_SOUND_QUERY_DIR/EnhanceQoLSound.toc"
 sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_TOOLTIP_QUERY_DIR/EnhanceQoLTooltip.toc"
 sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_VENDOR_QUERY_DIR/EnhanceQoLVendor.toc"
+sed -i '' "s/@project-version@/$VERSION/" "$EnhanceQoL_ACCESSIBILITY_DIR/EnhanceQoLAccessibility.toc"
 
 echo "Addons wurden nach $WOW_ADDON_DIR kopiert."
