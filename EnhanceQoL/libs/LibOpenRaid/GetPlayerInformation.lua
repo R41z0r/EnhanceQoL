@@ -17,6 +17,8 @@ local CONST_TALENT_VERSION_DRAGONFLIGHT = 5
 
 local CONST_BTALENT_VERSION_COVENANTS = 9
 
+local CONST_GLOBALCOOLDOWN_SPELLID = 61304
+
 local CONST_SPELLBOOK_CLASSSPELLS_TABID = 2
 local CONST_SPELLBOOK_GENERAL_TABID = 1
 local CONST_ISITEM_BY_TYPEID = {
@@ -25,19 +27,65 @@ local CONST_ISITEM_BY_TYPEID = {
     [12] = true, --utility items
 }
 
-local GetItemInfo = GetItemInfo
-local GetItemStats = GetItemStats
 local GetInventoryItemLink = GetInventoryItemLink
 
+-- TWW compat
+-- TODO: Remove when TWW is released
+local GetItemStats = C_Item.GetItemStats
+local GetSpellInfo = GetSpellInfo or function(spellID)
+    if not spellID then return nil end
+
+    local spellInfo = C_Spell.GetSpellInfo(spellID)
+    if spellInfo then
+        return spellInfo.name, nil, spellInfo.iconID, spellInfo.castTime, spellInfo.minRange,
+                spellInfo.maxRange, spellInfo.spellID, spellInfo.originalIconID
+    end
+end
+local GetSpellCooldown = C_Spell and C_Spell.GetSpellCooldown or GetSpellCooldown
+local GetDetailedItemLevelInfo = C_Item.GetDetailedItemLevelInfo or GetDetailedItemLevelInfo
+local GetSpellTabInfo = GetSpellTabInfo or (function(tabLine)
+    if not tabLine then return nil end
+
+    local skillLine = C_SpellBook.GetSpellBookSkillLineInfo(tabLine)
+    if skillLine then
+        return skillLine.name, skillLine.iconID, skillLine.itemIndexOffset,
+        skillLine.numSpellBookItems, skillLine.isGuild, skillLine.specID
+    end
+end)
+
+
+local GetSpellBookItemInfo = C_SpellBook and C_SpellBook.GetSpellBookItemType or GetSpellBookItemInfo
+local IsPassiveSpell = C_SpellBook and C_SpellBook.IsSpellBookItemPassive or IsPassiveSpell
+local GetNumSpellTabs = C_SpellBook and C_SpellBook.GetNumSpellBookSkillLines or GetNumSpellTabs
+local spellBookPlayerEnum = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "player"
+local HasPetSpells = C_SpellBook and C_SpellBook.HasPetSpells or HasPetSpells
+local GetOverrideSpell = C_Spell and  C_Spell.GetOverrideSpell or C_SpellBook.GetOverrideSpell
+local GetSpellBookItemName = C_SpellBook and C_SpellBook.GetSpellBookItemName or GetSpellBookItemName 
+local spellBookPetEnum = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Pet or "pet"
+
+local GetSpellCharges = GetSpellCharges or function(spellId)
+    local chargesInfo = C_Spell.GetSpellCharges(spellId)
+    if (chargesInfo) then
+        return chargesInfo.currentCharges, chargesInfo.maxCharges, chargesInfo.cooldownStartTime, chargesInfo.cooldownDuration, chargesInfo.chargeModRate
+    end
+end
+
+local _, _, _, buildInfo = GetBuildInfo()
+
 local isTimewalkWoW = function()
-    local _, _, _, buildInfo = GetBuildInfo()
     if (buildInfo < 40000) then
         return true
     end
 end
 
-local IsDragonflight = function()
-	return select(4, GetBuildInfo()) >= 100000
+local IsTWWExpansion = function()
+    if (buildInfo >= 110000) then
+        return true
+    end
+end
+
+local IsDragonflight = function() --and beyond
+	return buildInfo >= 100000
 end
 
 local IsShadowlands = function()
@@ -47,28 +95,34 @@ local IsShadowlands = function()
     end
 end
 
---information about the player character to send, each expansion has its own system and data can be different
---it's always a number
-function openRaidLib.UnitInfoManager.GetPlayerInfo1()
-    if (IsShadowlands()) then
-        --return the renown level within the player covenant
-        local renown = C_CovenantSanctumUI.GetRenownLevel() or 1
-        return renown
+function openRaidLib.GetHeroTalentId()
+    if (IsTWWExpansion()) then
+        local configId = C_ClassTalents.GetActiveConfigID()
+        if (not configId) then
+            return
+        end
+        local configInfo = C_Traits.GetConfigInfo(configId)
+        for treeIndex, treeId in ipairs(configInfo.treeIDs) do
+            local treeNodes = C_Traits.GetTreeNodes(treeId)
+            for nodeIdIndex, treeNodeID in ipairs(treeNodes) do
+                local traitNodeInfo = C_Traits.GetNodeInfo(configId, treeNodeID)
+                if (traitNodeInfo) then
+                    local activeEntry = traitNodeInfo.activeEntry
+                    if (activeEntry) then
+                        local entryId = activeEntry.entryID
+                        local rank = activeEntry.rank
+                        if (rank > 0) then
+                            local entryInfo = C_Traits.GetEntryInfo(configId, entryId)
+                            if (not entryInfo.definitionID and entryInfo.subTreeID) then
+                                return entryInfo.subTreeID
+                            end
+                        end
+                    end
+                end
+            end
+        end
     end
-
-    return 0
-end
-
---information about the player character to send, each expansion has its own system and data can be different
---it's always a number
-function openRaidLib.UnitInfoManager.GetPlayerInfo2()
-    if (IsShadowlands()) then
-        --return which covenant the player picked
-        local covenant = C_Covenants.GetActiveCovenantID() or 0
-        return covenant
-    end
-
-    return 0
+	return
 end
 
 --default player class-spec talent system
@@ -105,8 +159,17 @@ local getDragonflightTalentsExportedString = function()
         local treeHash = C_Traits.GetTreeHash(treeInfo.ID)
         local serializationVersion = C_Traits.GetLoadoutSerializationVersion()
 
-        
+
     end
+end
+
+---@return string
+local getDragonlightTalentAsString = function()
+	local activeConfigID = C_ClassTalents.GetActiveConfigID()
+	if (activeConfigID and activeConfigID > 0) then
+		return C_Traits.GenerateImportString(activeConfigID)
+	end
+	return ""
 end
 
 local getDragonflightTalentsAsIndexTable = function()
@@ -135,11 +198,13 @@ local getDragonflightTalentsAsIndexTable = function()
                         local definitionId = traitEntryInfo.definitionID
 
                         --definition info
-                        local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-                        local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-                        local spellName, _, spellTexture = GetSpellInfo(spellId)
-                        if (spellName) then
-                            allTalents[#allTalents+1] = spellId
+                        if (definitionId) then
+                            local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
+                            local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
+                            local spellName, _, spellTexture = GetSpellInfo(spellId)
+                            if (spellName) then
+                                allTalents[#allTalents+1] = spellId
+                            end
                         end
                     end
                 end
@@ -148,6 +213,82 @@ local getDragonflightTalentsAsIndexTable = function()
     end
 
     return allTalents
+end
+
+function openRaidLib.GetSpellIdsFromTalentString(talentString)
+    C_AddOns.LoadAddOn("Blizzard_PlayerSpells")
+    local talentsFrame = PlayerSpellsFrame.TalentsFrame
+    talentsFrame:Show()
+
+    local spellIds = {}
+
+    local importStream = ExportUtil.MakeImportDataStream(talentString)
+    local headerValid, serializationVersion, specID, treeHash = talentsFrame:ReadLoadoutHeader(importStream)
+
+    local currentSerializationVersion = C_Traits.GetLoadoutSerializationVersion()
+    if (not headerValid or serializationVersion ~= currentSerializationVersion) then
+        return spellIds
+    end
+
+    local treeInfo = talentsFrame:GetTreeInfo()
+    local configID = talentsFrame:GetConfigID()
+    local treeID = treeInfo.ID
+
+    if (treeInfo and configID) then
+        local loadoutContent = talentsFrame:ReadLoadoutContent(importStream, treeInfo.ID)
+        local loadoutEntryInfo = talentsFrame:ConvertToImportLoadoutEntryInfo(configID, treeInfo.ID, loadoutContent)
+
+        if (loadoutContent and loadoutEntryInfo) then
+            for i = 1, #loadoutEntryInfo do
+                local thisTrait = loadoutEntryInfo[i]
+                local entryID = thisTrait.selectionEntryID
+                if (entryID and entryID > 0) then
+                    local traitEntryInfo = C_Traits.GetEntryInfo(configID, entryID)
+                    if (traitEntryInfo) then
+                        local definitionID = traitEntryInfo.definitionID
+                        if (definitionID) then
+                            local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionID)
+                            if (traitDefinitionInfo) then
+                                spellIds[traitDefinitionInfo.spellID] = true
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return spellIds
+end
+
+function openRaidLib.GetDragonFlightTalentsAsString()
+    local talents = getDragonlightTalentAsString()
+
+    --if is tww
+    if (IsTWWExpansion()) then
+        local heroTalentId = openRaidLib.GetHeroTalentId()
+        if (heroTalentId) then
+            talents = talents .. "@HT" .. openRaidLib.GetHeroTalentId()
+        end
+    end
+
+    return talents
+end
+
+function openRaidLib.ParseTalentString(talentString)
+    local heroTalentId = talentString:match("@HT(%d+)")
+    if (heroTalentId) then
+        heroTalentId = tonumber(heroTalentId)
+        if (heroTalentId) then
+            --remove the hero talent from the string
+            talentString = talentString:gsub("@HT%d+", "")
+            return talentString, heroTalentId
+        else
+            return talentString
+        end
+    else
+        return talentString
+    end
 end
 
 --creates two tables, one with indexed talents and another with pairs values ([talentId] = true)
@@ -201,9 +342,9 @@ function openRaidLib.UnitInfoManager.GetPlayerTalents()
 end
 
 function openRaidLib.UnitInfoManager.GetPlayerPvPTalents()
-    if (IsDragonflight()) then
-        return {}
-    end
+    --if (IsDragonflight()) then
+    --    return {}
+    --end
 
     local talentsPvP = {0, 0, 0}
     local talentList = C_SpecializationInfo.GetAllSelectedPvpTalentIDs()
@@ -246,23 +387,23 @@ function openRaidLib.UnitInfoManager.GetPlayerConduits()
             local C_Soulbinds_GetConduitCollectionData = C_Soulbinds.GetConduitCollectionData
             for nodeId, nodeInfo in ipairs(nodes) do
                 --check if the node is a conduit placed by the player
-                
+
                 if (nodeInfo.state == Enum.SoulbindNodeState.Selected)  then
                     local conduitId = nodeInfo.conduitID
                     local conduitRank = nodeInfo.conduitRank
-                    
+
                     if (conduitId and conduitRank) then
                         --have spell id when it's a default conduit from the game
                         local spellId = nodeInfo.spellID
                         --have conduit id when is a conduid placed by the player
                         local conduitId  = nodeInfo.conduitID
-                        
+
                         if (spellId == 0) then
                             --is player conduit
                             spellId = C_Soulbinds.GetConduitSpellID(nodeInfo.conduitID, nodeInfo.conduitRank)
                             conduits[#conduits+1] = spellId
                             local collectionData = C_Soulbinds_GetConduitCollectionData(conduitId)
-                            conduits[#conduits+1] = collectionData and collectionData.conduitItemLevel or 0         
+                            conduits[#conduits+1] = collectionData and collectionData.conduitItemLevel or 0
                         else
                             --is default conduit
                             conduits[#conduits+1] = spellId
@@ -275,16 +416,6 @@ function openRaidLib.UnitInfoManager.GetPlayerConduits()
     end
 
     return conduits
-end
-
-function openRaidLib.UnitInfoManager.GetPlayerBorrowedTalents()
-    local borrowedTalentVersion = openRaidLib.GetBorrowedTalentVersion()
-
-    if (borrowedTalentVersion == CONST_BTALENT_VERSION_COVENANTS) then
-        return openRaidLib.UnitInfoManager.GetPlayerConduits()
-    end
-
-    return {}
 end
 
 
@@ -350,7 +481,7 @@ function openRaidLib.GearManager.GetPlayerGemsAndEnchantInfo()
         local itemLink = GetInventoryItemLink("player", equipmentSlotId)
         if (itemLink) then
             --get the information from the item
-            local _, itemId, enchantId, gemId1, gemId2, gemId3, gemId4, suffixId, uniqueId, levelOfTheItem, specId, upgradeInfo, instanceDifficultyId, numBonusIds, restLink = strsplit(":", itemLink)
+            local itemQuality, hyperlinkType, itemId, enchantId, gemId1, gemId2, gemId3, gemId4, suffixId, uniqueId, levelOfTheItem, specId, upgradeInfo, instanceDifficultyId, numBonusIds, restLink = strsplit(":", itemLink)
             local gemsIds = {gemId1, gemId2, gemId3, gemId4}
 
             --enchant
@@ -374,21 +505,24 @@ function openRaidLib.GearManager.GetPlayerGemsAndEnchantInfo()
                 end
 
             --gems
-                local itemStatsTable = {}
+                --local itemStatsTable = {}
                 --fill the table above with information about the item
-                GetItemStats(itemLink, itemStatsTable)
+                --GetItemStats(itemLink, itemStatsTable) --deprecated in 10.2.5
+                local itemStatsTable = GetItemStats(itemLink)
 
                 --check if the item has a socket
-                if (itemStatsTable.EMPTY_SOCKET_PRISMATIC) then
-                    --check if the socket is empty
-                    for i = 1, itemStatsTable.EMPTY_SOCKET_PRISMATIC do
-                        local gemId = tonumber(gemsIds[i])
-                        if (not gemId or gemId == 0) then
-                            slotsWithoutGems[#slotsWithoutGems+1] = equipmentSlotId
+                if (itemStatsTable) then
+                    if (itemStatsTable.EMPTY_SOCKET_PRISMATIC) then
+                        --check if the socket is empty
+                        for i = 1, itemStatsTable.EMPTY_SOCKET_PRISMATIC do
+                            local gemId = tonumber(gemsIds[i])
+                            if (not gemId or gemId == 0) then
+                                slotsWithoutGems[#slotsWithoutGems+1] = equipmentSlotId
 
-                        --check if the gem is not a valid gem (deprecated gem)
-                        elseif (gemId < 180000) then
-                            slotsWithoutGems[#slotsWithoutGems+1] = equipmentSlotId
+                            --check if the gem is not a valid gem (deprecated gem)
+                            elseif (gemId < 180000) then
+                                slotsWithoutGems[#slotsWithoutGems+1] = equipmentSlotId
+                            end
                         end
                     end
                 end
@@ -404,36 +538,41 @@ function openRaidLib.GearManager.BuildPlayerEquipmentList()
     for equipmentSlotId = 1, 17 do
         local itemLink = GetInventoryItemLink("player", equipmentSlotId)
         if (itemLink) then
-            local itemStatsTable = {}
-            local itemID, enchantID, gemID1, gemID2, gemID3, gemID4, suffixID, uniqueID, linkLevel, specializationID, modifiersMask, itemContext = select(2, strsplit(":", itemLink))
-            itemID = tonumber(itemID)
+            --local itemStatsTable = {}
+            --local linkOptions = {LinkUtil.ExtractLink(itemLink)} [1] 'item' [2] itemlink string [3] item name
+            --local link = linkTable[2]
+
+            local _, linkOptions = LinkUtil.ExtractLink(itemLink);
 
             local effectiveILvl, isPreview, baseILvl = GetDetailedItemLevelInfo(itemLink)
             if (not effectiveILvl) then
                 openRaidLib.mainControl.scheduleUpdatePlayerData()
                 effectiveILvl = 0
+
+                local itemID, enchantID, gemID1, gemID2, gemID3, gemID4, suffixID, uniqueID, linkLevel, specializationID, modifiersMask, itemContext = strsplit(":", linkOptions)
+                itemID = tonumber(itemID)
+
                 openRaidLib.__errors[#openRaidLib.__errors+1] = "Fail to get Item Level: " .. (itemID or "invalid itemID") .. " " .. (itemLink and itemLink:gsub("|H", "") or "invalid itemLink")
             end
 
-            GetItemStats(itemLink, itemStatsTable)
+            local itemStatsTable = GetItemStats(itemLink)
             local gemSlotsAvailable = itemStatsTable and itemStatsTable.EMPTY_SOCKET_PRISMATIC or 0
 
-            local noPrefixItemLink = itemLink : gsub("^|c%x%x%x%x%x%x%x%x|Hitem", "")
+            --linkOptions = "212092::213481::::::80:63::35:7:6652:10397:10390:10371:10256:1527:10255:1:28:2462:::::"
+
+            local noPrefixItemLink = linkOptions --itemLink:gsub("^|c%x%x%x%x%x%x%x%x|Hitem", "")
             local linkTable = {strsplit(":", noPrefixItemLink)}
-            local numModifiers = linkTable[14]
+            local numModifiers = linkTable[13]
+
             numModifiers = numModifiers and tonumber(numModifiers) or 0
 
-            for i = #linkTable, 14 + numModifiers + 1, -1 do
-                tremove(linkTable, i)
+            for i = #linkTable, 13 + numModifiers + 1, -1 do
+                table.remove(linkTable, i)
             end
 
             local newItemLink = table.concat(linkTable, ":")
             newItemLink = newItemLink
             equipmentList[#equipmentList+1] = {equipmentSlotId, gemSlotsAvailable, effectiveILvl, newItemLink}
-
-            if (equipmentSlotId == 2) then
-                debug = {itemLink:gsub("|H", ""), newItemLink}
-            end
         end
     end
 
@@ -470,6 +609,9 @@ end
 local addCooldownToTable = function(cooldowns, cooldownsHash, cooldownSpellId, timeNow)
     local timeLeft, charges, startTimeOffset, duration, auraDuration = openRaidLib.CooldownManager.GetPlayerCooldownStatus(cooldownSpellId)
 
+    --local spellInfo = C_Spell.GetSpellInfo(cooldownSpellId)
+    --print(spellInfo.name, "charges:", charges)
+
     cooldowns[#cooldowns+1] = cooldownSpellId
     cooldowns[#cooldowns+1] = timeLeft
     cooldowns[#cooldowns+1] = charges
@@ -498,21 +640,32 @@ local getSpellListAsHashTableFromSpellBook = function()
     --local classNameLoc, className, classId = UnitClass("player") --not in use
     local locPlayerRace, playerRace, playerRaceId = UnitRace("player")
 
+    --Enum.SpellBookSkillLineIndex
+    --["OffSpecStart"] = 4,
+    --["Class"] = 2,
+    --["General"] = 1,
+    --["MainSpec"] = 3,
+
     --get racials from the general tab
-    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(CONST_SPELLBOOK_GENERAL_TABID)
+    local generalIndex = Enum.SpellBookSkillLineIndex and Enum.SpellBookSkillLineIndex.General or CONST_SPELLBOOK_GENERAL_TABID
+    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(generalIndex) --CONST_SPELLBOOK_GENERAL_TABID
+    if (not offset) then
+        return completeListOfSpells
+    end
+
     offset = offset + 1
     local tabEnd = offset + numSpells
     for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
-        local spellData = LIB_OPEN_RAID_COOLDOWNS_INFO[spellId]
+        local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
+        local spellData = LIB_OPEN_RAID_COOLDOWNS_INFO[spellId] --from the cooldowns table
         if (spellData) then
             local raceId = spellData.raceid
             if (raceId) then
                 if (type(raceId) == "table") then
                     if (raceId[playerRaceId]) then
-                        spellId = C_SpellBook.GetOverrideSpell(spellId)
+                        spellId = GetOverrideSpell(spellId)
                         local spellName = GetSpellInfo(spellId)
-                        local bIsPassive = IsPassiveSpell(spellId, "player")
+                        local bIsPassive = IsPassiveSpell(entryOffset, spellBookPlayerEnum)
                         if (spellName and not bIsPassive) then
                             completeListOfSpells[spellId] = true
                         end
@@ -520,9 +673,9 @@ local getSpellListAsHashTableFromSpellBook = function()
 
                 elseif (type(raceId) == "number") then
                     if (raceId == playerRaceId) then
-                        spellId = C_SpellBook.GetOverrideSpell(spellId)
+                        spellId = GetOverrideSpell(spellId)
                         local spellName = GetSpellInfo(spellId)
-                        local bIsPassive = IsPassiveSpell(spellId, "player")
+                        local bIsPassive = IsPassiveSpell(entryOffset, spellBookPlayerEnum)
                         if (spellName and not bIsPassive) then
                             completeListOfSpells[spellId] = true
                         end
@@ -533,18 +686,19 @@ local getSpellListAsHashTableFromSpellBook = function()
     end
 
 	--get spells from the Spec spellbook
-    for i = 1, GetNumSpellTabs() do
+    for i = 1, GetNumSpellTabs() do --called "lines" in new v11 api
         local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(i)
         if (tabTexture == specIconTexture) then
             offset = offset + 1
             local tabEnd = offset + numSpells
             for entryOffset = offset, tabEnd - 1 do
-                local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
+                local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
                 if (spellId) then
-                    if (spellType == "SPELL") then
-                        spellId = C_SpellBook.GetOverrideSpell(spellId)
+                    if (spellType == "SPELL" or spellType == 1) then
+                        --print(tabName, tabTexture == specIconTexture, offset, tabEnd,spellType, spellId)
+                        spellId = GetOverrideSpell(spellId)
                         local spellName = GetSpellInfo(spellId)
-                        local bIsPassive = IsPassiveSpell(spellId, "player")
+                        local bIsPassive = IsPassiveSpell(entryOffset, spellBookPlayerEnum)
                         if LIB_OPEN_RAID_MULTI_OVERRIDE_SPELLS[spellId] then
                             for _, overrideSpellId in pairs(LIB_OPEN_RAID_MULTI_OVERRIDE_SPELLS[spellId]) do
                                 completeListOfSpells[overrideSpellId] = true
@@ -563,12 +717,12 @@ local getSpellListAsHashTableFromSpellBook = function()
     offset = offset + 1
     local tabEnd = offset + numSpells
     for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
+        local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
         if (spellId) then
-            if (spellType == "SPELL") then
-                spellId = C_SpellBook.GetOverrideSpell(spellId)
+            if (spellType == "SPELL" or spellType == 1) then
+                spellId = GetOverrideSpell(spellId)
                 local spellName = GetSpellInfo(spellId)
-                local bIsPassive = IsPassiveSpell(spellId, "player")
+                local bIsPassive = IsPassiveSpell(entryOffset, spellBookPlayerEnum)
 
                 if LIB_OPEN_RAID_MULTI_OVERRIDE_SPELLS[spellId] then
                     for _, overrideSpellId in pairs(LIB_OPEN_RAID_MULTI_OVERRIDE_SPELLS[spellId]) do
@@ -595,14 +749,17 @@ local getSpellListAsHashTableFromSpellBook = function()
         return HasPetSpells()
     end
 
-    --get pet spells from the pet spellbook 
+    --get pet spells from the pet spellbook
     local numPetSpells = getNumPetSpells()
     if (numPetSpells) then
         for i = 1, numPetSpells do
-            local spellName, _, unmaskedSpellId = GetSpellBookItemName(i, "pet")
+            local spellName, _, unmaskedSpellId = GetSpellBookItemName(i, spellBookPetEnum) --Enum.SpellBookSpellBank.Pet = 1
+            local itemType, actionID, spellID = C_SpellBook.GetSpellBookItemType(i, spellBookPetEnum)
+            --print(i, spellName, _, unmaskedSpellId, itemType, actionID, spellID)
+            unmaskedSpellId = spellID
             if (unmaskedSpellId) then
-                unmaskedSpellId = C_SpellBook.GetOverrideSpell(unmaskedSpellId)
-                local bIsPassive = IsPassiveSpell(unmaskedSpellId, "pet")
+                unmaskedSpellId = GetOverrideSpell(unmaskedSpellId)
+                local bIsPassive = IsPassiveSpell(i, spellBookPetEnum)
                 if (spellName and not bIsPassive) then
                     completeListOfSpells[unmaskedSpellId] = true
                 end
@@ -610,6 +767,7 @@ local getSpellListAsHashTableFromSpellBook = function()
         end
     end
 
+    --dumpt(completeListOfSpells)
     return completeListOfSpells
 end
 
@@ -737,13 +895,12 @@ local getAuraDuration = function(spellId, unitId)
     --spellId = customBuffDuration or spellId --can't replace the spellId by customBuffDurationSpellId has it wount be found in LIB_OPEN_RAID_PLAYERCOOLDOWNS
 
     if (bIsNewUnitAuraAvailable) then
-        local bBatchCount = false
         local bUsePackedAura = true
         auraSpellID = customBuffDuration or spellId
         auraDurationTime = 0 --reset duration
         auraUnitId = unitId or "player"
 
-        AuraUtil.ForEachAura(auraUnitId, "HELPFUL", bBatchCount, handleBuffAura, bUsePackedAura) --check auras to find a buff for the spellId
+        AuraUtil.ForEachAura(auraUnitId, "HELPFUL", nil, handleBuffAura, bUsePackedAura) --check auras to find a buff for the spellId
 
         if (auraDurationTime == 0) then --if the buff wasn't found, attempt to get the duration from the file
             return LIB_OPEN_RAID_PLAYERCOOLDOWNS[spellId].duration or 0
@@ -785,14 +942,40 @@ function openRaidLib.CooldownManager.GetPlayerCooldownStatus(spellId)
                 return ceil(timeLeft), chargesAvailable, startTimeOffset, duration, buffDuration
             end
         else
-            local start, duration = GetSpellCooldown(spellId)
-            if (start == 0) then --cooldown is ready
-                return 0, 1, 0, 0, 0 --time left, charges, startTime
+
+            if (IsTWWExpansion()) then
+                local spellCooldownInfo = GetSpellCooldown(spellId)
+                local start = spellCooldownInfo.startTime
+                local duration = spellCooldownInfo.duration
+                if (start == 0) then --cooldown is ready
+                    return 0, 1, 0, 0, 0 --time left, charges, startTime
+                else
+                    local timeLeft = start + duration - GetTime()
+                    local globalCooldownInfo = GetSpellCooldown(CONST_GLOBALCOOLDOWN_SPELLID)
+                    if (globalCooldownInfo.startTime ~= 0 and globalCooldownInfo.duration >= timeLeft) then
+                        return 0, 1, 0, 0, 0 --time left, charges, startTime
+                    else
+                        local startTimeOffset = start - GetTime()
+                        return ceil(timeLeft), 0, ceil(startTimeOffset), duration, buffDuration --time left, charges, startTime, duration, buffDuration
+                    end
+                end
             else
-                local timeLeft = start + duration - GetTime()
-                local startTimeOffset = start - GetTime()
-                return ceil(timeLeft), 0, ceil(startTimeOffset), duration, buffDuration --time left, charges, startTime, duration, buffDuration
+                local start, duration = GetSpellCooldown(spellId)
+                if (start == 0) then --cooldown is ready
+                    return 0, 1, 0, 0, 0 --time left, charges, startTime
+                else
+                    local timeLeft = start + duration - GetTime()
+                    local gcStart, gcDuration = GetSpellCooldown(CONST_GLOBALCOOLDOWN_SPELLID)
+                    if (gcStart ~= 0 and gcDuration >= timeLeft) then
+                        return 0, 1, 0, 0, 0 --time left, charges, startTime
+                    else
+                        local startTimeOffset = start - GetTime()
+                        return ceil(timeLeft), 0, ceil(startTimeOffset), duration, buffDuration --time left, charges, startTime, duration, buffDuration
+                    end
+                end
             end
+
+
         end
     else
         return openRaidLib.DiagnosticError("CooldownManager|GetPlayerCooldownStatus()|cooldownInfo not found|", spellId)
@@ -803,50 +986,52 @@ do
     --make new namespace
     openRaidLib.AuraTracker = {}
 
-    function openRaidLib.AuraTracker.ScanCallback(aura)
-        local unitId = openRaidLib.AuraTracker.CurrentUnitId
-        local thisUnitAuras = openRaidLib.AuraTracker.CurrentAuras[unitId]
-
-        local auraInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitId, aura.auraInstanceID)
-        if (auraInfo) then
-            local spellId = auraInfo.spellId
-            if (spellId) then
-                thisUnitAuras[spellId] = true
-                openRaidLib.AuraTracker.AurasFoundOnScan[spellId] = true
+    do if (false) then --do not load this section as it isn't in use
+        function openRaidLib.AuraTracker.ScanCallback(auraInfo)
+            if (auraInfo) then
+                local spellId = auraInfo.spellId
+                if (spellId) then
+                    local unitId = openRaidLib.AuraTracker.CurrentUnitId
+                    local thisUnitAuras = openRaidLib.AuraTracker.CurrentAuras[unitId]
+                    thisUnitAuras[spellId] = true
+                    openRaidLib.AuraTracker.AurasFoundOnScan[spellId] = true
+                end
             end
         end
-    end
 
-	function openRaidLib.AuraTracker.ScanUnitAuras(unitId)
-		local batchCount = nil
-		local usePackedAura = true
-        openRaidLib.AuraTracker.CurrentUnitId = unitId
+        function openRaidLib.AuraTracker.ScanUnitAuras(unitId)
+            local maxCount = nil
+            local bUsePackedAura = true
+            openRaidLib.AuraTracker.CurrentUnitId = unitId
 
-        openRaidLib.AuraTracker.AurasFoundOnScan = {}
-		AuraUtil.ForEachAura(unitId, "HELPFUL", batchCount, openRaidLib.AuraTracker.ScanCallback, usePackedAura)
+            openRaidLib.AuraTracker.AurasFoundOnScan = {}
 
-        local thisUnitAuras = openRaidLib.AuraTracker.CurrentAuras[unitId]
-        for spellId in pairs(thisUnitAuras) do
-            if (not openRaidLib.AuraTracker.AurasFoundOnScan[spellId]) then
-                --aura removed
-                openRaidLib.internalCallback.TriggerEvent("unitAuraRemoved", unitId, spellId)
+            --code of 'ForEachAura' has been updated to use the latest API available
+            AuraUtil.ForEachAura(unitId, "HELPFUL", maxCount, openRaidLib.AuraTracker.ScanCallback, bUsePackedAura)
+
+            local thisUnitAuras = openRaidLib.AuraTracker.CurrentAuras[unitId]
+            for spellId in pairs(thisUnitAuras) do
+                if (not openRaidLib.AuraTracker.AurasFoundOnScan[spellId]) then
+                    --aura removed
+                    openRaidLib.internalCallback.TriggerEvent("unitAuraRemoved", unitId, spellId)
+                end
             end
         end
-	end
 
-    --run when the open raid lib loads
-    function openRaidLib.AuraTracker.StartScanUnitAuras(unitId)
-        openRaidLib.AuraTracker.CurrentAuras = {
-            [unitId] = {}
-        }
+        --run when the open raid lib loads
+        function openRaidLib.AuraTracker.StartScanUnitAuras(unitId) --this function isn't getting called (was called from Entering World event)
+            openRaidLib.AuraTracker.CurrentAuras = {
+                [unitId] = {} --storing using the unitId as key, won't work for any other unit other than the "player"
+            }
 
-        local auraFrameEvent = CreateFrame("frame")
-        auraFrameEvent:RegisterUnitEvent("UNIT_AURA", unitId)
+            local auraFrameEvent = CreateFrame("frame")
+            auraFrameEvent:RegisterUnitEvent("UNIT_AURA", unitId)
 
-        auraFrameEvent:SetScript("OnEvent", function()
-            openRaidLib.AuraTracker.ScanUnitAuras(unitId)
-        end)
-    end
+            auraFrameEvent:SetScript("OnEvent", function()
+                openRaidLib.AuraTracker.ScanUnitAuras(unitId)
+            end)
+        end
+    end end
 
     --test case:
     local debugModule = {}
@@ -855,7 +1040,6 @@ do
         --print("aura removed:", unitId, spellId, spellName)
     end
     openRaidLib.internalCallback.RegisterCallback("unitAuraRemoved", debugModule.AuraRemoved)
-
 end
 
 
@@ -900,7 +1084,6 @@ do
         local casterName = Ambiguate(casterString, "none")
         return openRaidLib.AuraTracker.FindBuffDuration(targetName, casterName, spellId)
     end
-
 end
 
 
@@ -976,3 +1159,86 @@ openRaidLib.specAttribute = {
         [1473] = 1, --Augmentation
     },
 }
+
+
+function openRaidLib.Util.GetPlayerSpellList()
+    local completeListOfSpells = {}
+    local specId, specName, _, specIconTexture = GetSpecializationInfo(GetSpecialization())
+    local locPlayerRace, playerRace, playerRaceId = UnitRace("player")
+    local generalIndex = Enum.SpellBookSkillLineIndex and Enum.SpellBookSkillLineIndex.General or CONST_SPELLBOOK_GENERAL_TABID
+    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(generalIndex) --CONST_SPELLBOOK_GENERAL_TABID
+
+    if (not offset) then
+        return completeListOfSpells
+    end
+
+    offset = offset + 1
+
+	--get spells from the Spec spellbook
+    for i = 1, GetNumSpellTabs() do --called "lines" in new v11 api
+        local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(i)
+        if (tabTexture == specIconTexture) then
+            print("running?")
+            offset = offset + 1
+            local tabEnd = offset + numSpells
+            for entryOffset = offset, tabEnd - 1 do
+                local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
+                if (spellId) then
+                    if (spellType == "SPELL" or spellType == 1) then
+                        --print(tabName, tabTexture == specIconTexture, offset, tabEnd,spellType, spellId)
+                        spellId = GetOverrideSpell(spellId)
+                        local spellName = GetSpellInfo(spellId)
+                        local bIsPassive = IsPassiveSpell(entryOffset, spellBookPlayerEnum)
+                        if (spellName and not bIsPassive) then
+                            completeListOfSpells[spellId] = true
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    --get class shared spells from the spell book
+    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(CONST_SPELLBOOK_CLASSSPELLS_TABID)
+    offset = offset + 1
+    local tabEnd = offset + numSpells
+    for entryOffset = offset, tabEnd - 1 do
+        local spellType, spellId = GetSpellBookItemInfo(entryOffset, spellBookPlayerEnum)
+        if (spellId) then
+            if (spellType == "SPELL" or spellType == 1) then
+                spellId = GetOverrideSpell(spellId)
+                local spellName = GetSpellInfo(spellId)
+                local bIsPassive = IsPassiveSpell(entryOffset, spellBookPlayerEnum)
+
+                if (spellName and not bIsPassive) then
+                    completeListOfSpells[spellId] = true
+                end
+            end
+        end
+    end
+
+    local getNumPetSpells = function()
+        --'HasPetSpells' contradicts the name and return the amount of pet spells available instead of a boolean
+        return HasPetSpells()
+    end
+
+    --get pet spells from the pet spellbook
+    local numPetSpells = getNumPetSpells()
+    if (numPetSpells) then
+        for i = 1, numPetSpells do
+            local spellName, _, unmaskedSpellId = GetSpellBookItemName(i, spellBookPetEnum)
+            local itemType, actionID, spellID = C_SpellBook.GetSpellBookItemType(i, spellBookPetEnum)
+            unmaskedSpellId = spellID
+            if (unmaskedSpellId) then
+                unmaskedSpellId = GetOverrideSpell(unmaskedSpellId)
+                local bIsPassive = IsPassiveSpell(i, spellBookPetEnum)
+                if (spellName and not bIsPassive) then
+                    completeListOfSpells[unmaskedSpellId] = true
+                end
+            end
+        end
+    end
+
+    --dumpt(completeListOfSpells)
+    return completeListOfSpells
+end

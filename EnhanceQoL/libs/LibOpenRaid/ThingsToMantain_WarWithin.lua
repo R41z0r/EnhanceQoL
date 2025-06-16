@@ -1,8 +1,8 @@
 
---data for dragonflight expansion
+--data for war within expansion
 do
 	local versionString, revision, launchDate, gameVersion = GetBuildInfo()
-	if (gameVersion >= 110000 or gameVersion < 100000) then
+	if (gameVersion >= 120000 or gameVersion < 110000) then
 		return
 	end
 
@@ -10,86 +10,32 @@ do
 		return
 	end
 
-	local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
+    local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 
 	local loadLibDatabase = function()
-		--localization
-		local gameLanguage = GetLocale()
+        --localization
+        local gameLanguage = GetLocale()
 
-		local L = { --default localization
-			["STRING_EXPLOSION"] = "explosion",
-			["STRING_MIRROR_IMAGE"] = "Mirror Image",
-			["STRING_CRITICAL_ONLY"]  = "critical",
-			["STRING_BLOOM"] = "Bloom", --lifebloom 'bloom' healing
-			["STRING_GLAIVE"] = "Glaive", --DH glaive toss
-			["STRING_MAINTARGET"] = "Main Target",
-			["STRING_AOE"] = "AoE", --multi targets
-			["STRING_SHADOW"] = "Shadow", --the spell school 'shadow'
-			["STRING_PHYSICAL"] = "Physical", --the spell school 'physical'
-			["STRING_PASSIVE"] = "Passive", --passive spell
-			["STRING_TEMPLAR_VINDCATION"] = "Templar's Vindication", --paladin spell
-			["STRING_PROC"] = "proc", --spell proc
-			["STRING_TRINKET"] = "Trinket", --trinket
-		}
+        local L = {} --default localization
 
 		if (gameLanguage == "enUS") then
 			--default language
-
 		elseif (gameLanguage == "deDE") then
-			L["STRING_EXPLOSION"] = "Explosion"
-			L["STRING_MIRROR_IMAGE"] = "Bilder spiegeln"
-			L["STRING_CRITICAL_ONLY"]  = "kritisch"
-
 		elseif (gameLanguage == "esES") then
-			L["STRING_EXPLOSION"] = "explosión"
-			L["STRING_MIRROR_IMAGE"] = "Imagen de espejo"
-			L["STRING_CRITICAL_ONLY"]  = "crítico"
-
 		elseif (gameLanguage == "esMX") then
-			L["STRING_EXPLOSION"] = "explosión"
-			L["STRING_MIRROR_IMAGE"] = "Imagen de espejo"
-			L["STRING_CRITICAL_ONLY"]  = "crítico"
-
 		elseif (gameLanguage == "frFR") then
-			L["STRING_EXPLOSION"] = "explosion"
-			L["STRING_MIRROR_IMAGE"] = "Effet miroir"
-			L["STRING_CRITICAL_ONLY"]  = "critique"
-
 		elseif (gameLanguage == "itIT") then
-			L["STRING_EXPLOSION"] = "esplosione"
-			L["STRING_MIRROR_IMAGE"] = "Immagine Speculare"
-			L["STRING_CRITICAL_ONLY"]  = "critico"
-
 		elseif (gameLanguage == "koKR") then
-			L["STRING_EXPLOSION"] = "폭발"
-			L["STRING_MIRROR_IMAGE"] = "미러 이미지"
-			L["STRING_CRITICAL_ONLY"]  = "치명타"
-
 		elseif (gameLanguage == "ptBR") then
-			L["STRING_EXPLOSION"] = "explosão"
-			L["STRING_MIRROR_IMAGE"] = "Imagem Espelhada"
-			L["STRING_CRITICAL_ONLY"]  = "critico"
-
 		elseif (gameLanguage == "ruRU") then
-			L["STRING_EXPLOSION"] = "взрыв"
-			L["STRING_MIRROR_IMAGE"] = "Зеркальное изображение"
-			L["STRING_CRITICAL_ONLY"]  = "критический"
-
 		elseif (gameLanguage == "zhCN") then
-			L["STRING_EXPLOSION"] = "爆炸"
-			L["STRING_MIRROR_IMAGE"] = "镜像"
-			L["STRING_CRITICAL_ONLY"]  = "爆击"
-
 		elseif (gameLanguage == "zhTW") then
-			L["STRING_EXPLOSION"] = "爆炸"
-			L["STRING_MIRROR_IMAGE"] = "鏡像"
-			L["STRING_CRITICAL_ONLY"]  = "致命"
 		end
 
-		LIB_OPEN_RAID_FOOD_BUFF = {} --default
+        LIB_OPEN_RAID_FOOD_BUFF = {} --default
 		LIB_OPEN_RAID_FLASK_BUFF = {} --default
 
-		LIB_OPEN_RAID_BLOODLUST = {
+        LIB_OPEN_RAID_BLOODLUST = {
 			[2825] = true, --bloodlust (shaman)
 			[32182] = true, --heroism (shaman)
 			[80353] = true, --timewarp (mage)
@@ -99,19 +45,20 @@ do
 			[390386] = true, --fury of the aspects
 		}
 
-		LIB_OPEN_RAID_MYTHICKEYSTONE_ITEMID = 180653
-		LIB_OPEN_RAID_AUGMENTATED_RUNE = 0 --need to update to dragonflight
+		LIB_OPEN_RAID_MYTHICKEYSTONE_ITEMID = 151086
+		LIB_OPEN_RAID_AUGMENTATED_RUNE = 0 -- TODO: need to update to war within
 
 		LIB_OPEN_RAID_COVENANT_ICONS = {
-			--need to get the icon for the new 4 covanants in dragonflight
+			--need to get the icon for the new 4 covanants in war within
 			--"Interface\\ICONS\\UI_Sigil_Kyrian", --kyrian
 			--"Interface\\ICONS\\UI_Sigil_Venthyr", --venthyr
 			--"Interface\\ICONS\\UI_Sigil_NightFae", --nightfae
 			--"Interface\\ICONS\\UI_Sigil_Necrolord", --necrolords
 		}
 
-		--which gear slots can be enchanted on the latest retail version of the game
+        --which gear slots can be enchanted on the latest retail version of the game
 		--when the value is a number, the slot only receives enchants for a specific attribute
+        -- TODO: Confirm
 		LIB_OPEN_RAID_ENCHANT_SLOTS = {
 			--[INVSLOT_NECK] = true,
 			[INVSLOT_BACK] = true,
@@ -131,6 +78,39 @@ do
 		-- print("enchantId:", enchandId)
 		LIB_OPEN_RAID_ENCHANT_IDS = {
 			--empty as the lib now get the enchant id and compare with expansion enchantId number space
+			[7442] = true, --[Enchant Weapon - Stormrider's Fury |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7448] = true, --[Enchant Weapon - Oathsworn's Tenacity |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7460] = true, --[Enchant Weapon - Authority of the Depths |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7454] = true, --[Enchant Weapon - Authority of Fiery Resolve |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7451] = true, --[Enchant Weapon - Authority of Air |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7439] = true, --[Enchant Weapon - Council's Guile |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7445] = true, --[Enchant Weapon - Stonebound Artistry |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7457] = true, --[Enchant Weapon - Authority of Storms |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7463] = true, --[Enchant Weapon - Authority of Radiant Power |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7473] = true, --[Enchant Ring - Cursed Haste |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7476] = true, --[Enchant Ring - Cursed Versatility |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7470] = true, --[Enchant Ring - Cursed Critical Strike |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7479] = true, --[Enchant Ring - Cursed Mastery |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7346] = true, --[Enchant Ring - Radiant Mastery |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7334] = true, --[Enchant Ring - Radiant Critical Strike |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7352] = true, --[Enchant Ring - Radiant Versatility |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7340] = true, --[Enchant Ring - Radiant Haste |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7415] = true, --[Enchant Cloak - Chant of Burrowing Rapidity |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7403] = true, --[Enchant Cloak - Chant of Winged Grace |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7409] = true, --[Enchant Cloak - Chant of Leeching Fangs |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7391] = true, --[Enchant Bracer - Chant of Armored Leech |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7385] = true, --[Enchant Bracer - Chant of Armored Avoidance |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7397] = true, --[Enchant Bracer - Chant of Armored Speed |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7424] = true, --[Enchant Boots - Defender's March |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7418] = true, --[Enchant Boots - Scout's March |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7421] = true, --[Enchant Boots - Cavalry's March |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7355] = true, --[Enchant Chest - Stormrider's Agility |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7361] = true, --[Enchant Chest - Oathsworn's Strength |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7358] = true, --[Enchant Chest - Council's Intellect |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7534] = true, --[Sunset Spellthread |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7529] = true, --[Daybreak Spellthread |A:Professions-ChatIcon-Quality-Tier1:17:15::1|a]
+			[7601] = true, --[Stormbound Armor Kit |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[7595] = true, --[Defender's Armor Kit |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
 		}
 
 		LIB_OPEN_RAID_DEATHKNIGHT_RUNEFORGING_ENCHANT_IDS = {
@@ -149,7 +129,7 @@ do
 		--local gemId = select(4, strsplit(":", itemLink))
 		--print("gemId:", gemId)
 		LIB_OPEN_RAID_GEM_IDS = {
-			--need update to dragonflight
+			-- TODO: need update to war within
 		}
 
 		--/dump GetWeaponEnchantInfo()
@@ -158,93 +138,61 @@ do
 			[5400] = {spell=318038}, -- Flametongue
 			[6498] = {spell=382021}, -- Earthliving
 			-- Runes, whetstones, weightstones
-			[6512] = {tier = 1, item=194823},
-			[6513] = {tier = 2, item=194823},
-			[6514] = {tier = 3, item=194823},
-
-			[6515] = {tier = 1, item=194826},
-			[6694] = {tier = 2, item=194826},
-			[6695] = {tier = 3, item=194826},
-
-			[6516] = {tier = 1, item=194820},
-			[6517] = {tier = 2, item=194820},
-			[6518] = {tier = 3, item=194820},
-
-			[6529] = {tier = 1, item=198162},
-			[6530] = {tier = 2, item=198162},
-			[6531] = {tier = 3, item=198162},
-
-			[6379] = {tier = 1, item=191940},
-			[6380] = {tier = 2, item=191940},
-			[6381] = {tier = 3, item=191940},
-
-			[6696] = {tier = 1, item=191945},
-			[6697] = {tier = 2, item=191945},
-			[6698] = {tier = 3, item=191945},
+            -- TODO: Update for war within
 		}
 
 		--buff spellId, the value of the food is the tier level
 		--use /details auras
+        -- TODO: Update for war within
 		LIB_OPEN_RAID_FOOD_BUFF = {
-			[382145] = {tier = {[220] = 1}, status = {"haste"}, localized = {STAT_HASTE}}, --Well Fed haste 220
-			[382146] = {tier = {[220] = 1}, status = {"critical"}, localized = {STAT_CRITICAL_STRIKE}}, --Well Fed crit 220
-			[382149] = {tier = {[220] = 1}, status = {"versatility"}, localized = {STAT_VERSATILITY}}, --Well Fed vers 220
-			[382150] = {tier = {[220] = 1}, status = {"mastery"}, localized = {STAT_MASTERY}}, --Well Fed mastery 220
-			[382152] = {tier = {[130] = 1}, status = {"haste", "critical"}, localized = {STAT_HASTE, STAT_CRITICAL_STRIKE}}, --Well Fed haste + crit 130
-			[382153] = {tier = {[130] = 1}, status = {"haste", "versatility"}, localized = {STAT_HASTE, STAT_VERSATILITY}}, --Well Fed haste + vers 130
-			[382154] = {tier = {[130] = 1}, status = {"haste", "mastery"}, localized = {STAT_HASTE, STAT_MASTERY}}, --Well Fed haste + mastery 130
-			[382155] = {tier = {[130] = 1}, status = {"critical", "versatility"}, localized = {STAT_CRITICAL_STRIKE, STAT_VERSATILITY}}, --Well Fed crit + vers 130
-			[382156] = {tier = {[130] = 1}, status = {"critical", "mastery"}, localized = {STAT_CRITICAL_STRIKE, STAT_MASTERY}}, --Well Fed crit + mastery 130
-			[382157] = {tier = {[130] = 1}, status = {"mastery", "versatility"}, localized = {STAT_MASTERY, STAT_VERSATILITY}}, --Well Fed vers + mastery 130
+
 		}
 
+		--buff spell ids
 		--use /details auras
 		LIB_OPEN_RAID_FLASK_BUFF = {
-			--phials
-			[371354] = {tier = {[131] = 1, [151] = 2, [174] = 3}}, --Phial of the Eye in the Storm
-			[370652] = {tier = {[470] = 1, [541] = 2, [622] = 3}}, --Phial of Static Empowerment
-			[371172] = {tier = {[236] = 1, [257] = 2, [279] = 3}}, --Phial of Tepid Versatility
-			[371204] = {tier = {[8125] = 1, [9344] = 2, [10746] = 3}}, --Phial of Still Air
-			[371036] = {tier = {[-4] = 1, [-5] = 2, [-6] = 3}}, --Phial of Icy Preservation
-			[374000] = {tier = {[690] = 1, [752] = 2, [814] = 3}}, --Iced Phial of Corrupting Rage
-			[371386] = {tier = {[432] = 1, [497] = 2, [572] = 3}}, --Phial of Charged Isolation
-			[373257] = {tier = {[4603] = 2, [3949] = 1, [5365] = 3}}, --Phial of Glacial Fury
-			[393700] = {tier = {[45] = 3, [38] = 2, [32] = 1}}, --Aerated Phial of Deftness
-			[393717] = {tier = {[45] = 3, [38] = 2, [32] = 1}}, --Steaming Phial of Finesse
-			[371186] = {tier = {[558] = 3, [473] = 1, [515] = 2}}, --Charged Phial of Alacrity
-			[393714] = {tier = {[45] = 3, [38] = 2, [32] = 1}}, --Crystalline Phial of Perception
-			[371339] = {tier = {[562] = 3, [476] = 1, [519] = 2}}, --Phial of Elemental Chaos
+			[431973] = true, --vers
+			[431972] = true, --haste
+			[431971] = true, --crit
+			[431974] = true, --mastery
+			[432021] = true, --chaos
+			[432473] = true, --healing
 		}
 
+        --on use spell ids
 		LIB_OPEN_RAID_ALL_POTIONS = {
-			[415569] = 1, --Dreamwalker's Healing Potion
-			[370511] = 1, --Refreshing Healing Potion
-			[371039] = 1, --Potion of Withering Vitality
-			[370607] = 1, --Aerated Mana Potion
-			[371024] = 1, --Elemental Potion of Power --querying cooldown with GetSpellCooldown(371024) gives the cooldown of both potions
-			[371028] = 1, --Elemental Potion of Ultimate Power
-			[371033] = 1, --Potion of Frozen Focus
-			[371125] = 1, --Potion of the Hushed Zephyr
-			[371052] = 1, --Potion of Chilled Clarity
+			[431419] = true, --Cavedweller's Delight
+			[431416] = true, --Healing Potion algari
+			[431914] = true, --Potion of Unwavering Focus
+			[431932] = true, --Tempered Potion
+			[453205] = true, --Potion Bomb of Power
+			[453162] = true, --Potion Bomb of Recovery
+			[453283] = true, --Potion Bomb of Speed
+			[431925] = true, --Frontline Potion
+			[431941] = true, --Potion of the Reborn Cheetah
+			[431418] = true, --Algari Mana Potion
+			[431422] = true, --Slumbering Soul Serum
+			[431432] = true, --Draught of Shocking Revelations
+			[431424] = true, --Draught of Silent Footfalls / Treading Lightly
+			[460074] = true, --Grotesque Vial
 		}
 
 		--spellId of healing from potions
 		LIB_OPEN_RAID_HEALING_POTIONS = {
-			[415569] = 1, --Dreamwalker's Healing Potion
-			[370511] = 1, --Refreshing Healing Potion
-			[371039] = 1, --Potion of Withering Vitality
-			[6262] = 1, --Warlock's Healthstone
+			[431416] = true, --Healing Potion algari
+			[431419] = true, --Cavedweller's Delight
+			[452767] = true, --Heartseeking Health Injector (engineering tinker)
 		}
 
 		LIB_OPEN_RAID_MANA_POTIONS = {
-			[370607] = 1, --Aerated Mana Potion -- CAST_SUCCESS | ENERGIZE
+			[431418] = true, --Algari Mana Potion
+			[431422] = true, --Slumbering Soul Serum (10s meditation)
 		}
-
 
 		--end of per expansion content
 		--------------------------------------------------------------------------------------------
 
-
+        -- TODO: Confirm for war within
 		LIB_OPEN_RAID_MELEE_SPECS = {
 			[251] = "DEATHKNIGHT",
 			[252] = "DEATHKNIGHT",
@@ -271,6 +219,7 @@ do
 		--get cooldown duration from the buff placed on the player or target player
 		--spell scanner not getting the spell from the pet spellbook
 
+        -- TODO: Update for war within
 		LIB_OPEN_RAID_COOLDOWNS_INFO = {
 
 			-- Filter Types:
@@ -289,16 +238,17 @@ do
 
 			--defensive potions
 			[6262] = {cooldown = 60,	duration = 0,	specs = {},	talent = false,	charges = 1, class = "", type = 10}, --Healthstone
-			[370511] = {cooldown = 300,	duration = 0,	specs = {},	talent = false,	charges = 1, class = "", type = 10, shareid = 101}, --Refreshing Healing Potion
-			[415569] = {cooldown = 300, duration = 0, specs = {}, talent = false, charges = 1, class = "", type = 10, sharedid = 101}, -- Dreamwalker's Healing Potion
+			[431419] = {cooldown = 300,	duration = 0,	specs = {},	talent = false,	charges = 1, class = "", type = 10, shareid = 101},	--Refreshing Potion
+			[431416] = {cooldown = 300, duration = 0, specs = {}, talent = false, charges = 1, class = "", type = 10, sharedid = 102},	--Healing Potion algari
 
 			--attack potions
-			[371024] = {cooldown = 300,	duration = 30,	specs = {},	talent = false,	charges = 1, class = "", type = 11, shareid = 101}, --Elemental Potion of Power
+			[431914] = {cooldown = 300,	duration = 20,	specs = {},	talent = false,	charges = 1, class = "", type = 11, shareid = 101}, --[Potion of Unwavering Focus |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
+			[431932] = {cooldown = 300,	duration = 30,	specs = {},	talent = false,	charges = 1, class = "", type = 11, shareid = 101}, --[Tempered Potion |A:Professions-ChatIcon-Quality-Tier3:17:18::1|a]
 
 			--utility potions
-			[371124] = {cooldown = 300,	duration = 0,	specs = {},	talent = false,	charges = 1, class = "", type = 12, shareid = 101}, --exp9 invisibility potion
+			[431424] = {cooldown = 300,	duration = 0,	specs = {},	talent = false,	charges = 1, class = "", type = 12, shareid = 101}, --exp10 invisibility potion
 
-			--racials 
+			--racials
 			--maintanance: login into the new race and type /run Details.GenerateRacialSpellList()
 			--this command give a formated line to paste here
 
@@ -366,7 +316,7 @@ do
 			-- 66 - Protection
 			-- 70 - Retribution
 			[31850] = {cooldown = 120,	duration = 8,	specs = {66},				talent = false,	charges = 1,	class = "PALADIN",	type = 2}, --Ardent Defender
-			[31821] = {cooldown = 180,	duration = 8,	specs = {65},				talent = false,	charges = 1,	class = "PALADIN",	type = 4}, --Aura Mastery
+			[31821] = {cooldown = 180,	duration = 8,	specs = {65},				talent = false,	charges = 1,	class = "PALADIN",	type = 4, cdtype = "DR"}, --Aura Mastery
 			[216331] = {cooldown = 120,	duration = 20,	specs = {65},				talent = false,	charges = 1,	class = "PALADIN",	type = 1}, --Avenging Crusader
 			[31884] = {cooldown = 120,	duration = 20,	specs = {65, 66, 70},	talent = false,	charges = 1,	class = "PALADIN",	type = 1}, --Avenging Wrath
 			[1044] = {cooldown = 25,	duration = 8,	specs = {65, 66, 70},	talent = false,	charges = 1,	class = "PALADIN",	type = 5}, --Blessing of Freedom
@@ -410,7 +360,7 @@ do
 			[184364] = {cooldown = 120,	duration = 8,	specs = {72},				talent = false,	charges = 1,	class = "WARRIOR",	type = 2}, --Enraged Regeneration
 			[5246] = {cooldown = 90,	duration = 8,	specs = {71, 72, 73},		talent = false,	charges = 1,	class = "WARRIOR",	type = 8}, --Intimidating Shout
 			[12975] = {cooldown = 180,	duration = 15,	specs = {73},				talent = false,	charges = 1,	class = "WARRIOR",	type = 2}, --Last Stand
-			[97462] = {cooldown = 180,	duration = 10,	specs = {71, 72, 73},		talent = false,	charges = 1,	class = "WARRIOR",	type = 4}, --Rallying Cry
+			[97462] = {cooldown = 180,	duration = 10,	specs = {71, 72, 73},		talent = false,	charges = 1,	class = "WARRIOR",	type = 4, cdtype = "DR", nostack = true}, --Rallying Cry. No Stack means that casting two rallying cries at the same time, won't duplicate the effect
 			[152277] = {cooldown = 60,	duration = 6,	specs = {71},				talent = false,	charges = 1,	class = "WARRIOR",	type = 1}, --Ravager
 			[228920] = {cooldown = 60,	duration = 6,	specs = {73},				talent = false,	charges = 1,	class = "WARRIOR",	type = 1}, --Ravager
 			[1719] = {cooldown = 90,	duration = 10,	specs = {72},				talent = false,	charges = 1,	class = "WARRIOR",	type = 1}, --Recklessness
@@ -426,9 +376,11 @@ do
 			[23920] = {cooldown = 25, duration = 0, 	specs = {}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 5}, --Spell Refleciton
 			[385060] = {cooldown = 45, duration = 0, 	specs = {}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 5}, --Odyn's Fury (can remove root with Avatar)
 			[3411] = {cooldown = 30, duration = 6, 		specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 3}, --Intervene
-			[386071] = {cooldown = 90, duration = 6, 	specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 8}, --Disrupting Shout
+			[386071] = {cooldown = 90, duration = 6, 	specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 6}, --Disrupting Shout
 			[385952] = {cooldown = 45, duration = 4, 	specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 5}, --Shield Charge
 			[1160] = {cooldown = 45, duration = 8, 		specs = {73}, 				talent = false,	charges = 1,	class = "WARRIOR",	type = 2}, --Demoralizing Shout
+			[385952] = {cooldown = 45, duration = 4, 	specs = {71, 72, 73}, 		talent = false,	charges = 1,	class = "WARRIOR",	type = 8}, --Shield Charge
+
 
 			--~warlock
 			-- 265 - Affliction
@@ -454,8 +406,11 @@ do
 			[132411] = {cooldown = 15,	duration = 0,	specs = {265, 266, 267},	talent = false,	charges = 1,	class = "WARLOCK",	type = 7,}, --Singe Magic (sacrifice)
 			[17767] = {cooldown = 120,	duration = 20,	specs = {265, 266, 267},	talent = false,	charges = 1,	class = "WARLOCK",	type = 2, pet = 1860}, --Shadow Bulwark
 			[132413] = {cooldown = 120,	duration = 20,	specs = {265, 266, 267},	talent = false,	charges = 1,	class = "WARLOCK",	type = 2,}, --Shadow Bulwark (sacrifice)
-			[6358] = {cooldown = 30,	duration = 30,	specs = {265, 266, 267},	talent = false,	charges = 1,	class = "WARLOCK",	type = 8, pet = 184600}, --Seduction
+
 			[261589] = {cooldown = 30,	duration = 30,	specs = {265, 266, 267},	talent = false,	charges = 1,	class = "WARLOCK",	type = 8}, --Seduction (Sacrifice)
+			--[6358] = {cooldown = 30,	duration = 30,	specs = {265, 266, 267},	talent = false,	charges = 1,	class = "WARLOCK",	type = 8}, --Seduction (Sacrifice)
+			[6358] = {cooldown = 30,	duration = 30,	specs = {265, 266, 267},	talent = false,	charges = 1,	class = "WARLOCK",	type = 8, pet = 184600}, --Seduction
+			[22703] = {cooldown = 120,	duration = 2,	specs = {265, 266, 267},	talent = false,	charges = 1,	class = "WARLOCK",	type = 8}, --Infernal Awakening
 
 			--~shaman
 			-- 262 - Elemental
@@ -470,14 +425,13 @@ do
 			[198103] = {cooldown = 300,	duration = 60,	specs = {262, 263, 264},	talent = false,	charges = 1,	class = "SHAMAN",	type = 2}, --Earth Elemental
 			[51533] = {cooldown = 120,	duration = 15,	specs = {263},				talent = false,	charges = 1,	class = "SHAMAN",	type = 1}, --Feral Spirit
 			[198067] = {cooldown = 150,	duration = 30,	specs = {262},				talent = false,	charges = 1,	class = "SHAMAN",	type = 1}, --Fire Elemental
-			[108280] = {cooldown = 180,	duration = 10,	specs = {264},				talent = false,	charges = 1,	class = "SHAMAN",	type = 4}, --Healing Tide Totem
+			[108280] = {cooldown = 180,	duration = 10,	specs = {264},				talent = false,	charges = 1,	class = "SHAMAN",	type = 4, cdtype = "HEAL"}, --Healing Tide Totem
 			[16191] = {cooldown = 180,	duration = 8,	specs = {264},				talent = false,	charges = 1,	class = "SHAMAN",	type = 5}, --Mana Tide Totem
-			[98008] = {cooldown = 180,	duration = 6,	specs = {264},				talent = false,	charges = 1,	class = "SHAMAN",	type = 4}, --Spirit Link Totem
+			[98008] = {cooldown = 180,	duration = 6,	specs = {264},				talent = false,	charges = 1,	class = "SHAMAN",	type = 4, cdtype = "DR"}, --Spirit Link Totem
 			[192249] = {cooldown = 150,	duration = 30,	specs = {262},				talent = false,	charges = 1,	class = "SHAMAN",	type = 1}, --Storm Elemental
 			[8143] = {cooldown = 60,	duration = 10,	specs = {262, 263, 264},	talent = false,	charges = 1,	class = "SHAMAN",	type = 5}, --Tremor Totem
 			[192077] = {cooldown = 120,	duration = 15,	specs = {262, 263, 264},	talent = false,	charges = 1,	class = "SHAMAN",	type = 5}, --Wind Rush Totem
 			[198838] = {cooldown = 60,	duration = 15,	specs = {264},				talent = false,	charges = 1,	class = "SHAMAN",	type = 4}, --Earthen Wall Totem
-			[383017] = {cooldown = 30,	duration = 0,	specs = {},					talent = false,	charges = 1,	class = "SHAMAN",	type = 4}, --Stoneskin Totem
 			[192058] = {cooldown = 60,	duration = 0,	specs = {262, 263, 264},	talent = false,	charges = 1,	class = "SHAMAN",	type = 8}, --Capacitor Totem
 			[51485] = {cooldown = 60,	duration = 20,	specs = {262, 263, 264},	talent = false,	charges = 1,	class = "SHAMAN",	type = 8}, --Earthgrab Totem
 			[51514] = {cooldown = 30,	duration = 0,	specs = {},					talent = false,	charges = 1,	class = "SHAMAN",	type = 8}, --Hex
@@ -490,7 +444,9 @@ do
 			[79206] = {cooldown = 120,   duration = 15,   specs = {262, 263, 264},  talent = false, charges = 1,    class = "SHAMAN",   type = 5}, --Spiritwalker's Grace
 			[383013] = {cooldown = 45,   duration = 6,   specs = {262, 263, 264},  	talent = false, charges = 1,    class = "SHAMAN",   type = 7}, --Poison Cleansing Totem
 			[305483] = {cooldown = 45,   duration = 5,   specs = {262, 263, 264},  	talent = false, charges = 1,    class = "SHAMAN",   type = 8}, --Lightning Lasso
-			[197214] = {cooldown = 40,   duration = 2,   specs = {262},  			talent = false, charges = 1,    class = "SHAMAN",   type = 8}, --Sundering
+			[197214] = {cooldown = 40,   duration = 2,   specs = {262},  			talent = false, charges = 1,    class = "SHAMAN",   type = 8, ignoredIfTalent = 469344}, --Sundering
+			[108270] = {cooldown = 180,    duration = 15,specs = {262, 263, 264},   talent = false, charges = 1,    class = "SHAMAN",    type = 2}, --Stone Bulwark Totem
+			[384352] = {cooldown = 60,	duration = 0,specs = {263},		talent = false,	charges = 1,	class = "SHAMAN",	type = 1}, --Doom Winds
 
 			--~monk
 			-- 268 - Brewmaster
@@ -506,9 +462,9 @@ do
 			[322118] = {cooldown = 180,	duration = 25,	specs = {270},				talent = false,	charges = 1,	class = "MONK",	type = 4}, --Invoke Yu'lon, the Jade Serpent
 			[325197] = {cooldown = 180,	duration = 25,	specs = {270},				talent = false,	charges = 1,	class = "MONK",	type = 4}, --Invoke Chi-Ji, the Red Crane
 			[119381] = {cooldown = 50,	duration = 3,	specs = {268, 269, 270},	talent = false,	charges = 1,	class = "MONK",	type = 8}, --Leg Sweep
-			[116849] = {cooldown = 120,	duration = 12,	specs = {270},				talent = false,	charges = 1,	class = "MONK",	type = 3}, --Life Cocoon
+			[116849] = {cooldown = 120,	duration = 12,	specs = {270},				talent = false,	charges = 1,	class = "MONK",	type = 3, cdtype = "TARGET"}, --Life Cocoon
 			[197908] = {cooldown = 90,	duration = 10,	specs = {270},				talent = false,	charges = 1,	class = "MONK",	type = 5}, --Mana Tea
-			[115310] = {cooldown = 180,	duration = 0,	specs = {270},				talent = false,	charges = 1,	class = "MONK",	type = 4}, --Revival
+			[115310] = {cooldown = 180,	duration = 0,	specs = {270},				talent = false,	charges = 1,	class = "MONK",	type = 4, cdtype = "HEAL"}, --Revival
 			[388615] = {cooldown = 180,	duration = 0,	specs = {270},				talent = false,	charges = 1,	class = "MONK",	type = 4}, --Restoral
 			[116844] = {cooldown = 45,	duration = 5,	specs = {268, 269, 270},	talent = false,	charges = 1,	class = "MONK",	type = 8}, --Ring of Peace
 			[152173] = {cooldown = 90,	duration = 12,	specs = {269},				talent = false,	charges = 1,	class = "MONK",	type = 1}, --Serenity
@@ -524,6 +480,7 @@ do
 			[218164] = {cooldown = 8,	duration = 0,	specs = {269,268},			talent = false,	charges = 1,	class = "MONK",	type = 7}, --Detox (DPS/Tank)
 			[325153] = {cooldown = 60,	duration = 3,	specs = {268},				talent = false,	charges = 1,	class = "MONK",	type = 2}, --Exploding Keg
 			[115078] = {cooldown = 45,	duration = 60,	specs = {268, 269, 270},	talent = false,	charges = 1,	class = "MONK",	type = 8}, --Paralysis
+			[443028] = {cooldown = 90,	duration = 4,	specs = {269, 270},			talent = false,	charges = 1,	class = "MONK",	type = 4}, --Celestial Conduit
 
 
 			--~hunter
@@ -553,6 +510,11 @@ do
 			[236776] = {cooldown = 40, duration = 0, 	specs = {253, 254, 255},	talent = false, charges = 1, 	class = "HUNTER", 	type = 8}, --High Explosive Trap
 			[272682] = {cooldown = 45,	duration = 4,	specs = {253, 254, 255},	talent = false,	charges = 1,	class = "HUNTER",	type = 7}, --Master's Call
 			[359844] = {cooldown = 120, duration = 20,  specs = {253}, 				talent = true, charges = 1, 	class = "HUNTER", 	type = 1}, -- Call of the Wild
+			[462031] = {cooldown = 60,    duration = 0,    specs = {},    talent = false,    charges = 1,    class = "HUNTER",    type = 8}, --Implosive Trap
+			[213691] = {cooldown = 30,    duration = 0,    specs = {},    talent = false,    charges = 1,    class = "HUNTER",    type = 8}, --Scatter Shot
+			[356719] = {cooldown = 60,    duration = 0,    specs = {},    talent = false,    charges = 1,    class = "HUNTER",    type = 8}, --Chimaeral Sting
+			[407028] = {cooldown = 45,    duration = 0,    specs = {},    talent = false,    charges = 1,    class = "HUNTER",    type = 8}, --Sticky Tar Bomb
+
 			--Boar nil 62305 Master's Call
 			--Boar Tiranaa 54216 Master's Call
 			--Tiranaa Tiranaa 272682 Master's Call
@@ -564,7 +526,7 @@ do
 			-- 105 - Restoration
 			[22812] = {cooldown = 60,	duration = 12,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 2}, --Barkskin
 			[106951] = {cooldown = 180,	duration = 15,	specs = {103, 104},			talent = false,	charges = 1,	class = "DRUID",	type = 1}, --Berserk
-			[194223] = {cooldown = 180,	duration = 20,	specs = {102},				talent = false,	charges = 1,	class = "DRUID",	type = 1}, --Celestial Alignment
+			[383410] = {cooldown = 180,	duration = 20,	specs = {102},				talent = false,	charges = 1,	class = "DRUID",	type = 1}, --Celestial Alignment
 			[391528] = {cooldown = 120,	duration = 4,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 1}, --Convoke the Spirits
 			[197721] = {cooldown = 90,	duration = 8,	specs = {105},				talent = false,	charges = 1,	class = "DRUID",	type = 4}, --Flourish
 			[319454] = {cooldown = 300,	duration = 45,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 1}, --Heart of the Wild
@@ -574,16 +536,16 @@ do
 			[102558] = {cooldown = 180,	duration = 30,	specs = {104},				talent = false,	charges = 1,	class = "DRUID",	type = 2}, --Incarnation: Guardian of Ursoc
 			[33891] = {cooldown = 180,	duration = 30,	specs = {105},				talent = false,	charges = 1,	class = "DRUID",	type = 4}, --Incarnation: Tree of Life
 			[29166] = {cooldown = 180,	duration = 12,	specs = {102, 105},			talent = false,	charges = 1,	class = "DRUID",	type = 5}, --Innervate
-			[102342] = {cooldown = 60,	duration = 12,	specs = {105},				talent = false,	charges = 1,	class = "DRUID",	type = 3}, --Ironbark
+			[102342] = {cooldown = 60,	duration = 12,	specs = {105},				talent = false,	charges = 1,	class = "DRUID",	type = 3, cdtype = "TARGET"}, --Ironbark
 			[203651] = {cooldown = 60,	duration = 0,	specs = {105},				talent = false,	charges = 1,	class = "DRUID",	type = 3}, --Overgrowth
 			[20484] = {cooldown = 600,	duration = 0,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 5}, --Rebirth
 			[108238] = {cooldown = 90,	duration = 0,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 2}, --Renewal
 			[61336] = {cooldown = 120,	duration = 6,	specs = {103, 104},			talent = false,	charges = 1,	class = "DRUID",	type = 2}, --Survival Instincts
-			[740] = {cooldown = 180,	duration = 8,	specs = {105},				talent = false,	charges = 1,	class = "DRUID",	type = 4}, --Tranquility
+			[740] = {cooldown = 180,	duration = 8,	specs = {105},				talent = false,	charges = 1,	class = "DRUID",	type = 4, cdtype = "HEAL"}, --Tranquility
 			[132469] = {cooldown = 30,	duration = 0,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 8}, --Typhoon
 			[102793] = {cooldown = 60,	duration = 10,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 8}, --Ursol's Vortex
 			[124974] = {cooldown = 90,	duration = 0,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 4}, --Nature's Vigil
-			[77761] = {cooldown = 120,	duration = 8,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 5}, --Stampeding Roar
+			[77761] = {cooldown = 120,	duration = 8,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 5, cdtype = "SPEED", nostack = true}, --Stampeding Roar
 			--[106898] = {cooldown = 120,	duration = 8,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 5}, --Stampeding Roar
 			--[77764] = {cooldown = 120,	duration = 8,	specs = {102, 103, 104, 105},	talent = false,	charges = 1,	class = "DRUID",	type = 5}, --Stampeding Roar
 			[5211] = {cooldown = 60,	duration = 0,	specs = {},			talent = false,	charges = 1,	class = "DRUID",	type = 8}, --Mighty Bash
@@ -600,7 +562,7 @@ do
 			-- 252 - Blood
 			[383269] = {cooldown = 120,	duration = 12,	specs = {250, 251, 252},	talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 1}, --Abomination Limb
 			[48707] = {cooldown = 60,	duration = 10,	specs = {250, 251, 252},	talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 2}, --Anti-Magic Shell
-			[51052] = {cooldown = 120,	duration = 10,	specs = {250, 251, 252},	talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 4}, --Anti-Magic Zone
+			[51052] = {cooldown = 120,	duration = 10,	specs = {250, 251, 252},	talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 4, cdtype = "DR"}, --Anti-Magic Zone
 			[275699] = {cooldown = 90,	duration = 15,	specs = {252},				talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 1}, --Apocalypse
 			[42650] = {cooldown = 480,	duration = 30,	specs = {252},				talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 1}, --Army of the Dead
 			[221562] = {cooldown = 45,	duration = 5,	specs = {250},				talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 8}, --Asphyxiate
@@ -619,11 +581,12 @@ do
 			[219809] = {cooldown = 60,	duration = 8,	specs = {250},				talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 2}, --Tombstone
 			[207289] = {cooldown = 78,	duration = 12,	specs = {252},				talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 1}, --Unholy Assault
 			[55233] = {cooldown = 90,	duration = 10,	specs = {250},				talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 2}, --Vampiric Blood
-			[212552] = {cooldown = 60,	duration = 4,	specs = {250, 251, 252},	talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 2}, --Wraith Walk
+			[212552] = {cooldown = 60,	duration = 4,	specs = {250, 251, 252},	talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 5}, --Wraith Walk
 			[49576] = {cooldown = 25,	duration = 0,	specs = {},					talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 8}, --Death Grip
 			[49039] = {cooldown = 120,	duration = 10,	specs = {250, 251, 252},	talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 2}, --Lichborne
 			[194679] = {cooldown = 25,	duration = 4,	specs = {252},				talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 2}, --Rune Tap
 			[194844] = {cooldown = 60,	duration = 0,	specs = {251},				talent = false,	charges = 1,	class = "DEATHKNIGHT",	type = 1}, --Bonestorm
+			[455395] = {cooldown = 90,  duration = 30,  specs = {252},    			talent = false, charges = 1,    class = "DEATHKNIGHT",  type = 1}, --Raise Abomination
 
 			--~demon hunter
 			-- 577 - Havoc
@@ -631,7 +594,7 @@ do
 			[198589] = {cooldown = 60,	duration = 10,	specs = {577},				talent = false,	charges = 1,	class = "DEMONHUNTER",	type = 2}, --Blur
 			[320341] = {cooldown = 90,	duration = 0,	specs = {581},				talent = false,	charges = 1,	class = "DEMONHUNTER",	type = 2}, --Bulk Extraction
 			[179057] = {cooldown = 60,	duration = 2,	specs = {577},				talent = false,	charges = 1,	class = "DEMONHUNTER",	type = 8}, --Chaos Nova
-			[196718] = {cooldown = 180,	duration = 8,	specs = {577},				talent = false,	charges = 1,	class = "DEMONHUNTER",	type = 4}, --Darkness
+			[196718] = {cooldown = 180,	duration = 8,	specs = {577},				talent = false,	charges = 1,	class = "DEMONHUNTER",	type = 4, cdtype = "DR"}, --Darkness
 			[211881] = {cooldown = 30,	duration = 4,	specs = {577},				talent = false,	charges = 1,	class = "DEMONHUNTER",	type = 5}, --Fel Eruption
 			[204021] = {cooldown = 60,	duration = 10,	specs = {581},				talent = false,	charges = 1,	class = "DEMONHUNTER",	type = 2}, --Fiery Brand
 			[217832] = {cooldown = 45,	duration = 0,	specs = {577, 581},			talent = false,	charges = 1,	class = "DEMONHUNTER",	type = 8}, --Imprison
@@ -674,8 +637,9 @@ do
 			[157981] = {cooldown = 30,	duration = 6,	specs = {63},				talent = false,	charges = 1,	class = "MAGE",	type = 8}, --Blast Wave
 			[475] = {cooldown = 8,	duration = 0,	specs = {63, 64, 62},			talent = false,	charges = 1,	class = "MAGE",	type = 7}, --Remove Curse
 			[122] = {cooldown = 30,	duration = 6,	specs = {63, 64, 62},			talent = false,	charges = 1,	class = "MAGE",	type = 8}, --Frost Nova
-			[157980] = {cooldown = 25,	duration = 0,	specs = {62},				talent = false,	charges = 1,	class = "MAGE",	type = 8}, --Supernova
-			[414660] = {cooldown = 120,	duration = 60,	specs = {63, 64, 62},		talent = false,	charges = 1,	class = "MAGE",	type = 4}, --Mass Barrier
+			[157980] = {cooldown = 45,	duration = 0,	specs = {62},				talent = false,	charges = 1,	class = "MAGE",	type = 8}, --Supernova
+			[389794] = {cooldown = 45,	duration = 0,	pvp = true,	specs = {662, 63, 64},	talent = false,	charges = 1,	class = "MAGE",	type = 8}, --Snowdrift
+			[414660] = {cooldown = 120,	duration = 60,	specs = {63, 64, 62},		talent = false,	charges = 1,	class = "MAGE",	type = 4, cdtype = "DR"}, --Mass Barrier
 			[414664] = {cooldown = 300,	duration = 12,	specs = {63, 64, 62},		talent = false,	charges = 1,	class = "MAGE",	type = 5}, --Mass Invisibility (only out of combat)
 
 			-- This needs more work to actually function
@@ -685,22 +649,22 @@ do
 			-- 256 - Discipline
 			-- 257 - Holy
 			-- 258 - Shadow
-			[200183] = {cooldown = 120,	duration = 20,	specs = {257},				talent = false,	charges = 1,	class = "PRIEST",	type = 2}, --Apotheosis
+			[200183] = {cooldown = 120,	duration = 20,	specs = {257},				talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Apotheosis
 			[19236] = {cooldown = 90,	duration = 10,	specs = {256, 257, 258},	talent = false,	charges = 1,	class = "PRIEST",	type = 2}, --Desperate Prayer
 			[47585] = {cooldown = 120,	duration = 6,	specs = {258},				talent = false,	charges = 1,	class = "PRIEST",	type = 2}, --Dispersion
-			[64843] = {cooldown = 180,	duration = 8,	specs = {257},				talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Divine Hymn
-			[246287] = {cooldown = 90,	duration = 0,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Evangelism
-			[47788] = {cooldown = 180,	duration = 10,	specs = {257},				talent = false,	charges = 1,	class = "PRIEST",	type = 3}, --Guardian Spirit
+			[64843] = {cooldown = 180,	duration = 8,	specs = {257},				talent = false,	charges = 1,	class = "PRIEST",	type = 4, cdtype = "HEAL"}, --Divine Hymn
+			[472433] = {cooldown = 90,	duration = 0,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Evangelism
+			[47788] = {cooldown = 180,	duration = 10,	specs = {257},				talent = false,	charges = 1,	class = "PRIEST",	type = 3, cdtype = "TARGET"}, --Guardian Spirit
 			[265202] = {cooldown = 720,	duration = 0,	specs = {257},				talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Holy Word: Salvation
 			[372835] = {cooldown = 180,	duration = 0,	specs = {257},				talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Lightwell
 			[73325] = {cooldown = 90,	duration = 0,	specs = {256, 257, 258},	talent = false,	charges = 1,	class = "PRIEST",	type = 5}, --Leap of Faith
 			[271466] = {cooldown = 180,	duration = 10,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Luminous Barrier
-			[205369] = {cooldown = 30,	duration = 6,	specs = {258},				talent = false,	charges = 1,	class = "PRIEST",	type = 5}, --Mind Bomb
+			--[205369] = {cooldown = 30,	duration = 6,	specs = {258},				talent = false,	charges = 1,	class = "PRIEST",	type = 5}, --Mind Bomb
 			[200174] = {cooldown = 60,	duration = 15,	specs = {258},				talent = false,	charges = 1,	class = "PRIEST",	type = 1}, --Mindbender spec 258
 			[123040] = {cooldown = 60,	duration = 12,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 1}, --Mindbender spec 256
-			[33206] = {cooldown = 180,	duration = 8,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 3}, --Pain Suppression
+			[33206] = {cooldown = 180,	duration = 8,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 3, cdtype = "TARGET"}, --Pain Suppression
 			[10060] = {cooldown = 120,	duration = 20,	specs = {256, 257, 258},	talent = false,	charges = 1,	class = "PRIEST",	type = 1}, --Power Infusion
-			[62618] = {cooldown = 180,	duration = 10,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Power Word: Barrier
+			[62618] = {cooldown = 180,	duration = 10,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 4, cdtype = "DR"}, --Power Word: Barrier
 			[64044] = {cooldown = 45,	duration = 4,	specs = {258},				talent = false,	charges = 1,	class = "PRIEST",	type = 8}, --Psychic Horror
 			[8122] = {cooldown = 60,	duration = 8,	specs = {256, 257, 258},	talent = false,	charges = 1,	class = "PRIEST",	type = 8}, --Psychic Scream
 			[47536] = {cooldown = 90,	duration = 10,	specs = {256},				talent = false,	charges = 1,	class = "PRIEST",	type = 5}, --Rapture
@@ -713,10 +677,12 @@ do
 			[586] = {cooldown = 30,	duration= 0,	specs = {},					talent = false,	charges = 1,	class = "PRIEST",	type = 2}, --Fade
 			[108968] = {cooldown = 5*60,duration = 0,	specs = {},					talent = false,	charges = 1,	class = "PRIEST",	type = 3}, --Void Shift
 			[391109] = {cooldown = 60,	duration = 20,	specs = {258},				talent = false,	charges = 1,	class = "PRIEST",	type = 1}, --Dark Ascension
-			[527] = {cooldown = 8,	duration = 0,	specs = {256,257},				talent = false,	charges = 1,	class = "PRIEST",	type = 7}, --Purify 
-			[213634] = {cooldown = 8,	duration = 0,	specs = {258},				talent = false,	charges = 1,	class = "PRIEST",	type = 7}, --Purify Disease 
+			[527] = {cooldown = 8,	duration = 0,	specs = {256,257},				talent = false,	charges = 1,	class = "PRIEST",	type = 7}, --Purify
+			[213634] = {cooldown = 8,	duration = 0,	specs = {258},				talent = false,	charges = 1,	class = "PRIEST",	type = 7}, --Purify Disease
 			[108920] = {cooldown = 60,	duration = 20,	specs = {256, 257, 258},	talent = false,	charges = 1,	class = "PRIEST",	type = 8}, --Void Tendrils
-
+			[451235] = {cooldown = 120,	duration = 15,	specs = {256,258},			talent = false,	charges = 1,	class = "PRIEST",	type = 1}, --Voidwraith
+			[120517] = {cooldown = 60,	duration = 0,	specs = {256, 257, 258},		talent = false,	charges = 1,	class = "PRIEST",	type = 4}, --Halo
+			[421453] = { cooldown = 240, 	duration = 5.3, specs = { 256, }, 			talent = false, charges = 1, 	class = "PRIEST", 	type = 4 }, --Ultimate Penitence
 
 			--~rogue
 			-- 259 - Assasination
@@ -739,7 +705,8 @@ do
 			[1966] = {cooldown = 15,	duration = 0,	specs = {},			talent = false,	charges = 1,	class = "ROGUE",	type = 2}, --Feint
 			[384631] = {cooldown = 90,	duration = 12,	specs = {261},				talent = false,	charges = 1,	class = "ROGUE",	type = 1}, --Flagellation
 			[277925] = {cooldown = 60,	duration = 4,	specs = {261},				talent = false,	charges = 1,	class = "ROGUE",	type = 1}, --Shuriken Tornado
-			[360194] = {cooldown = 120, duration = 16,  specs = {259}, 				talent = true, charges = 1, 	class = "ROGUE", 	type = 1}, -- Deathmark
+			[360194] = {cooldown = 120, duration = 16,  specs = {259}, 				talent = false, charges = 1, 	class = "ROGUE", 	type = 1}, -- Deathmark
+			[385627] = {cooldown = 60,	duration = 14,	specs = {259},				talent = false,	charges = 1,	class = "ROGUE",	type = 1}, -- Kingsbane
 
 			--~evoker
 			-- 1467 - Devastation
@@ -750,8 +717,8 @@ do
 			[360823] = {cooldown = 8,	duration = 0,	specs = {1468},					talent = false,	charges = 1,	class = "EVOKER",	type = 7}, --Naturalize
 			[357210] = {cooldown = 120,	duration = 0,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 1}, --Deep Breath
 			[375087] = {cooldown = 120,	duration = 0,	specs = {1467},					talent = false,	charges = 1,	class = "EVOKER",	type = 1}, --Dragonrage
-			[359816] = {cooldown = 120,	duration = 15,	specs = {1468},					talent = false,	charges = 1,	class = "EVOKER",	type = 4}, --Dream Flight
-			[370960] = {cooldown = 180,	duration = 4.4,	specs = {1468},					talent = false,	charges = 1,	class = "EVOKER",	type = 2}, --Emerald Communion
+			[359816] = {cooldown = 120,	duration = 15,	specs = {1468},					talent = false,	charges = 1,	class = "EVOKER",	type = 4, cdtype = "HEAL"}, --Dream Flight
+			[370960] = {cooldown = 180,	duration = 4.4,	specs = {1468},					talent = false,	charges = 1,	class = "EVOKER",	type = 4}, --Emerald Communion
 
 			[358385] = {cooldown = 90,	duration = 0,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 8}, --Landslide
 			[372048] = {cooldown = 120,	duration = 10,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 8}, --Oppressing Roar
@@ -759,11 +726,11 @@ do
 			[374348] = {cooldown = 90,	duration = 8,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 2}, --Renewing Blaze
 
 			[370665] = {cooldown = 60,	duration = 0,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 5}, --Rescue
-			[363534] = {cooldown = 240,	duration = 5,	specs = {1468},					talent = false,	charges = 1,	class = "EVOKER",	type = 4}, --Rewind
+			[363534] = {cooldown = 240,	duration = 5,	specs = {1468},					talent = false,	charges = 1,	class = "EVOKER",	type = 4, cdtype = "HEAL"}, --Rewind
 			[370537] = {cooldown = 90,	duration = 30,	specs = {1468},				talent = false,	charges = 1,	class = "EVOKER",	type = 4}, --Stasis
 			[357170] = {cooldown = 60,	duration = 8,	specs = {1468},					talent = false,	charges = 1,	class = "EVOKER",	type = 3}, --Time Dilation
 			[374968] = {cooldown = 120,	duration = 10,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 5}, --Time Spiral
-			[374227] = {cooldown = 120,	duration = 8,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 4}, --Zephyr
+			[374227] = {cooldown = 120,	duration = 8,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 4, cdtype = "DR"}, --Zephyr
 			[360806] = {cooldown = 15,	duration = 20,	specs = {1467, 1468},			talent = false,	charges = 1,	class = "EVOKER",	type = 8}, --Sleep Walk
 
 			[360827] = {cooldown = 30,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 3}, --Blistering Scales
@@ -773,34 +740,69 @@ do
 			--[403208] = {cooldown = 0,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 0}, --Draconic Attunements
 			--[403264] = {cooldown = 3,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 0}, --Black Attunement
 			--[403265] = {cooldown = 3,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 0}, --Bronze Attunement
-			[403631] = {cooldown = 120,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 1}, --Breath of Eons
+			--[403631] = {cooldown = 120,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 1}, --Breath of Eons
+			[442204] = {cooldown = 120,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 1}, --Breath of Eons
 			[404977] = {cooldown = 180,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 1}, --Time Skip
 			[406732] = {cooldown = 120,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 3}, --Spatial Paradox
 			[408233] = {cooldown = 60,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 5}, --Bestow Weyrnstone
 			[409311] = {cooldown = 12,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 1}, --Prescience
 			--[412710] = {cooldown = 0,	duration = 0,	specs = {1473},			talent = false,	charges = 1,	class = "EVOKER",	type = 0}, --Timelessness
+			[443328] = {cooldown = 30,	duration = 0,	specs = {1468, 1467}, 		talent = false, charges = 2,    class = "EVOKER", 	type = 3}, --Engulf
 		}
+
+		C_Timer.After(0, function()
+			for spellId in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+				local spellInfo = C_Spell.GetSpellInfo(spellId)
+				if (not spellInfo) then
+					LIB_OPEN_RAID_COOLDOWNS_INFO[spellId] = nil
+					--print("OpenRaid: Spell " .. spellId .. " not found in spellbook")
+				end
+			end
+		end)
+
+		local ccSpellNameCache = {}
+		function openRaidLib.GetCCSpellIdBySpellName(spellName)
+			if (ccSpellNameCache[spellName]) then
+				return ccSpellNameCache[spellName]
+			end
+
+			for spellId in pairs(LIB_OPEN_RAID_CROWDCONTROL) do
+				local spellInfo = C_Spell.GetSpellInfo(spellId)
+				if (spellInfo) then
+					if (spellInfo.name == spellName) then
+						ccSpellNameCache[spellName] = spellId
+						return spellId
+					end
+				end
+			end
+
+			return nil
+		end
 
 		--list of all crowd control spells
 		--it is not transmitted to other clients
+        -- TODO: Update for war within
 		LIB_OPEN_RAID_CROWDCONTROL = {
+			[462031] = {cooldown = 60,	class = "HUNTER"}, --Implosive Trap
+			[116844] = {cooldown = 45,	class = "MONK"}, --Ring of Peace
+			[20549] = {cooldown = 90,	class = ""}, --War Stomp (Tauren)
 			[331866] = {cooldown = 0,	class = "COVENANT|VENTHYR"}, --Agent of Chaos
 			[334693] = {cooldown = 0,	class = "DEAHTKNIGHT"}, --Absolute Zero
 			[221562] = {cooldown = 45,	class = "DEATHKNIGHT"}, --Asphyxiate
-			[47528] = {cooldown = 15,	class = "DEATHKNIGHT"}, --Mind Freeze
+			--[47528] = {cooldown = 15,	class = "DEATHKNIGHT"}, --Mind Freeze
 			[207167] = {cooldown = 60,	class = "DEATHKNIGHT"}, --Blinding Sleet
 			[91807] = {cooldown = 0,	class = "DEATHKNIGHT"}, --Shambling Rush
 			[108194] = {cooldown = 45,	class = "DEATHKNIGHT"}, --Asphyxiate
 			[211881] = {cooldown = 30,	class = "DEMONHUNTER"}, --Fel Eruption
 			[200166] = {cooldown = 0,	class = "DEMONHUNTER"}, --Metamorphosis
 			[217832] = {cooldown = 45,	class = "DEMONHUNTER"}, --Imprison
-			[183752] = {cooldown = 15,	class = "DEMONHUNTER"}, --Disrupt
+			--[183752] = {cooldown = 15,	class = "DEMONHUNTER"}, --Disrupt
 			[207685] = {cooldown = 0,	class = "DEMONHUNTER"}, --Sigil of Misery
 			[179057] = {cooldown = 45,	class = "DEMONHUNTER"}, --Chaos Nova
 			[221527] = {cooldown = 45,	class = "DEMONHUNTER"}, --Imprison with detainment talent
 			[339] = {cooldown = 0,		class = "DRUID"}, --Entangling Roots
 			[102359] = {cooldown = 30,	class = "DRUID"}, --Mass Entanglement
-			[93985] = {cooldown = 0,	class = "DRUID"}, --Skull Bash
+			--[93985] = {cooldown = 0,	class = "DRUID"}, --Skull Bash
 			[2637] = {cooldown = 0,		class = "DRUID"}, --Hibernate
 			[5211] = {cooldown = 60,	class = "DRUID"}, --Mighty Bash
 			[99] = {cooldown = 30,		class = "DRUID"}, --Incapacitating Roar
@@ -816,7 +818,7 @@ do
 			[360806] = {cooldown = 15,	class = "EVOKER"}, --Sleep Walk
 			[162480] = {cooldown = 0,	class = "HUNTER"}, --Steel Trap
 			[187707] = {cooldown = 15,	class = "HUNTER"}, --Muzzle
-			[147362] = {cooldown = 24,	class = "HUNTER"}, --Counter Shot
+			--[147362] = {cooldown = 24,	class = "HUNTER"}, --Counter Shot
 			[190927] = {cooldown = 6,	class = "HUNTER"}, --Harpoon
 			[117526] = {cooldown = 45,	class = "HUNTER"}, --Binding Shot
 			[24394] = {cooldown = 0,	class = "HUNTER"}, --Intimidation
@@ -841,24 +843,24 @@ do
 			[126819] = {cooldown = 0,	class = "MAGE"}, --Polymorph
 			[61305] = {cooldown = 0,	class = "MAGE"}, --Polymorph
 			[28272] = {cooldown = 0,	class = "MAGE"}, --Polymorph
-			[2139] = {cooldown = 24,	class = "MAGE"}, --Counterspell
+			--[2139] = {cooldown = 24,	class = "MAGE"}, --Counterspell
 			[198909] = {cooldown = 0,	class = "MONK"}, --Song of Chi-Ji
 			[119381] = {cooldown = 60,	class = "MONK"}, --Leg Sweep
 			[107079] = {cooldown = 120,	class = "MONK"}, --Quaking Palm
 			[116706] = {cooldown = 0,	class = "MONK"}, --Disable
 			[115078] = {cooldown = 45,	class = "MONK"}, --Paralysis
-			[116705] = {cooldown = 15,	class = "MONK"}, --Spear Hand Strike
-			[31935] = {cooldown = 15,	class = "PALADIN"}, --Avenger's Shield
+			--[116705] = {cooldown = 15,	class = "MONK"}, --Spear Hand Strike
+			--[31935] = {cooldown = 15,	class = "PALADIN"}, --Avenger's Shield
 			[20066] = {cooldown = 15,	class = "PALADIN"}, --Repentance
 			[217824] = {cooldown = 0,	class = "PALADIN"}, --Shield of Virtue
 			[105421] = {cooldown = 0,	class = "PALADIN"}, --Blinding Light
 			[10326] = {cooldown = 15,	class = "PALADIN"}, --Turn Evil
 			[853] = {cooldown = 60,		class = "PALADIN"}, --Hammer of Justice
-			[96231] = {cooldown = 15,	class = "PALADIN"}, --Rebuke
+			--[96231] = {cooldown = 15,	class = "PALADIN"}, --Rebuke
 			[205364] = {cooldown = 30,	class = "PRIEST"}, --Dominate Mind
 			[64044] = {cooldown = 45,	class = "PRIEST"}, --Psychic Horror
 			[226943] = {cooldown = 0,	class = "PRIEST"}, --Mind Bomb
-			[15487] = {cooldown = 45,	class = "PRIEST"}, --Silence
+			--[15487] = {cooldown = 45,	class = "PRIEST"}, --Silence
 			[605] = {cooldown = 0,		class = "PRIEST"}, --Mind Control
 			[8122] = {cooldown = 45,	class = "PRIEST"}, --Psychic Scream
 			[200200] = {cooldown = 60,	class = "PRIEST"}, --Holy Word: Chastise
@@ -867,7 +869,7 @@ do
 			[114404] = {cooldown = 20,	class = "PRIEST"}, --Void Tendril's Grasp
 			[6770] = {cooldown = 0,		class = "ROGUE"}, --Sap
 			[2094] = {cooldown = 120,	class = "ROGUE"}, --Blind
-			[1766] = {cooldown = 15,	class = "ROGUE"}, --Kick
+			--[1766] = {cooldown = 15,	class = "ROGUE"}, --Kick
 			[427773] = {cooldown = 0,	class = "ROGUE"}, --Blind
 			[408] = {cooldown = 20,		class = "ROGUE"}, --Kidney Shot
 			[1776] = {cooldown = 20,	class = "ROGUE"}, --Gouge
@@ -876,8 +878,8 @@ do
 			[269352] = {cooldown = 30,	class = "SHAMAN"}, --Hex
 			[277778] = {cooldown = 30,	class = "SHAMAN"}, --Hex
 			[64695] = {cooldown = 0,	class = "SHAMAN"}, --Earthgrab
-			[57994] = {cooldown = 12,	class = "SHAMAN"}, --Wind Shear
-			[197214] = {cooldown = 40,	class = "SHAMAN"}, --Sundering
+			--[57994] = {cooldown = 12,	class = "SHAMAN"}, --Wind Shear
+			--[197214] = {cooldown = 40,	class = "SHAMAN"}, --Sundering
 			[118905] = {cooldown = 0,	class = "SHAMAN"}, --Static Charge
 			[277784] = {cooldown = 30,	class = "SHAMAN"}, --Hex
 			[309328] = {cooldown = 30,	class = "SHAMAN"}, --Hex
@@ -891,10 +893,10 @@ do
 			[118699] = {cooldown = 0,	class = "WARLOCK"}, --Fear
 			[710] = {cooldown = 0,		class = "WARLOCK"}, --Banish
 			[212619] = {cooldown = 60,	class = "WARLOCK"}, --Call Felhunter
-			[19647] = {cooldown = 24,	class = "WARLOCK"}, --Spell Lock
+			--[19647] = {cooldown = 24,	class = "WARLOCK"}, --Spell Lock
 			[30283] = {cooldown = 60,	class = "WARLOCK"}, --Shadowfury
 			[5484] = {cooldown = 40,	class = "WARLOCK"}, --Howl of Terror
-			[6552] = {cooldown = 15,	class = "WARRIOR"}, --Pummel
+			--[6552] = {cooldown = 15,	class = "WARRIOR"}, --Pummel
 			[132168] = {cooldown = 0,	class = "WARRIOR"}, --Shockwave
 			[132169] = {cooldown = 0,	class = "WARRIOR"}, --Storm Bolt
 			[5246] = {cooldown = 90,	class = "WARRIOR"}, --Intimidating Shout
@@ -920,6 +922,13 @@ do
 				local id = spellData.shareid
 				LIB_OPEN_RAID_COOLDOWNS_SHARED_ID[id] = LIB_OPEN_RAID_COOLDOWNS_SHARED_ID[id] or {}
 				LIB_OPEN_RAID_COOLDOWNS_SHARED_ID[id][spellID] = spellData.type
+			end
+
+			if (spellData.type == 8) then --crowd control
+				if (not LIB_OPEN_RAID_CROWDCONTROL[spellID]) then
+					local ccTable = {cooldown = spellData.cooldown, class = spellData.class}
+					LIB_OPEN_RAID_CROWDCONTROL[spellID] = ccTable
+				end
 			end
 		end
 
@@ -1007,6 +1016,27 @@ do
 			[89766] = LIB_OPEN_RAID_COOLDOWNS_INFO[89766], --Axe Toss (pet felguard ability)
 		}
 
+		--iterate on all cooldown spells, check for type == 6 (interrupt) and if the list above doesn't have it, add
+		for spellID, spellData in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
+			if (spellData.type == 6 and not LIB_OPEN_RAID_SPELL_INTERRUPT[spellID]) then
+				LIB_OPEN_RAID_SPELL_INTERRUPT[spellID] = spellData
+			end
+		end
+
+		--all interrupts a class can have, not separated by spec
+		LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS = {}
+		for spellID, spellData in pairs(LIB_OPEN_RAID_SPELL_INTERRUPT) do
+			local class = spellData.class
+			if (class) then
+				LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS[class] = LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS[class] or {}
+				LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS[class][spellID] = spellData
+				local spellInfo = C_Spell.GetSpellInfo(spellID)
+				if (spellInfo and spellInfo.name and spellInfo.name ~= UNKNOWN) then
+					LIB_OPEN_RAID_SPELL_INTERRUPT_BYCLASS[class][spellInfo.name] = spellData
+				end
+			end
+		end
+
 		--override list of spells with more than one effect, example: multiple types of polymorph
 		LIB_OPEN_RAID_SPELL_DEFAULT_IDS = {
 			--stampeding roar (druid)
@@ -1041,6 +1071,7 @@ do
 			[370564] = 370537, -- Evoker Stasis
 			--[414658] = 45438, -- Ice Block with the talent Ice Cold
 			--[414658] = 45438, -- Ice Block with the talent IceCold
+			[406971] = 372048, -- Oppressing Roar, when talented
 		}
 		LIB_OPEN_RAID_MULTI_OVERRIDE_SPELLS = {
 			[106898] = {106898,77764,77761},
@@ -1103,10 +1134,87 @@ do
 			[1473] = 13,
 		}
 
-		LIB_OPEN_RAID_DATABASE_LOADED = true
-	end
+		LIB_OPEN_RAID_NPCID_TO_DISPLAYID = {
+			--City of Threads
+			[223181] = 119370, --Agile Pursuer
+			[220004] = 119377, --Ascended Aristocrat
+			[216326] = 115771, --Ascended Neophyte
+			[220199] = 120589, --Battle Scarab
+			[216329] = 114555, --Congealed Droplet
+			[223844] = 118106, --Covert Webmancer
+			[224732] = 118106, --Covert Webmancer
+			[221102] = 118827, --Elder Shadeweaver
+			[214840] = 117840, --Engorged Crawler
+			[220777] = 114268, --Executor Nizrek --? need more info
+			[220793] = 117374, --Favored Citizen
+			[227607] = 114421, --Fliq'ri
+			[220196] = 120905, --Herald of Ansurek
+			[220012] = 115734, --Hollows Merchant
+			[220003] = 119371, --Hollows Resident
+			[219983] = 114423, --Hollows Resident
+			[221103] = 118826, --Hulking Warshell
+			[216658] = 116701, --Izo, the Grand Splicer
+			[216341] = 120841, --Jabbing Flyer
+			[226060] = 119910, --Kobyss Puppet
+			[218324] = 117119, --Nakt
+			[216648] = 116699, --Nx
+			[216619] = 116692, --Orator Krix'vizk
+			[220401] = 121817, --Pale Priest
+			[223646] = 114026, --Pale Priest
+			[224331] = 117326, --Phylleus
+			[223254] = 118964, --Queen Ansurek
+			[216336] = 120876, --Ravenous Crawler
+			[220037] = 118106, --Reposing Knight
+			[220404] = 114418, --Royal Acolyte
+			[220197] = 120882, --Royal Swarmguard
+			[220730] = 120890, --Royal Venomshell
+			[224324] = 115750, --Silkswooner Waree
+			[216342] = 120891, --Skittering Assistant
+			[223357] = 120886, --Sureki Conscript
+			[220195] = 120872, --Sureki Silkbinder
+			[216339] = 120894, --Sureki Unnaturaler
+			[220193] = 120868, --Sureki Venomblade
+			[216320] = 117254, --The Coaglamation
+			[222646] = 116681, --Trained Flyer
+			[222559] = 116681, --Trained Flyer
+			[217470] = 115735, --Tulumun
+			[220353] = 116446, --Umbral Citizen
+			[220351] = 117374, --Umbral Citizen
+			[222700] = 118005, --Umbral Weave
+			[216328] = 116499, --Unstable Test Subject
+			[226058] = 118410, --Van'atka
+			[216649] = 116700, --Vx
+			[223182] = 119369, --Web Marauder
+			[224731] = 119369, --Web Marauder
+			[219984] = 119732, --Xeph'itik
+		}
 
-	--this will make sure to always have the latest data
+		--overwrite values in this table only after PEW event.
+		--tickInterval: amount of seconds between each tick, default: 3. lower this to increase precision on when the cooldown ended.
+		LIB_OPEN_RAID_COOLDOWNS_CONFIG = {
+			[6552] =	{tickInterval = 1, latencyCompensation = 0.5}, --Pummel
+			[2139] =	{tickInterval = 1, latencyCompensation = 0.5}, --Counterspell
+			[15487] =	{tickInterval = 1, latencyCompensation = 0.5}, --Silence (shadow) Last Word Talent to reduce cooldown in 15 seconds
+			[1766] =	{tickInterval = 1, latencyCompensation = 0.5}, --Kick
+			[96231] =	{tickInterval = 1, latencyCompensation = 0.5}, --Rebuke (protection and retribution)
+			[116705] =	{tickInterval = 1, latencyCompensation = 0.5}, --Spear Hand Strike (brewmaster and windwalker)
+			[57994] =	{tickInterval = 1, latencyCompensation = 0.5}, --Wind Shear
+			[47528] =	{tickInterval = 1, latencyCompensation = 0.5}, --Mind Freeze
+			[106839] =	{tickInterval = 1, latencyCompensation = 0.5}, --Skull Bash (feral, guardian)
+			[78675] =	{tickInterval = 1, latencyCompensation = 0.5}, --Solar Beam (balance)
+			[147362] =	{tickInterval = 1, latencyCompensation = 0.5}, --Counter Shot (beast mastery, marksmanship)
+			[187707] =	{tickInterval = 1, latencyCompensation = 0.5}, --Muzzle (survival)
+			[183752] =	{tickInterval = 1, latencyCompensation = 0.5}, --Disrupt
+			[19647] =	{tickInterval = 1, latencyCompensation = 0.5}, --Spell Lock (pet felhunter ability)
+			[132409] =	{tickInterval = 1, latencyCompensation = 0.5}, --Spell Lock with felhunter Sacrified by Grimeoire of Sacrifice
+			[89766] =	{tickInterval = 1, latencyCompensation = 0.5}, --Axe Toss (pet felguard ability)
+			[351338] =	{tickInterval = 1, latencyCompensation = 0.5}, --Quell (Evoker)
+		}
+
+		LIB_OPEN_RAID_DATABASE_LOADED = true
+    end
+
+    --this will make sure to always have the latest data
 	C_Timer.After(0, function()
 		if (openRaidLib.__version == LIB_OPEN_RAID_MAX_VERSION) then
 			loadLibDatabase()
@@ -1114,39 +1222,3 @@ do
 	end)
 	loadLibDatabase()
 end
-
-
---[=[ code used to build the crowd control list
-for spellId, spellInfo in pairs(LIB_OPEN_RAID_COOLDOWNS_INFO) do
-	if (spellInfo.type == 8) then
-		LIB_OPEN_RAID_CROWDCONTROL[spellId] = spellInfo
-	end
-end
-
-LIB_OPEN_RAID_CROWDCONTROL = {}
-
-C_Timer.After(5, function()
-	--for debugging, compares which crowd control spells are in the details framework that are not in the lib
-	local notInLib = {}
-
-	local DF_CrowdControlSpells = DetailsFramework.CrowdControlSpells
-	for spellId, className in pairs(DF_CrowdControlSpells) do
-		local spellName = GetSpellInfo(spellId)
-		if (spellName) then -- and not LIB_OPEN_RAID_CROWDCONTROL[spellId]
-			local spellCooldown = math.floor(GetSpellBaseCooldown(spellId)/1000)
-			notInLib[#notInLib+1] = {spellId, spellName, spellCooldown, className}
-		end
-	end
-
-	table.sort(notInLib, function(t1, t2) return t1[4] < t2[4] end)
-
-	--make a string like the one above
-	local result = ""
-	for i = 1, #notInLib do
-		local spellId, spellName, spellCooldown, className = unpack(notInLib[i])
-		result = result .. "["..spellId.."] =\t{cooldown = "..spellCooldown..",\t\tclass = \"" .. className .. "\"}, --" .. spellName .. "\n"
-	end
-
-	dumpt(result)
-end)
---]=]

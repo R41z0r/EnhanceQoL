@@ -10,6 +10,10 @@ end
 
 local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")
 
+-- TWW compat
+-- TODO: Remove when TWW is released
+local GetItemInfo = GetItemInfo or C_Item.GetItemInfo
+
 local CONST_FRACTION_OF_A_SECOND = 0.01
 
 local CONST_COOLDOWN_TYPE_OFFENSIVE = 1
@@ -146,6 +150,31 @@ function openRaidLib.IsInGroup()
     local inParty = IsInGroup()
     local inRaid = IsInRaid()
     return inParty or inRaid
+end
+
+---return a table with unitName as keys and true as value
+---@return table<string, boolean>
+function openRaidLib.GetPlayersInTheGroup()
+    local playersInTheGroup = {}
+    if (IsInRaid()) then
+        for i = 1, GetNumGroupMembers() do
+            local unitName = GetUnitName("raid"..i, true)
+            if (unitName) then
+                playersInTheGroup[unitName] = true
+            end
+        end
+
+    elseif (IsInGroup()) then
+        for i = 1, GetNumGroupMembers() - 1 do
+            local unitName = GetUnitName("party"..i, true)
+            if (unitName) then
+                playersInTheGroup[unitName] = true
+            end
+        end
+        playersInTheGroup[UnitName("player")] = true
+    end
+
+    return playersInTheGroup
 end
 
 function openRaidLib.UpdateUnitIDCache()

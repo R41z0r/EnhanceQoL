@@ -1,8 +1,9 @@
 
---data for shadowlands expansion
+--data for cataclysm expansion
+--ToDo: Cata Data needed
 
 local versionString, revision, launchDate, gameVersion = GetBuildInfo()
-if (gameVersion >= 100000 or gameVersion < 90000) then
+if (gameVersion >= 50000 or gameVersion < 30000) then
     return
 end
 
@@ -81,155 +82,55 @@ end
 
 LIB_OPEN_RAID_MANA_POTIONS = {}
 
+LIB_OPEN_RAID_FOOD_BUFF = {} --default
+LIB_OPEN_RAID_FLASK_BUFF = {} --default
+
 LIB_OPEN_RAID_BLOODLUST = {
-    [2825] = true, --bloodlust
-    [32182] = true, --heroism
-    [80353] = true, --timewarp
-    [90355] = true, --ancient hysteria
-    [309658] = true, --current exp drums
-}
-
-LIB_OPEN_RAID_MYTHICKEYSTONE_ITEMID = 180653
-LIB_OPEN_RAID_AUGMENTATED_RUNE = 347901
-
-LIB_OPEN_RAID_COVENANT_ICONS = {
-    [[Interface\ICONS\UI_Sigil_Kyrian]], --kyrian
-    [[Interface\ICONS\UI_Sigil_Venthyr]], --venthyr
-    [[Interface\ICONS\UI_Sigil_NightFae]], --nightfae
-    [[Interface\ICONS\UI_Sigil_Necrolord]], --necrolords
+	[2825] = true, --bloodlust
+	[32182] = true, --heroism
+	[80353] = true, --timewarp
+	[90355] = true, --ancient hysteria
+	[309658] = true, --current exp drums
 }
 
 --which gear slots can be enchanted on the latest retail version of the game
 --when the value is a number, the slot only receives enchants for a specific attribute
 LIB_OPEN_RAID_ENCHANT_SLOTS = {
-    --[INVSLOT_NECK] = true,
-    [INVSLOT_BACK] = true, --for all
-    [INVSLOT_CHEST] = true, --for all
-    [INVSLOT_FINGER1] = true, --for all
-    [INVSLOT_FINGER2] = true, --for all
-    [INVSLOT_MAINHAND] = true, --for all
+	--[INVSLOT_NECK] = true,
+	[INVSLOT_BACK] = true, --for all
+	[INVSLOT_CHEST] = true, --for all
+	[INVSLOT_FINGER1] = true, --for all
+	[INVSLOT_FINGER2] = true, --for all
+	[INVSLOT_MAINHAND] = true, --for all
 
-    [INVSLOT_FEET] = 2, --agility only
-    [INVSLOT_WRIST] = 1, --intellect only
-    [INVSLOT_HAND] = 3, --strenth only
+	[INVSLOT_FEET] = 2, --agility only
+	[INVSLOT_WRIST] = 1, --intellect only
+	[INVSLOT_HAND] = 3, --strenth only
 }
 
--- how to get the enchantId:
--- local itemLink = GetInventoryItemLink("player", slotId)
--- local enchandId = select(3, strsplit(":", itemLink))
--- print("enchantId:", enchandId)
-LIB_OPEN_RAID_ENCHANT_IDS = {
---FEET
-    --[6207] = INVSLOT_FEET, --[Enchant Boots - Speed of Soul]
-    [6211] = INVSLOT_FEET, --[Enchant Boots - Eternal Agility] + 15 agi
-    [6212] = INVSLOT_FEET, --[Enchant Boots - Agile Soulwalker] + 10 agi
+LIB_OPEN_RAID_MYTHICKEYSTONE_ITEMID = 180653
+LIB_OPEN_RAID_AUGMENTATED_RUNE = 0
 
---WRIST
-    --[6222] = INVSLOT_WRIST, [Enchant Bracers - Shaded Hearthing]
-    [6219] = INVSLOT_WRIST, --[Enchant Bracers - Illuminated Soul] + 10 int
-    [6220] = INVSLOT_WRIST, --[Enchant Bracers - Eternal Intellect] + 15 int
+LIB_OPEN_RAID_COVENANT_ICONS = {}
 
---HAND
-    --[6205] = INVSLOT_HAND, --[Enchant Gloves - Shadowlands Gathering]
-    [6209] = INVSLOT_HAND, --[Enchant Gloves - Strength of Soul] +10 str
-    [6210] = INVSLOT_HAND, --[Enchant Gloves - Eternal Strength] +15 str
+LIB_OPEN_RAID_ENCHANT_IDS = {}
 
---FINGER
-    [6164] = INVSLOT_FINGER1, --[Enchant Ring - Tenet of Critical Strike] +16
-    [6166] = INVSLOT_FINGER1, --[Enchant Ring - Tenet of Haste] +16
-    [6168] = INVSLOT_FINGER1, --[Enchant Ring - Tenet of Mastery] +16
-    [6170] = INVSLOT_FINGER1, --[Enchant Ring - Tenet of Versatility] +16
+LIB_OPEN_RAID_GEM_IDS = {}
 
---BACK
-    [6202] = INVSLOT_BACK, --[Enchant Cloak - Fortified Speed] +20 stam +30 speed
-    [6203] = INVSLOT_BACK, --[Enchant Cloak - Fortified Avoidance] +20 stam +30 avoidance
-    [6204] = INVSLOT_BACK, --[Enchant Cloak - Fortified Leech]
-    [6208] = INVSLOT_BACK, --[Enchant Cloak - Soul Vitality]
+LIB_OPEN_RAID_WEAPON_ENCHANT_IDS = {}
 
---CHEST
-    [6213] = INVSLOT_CHEST, --[Enchant Chest - Eternal Bulwark] +25 armor +20 agi or str
-    [6214] = INVSLOT_CHEST, --[Enchant Chest - Eternal Skirmish] +20 agi or str +more white damage
-    [6217] = INVSLOT_CHEST, --[Enchant Chest - Eternal Bounds] +20 int + 6% mana
-    [6216] = INVSLOT_CHEST, --[Enchant Chest - Sacred Stats] +20 all stats
-    [6230] = INVSLOT_CHEST, --[Enchant Chest - Eternal Stats] +30 all stats
+LIB_OPEN_RAID_FOOD_BUFF = {}
 
---MAINHAND
-    [6223] = INVSLOT_MAINHAND, --[Enchant Weapon - Lightless Force] + shadow wave damage
-    [6226] = INVSLOT_MAINHAND, --[Enchant Weapon - Eternal Grace] + burst of healing done
-    [6227] = INVSLOT_MAINHAND, --[Enchant Weapon - Ascended Vigor] + healing received increased
-    [6228] = INVSLOT_MAINHAND, --[Enchant Weapon - Sinful Revelation] + 6% bleed damage
-    [6229] = INVSLOT_MAINHAND, --[Enchant Weapon - Celestial Guidance] + 5% agility
-    [6243] = INVSLOT_MAINHAND, --[Runeforging: Rune of Hysteria]
-    [3370] = INVSLOT_MAINHAND, --[Runeforging: Rune of Razorice]
-    [6241] = INVSLOT_MAINHAND, --[Runeforging: Rune of Sanguination]
-    [6242] = INVSLOT_MAINHAND, --[Runeforging: Rune of Spellwarding]
-    [6245] = INVSLOT_MAINHAND, --[Runeforging: Rune of the Apocalypse]
-    [3368] = INVSLOT_MAINHAND, --[Runeforging: Rune of the Fallen Crusader]
-    [3847] = INVSLOT_MAINHAND, --[Runeforging: Rune of the Stoneskin Gargoyle]
-    [6244] = INVSLOT_MAINHAND, --[Runeforging: Rune of Unending Thirst]
-}
+LIB_OPEN_RAID_FLASK_BUFF = {}
 
--- how to get the gemId:
--- local itemLink = GetInventoryItemLink("player", slotId)
--- local gemId = select(4, strsplit(":", itemLink))
--- print("gemId:", gemId)
-LIB_OPEN_RAID_GEM_IDS = {
-    [173126] = true, --Straddling Jewel Doublet (green, +12 speed)
-    [173125] = true, --Revitalizing Jewel Doublet (green, +100 health)
-    [173130] = true, --Masterful Jewel Cluster (blue, master)
-    [173129] = true, --Versatile Jewel Cluster (blue, versatility)
-    [173127] = true, --Deadly Jewel Cluster (blue, crit)
-    [173128] = true, --Quick Jewel Cluster (blue, haste)
-    [168636] = true, --Leviathan's Eye of Strength (purple, strength)
-    [168638] = true, --Leviathan's Eye of Intellect (purple, intellect)
-    [169220] = true, --Straddling Sage Agate (blue, movement speed)
-}
+LIB_OPEN_RAID_ALL_POTIONS = {}
 
---/dump GetWeaponEnchantInfo()
-LIB_OPEN_RAID_WEAPON_ENCHANT_IDS = {
-    [6188] = true, --shadowcore oil
-    [6190] = true, --embalmer's oil
-    [6201] = true, --weighted
-    [6200] = true, --sharpened
-    [5400] = true, --flametongue
-    [5401] = true, --windfury
-}
-
---buff spellId, the value of the food is the tier level
-LIB_OPEN_RAID_FOOD_BUFF = {
-    [259454] = 1, --(agility) Feast of Gluttonous Hedonism
-    [308434] = 1, --(critical) Phantasmal Souffle and Fries
-    [308397] = 1, --(critical +18) Butterscotch Marinated Ribs
-    [308400] = 1, --(critical +30) Spinefin Souffle and Fries
-    [308488] = 1, --(haste) Tenebrous Crown Roast Aspic
-    [308404] = 1, --(haste +18) Cinnamon Bonefish Stew
-    [308405] = 1, --(haste +30) Tenebrous Crown Roast Aspic
-    [308506] = 1, --(mastery) Crawler Ravioli with Apple Sauce
-    [308412] = 1, --(mastery +18) Meaty Apple Dumplings
-    [308413] = 1, --(mastery +30) Iridescent Ravioli with Apple Sauce
-    [308525] = 1, --(stamina) Banana Beef Pudding
-    [308414] = 1, --(stamina +14) Pickled Meat Smoothie
-    [308415] = 1, --(stamina +22) Banana Beef Pudding
-    [308514] = 1, --(versatility) Steak a la Mode
-    [308425] = 1, --(versatility +18) Sweet Silvergill Sausages
-    [308426] = 1, --(versatility +30) Steak a la Mode
-    [308419] = 1, --(periodicaly damage) Smothered Shank
-    [327715] = 1, --(speed) Fried Bonefish
-
-    --feasts
-    [327706] = 2, --strength +20
-    [327707] = 2, --stamina +20
-    [327708] = 2, --intellect +20
-    [327709] = 2, --agility +20
-    [327704] = 2, --intellect +18
-    [327701] = 2, --strength +18
-    [327705] = 2, --agility +18
-}
-
-LIB_OPEN_RAID_FLASK_BUFF = {
-    [307185] = true, --Spectral Flask of Power
-    [307187] = true, --Spectral Stamina Flask
-    [307166] = true, --Eternal Flask
+LIB_OPEN_RAID_HEALING_POTIONS = {
+	[33447] = true, --Runic Healing Potion
+	[41166] = true, --Runic Healing Injector
+	[47875] = true, --Warlock's Healthstone (0/2 Talent)
+	[47867] = true, --Warlock's Healthstone (1/2 Talent)
+	[47877] = true, --Warlock's Healthstone (2/2 Talent)
 }
 
 LIB_OPEN_RAID_MELEE_SPECS = {
@@ -273,6 +174,7 @@ LIB_OPEN_RAID_COOLDOWNS_INFO = {
 	[116705] = {class = "MONK", specs = {268, 269}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Spear Hand Strike (brewmaster and windwalker)
 	[57994] = {class = "SHAMAN", specs = {262, 263, 264}, cooldown = 12, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Wind Shear
 	[47528] = {class = "DEATHKNIGHT", specs = {250, 251, 252}, cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Mind Freeze
+	[47476] = {class = "DEATHKNIGHT", specs = {250, 251, 252}, cooldown = 120, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Strangulate
 	[106839] = {class = "DRUID", specs = {103, 104}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Skull Bash (feral, guardian)
 	[78675] = {class = "DRUID", specs = {102}, cooldown = 60, silence = 8, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Solar Beam (balance)
 	[147362] = {class = "HUNTER", specs = {253, 254}, cooldown = 24, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = 6, charges = 1}, --Counter Shot (beast mastery, marksmanship)
@@ -367,7 +269,7 @@ LIB_OPEN_RAID_COOLDOWNS_INFO = {
 	[192058] = 	{cooldown = 60, 	duration = false, 	specs = {262,263,264}, 	talent =false, charges = 1, class = "SHAMAN", type = 5}, --Capacitor Totem
 	[8143] = 	{cooldown = 60, 	duration = 10, 		specs = {262,263,264}, 	talent =false, charges = 1, class = "SHAMAN", type = 5}, --Tremor Totem
 	[192077] = 	{cooldown = 120, 	duration = 15, 		specs = {262,263,264}, 	talent =21966, charges = 1, class = "SHAMAN", type = 5}, --Wind Rush Totem (talent)
-	
+
 	--monk
 	-- 268 - Brewmaster
 	-- 269 - Windwalker
@@ -391,7 +293,7 @@ LIB_OPEN_RAID_COOLDOWNS_INFO = {
 	[197908] = 	{cooldown = 90, 	duration = 10, 		specs = {270}, 			talent =22166, charges = 1, class = "MONK", type = 5}, --Mana tea (talent)
 	[116844] = 	{cooldown = 45, 	duration = 5, 		specs = {268,269,270}, 	talent =19995, charges = 1, class = "MONK", type = 5}, --Ring of peace (talent)
 	[119381] = 	{cooldown = 50, 	duration = 3, 		specs = {268,269,270}, 	talent =false, charges = 1, class = "MONK", type = 5}, --Leg Sweep
-	
+
 	--hunter
 	-- 253 - Beast Mastery
 	-- 254 - Marksmenship
@@ -480,7 +382,7 @@ LIB_OPEN_RAID_COOLDOWNS_INFO = {
 	[207684] = 	{cooldown = 90, 	duration = 12, 		specs = {581}, 			talent =false, charges = 1, class = "DEMONHUNTER", type = 5}, --Sigil of Misery
 	[202137] = 	{cooldown = 60, 	duration = 8, 		specs = {581}, 			talent =false, charges = 1, class = "DEMONHUNTER", type = 5}, --Sigil of Silence
 	[202138] = 	{cooldown = 90, 	duration = 6, 		specs = {581}, 			talent =22511, charges = 1, class = "DEMONHUNTER", type = 5}, --Sigil of Chains (talent)
-	
+
 	--mage
 	-- 62 - Arcane
 	-- 63 - Fire
@@ -561,6 +463,129 @@ end
 LIB_OPEN_RAID_COOLDOWNS_BY_SPEC[1467] = {};
 LIB_OPEN_RAID_COOLDOWNS_BY_SPEC[1468] = {};
 
+--list of all crowd control spells
+--it is not transmitted to other clients
+LIB_OPEN_RAID_CROWDCONTROL = { --copied from retail
+	[331866] = {cooldown = 0,	class = "COVENANT|VENTHYR"}, --Agent of Chaos
+	[334693] = {cooldown = 0,	class = "DEAHTKNIGHT"}, --Absolute Zero
+	[221562] = {cooldown = 45,	class = "DEATHKNIGHT"}, --Asphyxiate
+	[47528] = {cooldown = 15,	class = "DEATHKNIGHT"}, --Mind Freeze
+	[47476] = {cooldown = 120,  class = "DEAHTKNIGHT"}, --Strangulate
+	[207167] = {cooldown = 60,	class = "DEATHKNIGHT"}, --Blinding Sleet
+	[91807] = {cooldown = 0,	class = "DEATHKNIGHT"}, --Shambling Rush
+	[108194] = {cooldown = 45,	class = "DEATHKNIGHT"}, --Asphyxiate
+	[211881] = {cooldown = 30,	class = "DEMONHUNTER"}, --Fel Eruption
+	[200166] = {cooldown = 0,	class = "DEMONHUNTER"}, --Metamorphosis
+	[217832] = {cooldown = 45,	class = "DEMONHUNTER"}, --Imprison
+	[183752] = {cooldown = 15,	class = "DEMONHUNTER"}, --Disrupt
+	[207685] = {cooldown = 0,	class = "DEMONHUNTER"}, --Sigil of Misery
+	[179057] = {cooldown = 45,	class = "DEMONHUNTER"}, --Chaos Nova
+	[221527] = {cooldown = 45,	class = "DEMONHUNTER"}, --Imprison with detainment talent
+	[339] = {cooldown = 0,		class = "DRUID"}, --Entangling Roots
+	[102359] = {cooldown = 30,	class = "DRUID"}, --Mass Entanglement
+	[93985] = {cooldown = 0,	class = "DRUID"}, --Skull Bash
+	[2637] = {cooldown = 0,		class = "DRUID"}, --Hibernate
+	[5211] = {cooldown = 60,	class = "DRUID"}, --Mighty Bash
+	[22570] = {cooldown = 10,       class = "DRUID"}, --Maim
+	[127797] = {cooldown = 0,	class = "DRUID"}, --Ursol's Vortex
+	[203123] = {cooldown = 0,	class = "DRUID"}, --Maim
+	[45334] = {cooldown = 0,	class = "DRUID"}, --Immobilized
+	[33786] = {cooldown = 0,	class = "DRUID"}, --Cyclone
+	[236748] = {cooldown = 30,	class = "DRUID"}, --Intimidating Roar
+	[61391] = {cooldown = 0,	class = "DRUID"}, --Typhoon
+	[163505] = {cooldown = 0,	class = "DRUID"}, --Rake
+	[50259] = {cooldown = 0,	class = "DRUID"}, --Dazed
+	[372245] = {cooldown = 0,	class = "EVOKER"}, --Terror of the Skies
+	[360806] = {cooldown = 15,	class = "EVOKER"}, --Sleep Walk
+	[162480] = {cooldown = 0,	class = "HUNTER"}, --Steel Trap
+	[187707] = {cooldown = 15,	class = "HUNTER"}, --Muzzle
+	[147362] = {cooldown = 24,	class = "HUNTER"}, --Counter Shot
+	[190927] = {cooldown = 6,	class = "HUNTER"}, --Harpoon
+	[117526] = {cooldown = 45,	class = "HUNTER"}, --Binding Shot
+	[24394] = {cooldown = 0,	class = "HUNTER"}, --Intimidation
+	[117405] = {cooldown = 0,	class = "HUNTER"}, --Binding Shot
+	[19577] = {cooldown = 60,	class = "HUNTER"}, --Intimidation
+	[1513] = {cooldown = 0,		class = "HUNTER"}, --Scare Beast
+    [90337] = {cooldown = 60,	class = "HUNTER"}, --Bad Manner (Monkey Stun)
+    [19503] = {cooldown = 30,	class = "HUNTER"}, --Scatter Shot
+	[3355] = {cooldown = 30,	class = "HUNTER"}, --Freezing Trap
+	[203337] = {cooldown = 30,	class = "HUNTER"}, --Freezing trap with diamond ice talent
+	[31661] = {cooldown = 45,	class = "MAGE"}, --Dragon's Breath
+	[161353] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[277787] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[157981] = {cooldown = 30,	class = "MAGE"}, --Blast Wave
+	[44572] = {cooldown = 0,	class = "MAGE"}, --Deep Freeze
+	[82691] = {cooldown = 0,	class = "MAGE"}, --Ring of Frost
+	[118] = {cooldown = 0,		class = "MAGE"}, --Polymorph
+	[161354] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[157997] = {cooldown = 25,	class = "MAGE"}, --Ice Nova
+	[391622] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[28271] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[122] = {cooldown = 0,		class = "MAGE"}, --Frost Nova
+	[277792] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[61721] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[126819] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[61305] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[28272] = {cooldown = 0,	class = "MAGE"}, --Polymorph
+	[2139] = {cooldown = 24,	class = "MAGE"}, --Counterspell
+	[198909] = {cooldown = 0,	class = "MONK"}, --Song of Chi-Ji
+	[119381] = {cooldown = 60,	class = "MONK"}, --Leg Sweep
+	[107079] = {cooldown = 120,	class = "MONK"}, --Quaking Palm
+	[116706] = {cooldown = 0,	class = "MONK"}, --Disable
+	[115078] = {cooldown = 45,	class = "MONK"}, --Paralysis
+	[116705] = {cooldown = 15,	class = "MONK"}, --Spear Hand Strike
+	[31935] = {cooldown = 15,	class = "PALADIN"}, --Avenger's Shield
+	[20066] = {cooldown = 15,	class = "PALADIN"}, --Repentance
+	[217824] = {cooldown = 0,	class = "PALADIN"}, --Shield of Virtue
+	[105421] = {cooldown = 0,	class = "PALADIN"}, --Blinding Light
+	[10326] = {cooldown = 15,	class = "PALADIN"}, --Turn Evil
+	[853] = {cooldown = 60,		class = "PALADIN"}, --Hammer of Justice
+	[96231] = {cooldown = 15,	class = "PALADIN"}, --Rebuke
+	[205364] = {cooldown = 30,	class = "PRIEST"}, --Dominate Mind
+	[64044] = {cooldown = 45,	class = "PRIEST"}, --Psychic Horror
+	[226943] = {cooldown = 0,	class = "PRIEST"}, --Mind Bomb
+	[15487] = {cooldown = 45,	class = "PRIEST"}, --Silence
+	[605] = {cooldown = 0,		class = "PRIEST"}, --Mind Control
+	[8122] = {cooldown = 45,	class = "PRIEST"}, --Psychic Scream
+	[200200] = {cooldown = 60,	class = "PRIEST"}, --Holy Word: Chastise
+	[9484] = {cooldown = 0,		class = "PRIEST"}, --Shackle Undead
+	[200196] = {cooldown = 60,	class = "PRIEST"}, --Holy Word: Chastise
+	[6770] = {cooldown = 0,		class = "ROGUE"}, --Sap
+	[2094] = {cooldown = 120,	class = "ROGUE"}, --Blind
+	[1766] = {cooldown = 15,	class = "ROGUE"}, --Kick
+	[427773] = {cooldown = 0,	class = "ROGUE"}, --Blind
+	[408] = {cooldown = 20,		class = "ROGUE"}, --Kidney Shot
+	[1776] = {cooldown = 20,	class = "ROGUE"}, --Gouge
+	[1833] = {cooldown = 0,		class = "ROGUE"}, --Cheap Shot
+	[211015] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[269352] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[277778] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[64695] = {cooldown = 0,	class = "SHAMAN"}, --Earthgrab
+	[57994] = {cooldown = 12,	class = "SHAMAN"}, --Wind Shear
+	[197214] = {cooldown = 40,	class = "SHAMAN"}, --Sundering
+	[118905] = {cooldown = 0,	class = "SHAMAN"}, --Static Charge
+	[277784] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[309328] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[211010] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[210873] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[211004] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[51514] = {cooldown = 30,	class = "SHAMAN"}, --Hex
+	[305485] = {cooldown = 30,	class = "SHAMAN"}, --Lightning Lasso
+	[89766] = {cooldown = 30,	class = "WARLOCK"}, --Axe Toss (pet felguard ability)
+	[6789] = {cooldown = 45,	class = "WARLOCK"}, --Mortal Coil
+	[118699] = {cooldown = 0,	class = "WARLOCK"}, --Fear
+	[5782] = {cooldown = 0,	class = "WARLOCK"}, --Fear
+	[710] = {cooldown = 0,		class = "WARLOCK"}, --Banish
+	[212619] = {cooldown = 60,	class = "WARLOCK"}, --Call Felhunter
+	[19647] = {cooldown = 24,	class = "WARLOCK"}, --Spell Lock
+	[30283] = {cooldown = 60,	class = "WARLOCK"}, --Shadowfury
+	[5484] = {cooldown = 40,	class = "WARLOCK"}, --Howl of Terror
+	[6552] = {cooldown = 15,	class = "WARRIOR"}, --Pummel
+	[132168] = {cooldown = 0,	class = "WARRIOR"}, --Shockwave
+	[132169] = {cooldown = 0,	class = "WARRIOR"}, --Storm Bolt
+	[5246] = {cooldown = 90,	class = "WARRIOR"}, --Intimidating Shout
+}
+
 --[=[
 Spell customizations:
 	Many times there's spells with the same name which does different effects
@@ -587,6 +612,9 @@ elseif (GetBuildInfo():match ("%d") == "2") then
 	LIB_OPEN_RAID_SPELL_CUSTOM_NAMES = {}
 
 elseif (GetBuildInfo():match ("%d") == "3") then
+	LIB_OPEN_RAID_SPELL_CUSTOM_NAMES = {}
+
+elseif (GetBuildInfo():match ("%d") == "4") then
 	LIB_OPEN_RAID_SPELL_CUSTOM_NAMES = {}
 
 else
@@ -631,6 +659,7 @@ LIB_OPEN_RAID_SPELL_INTERRUPT = {
 	[57994] = LIB_OPEN_RAID_COOLDOWNS_INFO[57994], --Wind Shear
 
 	[47528] = LIB_OPEN_RAID_COOLDOWNS_INFO[47528], --Mind Freeze
+	[47476] = LIB_OPEN_RAID_COOLDOWNS_INFO[47476], --Strangulate
 
 	[106839] = LIB_OPEN_RAID_COOLDOWNS_INFO[106839], --Skull Bash (feral, guardian)
 	[78675] = LIB_OPEN_RAID_COOLDOWNS_INFO[78675], --Solar Beam (balance)
