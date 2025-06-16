@@ -22,6 +22,7 @@ exclude_files = {
 	"EnhanceQoL/libs/LibOpenRaid/Deprecated.lua",
 	"EnhanceQoL/libs/LibOpenRaid/Functions.lua",
 	"EnhanceQoL/libs/LibOpenRaid/GetPlayerInformation.lua",
+	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Pandaria.lua",
 	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Wrath.lua",
 	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_WarWithin.lua",
 	"EnhanceQoL/libs/LibOpenRaid/ThingsToMantain_Shadowlands.lua",
