@@ -15,5 +15,3 @@ addon.functions.InitDBValue("lfgListingColor", { r = 1, g = 1, b = 1 })
 addon.functions.InitDBValue("lfgAccessibilityEnabled", true)
 addon.functions.InitDBValue("lfgListingColorActivity", { r = 1, g = 1, b = 1 })
 addon.functions.InitDBValue("lfgListingColorCustom", { r = 1, g = 1, b = 1 })
-
-addon.functions.InitDBValue("lfgBackgroundColor", { r = 0, g = 0, b = 0 })
