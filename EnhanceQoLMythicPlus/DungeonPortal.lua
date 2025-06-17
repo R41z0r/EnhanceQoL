@@ -94,6 +94,7 @@ local title = frameAnchor:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge"
 title:SetPoint("TOP", 0, -10)
 local mSeasonTitle = MYTHIC_DUNGEON_SEASON
 title:SetFormattedText(string.gsub(mSeasonTitle, "%s*%b()", ""))
+title:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 frameAnchor:SetSize(title:GetStringWidth() + 20, 170) -- Breite x Höhe
 
 -- Compendium
@@ -111,6 +112,7 @@ local titleCompendium = frameAnchorCompendium:CreateFontString(nil, "OVERLAY", "
 titleCompendium:SetPoint("TOP", 0, -10)
 local mSeasonTitleCompendium = L["DungeonCompendium"]
 titleCompendium:SetFormattedText(mSeasonTitleCompendium)
+titleCompendium:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 frameAnchorCompendium:SetSize(titleCompendium:GetStringWidth() + 20, 170) -- Breite x Höhe
 frameAnchorCompendium:SetPoint("TOPLEFT", DungeonTeleportFrame, "TOPRIGHT", 0, 0)
 
@@ -217,9 +219,10 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 			button:RegisterForClicks("AnyUp", "AnyDown")
 
 			-- Text und Tooltip
-			local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-			label:SetPoint("TOP", button, "BOTTOM", 0, -2)
-			label:SetText(spellData.text)
+                                local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                                label:SetPoint("TOP", button, "BOTTOM", 0, -2)
+                                label:SetText(spellData.text)
+                                label:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
 			button:SetScript("OnEnter", function(self)
 				if addon.db["portalShowTooltip"] then
@@ -365,11 +368,12 @@ local function CreatePortalCompendium(frame, compendium)
 				end
 			end)
 		end
-		if #sortedSpells > 0 then
-			-- Überschrift (Headline)
-			local headline = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-			headline:SetPoint("TOP", frame, "TOP", 0, currentYOffset)
-			headline:SetText(section.headline)
+                if #sortedSpells > 0 then
+                        -- Überschrift (Headline)
+                        local headline = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                        headline:SetPoint("TOP", frame, "TOP", 0, currentYOffset)
+                        headline:SetText(section.headline)
+                        headline:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 			currentYOffset = currentYOffset - headline:GetStringHeight() - 10 -- Abstand für Buttons
 			table.insert(frame.headline, headline)
 		end
@@ -631,9 +635,10 @@ local function CreateRioScore()
 		frameAnchorScore:SetFrameStrata("TOOLTIP")
 
 		-- Überschrift hinzufügen
-		local titleScore = frameAnchorScore:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-		titleScore:SetFormattedText(DUNGEON_SCORE)
-		titleScore:SetPoint("TOP", 0, -10)
+                local titleScore = frameAnchorScore:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+                titleScore:SetFormattedText(DUNGEON_SCORE)
+                titleScore:SetPoint("TOP", 0, -10)
+                titleScore:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
 		frameAnchorScore:SetSize(max(titleScore:GetStringWidth() + 20, 200), 170) -- Breite x Höhe
 		if addon.db["teleportFrame"] then
@@ -832,9 +837,10 @@ local function updateKeystoneInfo()
 					button:SetPoint("LEFT", frame, "LEFT", 10, 0)
 					if mapData.spellId then button.spellID = mapData.spellId end
 					-- Dungeonname (zum Beispiel rechtsbündig)
-					local dungeonText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-					dungeonText:SetPoint("TOPLEFT", button, "TOPRIGHT", 5, 0)
-					dungeonText:SetText(mapData.mapName or "Unknown Dungeon")
+                                        local dungeonText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                                        dungeonText:SetPoint("TOPLEFT", button, "TOPRIGHT", 5, 0)
+                                        dungeonText:SetText(mapData.mapName or "Unknown Dungeon")
+                                        dungeonText:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
 					-- Hintergrund
 					local bg = button:CreateTexture(nil, "BACKGROUND")
@@ -878,14 +884,16 @@ local function updateKeystoneInfo()
 
 					if data.level and data.level > 0 then
 						-- Key-Level als Text
-						local levelText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-						levelText:SetPoint("CENTER", button, "CENTER", 0, 0)
-						levelText:SetText((data.level or "0"))
-						levelText:SetTextColor(1, 1, 1)
+                                                local levelText = button:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+                                                levelText:SetPoint("CENTER", button, "CENTER", 0, 0)
+                                                levelText:SetText((data.level or "0"))
+                                                levelText:SetTextColor(1, 1, 1)
+                                                levelText:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 					end
 					-- Spielername in Klassenfarbe
-					local playerNameText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-					playerNameText:SetPoint("BOTTOMLEFT", button, "BOTTOMRIGHT", 5, 0)
+                                        local playerNameText = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                                        playerNameText:SetPoint("BOTTOMLEFT", button, "BOTTOMRIGHT", 5, 0)
+                                        playerNameText:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
 					local classColor = data.classColor
 					playerNameText:SetText(data.charName)
@@ -909,8 +917,9 @@ function addon.MythicPlus.functions.togglePartyKeystone()
 		if addon.db["groupfinderShowPartyKeystone"] and not IsInRaid() then
 			if not isRegistered then
 				isRegistered = true
-				measureFontString = UIParent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-				measureFontString:Hide()
+                                measureFontString = UIParent:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                                measureFontString:Hide()
+                                measureFontString:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 				openRaidLib.RegisterCallback(addon.MythicPlus, "KeystoneUpdate", "onKeystoneUpdate")
 				openRaidLib.RequestKeystoneDataFromParty()
 			end
