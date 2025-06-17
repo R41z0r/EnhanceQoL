@@ -1,12 +1,13 @@
 # Changelog
 
-## [3.21.0] – 2025-06-15
+## [3.21.0] – 2025-06-17
 ### ✨ Added  
 - **Bag-Filter Reset**  
   - One-click button that clears all active bag-filter settings.
 
 ### 🔄 Changed
 - Reduced some required libs
+- Updated TOC for 11.1.7
 
 ## [3.20.1] – 2025-06-12
 ### 🐛 Fixed
