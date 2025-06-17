@@ -619,6 +619,7 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	local nameEdit = addon.functions.createEditboxAce(L["CategoryName"], cat.name, function(self, _, text)
 		if text ~= "" then cat.name = text end
 		groupTabs:SetTabs(getCategoryTabs())
+		addon.functions.formatTextTabs(groupTabs)
 		groupTabs:SelectTab(catId)
 	end)
 	core:AddChild(nameEdit)
@@ -708,6 +709,7 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 		end
 		selectedCategory = next(addon.db["buffTrackerCategories"]) or 1
 		groupTabs:SetTabs(getCategoryTabs())
+		addon.functions.formatTextTabs(groupTabs)
 		groupTabs:SelectTab(selectedCategory)
 	end)
 	core:AddChild(delBtn)
@@ -857,6 +859,7 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 
 	local groupTabs = addon.functions.createContainer("TabGroup", "Flow")
 	groupTabs:SetTabs(getCategoryTabs())
+	addon.functions.formatTextTabs(groupTabs)
 	groupTabs:SetCallback("OnGroupSelected", function(tabContainer, event, group)
 		selectedCategory = group
 		addon.db["buffTrackerSelectedCategory"] = group
@@ -887,6 +890,7 @@ function addon.Aura.functions.addBuffTrackerOptions(container)
 		}
 		ensureAnchor(newId)
 		groupTabs:SetTabs(getCategoryTabs())
+		addon.functions.formatTextTabs(groupTabs)
 		groupTabs:SelectTab(newId)
 	end)
 	groupHeader:AddChild(addIcon)

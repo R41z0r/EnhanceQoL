@@ -1057,6 +1057,7 @@ local function addTalentFrame(container)
 		groupTalent:SetFullWidth(true) -- Nimmt die volle Breite des Parents
 
 		groupTalent:SetTabs(addon.MythicPlus.variables.specNames)
+		addon.functions.formatTextTabs(groupTalent)
 		groupTalent:SetCallback("OnGroupSelected", function(tabContainer, event, group)
 			tabContainer:ReleaseChildren()
 			if not addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID] then addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID] = {} end

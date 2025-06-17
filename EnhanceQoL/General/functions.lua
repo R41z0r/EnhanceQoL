@@ -90,10 +90,20 @@ function addon.functions.prepareListForDropdown(tList, sortKey)
 	return dropdownList, order
 end
 
-function addon.functions.createContainer(type, layout)
-	local element = AceGUI:Create(type)
+function addon.functions.formatTextTabs(tabs)
+	if tabs and tabs.tabs then
+		for i = 1, #tabs.tabs do
+			if tabs.tabs[i].Text and type(tabs.tabs[i].Text.SetFont) == "function" then tabs.tabs[i].Text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+		end
+	end
+end
+
+function addon.functions.createContainer(typ, layout)
+	local element = AceGUI:Create(typ)
 	element:SetFullWidth(true)
 	if layout then element:SetLayout(layout) end
+	if element.titletext and type(element.titletext.SetFont) == "function" then element.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+
 	return element
 end
 
@@ -101,6 +111,7 @@ function addon.functions.createCheckboxAce(text, value, callBack, description)
 	local checkbox = AceGUI:Create("CheckBox")
 
 	checkbox:SetLabel(text)
+	if checkbox.text and type(checkbox.text.SetFont) == "function" then checkbox.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 	checkbox:SetValue(value)
 	checkbox:SetCallback("OnValueChanged", callBack)
 	checkbox:SetFullWidth(true)
@@ -113,6 +124,10 @@ function addon.functions.createEditboxAce(label, text, OnEnterPressed, OnTextCha
 	local editbox = AceGUI:Create("EditBox")
 
 	editbox:SetLabel(label)
+	if editbox.editbox and type(editbox.editbox.SetFont) == "function" then editbox.editbox:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+	if editbox.label and type(editbox.label.SetFont) == "function" then editbox.label:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+	if editbox.button and type(editbox.button.SetFont) == "function" then editbox.button:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+
 	if text then editbox:SetText(text) end
 	if OnEnterPressed then editbox:SetCallback("OnEnterPressed", OnEnterPressed) end
 	if OnTextChanged then editbox:SetCallback("OnTextChanged", OnTextChanged) end
@@ -123,6 +138,10 @@ function addon.functions.createSliderAce(text, value, min, max, step, callBack)
 	local slider = AceGUI:Create("Slider")
 
 	slider:SetLabel(text)
+	if slider.lowtext and type(slider.lowtext.SetFont) == "function" then slider.lowtext:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+	if slider.hightext and type(slider.hightext.SetFont) == "function" then slider.hightext:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+	if slider.editbox and type(slider.editbox.SetFont) == "function" then slider.editbox:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+	if slider.label and type(slider.label.SetFont) == "function" then slider.label:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 	slider:SetValue(value)
 	slider:SetSliderValues(min, max, step)
 	if callBack then slider:SetCallback("OnValueChanged", callBack) end
@@ -147,6 +166,7 @@ function addon.functions.createLabelAce(text, color, font, fontSize)
 	local label = AceGUI:Create("Label")
 
 	label:SetText(text)
+	if type(label.label.SetFont) == "function" then label.label:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 	if color then label:SetColor(color.r, color.g, color.b) end
 
 	label:SetFont(font or addon.variables.defaultFont, fontSize, "OUTLINE")
@@ -156,6 +176,7 @@ end
 function addon.functions.createButtonAce(text, width, callBack)
 	local button = AceGUI:Create("Button")
 	button:SetText(text)
+	if button.text and type(button.text.SetFont) == "function" then button.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 	button:SetWidth(width or 100)
 	if callBack then button:SetCallback("OnClick", callBack) end
 	return button
@@ -164,6 +185,8 @@ end
 function addon.functions.createDropdownAce(text, list, order, callBack)
 	local dropdown = AceGUI:Create("Dropdown")
 	dropdown:SetLabel(text or "")
+	if dropdown.label and type(dropdown.label.SetFont) == "function" then dropdown.label:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+	if dropdown.text and type(dropdown.text.SetFont) == "function" then dropdown.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 
 	if order then
 		dropdown:SetList(list, order)
@@ -172,6 +195,11 @@ function addon.functions.createDropdownAce(text, list, order, callBack)
 	end
 	dropdown:SetFullWidth(true)
 	if callBack then dropdown:SetCallback("OnValueChanged", callBack) end
+	dropdown:SetCallback("OnOpened", function()
+		for _, item in dropdown.pullout:IterateItems() do
+			item.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+		end
+	end)
 	return dropdown
 end
 
@@ -253,6 +281,8 @@ function addon.functions.createWrapperData(data, container, L)
 				if checkboxData.callback then widget:SetCallback("OnValueChanged", checkboxData.callback) end
 				group:AddChild(widget)
 			end
+			if widget.text and type(widget.text.SetFont) == "function" then widget.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+			if widget.label and type(widget.label.SetFont) == "function" then widget.label:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 			if checkboxData.gv then addon.elements[checkboxData.gv] = widget end
 		end
 	end

@@ -70,8 +70,6 @@ local function addFontFrame(container)
 	local drop = addon.functions.createDropdownAce(L["Default Font"], list, order, function(self, _, key)
 		addon.db["accessibilityFont"] = key
 		addon.variables.defaultFont = fonts[key]
-		addon.variables.requireReload = true
-		addon.functions.checkReloadFrame()
 	end)
 	drop:SetCallback("OnOpened", function()
 		for _, item in drop.pullout:IterateItems() do

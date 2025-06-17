@@ -177,6 +177,7 @@ function ChatIM:CreateUI()
 	self:HookInsertLink()
 	local frame = AceGUI:Create("Window")
 	frame:SetTitle(L["Instant Chats"])
+	if frame.titletext and type(frame.titletext.SetFont) == "function" then frame.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 	frame:SetWidth(400)
 	frame:SetHeight(300)
 	frame:SetLayout("Fill")
@@ -191,6 +192,8 @@ function ChatIM:CreateUI()
 	frame.frame:Hide()
 
 	local tabGroup = AceGUI:Create("TabGroup")
+	if tabGroup.titletext and type(tabGroup.titletext.SetFont) == "function" then tabGroup.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+
 	tabGroup:SetLayout("Fill")
 	tabGroup:SetCallback("OnGroupSelected", function(widget, _, value) ChatIM:SelectTab(widget, value) end)
 	frame:AddChild(tabGroup)
@@ -440,6 +443,7 @@ function ChatIM:CreateTab(sender, isBN, bnetID, battleTag)
 
 	table.insert(self.tabList, { text = displayName, value = sender })
 	self.tabGroup:SetTabs(self.tabList)
+	addon.functions.formatTextTabs(self.tabGroup)
 	if not self.activeTab then self.tabGroup:SelectTab(sender) end
 	self:RefreshTabCallbacks()
 	self:UpdateTabLabel(sender)
@@ -548,6 +552,7 @@ function ChatIM:RemoveTab(sender)
 	end
 	self.tabs[sender] = nil
 	self.tabGroup:SetTabs(self.tabList)
+	addon.functions.formatTextTabs(self.tabGroup)
 	self:RefreshTabCallbacks()
 	if #self.tabList == 0 then
 		self:HideWindow()
@@ -615,6 +620,7 @@ function ChatIM:UpdateTabLabel(sender)
 	end
 	local current = self.activeTab
 	self.tabGroup:SetTabs(self.tabList)
+	addon.functions.formatTextTabs(self.tabGroup)
 	if current then self.tabGroup:SelectTab(current) end
 	self:RefreshTabCallbacks()
 end
