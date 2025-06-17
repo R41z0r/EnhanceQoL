@@ -13,6 +13,18 @@ local IsEquippableItem = C_Item.IsEquippableItem
 local UnitInParty = UnitInParty
 local UnitInRaid = UnitInRaid
 
+function addon.functions.getLocaleDefaultFont()
+       local locale = GAME_LOCALE or GetLocale()
+       if locale == "ruRU" then
+               return "Fonts\\ARIALN.TTF"
+       elseif locale == "koKR" then
+               return "Fonts\\2002.ttf"
+       elseif locale == "zhTW" or locale == "zhCN" then
+               return "Fonts\\ARKai_T.ttf"
+       end
+       return "Fonts\\FRIZQT__.TTF"
+end
+
 function addon.functions.InitDBValue(key, defaultValue)
 	if addon.db[key] == nil then addon.db[key] = defaultValue end
 end
@@ -210,6 +222,18 @@ function addon.functions.updateTreeGroupFonts(tree)
                        btn.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
                end
        end
+end
+
+function addon.functions.applyPopupFonts(popup)
+       if not popup then return end
+       if popup.text and popup.text.SetFont then popup.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+       if popup.button1 and popup.button1.GetFontString and popup.button1:GetFontString() then
+               popup.button1:GetFontString():SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+       end
+       if popup.button2 and popup.button2.GetFontString and popup.button2:GetFontString() then
+               popup.button2:GetFontString():SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+       end
+       if popup.editBox and popup.editBox.SetFont then popup.editBox:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
 end
 
 function addon.functions.createWrapperData(data, container, L)

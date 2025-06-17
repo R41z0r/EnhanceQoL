@@ -47,7 +47,10 @@ local function checkBagIgnoreJunk()
 				whileDead = true,
 				hideOnEscape = true,
 				preferredIndex = 3,
-				OnShow = function(self) self:SetFrameStrata("TOOLTIP") end,
+                               OnShow = function(self)
+                                       self:SetFrameStrata("TOOLTIP")
+                                       addon.functions.applyPopupFonts(self)
+                               end,
 			}
 			StaticPopup_Show("SellJunkIgnoredBag")
 		end
@@ -1095,16 +1098,17 @@ local function addChatFrame(container)
 		local btnDelete = addon.functions.createButtonAce(L["ChatIMHistoryDelete"], 140, function()
 			local target = dropHistory:GetValue()
 			if not target then return end
-			StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"] = StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"]
-				or {
-					text = L["ChatIMHistoryDeleteConfirm"],
-					button1 = YES,
-					button2 = CANCEL,
-					timeout = 0,
-					whileDead = true,
-					hideOnEscape = true,
-					preferredIndex = 3,
-				}
+                       StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"] = StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"]
+                               or {
+                                        text = L["ChatIMHistoryDeleteConfirm"],
+                                        button1 = YES,
+                                        button2 = CANCEL,
+                                        timeout = 0,
+                                        whileDead = true,
+                                        hideOnEscape = true,
+                                        preferredIndex = 3,
+                                        OnShow = function(self) addon.functions.applyPopupFonts(self) end,
+                               }
 			StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"].OnAccept = function()
 				EnhanceQoL_IMHistory[target] = nil
 				if addon.ChatIM and addon.ChatIM.history then addon.ChatIM.history[target] = nil end
@@ -1115,16 +1119,17 @@ local function addChatFrame(container)
 		end)
 
 		local btnClear = addon.functions.createButtonAce(L["ChatIMHistoryClearAll"], 140, function()
-			StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"] = StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"]
-				or {
-					text = L["ChatIMHistoryClearConfirm"],
-					button1 = YES,
-					button2 = CANCEL,
-					timeout = 0,
-					whileDead = true,
-					hideOnEscape = true,
-					preferredIndex = 3,
-				}
+                       StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"] = StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"]
+                               or {
+                                        text = L["ChatIMHistoryClearConfirm"],
+                                        button1 = YES,
+                                        button2 = CANCEL,
+                                        timeout = 0,
+                                        whileDead = true,
+                                        hideOnEscape = true,
+                                        preferredIndex = 3,
+                                        OnShow = function(self) addon.functions.applyPopupFonts(self) end,
+                               }
 			StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"].OnAccept = function()
 				wipe(EnhanceQoL_IMHistory)
 				if addon.ChatIM then addon.ChatIM.history = EnhanceQoL_IMHistory end

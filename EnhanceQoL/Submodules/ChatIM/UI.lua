@@ -101,11 +101,12 @@ StaticPopupDialogs["EQOL_URL_COPY"] = {
 	whileDead = true,
 	hideOnEscape = true,
 	preferredIndex = 3,
-	OnShow = function(self, data)
-		self.editBox:SetText(data or "")
-		self.editBox:SetFocus()
-		self.editBox:HighlightText()
-	end,
+       OnShow = function(self, data)
+               addon.functions.applyPopupFonts(self)
+               self.editBox:SetText(data or "")
+               self.editBox:SetFocus()
+               self.editBox:HighlightText()
+       end,
 }
 
 StaticPopupDialogs["EQOL_LINK_WARNING"] = {
@@ -116,7 +117,10 @@ StaticPopupDialogs["EQOL_LINK_WARNING"] = {
 	timeout = 0,
 	whileDead = true,
 	hideOnEscape = true,
-	preferredIndex = 3,
+       preferredIndex = 3,
+       OnShow = function(self)
+               addon.functions.applyPopupFonts(self)
+       end,
 }
 
 ChatIM.storage = ChatIM.storage or CreateFrame("Frame")
@@ -293,10 +297,10 @@ function ChatIM:CreateTab(sender, isBN, bnetID, battleTag)
 		if info then battleTag = info.battleTag end
 	end
 
-	local smf = CreateFrame("ScrollingMessageFrame", nil, ChatIM.storage)
-	-- we'll anchor later when the tab becomes active
-	smf:SetAllPoints(ChatIM.storage)
-	smf:SetFontObject(ChatFontNormal)
+       local smf = CreateFrame("ScrollingMessageFrame", nil, ChatIM.storage)
+       -- we'll anchor later when the tab becomes active
+       smf:SetAllPoints(ChatIM.storage)
+       smf:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 	smf:SetJustifyH("LEFT")
 	smf:SetFading(false)
 	smf:SetMaxLines(ChatIM.maxHistoryLines)
@@ -416,10 +420,10 @@ function ChatIM:CreateTab(sender, isBN, bnetID, battleTag)
 		end
 	end
 	-- will be parented/anchored once the tab becomes active
-	local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
-	eb:SetAutoFocus(false)
-	eb:SetHeight(20)
-	eb:SetFontObject(ChatFontNormal)
+       local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
+       eb:SetAutoFocus(false)
+       eb:SetHeight(20)
+       eb:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 	eb:SetScript("OnEditFocusGained", function() ChatIM:UpdateAlpha() end)
 	eb:SetScript("OnEditFocusLost", function()
 		C_Timer.After(5, function() ChatIM:UpdateAlpha() end)
@@ -708,7 +712,7 @@ function ChatIM:HideWindow()
 end
 
 function ChatIM:StartWhisper(target, bnetID, accountTag)
-	if not target then return end
+        if not target then return end
 	if bnetID then
 		self:CreateTab(target, true, bnetID, accountTag)
 	else
@@ -718,5 +722,20 @@ function ChatIM:StartWhisper(target, bnetID, accountTag)
 	if not self.tabGroup then return end
 	self.tabGroup:SelectTab(target)
 	local tab = self.tabs[target]
-	if tab and tab.edit then tab.edit:SetFocus() end
+        if tab and tab.edit then tab.edit:SetFocus() end
+end
+
+function ChatIM:ApplyFonts()
+       if self.widget and self.widget.titletext and self.widget.titletext.SetFont then
+               self.widget.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+       end
+       if self.tabGroup and self.tabGroup.titletext and self.tabGroup.titletext.SetFont then
+               self.tabGroup.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+       end
+       if self.tabs then
+               for _, tab in pairs(self.tabs) do
+                       if tab.msg and tab.msg.SetFont then tab.msg:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+                       if tab.edit and tab.edit.SetFont then tab.edit:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+               end
+       end
 end
