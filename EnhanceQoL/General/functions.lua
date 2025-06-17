@@ -199,8 +199,17 @@ function addon.functions.createDropdownAce(text, list, order, callBack)
 		for _, item in dropdown.pullout:IterateItems() do
 			item.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 		end
-	end)
-	return dropdown
+        end)
+        return dropdown
+end
+
+function addon.functions.updateTreeGroupFonts(tree)
+       if not tree or not tree.buttons then return end
+       for _, btn in ipairs(tree.buttons) do
+               if btn.text and type(btn.text.SetFont) == "function" then
+                       btn.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+               end
+       end
 end
 
 function addon.functions.createWrapperData(data, container, L)

@@ -3598,7 +3598,10 @@ local function CreateUI()
 	addon.treeGroupData = {}
 
 	-- Create the TreeGroup
-	addon.treeGroup = AceGUI:Create("TreeGroup")
+        addon.treeGroup = AceGUI:Create("TreeGroup")
+        hooksecurefunc(addon.treeGroup, "RefreshTree", function(self)
+                addon.functions.updateTreeGroupFonts(self)
+        end)
 	addon.functions.addToTree(nil, {
 		value = "general",
 		text = L["General"],
@@ -3690,9 +3693,10 @@ local function CreateUI()
 			addon.LayoutTools.functions.treeCallback(container, group)
 		end
 	end)
-	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
-	addon.variables.statusTable.groups["general\001ui"] = true
-	frame:AddChild(addon.treeGroup)
+        addon.treeGroup:SetStatusTable(addon.variables.statusTable)
+        addon.variables.statusTable.groups["general\001ui"] = true
+        frame:AddChild(addon.treeGroup)
+        addon.functions.updateTreeGroupFonts(addon.treeGroup)
 
 	-- Select the first group by default
 	addon.treeGroup:SelectByPath("general")
