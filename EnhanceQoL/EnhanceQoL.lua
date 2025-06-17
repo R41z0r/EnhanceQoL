@@ -47,10 +47,10 @@ local function checkBagIgnoreJunk()
 				whileDead = true,
 				hideOnEscape = true,
 				preferredIndex = 3,
-                               OnShow = function(self)
-                                       self:SetFrameStrata("TOOLTIP")
-                                       addon.functions.applyPopupFonts(self)
-                               end,
+				OnShow = function(self)
+					self:SetFrameStrata("TOOLTIP")
+					addon.functions.applyPopupFonts(self)
+				end,
 			}
 			StaticPopup_Show("SellJunkIgnoredBag")
 		end
@@ -612,7 +612,7 @@ local function onInspect(arg1)
 								-- Text für das Item-Level
 								element.ilvl = element:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 								element.ilvl:SetPoint("TOPRIGHT", element.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
-                                                                element.ilvl:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+								element.ilvl:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 							end
 
 							local color = eItem:GetItemQualityColor()
@@ -651,7 +651,7 @@ local function onInspect(arg1)
 									element.borderGradient:SetGradient("VERTICAL", CreateColor(1, 0, 0, 1), CreateColor(1, 0.3, 0.3, 0.5))
 									element.borderGradient:Hide()
 								end
-                                                                element.enchant:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize - 2, "OUTLINE")
+								element.enchant:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize - 2, "OUTLINE")
 							end
 							if element.borderGradient then
 								local data = C_TooltipInfo.GetHyperlink(itemLink)
@@ -775,6 +775,7 @@ local function setIlvlText(element, slot)
 
 					element.ilvl:SetFormattedText(itemLevelText)
 					element.ilvl:SetTextColor(color.r, color.g, color.b, 1)
+					element.ilvl:SetFont(addon.variables.defaultFont, 16, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 
 					local textWidth = element.ilvl:GetStringWidth()
 					element.ilvlBackground:SetSize(textWidth + 6, element.ilvl:GetStringHeight() + 4) -- Mehr Padding für bessere Lesbarkeit
@@ -1098,17 +1099,17 @@ local function addChatFrame(container)
 		local btnDelete = addon.functions.createButtonAce(L["ChatIMHistoryDelete"], 140, function()
 			local target = dropHistory:GetValue()
 			if not target then return end
-                       StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"] = StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"]
-                               or {
-                                        text = L["ChatIMHistoryDeleteConfirm"],
-                                        button1 = YES,
-                                        button2 = CANCEL,
-                                        timeout = 0,
-                                        whileDead = true,
-                                        hideOnEscape = true,
-                                        preferredIndex = 3,
-                                        OnShow = function(self) addon.functions.applyPopupFonts(self) end,
-                               }
+			StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"] = StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"]
+				or {
+					text = L["ChatIMHistoryDeleteConfirm"],
+					button1 = YES,
+					button2 = CANCEL,
+					timeout = 0,
+					whileDead = true,
+					hideOnEscape = true,
+					preferredIndex = 3,
+					OnShow = function(self) addon.functions.applyPopupFonts(self) end,
+				}
 			StaticPopupDialogs["EQOL_DELETE_IM_HISTORY"].OnAccept = function()
 				EnhanceQoL_IMHistory[target] = nil
 				if addon.ChatIM and addon.ChatIM.history then addon.ChatIM.history[target] = nil end
@@ -1119,17 +1120,17 @@ local function addChatFrame(container)
 		end)
 
 		local btnClear = addon.functions.createButtonAce(L["ChatIMHistoryClearAll"], 140, function()
-                       StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"] = StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"]
-                               or {
-                                        text = L["ChatIMHistoryClearConfirm"],
-                                        button1 = YES,
-                                        button2 = CANCEL,
-                                        timeout = 0,
-                                        whileDead = true,
-                                        hideOnEscape = true,
-                                        preferredIndex = 3,
-                                        OnShow = function(self) addon.functions.applyPopupFonts(self) end,
-                               }
+			StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"] = StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"]
+				or {
+					text = L["ChatIMHistoryClearConfirm"],
+					button1 = YES,
+					button2 = CANCEL,
+					timeout = 0,
+					whileDead = true,
+					hideOnEscape = true,
+					preferredIndex = 3,
+					OnShow = function(self) addon.functions.applyPopupFonts(self) end,
+				}
 			StaticPopupDialogs["EQOL_CLEAR_IM_HISTORY"].OnAccept = function()
 				wipe(EnhanceQoL_IMHistory)
 				if addon.ChatIM then addon.ChatIM.history = EnhanceQoL_IMHistory end
@@ -1147,7 +1148,7 @@ local function addChatFrame(container)
 
 		local hint = AceGUI:Create("Label")
 		hint:SetFullWidth(true)
-                hint:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
+		hint:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 		hint:SetText("|cffffd700" .. L["RightClickCloseTab"] .. "|r ")
 		groupCoreSetting:AddChild(hint)
 	end
@@ -3272,9 +3273,9 @@ local function initUI()
 		row.radio:SetPoint("LEFT", row, "LEFT", 4, 0)
 		row.radio:SetChecked(false)
 
-                row.radio.text:SetFontObject(GameFontNormalLarge)
-                row.radio.text:SetText(specName)
-                row.radio.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
+		row.radio.text:SetFontObject(GameFontNormalLarge)
+		row.radio.text:SetText(specName)
+		row.radio.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize + 2, "OUTLINE")
 
 		row:RegisterForClicks("AnyUp")
 		row.radio:RegisterForClicks("AnyUp")
@@ -3448,7 +3449,7 @@ local function initCharacter()
 
 	addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
-        addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
+	addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 	addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
 	addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
 
@@ -3467,7 +3468,7 @@ local function initCharacter()
 
 	addon.general.durabilityIconFrame.count = addon.general.durabilityIconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	addon.general.durabilityIconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.durabilityIconFrame, "BOTTOMRIGHT", 1, 2)
-        addon.general.durabilityIconFrame.count:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize - 2, "OUTLINE")
+	addon.general.durabilityIconFrame.count:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize - 2, "OUTLINE")
 
 	if addon.db["showDurabilityOnCharframe"] == false then addon.general.durabilityIconFrame:Hide() end
 
@@ -3490,7 +3491,7 @@ local function initCharacter()
 		-- Text für das Item-Level
 		value.ilvl = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		value.ilvl:SetPoint("TOPRIGHT", value.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
-                value.ilvl:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+		value.ilvl:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 
 		value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		if addon.variables.itemSlotSide[key] == 0 then
@@ -3500,7 +3501,7 @@ local function initCharacter()
 		else
 			value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
 		end
-                value.enchant:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize - 2, "OUTLINE")
+		value.enchant:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
 		value.gems = {}
 		for i = 1, 3 do
@@ -3604,10 +3605,8 @@ local function CreateUI()
 	addon.treeGroupData = {}
 
 	-- Create the TreeGroup
-        addon.treeGroup = AceGUI:Create("TreeGroup")
-        hooksecurefunc(addon.treeGroup, "RefreshTree", function(self)
-                addon.functions.updateTreeGroupFonts(self)
-        end)
+	addon.treeGroup = AceGUI:Create("TreeGroup")
+	hooksecurefunc(addon.treeGroup, "RefreshTree", function(self) addon.functions.updateTreeGroupFonts(self) end)
 	addon.functions.addToTree(nil, {
 		value = "general",
 		text = L["General"],
@@ -3679,7 +3678,7 @@ local function CreateUI()
 			sub:SetFullHeight(true)
 			container:AddChild(sub)
 			AceConfigDlg:Open("EQOL_Profiles", sub)
-elseif string.match(group, "^accessibility") then
+		elseif string.match(group, "^accessibility") then
 			addon.Accessibility.functions.treeCallback(container, group)
 		elseif string.match(group, "^tooltip") then
 			addon.Tooltip.functions.treeCallback(container, group)
@@ -3699,10 +3698,10 @@ elseif string.match(group, "^accessibility") then
 			addon.LayoutTools.functions.treeCallback(container, group)
 		end
 	end)
-        addon.treeGroup:SetStatusTable(addon.variables.statusTable)
-        addon.variables.statusTable.groups["general\001ui"] = true
-        frame:AddChild(addon.treeGroup)
-        addon.functions.updateTreeGroupFonts(addon.treeGroup)
+	addon.treeGroup:SetStatusTable(addon.variables.statusTable)
+	addon.variables.statusTable.groups["general\001ui"] = true
+	frame:AddChild(addon.treeGroup)
+	addon.functions.updateTreeGroupFonts(addon.treeGroup)
 
 	-- Select the first group by default
 	addon.treeGroup:SelectByPath("general")
@@ -4087,8 +4086,8 @@ local eventHandlers = {
 			loadSubAddon("EnhanceQoLMythicPlus")
 			loadSubAddon("EnhanceQoLDrinkMacro")
 			loadSubAddon("EnhanceQoLTooltip")
-                        loadSubAddon("EnhanceQoLVendor")
-                        loadSubAddon("EnhanceQoLAccessibility")
+			loadSubAddon("EnhanceQoLVendor")
+			loadSubAddon("EnhanceQoLAccessibility")
 
 			checkBagIgnoreJunk()
 		end
