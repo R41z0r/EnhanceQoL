@@ -68,9 +68,10 @@ local function addFontFrame(container)
 	end
 	local list, order = addon.functions.prepareListForDropdown(fontsList, true)
 	local drop = addon.functions.createDropdownAce(L["Default Font"], list, order, function(self, _, key)
-		addon.db["accessibilityFont"] = key
-		addon.variables.defaultFont = fonts[key]
-	end)
+               addon.db["accessibilityFont"] = key
+               addon.variables.defaultFont = fonts[key]
+               if addon.treeGroup then addon.functions.updateTreeGroupFonts(addon.treeGroup) end
+       end)
 	drop:SetCallback("OnOpened", function()
 		for _, item in drop.pullout:IterateItems() do
 			item.text:SetFont(fonts[item.userdata.value], 12, "OUTLINE")
