@@ -3272,8 +3272,9 @@ local function initUI()
 		row.radio:SetPoint("LEFT", row, "LEFT", 4, 0)
 		row.radio:SetChecked(false)
 
-		row.radio.text:SetFontObject(GameFontNormalLarge)
-		row.radio.text:SetText(specName)
+                row.radio.text:SetFontObject(GameFontNormalLarge)
+                row.radio.text:SetText(specName)
+                row.radio.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
 		row:RegisterForClicks("AnyUp")
 		row.radio:RegisterForClicks("AnyUp")
@@ -3678,7 +3679,7 @@ local function CreateUI()
 			sub:SetFullHeight(true)
 			container:AddChild(sub)
 			AceConfigDlg:Open("EQOL_Profiles", sub)
-		elseif string.match(group, "^accessibility") then 
+elseif string.match(group, "^accessibility") then
 			addon.Accessibility.functions.treeCallback(container, group)
 		elseif string.match(group, "^tooltip") then
 			addon.Tooltip.functions.treeCallback(container, group)

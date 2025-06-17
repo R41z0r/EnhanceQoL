@@ -144,12 +144,14 @@ local function createCooldownBar(spellID, anchorFrame, playerName, unit)
 			_, _, spellIcon = GetSpellInfo(spellID)
 		end
 	end
-	frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	frame.text:SetPoint("LEFT", frame, "LEFT", 3, 0)
-	frame.text:SetText(textLeft)
+    frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    frame.text:SetPoint("LEFT", frame, "LEFT", 3, 0)
+    frame.text:SetText(textLeft)
+    frame.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
-	frame.time = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-	frame.time:SetPoint("RIGHT", frame, "RIGHT", -3, 0)
+    frame.time = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    frame.time:SetPoint("RIGHT", frame, "RIGHT", -3, 0)
+    frame.time:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
 	-- Spell-Icon hinzufügen
 	frame.icon = frame:CreateTexture(nil, "OVERLAY")
@@ -215,6 +217,7 @@ frameAnchor:RegisterForDrag("LeftButton")
 frameAnchor.text = frameAnchor:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 frameAnchor.text:SetPoint("CENTER", frameAnchor, "CENTER")
 frameAnchor.text:SetText(L["Drag me to position Cooldownbars"])
+frameAnchor.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 
 frameAnchor:SetScript("OnDragStart", frameAnchor.StartMoving)
 frameAnchor:SetScript("OnDragStop", function(self)
