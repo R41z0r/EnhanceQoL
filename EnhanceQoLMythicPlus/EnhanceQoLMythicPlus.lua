@@ -1070,7 +1070,7 @@ local function addTalentFrame(container)
 					addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] = value
 					C_Timer.After(1, function() addon.MythicPlus.functions.checkLoadout() end)
 				end)
-				if dropPullTimerType.label and dropPullTimerType.label.SetFont then dropPullTimerType.label:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+                                if dropPullTimerType.label and dropPullTimerType.label.SetFont then dropPullTimerType.label:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
 				if addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id] then
 					dropPullTimerType:SetValue(addon.db["talentReminderSettings"][addon.variables.unitPlayerGUID][group][cbData.id])
 				else

@@ -11,6 +11,8 @@ addon.Accessibility.functions = {}
 addon.LAccessibility = {}
 
 addon.functions.InitDBValue("accessibilityFont", "Friz Quadrata")
+addon.functions.InitDBValue("accessibilityFontEnabled", true)
+addon.functions.InitDBValue("accessibilityFontSize", 12)
 addon.functions.InitDBValue("lfgListingColor", { r = 1, g = 1, b = 1 })
 addon.functions.InitDBValue("lfgAccessibilityEnabled", true)
 addon.functions.InitDBValue("lfgListingColorActivity", { r = 1, g = 1, b = 1 })

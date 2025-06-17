@@ -250,7 +250,7 @@ local function addGeneralFrame(container)
 		-- Direkt hinter dem DropDown:
                local colorPicker = AceGUI:Create("ColorPicker")
                colorPicker:SetLabel(L["Ring Color"])
-               if colorPicker.text and colorPicker.text.SetFont then colorPicker.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+               if colorPicker.text and colorPicker.text.SetFont then colorPicker.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
 		-- colorPicker:SetHasAlpha(true) -- Falls du Transparenz erlauben willst
 		-- Alte Werte (falls gesetzt) aus dem SavedVariables laden:
 		if addon.db["mouseRingColor"] then
@@ -306,7 +306,7 @@ local function addGeneralFrame(container)
 			-- Direkt hinter dem DropDown:
                        local colorPicker = AceGUI:Create("ColorPicker")
                        colorPicker:SetLabel(L["Trail Color"])
-                       if colorPicker.text and colorPicker.text.SetFont then colorPicker.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+                       if colorPicker.text and colorPicker.text.SetFont then colorPicker.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
 			colorPicker:SetHasAlpha(true) -- Falls du Transparenz erlauben willst
 			-- Alte Werte (falls gesetzt) aus dem SavedVariables laden:
 			if addon.db["mouseTrailColor"] then

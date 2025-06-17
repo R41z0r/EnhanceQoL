@@ -675,14 +675,15 @@ table.sort(addon.variables.actionBarNames, function(a, b) return a.text < b.text
 
 addon.variables.defaultFont = "Fonts\\FRIZQT__.TTF"
 if (GAME_LOCALE or GetLocale()) == "ruRU" then
-	addon.variables.defaultFont = "Fonts\\ARIALN.TTF"
+        addon.variables.defaultFont = "Fonts\\ARIALN.TTF"
 elseif (GAME_LOCALE or GetLocale()) == "koKR" then
 	addon.variables.defaultFont = "Fonts\\2002.ttf"
 elseif (GAME_LOCALE or GetLocale()) == "zhTW" then
 	addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
 elseif (GAME_LOCALE or GetLocale()) == "zhCN" then
-	addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
+        addon.variables.defaultFont = "Fonts\\ARKai_T.ttf"
 end
+addon.variables.defaultFontSize = 12
 
 addon.variables.cvarOptions = {
 	["autoDismount"] = { trueValue = "1", falseValue = "0", description = addon.L["autoDismount"] },

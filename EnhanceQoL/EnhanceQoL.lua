@@ -612,7 +612,7 @@ local function onInspect(arg1)
 								-- Text für das Item-Level
 								element.ilvl = element:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 								element.ilvl:SetPoint("TOPRIGHT", element.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
-								element.ilvl:SetFont(addon.variables.defaultFont, 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+                                                                element.ilvl:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 							end
 
 							local color = eItem:GetItemQualityColor()
@@ -651,7 +651,7 @@ local function onInspect(arg1)
 									element.borderGradient:SetGradient("VERTICAL", CreateColor(1, 0, 0, 1), CreateColor(1, 0.3, 0.3, 0.5))
 									element.borderGradient:Hide()
 								end
-								element.enchant:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
+                                                                element.enchant:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize - 2, "OUTLINE")
 							end
 							if element.borderGradient then
 								local data = C_TooltipInfo.GetHyperlink(itemLink)
@@ -1147,7 +1147,7 @@ local function addChatFrame(container)
 
 		local hint = AceGUI:Create("Label")
 		hint:SetFullWidth(true)
-		hint:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+                hint:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 		hint:SetText("|cffffd700" .. L["RightClickCloseTab"] .. "|r ")
 		groupCoreSetting:AddChild(hint)
 	end
@@ -3447,7 +3447,7 @@ local function initCharacter()
 
 	addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
-	addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+        addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 	addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
 	addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
 
@@ -3466,7 +3466,7 @@ local function initCharacter()
 
 	addon.general.durabilityIconFrame.count = addon.general.durabilityIconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 	addon.general.durabilityIconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.durabilityIconFrame, "BOTTOMRIGHT", 1, 2)
-	addon.general.durabilityIconFrame.count:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
+        addon.general.durabilityIconFrame.count:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize - 2, "OUTLINE")
 
 	if addon.db["showDurabilityOnCharframe"] == false then addon.general.durabilityIconFrame:Hide() end
 
@@ -3489,7 +3489,7 @@ local function initCharacter()
 		-- Text für das Item-Level
 		value.ilvl = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		value.ilvl:SetPoint("TOPRIGHT", value.ilvlBackground, "TOPRIGHT", -1, -2) -- Position des Textes im Zentrum des Hintergrunds
-		value.ilvl:SetFont(addon.variables.defaultFont, 14, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
+                value.ilvl:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") -- Setzt die Schriftart, -größe und -stil (OUTLINE)
 
 		value.enchant = value:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
 		if addon.variables.itemSlotSide[key] == 0 then
@@ -3499,7 +3499,7 @@ local function initCharacter()
 		else
 			value.enchant:SetPoint("BOTTOMRIGHT", value, "BOTTOMLEFT", -2, 1)
 		end
-		value.enchant:SetFont(addon.variables.defaultFont, 12, "OUTLINE")
+                value.enchant:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize - 2, "OUTLINE")
 
 		value.gems = {}
 		for i = 1, 3 do
