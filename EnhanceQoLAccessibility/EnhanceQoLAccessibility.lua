@@ -48,7 +48,6 @@ local function updateLFGBackground()
 		c = { r = 0, g = 0, b = 0 }
 	else
 		c = { r = 1, g = 1, b = 1 }
-
 	end
 	colorRegions(LFGListFrame.SearchPanel, c)
 	if LFGListFrame.SearchPanel.ScrollBox then colorRegions(LFGListFrame.SearchPanel.ScrollBox, c) end
@@ -73,6 +72,11 @@ local function addFontFrame(container)
 		addon.variables.defaultFont = fonts[key]
 		addon.variables.requireReload = true
 		addon.functions.checkReloadFrame()
+	end)
+	drop:SetCallback("OnOpened", function()
+		for _, item in drop.pullout:IterateItems() do
+			item.text:SetFont(fonts[item.userdata.value], 12, "OUTLINE")
+		end
 	end)
 	drop:SetValue(addon.db["accessibilityFont"])
 	drop:SetWidth(250)
