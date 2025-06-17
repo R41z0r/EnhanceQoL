@@ -43,15 +43,15 @@ end
 
 local function updateLFGBackground()
 	if not LFGListFrame or not LFGListFrame.SearchPanel then return end
-	local c = addon.db["lfgBackgroundColor"] or { r = 0, g = 0, b = 0 }
+	local c
 	if addon.db["lfgAccessibilityEnabled"] then
-		colorRegions(LFGListFrame.SearchPanel, c)
-		if LFGListFrame.SearchPanel.ScrollBox then colorRegions(LFGListFrame.SearchPanel.ScrollBox, c) end
+		c = { r = 0, g = 0, b = 0 }
 	else
 		c = { r = 1, g = 1, b = 1 }
-		colorRegions(LFGListFrame.SearchPanel, c)
-		if LFGListFrame.SearchPanel.ScrollBox then colorRegions(LFGListFrame.SearchPanel.ScrollBox, c) end
+
 	end
+	colorRegions(LFGListFrame.SearchPanel, c)
+	if LFGListFrame.SearchPanel.ScrollBox then colorRegions(LFGListFrame.SearchPanel.ScrollBox, c) end
 end
 
 local function addFontFrame(container)
@@ -122,16 +122,6 @@ local function addLFGFrame(container)
 	cp2:SetColor(c2.r, c2.g, c2.b)
 	cp2:SetCallback("OnValueChanged", function(widget, event, r, g, b) addon.db["lfgListingColorCustom"] = { r = r, g = g, b = b } end)
 	group:AddChild(cp2)
-
-	local cpBg = AceGUI:Create("ColorPicker")
-	cpBg:SetLabel(L["Listing background color"])
-	local cBg = addon.db["lfgBackgroundColor"] or { r = 0, g = 0, b = 0 }
-	cpBg:SetColor(cBg.r, cBg.g, cBg.b)
-	cpBg:SetCallback("OnValueChanged", function(widget, event, r, g, b)
-		addon.db["lfgBackgroundColor"] = { r = r, g = g, b = b }
-		updateLFGBackground()
-	end)
-	group:AddChild(cpBg)
 end
 
 addon.functions.addToTree(nil, {
