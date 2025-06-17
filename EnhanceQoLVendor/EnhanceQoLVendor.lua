@@ -153,14 +153,15 @@ local eventHandlers = {
 	end,
 	["ITEM_DATA_LOAD_RESULT"] = function(arg1, arg2)
 		if arg2 == false and addon.aceFrame:IsShown() and lastEbox then
-			StaticPopupDialogs["VendorWrongItemID"] = {
-				text = L["Item id does not exist"],
-				button1 = "OK",
-				timeout = 0,
-				whileDead = true,
-				hideOnEscape = true,
-				preferredIndex = 3, -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
-			}
+                       StaticPopupDialogs["VendorWrongItemID"] = {
+                               text = L["Item id does not exist"],
+                               button1 = "OK",
+                               timeout = 0,
+                               whileDead = true,
+                               hideOnEscape = true,
+                               preferredIndex = 3, -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+                               OnShow = function(self) addon.functions.applyPopupFonts(self) end,
+                       }
 			StaticPopup_Show("VendorWrongItemID")
 			lastEbox:SetText("")
 		end

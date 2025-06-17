@@ -10,3 +10,5 @@ L["Listing activity name color"] = "Listing activity name color"
 L["Listing custom text color"] = "Listing custom text color"
 
 L["Listing background color"] = "Listing background color"
+L["Reset to default"] = "Reset to default"
+L["FontChangeHint"] = "This changes the fonts used by EnhanceQoL"
