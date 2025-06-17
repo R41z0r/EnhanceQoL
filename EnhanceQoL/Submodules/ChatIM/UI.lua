@@ -181,7 +181,7 @@ function ChatIM:CreateUI()
 	self:HookInsertLink()
 	local frame = AceGUI:Create("Window")
 	frame:SetTitle(L["Instant Chats"])
-	if frame.titletext and type(frame.titletext.SetFont) == "function" then frame.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+        if frame.titletext and type(frame.titletext.SetFont) == "function" then frame.titletext:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
 	frame:SetWidth(400)
 	frame:SetHeight(300)
 	frame:SetLayout("Fill")
@@ -196,7 +196,7 @@ function ChatIM:CreateUI()
 	frame.frame:Hide()
 
 	local tabGroup = AceGUI:Create("TabGroup")
-	if tabGroup.titletext and type(tabGroup.titletext.SetFont) == "function" then tabGroup.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+        if tabGroup.titletext and type(tabGroup.titletext.SetFont) == "function" then tabGroup.titletext:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
 
 	tabGroup:SetLayout("Fill")
 	tabGroup:SetCallback("OnGroupSelected", function(widget, _, value) ChatIM:SelectTab(widget, value) end)
@@ -300,7 +300,7 @@ function ChatIM:CreateTab(sender, isBN, bnetID, battleTag)
        local smf = CreateFrame("ScrollingMessageFrame", nil, ChatIM.storage)
        -- we'll anchor later when the tab becomes active
        smf:SetAllPoints(ChatIM.storage)
-       smf:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+       smf:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 	smf:SetJustifyH("LEFT")
 	smf:SetFading(false)
 	smf:SetMaxLines(ChatIM.maxHistoryLines)
@@ -423,7 +423,7 @@ function ChatIM:CreateTab(sender, isBN, bnetID, battleTag)
        local eb = CreateFrame("EditBox", nil, ChatIM.storage, "InputBoxTemplate")
        eb:SetAutoFocus(false)
        eb:SetHeight(20)
-       eb:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+       eb:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
 	eb:SetScript("OnEditFocusGained", function() ChatIM:UpdateAlpha() end)
 	eb:SetScript("OnEditFocusLost", function()
 		C_Timer.After(5, function() ChatIM:UpdateAlpha() end)
@@ -727,15 +727,15 @@ end
 
 function ChatIM:ApplyFonts()
        if self.widget and self.widget.titletext and self.widget.titletext.SetFont then
-               self.widget.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+               self.widget.titletext:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
        end
        if self.tabGroup and self.tabGroup.titletext and self.tabGroup.titletext.SetFont then
-               self.tabGroup.titletext:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+               self.tabGroup.titletext:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE")
        end
        if self.tabs then
                for _, tab in pairs(self.tabs) do
-                       if tab.msg and tab.msg.SetFont then tab.msg:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
-                       if tab.edit and tab.edit.SetFont then tab.edit:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+                       if tab.msg and tab.msg.SetFont then tab.msg:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
+                       if tab.edit and tab.edit.SetFont then tab.edit:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
                end
        end
 end

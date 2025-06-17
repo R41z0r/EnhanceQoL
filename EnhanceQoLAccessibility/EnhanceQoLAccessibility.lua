@@ -24,9 +24,15 @@ for name, path in pairs(LSM:HashTable("font")) do
 end
 addon.Accessibility.fonts = fonts
 
--- apply saved font
+-- apply saved font and font size depending on setting
 local savedFont = addon.db["accessibilityFont"]
-if savedFont and fonts[savedFont] then addon.variables.defaultFont = fonts[savedFont] end
+if addon.db["accessibilityFontEnabled"] then
+       addon.variables.defaultFont = fonts[savedFont] or addon.functions.getLocaleDefaultFont()
+       addon.variables.defaultFontSize = addon.db["accessibilityFontSize"] or addon.variables.defaultFontSize
+else
+       addon.variables.defaultFont = addon.functions.getLocaleDefaultFont()
+       addon.variables.defaultFontSize = 14
+end
 
 if addon.db["lfgListingColor"] and not addon.db["lfgListingColorActivity"] then
 	addon.db["lfgListingColorActivity"] = addon.db["lfgListingColor"]
@@ -57,13 +63,29 @@ local function addFontFrame(container)
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 	container:AddChild(wrapper)
 
-	local group = addon.functions.createContainer("InlineGroup", "List")
-	wrapper:AddChild(group)
+        local group = addon.functions.createContainer("InlineGroup", "List")
+        wrapper:AddChild(group)
 
-	local hint = addon.functions.createLabelAce(L["FontChangeHint"])
-	hint:SetFullWidth(true)
-	group:AddChild(hint)
-	group:AddChild(addon.functions.createSpacerAce())
+        local hint = addon.functions.createLabelAce(L["FontChangeHint"])
+        hint:SetFullWidth(true)
+        group:AddChild(hint)
+        group:AddChild(addon.functions.createSpacerAce())
+
+        local cb = addon.functions.createCheckboxAce(L["Enable Font Changes"], addon.db["accessibilityFontEnabled"], function(self, _, value)
+                addon.db["accessibilityFontEnabled"] = value
+                if value then
+                        addon.variables.defaultFont = fonts[addon.db["accessibilityFont"]] or addon.functions.getLocaleDefaultFont()
+                        addon.variables.defaultFontSize = addon.db["accessibilityFontSize"] or addon.variables.defaultFontSize
+                else
+                        addon.variables.defaultFont = addon.functions.getLocaleDefaultFont()
+                        addon.variables.defaultFontSize = 14
+                end
+                if addon.treeGroup then addon.functions.updateTreeGroupFonts(addon.treeGroup) end
+                if addon.ChatIM and addon.ChatIM.ApplyFonts then addon.ChatIM:ApplyFonts() end
+                addon.variables.requireReload = true
+        end)
+        group:AddChild(cb)
+        group:AddChild(addon.functions.createSpacerAce())
 
 	-- Build a list that uses the font name for both key and value so the
 	-- dropdown shows the name instead of the font path
@@ -79,26 +101,39 @@ local function addFontFrame(container)
 		if addon.ChatIM and addon.ChatIM.ApplyFonts then addon.ChatIM:ApplyFonts() end
 		addon.variables.requireReload = true
 	end)
-	drop:SetCallback("OnOpened", function()
-		for _, item in drop.pullout:IterateItems() do
-			item.text:SetFont(fonts[item.userdata.value], 12, "OUTLINE")
-		end
-	end)
+        drop:SetCallback("OnOpened", function()
+                for _, item in drop.pullout:IterateItems() do
+                        item.text:SetFont(fonts[item.userdata.value], addon.variables.defaultFontSize - 2, "OUTLINE")
+                end
+        end)
 	drop:SetValue(addon.db["accessibilityFont"])
 	drop:SetWidth(250)
 	group:AddChild(drop)
 	group:AddChild(addon.functions.createSpacerAce())
 
-	local resetBtn = addon.functions.createButtonAce(L["Reset to default"], nil, function()
-		addon.db["accessibilityFont"] = nil
-		addon.variables.defaultFont = addon.functions.getLocaleDefaultFont()
-		if addon.treeGroup then addon.functions.updateTreeGroupFonts(addon.treeGroup) end
-		if addon.ChatIM and addon.ChatIM.ApplyFonts then addon.ChatIM:ApplyFonts() end
-		addon.variables.requireReload = true
-		addon.functions.checkReloadFrame()
-	end)
-	resetBtn:SetWidth(200)
-	group:AddChild(resetBtn)
+        local resetBtn = addon.functions.createButtonAce(L["Reset to default"], nil, function()
+                addon.db["accessibilityFont"] = nil
+                addon.variables.defaultFont = addon.functions.getLocaleDefaultFont()
+                addon.db["accessibilityFontSize"] = 12
+                addon.variables.defaultFontSize = addon.db["accessibilityFontSize"]
+                if addon.treeGroup then addon.functions.updateTreeGroupFonts(addon.treeGroup) end
+                if addon.ChatIM and addon.ChatIM.ApplyFonts then addon.ChatIM:ApplyFonts() end
+                addon.variables.requireReload = true
+        end)
+        resetBtn:SetWidth(200)
+        group:AddChild(resetBtn)
+
+        local slider = addon.functions.createSliderAce(L["Default Font Size"], addon.db["accessibilityFontSize"], 7, 25, 1, function(self, _, value)
+                addon.db["accessibilityFontSize"] = value
+                addon.variables.defaultFontSize = value
+                if addon.treeGroup then addon.functions.updateTreeGroupFonts(addon.treeGroup) end
+                if addon.ChatIM and addon.ChatIM.ApplyFonts then addon.ChatIM:ApplyFonts() end
+                addon.variables.requireReload = true
+        end)
+        slider:SetDisabled(not addon.db["accessibilityFontEnabled"])
+        drop:SetDisabled(not addon.db["accessibilityFontEnabled"])
+        resetBtn:SetDisabled(not addon.db["accessibilityFontEnabled"])
+        group:AddChild(slider)
 end
 
 local function applyListingColor(entry)
@@ -133,7 +168,7 @@ local function addLFGFrame(container)
 
 	local cp1 = AceGUI:Create("ColorPicker")
 	cp1:SetLabel(L["Listing activity name color"])
-	if cp1.text and cp1.text.SetFont then cp1.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+        if cp1.text and cp1.text.SetFont then cp1.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
 	local c1 = addon.db["lfgListingColorActivity"] or { r = 1, g = 1, b = 1 }
 	cp1:SetColor(c1.r, c1.g, c1.b)
 	cp1:SetCallback("OnValueChanged", function(widget, event, r, g, b) addon.db["lfgListingColorActivity"] = { r = r, g = g, b = b } end)
@@ -141,7 +176,7 @@ local function addLFGFrame(container)
 
 	local cp2 = AceGUI:Create("ColorPicker")
 	cp2:SetLabel(L["Listing custom text color"])
-	if cp2.text and cp2.text.SetFont then cp2.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE") end
+        if cp2.text and cp2.text.SetFont then cp2.text:SetFont(addon.variables.defaultFont, addon.variables.defaultFontSize, "OUTLINE") end
 	local c2 = addon.db["lfgListingColorCustom"] or { r = 1, g = 1, b = 1 }
 	cp2:SetColor(c2.r, c2.g, c2.b)
 	cp2:SetCallback("OnValueChanged", function(widget, event, r, g, b) addon.db["lfgListingColorCustom"] = { r = r, g = g, b = b } end)
