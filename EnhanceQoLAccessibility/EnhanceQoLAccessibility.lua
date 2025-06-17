@@ -48,6 +48,7 @@ local function updateLFGBackground()
 		c = { r = 0, g = 0, b = 0 }
 	else
 		c = { r = 1, g = 1, b = 1 }
+
 	end
 	colorRegions(LFGListFrame.SearchPanel, c)
 	if LFGListFrame.SearchPanel.ScrollBox then colorRegions(LFGListFrame.SearchPanel.ScrollBox, c) end
@@ -60,7 +61,13 @@ local function addFontFrame(container)
 	local group = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(group)
 
-	local list, order = addon.functions.prepareListForDropdown(fonts, true)
+	-- Build a list that uses the font name for both key and value so the
+	-- dropdown shows the name instead of the font path
+	local fontsList = {}
+	for name in pairs(fonts) do
+		fontsList[name] = name
+	end
+	local list, order = addon.functions.prepareListForDropdown(fontsList, true)
 	local drop = addon.functions.createDropdownAce(L["Default Font"], list, order, function(self, _, key)
 		addon.db["accessibilityFont"] = key
 		addon.variables.defaultFont = fonts[key]
