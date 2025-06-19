@@ -42,6 +42,13 @@ addon.functions.InitDBValue("buffTrackerOrder", {})
 addon.functions.InitDBValue("buffTrackerSounds", {})
 addon.functions.InitDBValue("buffTrackerSoundsEnabled", {})
 
+-- Consumable Reminder
+addon.functions.InitDBValue("consumableReminderSetup", {})
+addon.functions.InitDBValue("consumableReminderPoint", "CENTER")
+addon.functions.InitDBValue("consumableReminderX", 0)
+addon.functions.InitDBValue("consumableReminderY", 0)
+addon.functions.InitDBValue("consumableReminderSize", 36)
+
 if type(addon.db["buffTrackerSelectedCategory"]) ~= "number" then addon.db["buffTrackerSelectedCategory"] = 1 end
 
 for _, cat in pairs(addon.db["buffTrackerCategories"]) do
