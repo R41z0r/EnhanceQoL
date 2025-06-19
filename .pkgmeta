@@ -38,3 +38,4 @@ move-folders:
   EnhanceQoL/EnhanceQoLSound: EnhanceQoLSound
   EnhanceQoL/EnhanceQoLTooltip: EnhanceQoLTooltip
   EnhanceQoL/EnhanceQoLVendor: EnhanceQoLVendor
+  EnhanceQoL/EnhanceQoLAura: EnhanceQoLAura

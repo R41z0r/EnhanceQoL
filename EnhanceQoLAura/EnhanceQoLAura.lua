@@ -596,6 +596,7 @@ addon.functions.addToTree(nil, {
 	children = {
 		--    { value = "resourcebar", text = DISPLAY_PERSONAL_RESOURCE },
 		{ value = "bufftracker", text = L["BuffTracker"] },
+		{ value = "consumablereminder", text = L["ConsumableReminder"] },
 	},
 })
 
@@ -606,5 +607,7 @@ function addon.Aura.functions.treeCallback(container, group)
 	elseif group == "aura\001bufftracker" then
 		addon.Aura.functions.addBuffTrackerOptions(container)
 		addon.Aura.scanBuffs()
+	elseif group == "aura\001consumablereminder" then
+		addon.Aura.functions.addConsumableReminderOptions(container)
 	end
 end
