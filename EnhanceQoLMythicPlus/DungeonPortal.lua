@@ -63,7 +63,15 @@ local function getCurrentSeasonPortal()
 								background = backgroundTexture,
 							}
 						end
-						if data.mapID then filteredMapID[data.mapID] = cId end
+						if data.mapID then
+							if type(data.mapID) == "table" then
+								for _, mID in pairs(data.mapID) do
+									filteredMapID[mID] = cId
+								end
+							else
+								filteredMapID[data.mapID] = cId
+							end
+						end
 						break
 					end
 				end

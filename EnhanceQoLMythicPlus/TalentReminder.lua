@@ -28,10 +28,16 @@ local function createSeasonInfo()
 		for spellID, data in pairs(section.spells) do
 			if data.mapID and data.cId then
 				for cId in pairs(data.cId) do
-					if cModeIDLookup[cId] and not addon.MythicPlus.variables.seasonMapHash[data.mapID] then
+					local mID
+					if type(data.mapID) == "table" then
+						mID = data.mapID[cId]
+					else
+						mID = data.mapID
+					end
+					if mID and cModeIDLookup[cId] and not addon.MythicPlus.variables.seasonMapHash[mID] then
 						local mapName = C_ChallengeMode.GetMapUIInfo(cId)
-						table.insert(addon.MythicPlus.variables.seasonMapInfo, { name = mapName, id = data.mapID })
-						addon.MythicPlus.variables.seasonMapHash[data.mapID] = true
+						table.insert(addon.MythicPlus.variables.seasonMapInfo, { name = mapName, id = mID })
+						addon.MythicPlus.variables.seasonMapHash[mID] = true
 					end
 				end
 			end
