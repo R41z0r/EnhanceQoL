@@ -5,6 +5,7 @@
 - **TWW S3 Catalyst Currency**
 - **Dungeon Teleports for TWW S3**
 - **Updated TOC for 11.2.0**
+- **Instant Catalyst button**
 
 ### 🐛 Fixed
 - Character frame reliably shows **Catalyst charges** again
