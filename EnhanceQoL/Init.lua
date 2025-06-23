@@ -509,7 +509,7 @@ addon.variables.unitRace = select(2, UnitRace("player"))
 addon.variables.unitName = select(1, UnitName("player"))
 
 addon.variables.requireReload = false
-addon.variables.catalystID = 3116 -- Change to get the actual cataclyst charges in char frame
+addon.variables.catalystID = nil -- Change to get the actual cataclyst charges in char frame
 addon.variables.durabilityIcon = 136241 -- Anvil Symbol
 addon.variables.durabilityCount = 0
 addon.variables.hookedOrderHall = false

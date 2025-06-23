@@ -902,7 +902,7 @@ hooksecurefunc("PaperDollFrame_SetItemLevel", function(statFrame, unit) UpdateIt
 
 local function setCharFrame()
 	UpdateItemLevel()
-	if addon.db["showCatalystChargesOnCharframe"] then
+	if addon.db["showCatalystChargesOnCharframe"] and addon.variables.catalystID then
 		local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
 		addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
 	end
@@ -2014,7 +2014,7 @@ local function addCharacterFrame(container)
 			type = "CheckBox",
 			callback = function(self, _, value)
 				addon.db["showCatalystChargesOnCharframe"] = value
-				if value then
+				if value and addon.variables.catalystID then
 					local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
 					addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
 					addon.general.iconFrame:Show()
@@ -3428,26 +3428,27 @@ local function initCharacter()
 	end
 
 	-- Add Cataclyst charges in char frame
-	local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
-	local iconID = cataclystInfo.iconFileID
+	if addon.variables.catalystID then
+		local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
+		local iconID = cataclystInfo.iconFileID
 
-	addon.general.iconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
-	addon.general.iconFrame:SetSize(32, 32)
-	addon.general.iconFrame:SetPoint("BOTTOMLEFT", PaperDollSidebarTab3, "BOTTOMRIGHT", 4, 0)
+		addon.general.iconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
+		addon.general.iconFrame:SetSize(32, 32)
+		addon.general.iconFrame:SetPoint("BOTTOMLEFT", PaperDollSidebarTab3, "BOTTOMRIGHT", 4, 0)
 
-	addon.general.iconFrame.icon = addon.general.iconFrame:CreateTexture(nil, "OVERLAY")
-	addon.general.iconFrame.icon:SetSize(32, 32)
-	addon.general.iconFrame.icon:SetPoint("CENTER", addon.general.iconFrame, "CENTER")
-	addon.general.iconFrame.icon:SetTexture(iconID)
+		addon.general.iconFrame.icon = addon.general.iconFrame:CreateTexture(nil, "OVERLAY")
+		addon.general.iconFrame.icon:SetSize(32, 32)
+		addon.general.iconFrame.icon:SetPoint("CENTER", addon.general.iconFrame, "CENTER")
+		addon.general.iconFrame.icon:SetTexture(iconID)
 
-	addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-	addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
-	addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
-	addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
-	addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
+		addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+		addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
+		addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+		addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
+		addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
 
-	if addon.db["showCatalystChargesOnCharframe"] == false then addon.general.iconFrame:Hide() end
-
+		if addon.db["showCatalystChargesOnCharframe"] == false then addon.general.iconFrame:Hide() end
+	end
 	-- add durability icon on charframe
 
 	addon.general.durabilityIconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
@@ -4062,6 +4063,7 @@ local eventHandlers = {
 			local profilesPage = AceDBOptions:GetOptionsTable(addon.dbObject)
 			AceConfig:RegisterOptionsTable("EQOL_Profiles", profilesPage)
 
+			addon.functions.catalystChecks()
 			loadMain()
 			EQOL.PersistSignUpNote()
 
@@ -4097,7 +4099,7 @@ local eventHandlers = {
 		end
 	end,
 	["CURRENCY_DISPLAY_UPDATE"] = function(arg1)
-		if arg1 == addon.variables.catalystID then
+		if arg1 == addon.variables.catalystID and addon.variables.catalystID then
 			local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
 			addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
 		end
@@ -4141,6 +4143,11 @@ local eventHandlers = {
 					if #options > 1 then
 						for _, v in pairs(options) do
 							if v.gossipOptionID and addon.db["autogossipID"][v.gossipOptionID] then C_GossipInfo.SelectOption(v.gossipOptionID) end
+							if v.flags == 1 then
+								-- 1 könnte "Quest abgabe" sein
+								C_GossipInfo.SelectOption(v.gossipOptionID)
+								return
+							end
 						end
 					elseif #options == 1 and options[1] and not gossipClicked[options[1].gossipOptionID] then
 						gossipClicked[options[1].gossipOptionID] = true

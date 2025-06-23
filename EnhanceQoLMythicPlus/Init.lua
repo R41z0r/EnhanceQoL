@@ -381,10 +381,11 @@ addon.MythicPlus.variables.portalCompendium = {
 		headline = EXPANSION_NAME10,
 		spells = {
 			[445269] = { text = "SV", cId = { [501] = true } },
-			[445416] = { text = "COT", cId = { [502] = true } },
-			[445414] = { text = "DAWN", cId = { [505] = true } },
-			[445417] = { text = "ARAK", cId = { [503] = true } },
+			[445416] = { text = "COT", cId = { [502] = true }, mapID = 2343 },
+			[445414] = { text = "DAWN", cId = { [505] = true }, mapID = 2359 },
+			[445417] = { text = "ARAK", cId = { [503] = true }, mapID = 2357 },
 			[1216786] = { text = "FLOOD", cId = { [525] = true }, mapID = 2773 },
+			[1237215] = { text = "ED", cId = { [542] = true } },
 			[445440] = { text = "BREW", cId = { [506] = true }, mapID = 2661 },
 			[445444] = { text = "PSF", cId = { [499] = true }, mapID = 2649 },
 			[445441] = { text = "DFC", cId = { [504] = true }, mapID = 2651 },
@@ -394,6 +395,7 @@ addon.MythicPlus.variables.portalCompendium = {
 			[446534] = { text = "DORN", isMagePortal = true },
 			[1226482] = { text = "LOU", isRaid = true },
 			[1223041] = { text = "HS", isItem = true, itemID = 234389, isRaid = true, icon = 3718248, map = 2406 },
+			[1239155] = { text = "MFO", isRaid = true },
 		},
 	},
 	[110] = {
@@ -423,12 +425,12 @@ addon.MythicPlus.variables.portalCompendium = {
 			[354462] = { text = "NW", cId = { [376] = true } },
 			[354463] = { text = "PF", cId = { [379] = true } },
 			[354464] = { text = "MISTS", cId = { [375] = true } },
-			[354465] = { text = "HOA", cId = { [378] = true } },
+			[354465] = { text = "HOA", cId = { [378] = true }, mapID = 1663 },
 			[354466] = { text = "SOA", cId = { [381] = true } },
 			[354467] = { text = "TOP", cId = { [382] = true }, mapID = 2293 },
 			[354468] = { text = "DOS", cId = { [377] = true } },
 			[354469] = { text = "SD", cId = { [380] = true } },
-			[367416] = { text = "TAZA", cId = { [391] = true, [392] = true } },
+			[367416] = { text = "TAZA", cId = { [391] = true, [392] = true }, mapID = 1989 },
 			[373190] = { text = "CN", isRaid = true }, -- Raids
 			[373192] = { text = "SFO", isRaid = true }, -- Raids
 			[373191] = { text = "SOD", isRaid = true }, -- Raids

@@ -22,6 +22,16 @@
             "problemMatcher": []
         },
         {
+            "label": "Build and Deploy Addon XPTR",
+            "type": "shell",
+            "command": "./scripts/buildXPTR.sh",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Build and Deploy Addon BigWigsPackager",
             "type": "shell",
             "command": "./.release/release.sh",

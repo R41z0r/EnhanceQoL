@@ -971,3 +971,19 @@ function addon.functions.registerWayCommand()
 	SLASH_EQOLWAY1 = "/way"
 	SlashCmdList["EQOLWAY"] = handleWayCommand
 end
+
+function addon.functions.catalystChecks()
+	local mId = C_MythicPlus.GetCurrentSeason()
+	if mId then
+		if mId == 14 then
+			-- TWW Season 2 - Essence of Kaja’mite
+			addon.variables.catalystID = 3116
+		elseif mId == 15 then
+			-- TWW Season 3 - Ethereal Voidsplinter
+			addon.variables.catalystID = 3269
+		elseif mId == -1 then
+			-- -1 == No Season or PTR
+			addon.variables.catalystID = 3269
+		end
+	end
+end

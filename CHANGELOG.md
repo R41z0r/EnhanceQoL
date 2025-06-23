@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.22.0] – 2025-06-23
+### ✨ Added  
+- **TWW S3 Catalyst Currency**
+- **Dungeon Teleports for TWW S3**
+- **Updated TOC for 11.2.0**
+
 ## [3.21.0] – 2025-06-17
 ### ✨ Added  
 - **Bag-Filter Reset**  
