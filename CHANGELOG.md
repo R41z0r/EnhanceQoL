@@ -1,10 +1,15 @@
 # Changelog
 
 ## [3.22.0] – 2025-06-23
-### ✨ Added  
+### ✨ Added
 - **TWW S3 Catalyst Currency**
 - **Dungeon Teleports for TWW S3**
 - **Updated TOC for 11.2.0**
+
+### 🐛 Fixed
+- Character frame reliably shows **Catalyst charges** again
+- Mega-dungeon teleports work for **both halves** of split dungeons
+- Fixed errors when visiting merchants that sell items for **currency**
 
 ## [3.21.0] – 2025-06-17
 ### ✨ Added  
