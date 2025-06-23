@@ -4086,6 +4086,11 @@ local eventHandlers = {
 
 			checkBagIgnoreJunk()
 		end
+		if arg1 == "Blizzard_ItemInteractionUI" then
+			if addon.db["instantCatalystEnabled"] then
+
+			end
+		end
 	end,
 	--@debug@
 	["BAG_UPDATE_DELAYED"] = function(arg1)
@@ -4182,6 +4187,15 @@ local eventHandlers = {
 	end,
 	["INSPECT_READY"] = function(arg1)
 		if addon.db["showInfoOnInspectFrame"] then onInspect(arg1) end
+	end,
+	["ITEM_INTERACTION_ITEM_SELECTION_UPDATED"] = function(arg1)
+		if not ItemInteractionFrame:IsShown() then return end
+		if not EnhanceQoLInstantCatalyst then return end
+		if arg1 == nil then
+			-- disable my own button
+		else
+			-- enable my own button
+		end
 	end,
 	["INVENTORY_SEARCH_UPDATE"] = function()
 		if addon.db["showBagFilterMenu"] then
