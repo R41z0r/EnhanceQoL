@@ -2404,70 +2404,69 @@ local function updateMerchantButtonInfo()
 			local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
 			local itemLink = GetMerchantItemLink(itemIndex)
 
-			if itemLink and itemButton then
-				local eItem = Item:CreateFromItemLink(itemLink)
-				eItem:ContinueOnItemLoad(function()
-					-- local itemName, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
-					local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
+			if itemButton then
+				if itemLink and itemLink:find("item:") then
+					local eItem = Item:CreateFromItemLink(itemLink)
+					eItem:ContinueOnItemLoad(function()
+						-- local itemName, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
+						local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
 
-					if
-						(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
-					then
-						local link = eItem:GetItemLink()
-						local invSlot = select(4, C_Item.GetItemInfoInstant(link))
-						if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+						if
+							(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
+						then
+							local link = eItem:GetItemLink()
+							local invSlot = select(4, C_Item.GetItemInfoInstant(link))
+							if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
 
-						if not itemButton.ItemLevelText then
-							itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-							itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
-							itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
-							itemButton.ItemLevelText:SetShadowOffset(1, -1)
-							itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
-						end
+							if not itemButton.ItemLevelText then
+								itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+								itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
+								itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
+								itemButton.ItemLevelText:SetShadowOffset(1, -1)
+								itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+							end
 
-						local color = eItem:GetItemQualityColor()
-						itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
-						itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
-						itemButton.ItemLevelText:Show()
-						local bType
+							local color = eItem:GetItemQualityColor()
+							itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
+							itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+							itemButton.ItemLevelText:Show()
+							local bType
 
-						if addon.db["showBindOnBagItems"] then
-							local data = C_TooltipInfo.GetMerchantItem(itemIndex)
-							for i, v in pairs(data.lines) do
-								if v.type == 20 then
-									if v.leftText == ITEM_BIND_ON_EQUIP then
-										bType = "BoE"
-									elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
-										bType = "WuE"
-									elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
-										bType = "WB"
+							if addon.db["showBindOnBagItems"] then
+								local data = C_TooltipInfo.GetMerchantItem(itemIndex)
+								for i, v in pairs(data.lines) do
+									if v.type == 20 then
+										if v.leftText == ITEM_BIND_ON_EQUIP then
+											bType = "BoE"
+										elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+											bType = "WuE"
+										elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+											bType = "WB"
+										end
+										break
 									end
-									break
 								end
 							end
-						end
-						if bType then
-							if not itemButton.ItemBoundType then
-								itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
-								itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
-								itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+							if bType then
+								if not itemButton.ItemBoundType then
+									itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
+									itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
+									itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
-								itemButton.ItemBoundType:SetShadowOffset(2, 2)
-								itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+									itemButton.ItemBoundType:SetShadowOffset(2, 2)
+									itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+								end
+								itemButton.ItemBoundType:SetFormattedText(bType)
+								itemButton.ItemBoundType:Show()
+							elseif itemButton.ItemBoundType then
+								itemButton.ItemBoundType:Hide()
 							end
-							itemButton.ItemBoundType:SetFormattedText(bType)
-							itemButton.ItemBoundType:Show()
-						elseif itemButton.ItemBoundType then
-							itemButton.ItemBoundType:Hide()
 						end
-					elseif itemButton and itemButton.ItemLevelText then
-						if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-						itemButton.ItemLevelText:Hide()
-					end
-				end)
-			elseif itemButton and itemButton.ItemLevelText then
-				if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-				itemButton.ItemLevelText:Hide()
+					end)
+				else
+					if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+					if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+				end
 			end
 		end
 	end
