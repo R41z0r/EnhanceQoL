@@ -2214,6 +2214,15 @@ local function addMiscFrame(container, d)
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["autoQuickLoot"] = value end,
 		},
+		{
+			parent = "",
+			var = "instantCatalystEnabled",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["instantCatalystEnabled"] = value
+				addon.functions.toggleInstantCatalystButton(value)
+			end,
+		},
 	}
 
 	addon.functions.createWrapperData(data, container, L)
@@ -2624,6 +2633,7 @@ local function initMisc()
 	addon.functions.InitDBValue("hideMinimapButton", false)
 	addon.functions.InitDBValue("hideBagsBar", false)
 	addon.functions.InitDBValue("hideMicroMenu", false)
+	addon.functions.InitDBValue("instantCatalystEnabled", false)
 	--@debug@
 	addon.functions.InitDBValue("automaticallyOpenContainer", false)
 	--@end-debug@
@@ -3423,6 +3433,40 @@ function addon.functions.createCatalystFrame()
 	end
 end
 
+function addon.functions.createInstantCatalystButton()
+	if not ItemInteractionFrame or EnhanceQoLInstantCatalyst then return end
+
+	local parent = ItemInteractionFrame.ButtonFrame or ItemInteractionFrame
+	local anchor = parent and (parent.AcceptButton or parent.ActionButton)
+
+	local button = CreateFrame("Button", "EnhanceQoLInstantCatalyst", parent, "UIPanelButtonTemplate")
+	button:SetSize(120, 22)
+	button:SetText("Instant")
+	button:SetEnabled(false)
+
+	if anchor then
+		button:SetPoint("LEFT", anchor, "RIGHT", 4, 0)
+	else
+		button:SetPoint("BOTTOM", parent, "BOTTOM", 0, 4)
+	end
+
+	button:SetScript("OnClick", function() C_ItemInteraction.PerformItemInteraction() end)
+
+	ItemInteractionFrame:HookScript("OnShow", function() button:SetEnabled(false) end)
+end
+
+function addon.functions.toggleInstantCatalystButton(value)
+	if not IsAddOnLoaded("Blizzard_ItemInteractionUI") then return end
+	if not ItemInteractionFrame then return end
+
+	if value then
+		if not EnhanceQoLInstantCatalyst then addon.functions.createInstantCatalystButton() end
+		if EnhanceQoLInstantCatalyst then EnhanceQoLInstantCatalyst:Show() end
+	elseif EnhanceQoLInstantCatalyst then
+		EnhanceQoLInstantCatalyst:Hide()
+	end
+end
+
 local function initCharacter()
 	addon.functions.InitDBValue("showIlvlOnBankFrame", false)
 	addon.functions.InitDBValue("showIlvlOnMerchantframe", false)
@@ -4086,11 +4130,7 @@ local eventHandlers = {
 
 			checkBagIgnoreJunk()
 		end
-		if arg1 == "Blizzard_ItemInteractionUI" then
-			if addon.db["instantCatalystEnabled"] then
-
-			end
-		end
+		if arg1 == "Blizzard_ItemInteractionUI" then addon.functions.toggleInstantCatalystButton(addon.db["instantCatalystEnabled"]) end
 	end,
 	--@debug@
 	["BAG_UPDATE_DELAYED"] = function(arg1)
@@ -4192,9 +4232,9 @@ local eventHandlers = {
 		if not ItemInteractionFrame:IsShown() then return end
 		if not EnhanceQoLInstantCatalyst then return end
 		if arg1 == nil then
-			-- disable my own button
+			EnhanceQoLInstantCatalyst:SetEnabled(false)
 		else
-			-- enable my own button
+			EnhanceQoLInstantCatalyst:SetEnabled(true)
 		end
 	end,
 	["INVENTORY_SEARCH_UPDATE"] = function()

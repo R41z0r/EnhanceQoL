@@ -95,6 +95,7 @@ Each action bar can be set to appear only on mouseover:
 - **Automatically confirm to sell tradeable loot** (Automatically confirm to sell tradeable loot within the trade window time frame).
 - **Open the character frame when upgrading items at the vendor** (Open the character frame when upgrading items at the vendor).
 - **Quick loot items** (Quick loot items).
+- **Instant Catalyst button** (Instant Catalyst button).
 
 ## Map Tools
 - **Enable /way command** (Enable /way command): provides a simple waypoint command if no other addon uses /way.
