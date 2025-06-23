@@ -981,9 +981,7 @@ function addon.functions.catalystChecks()
 		elseif mId == 15 then
 			-- TWW Season 3 - Ethereal Voidsplinter
 			addon.variables.catalystID = 3269
-		elseif mId == -1 then
-			-- -1 == No Season or PTR
-			addon.variables.catalystID = 3269
 		end
 	end
+	addon.functions.createCatalystFrame()
 end

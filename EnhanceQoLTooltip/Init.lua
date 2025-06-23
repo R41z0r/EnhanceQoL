@@ -78,6 +78,7 @@ addon.Tooltip.variables.kindsByID = {
 }
 
 addon.Tooltip.variables.challengeMapID = {
+	[542] = "ED",
 	[501] = "SV",
 	[502] = "COT",
 	[505] = "DAWN",
@@ -105,8 +106,8 @@ addon.Tooltip.variables.challengeMapID = {
 	[382] = "TOP",
 	[377] = "DOS",
 	[380] = "SD",
-	[391] = "TAZA",
-	[392] = "TAZA",
+	[391] = "STREET",
+	[392] = "GAMBIT",
 	[245] = "FH",
 	[251] = "UR",
 	[369] = "WORK",

@@ -902,7 +902,8 @@ hooksecurefunc("PaperDollFrame_SetItemLevel", function(statFrame, unit) UpdateIt
 
 local function setCharFrame()
 	UpdateItemLevel()
-	if addon.db["showCatalystChargesOnCharframe"] and addon.variables.catalystID then
+	if not addon.general.iconFrame then addon.functions.catalystChecks() end
+	if addon.db["showCatalystChargesOnCharframe"] and addon.variables.catalystID and addon.general.iconFrame then
 		local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
 		addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
 	end
@@ -3396,6 +3397,32 @@ local function initUI()
 	if addon.db["enableLootspecQuickswitch"] then addon.functions.createLootspecFrame() end
 end
 
+function addon.functions.createCatalystFrame()
+	if addon.variables.catalystID then
+		if addon.general.iconFrame then return end
+		local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
+		if cataclystInfo then
+			local iconID = cataclystInfo.iconFileID
+
+			addon.general.iconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
+			addon.general.iconFrame:SetSize(32, 32)
+			addon.general.iconFrame:SetPoint("BOTTOMLEFT", PaperDollSidebarTab3, "BOTTOMRIGHT", 4, 0)
+
+			addon.general.iconFrame.icon = addon.general.iconFrame:CreateTexture(nil, "OVERLAY")
+			addon.general.iconFrame.icon:SetSize(32, 32)
+			addon.general.iconFrame.icon:SetPoint("CENTER", addon.general.iconFrame, "CENTER")
+			addon.general.iconFrame.icon:SetTexture(iconID)
+
+			addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+			addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
+			addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
+			addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
+			addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
+			if addon.db["showCatalystChargesOnCharframe"] == false then addon.general.iconFrame:Hide() end
+		end
+	end
+end
+
 local function initCharacter()
 	addon.functions.InitDBValue("showIlvlOnBankFrame", false)
 	addon.functions.InitDBValue("showIlvlOnMerchantframe", false)
@@ -3427,27 +3454,7 @@ local function initCharacter()
 	end
 
 	-- Add Cataclyst charges in char frame
-	if addon.variables.catalystID then
-		local cataclystInfo = C_CurrencyInfo.GetCurrencyInfo(addon.variables.catalystID)
-		local iconID = cataclystInfo.iconFileID
-
-		addon.general.iconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
-		addon.general.iconFrame:SetSize(32, 32)
-		addon.general.iconFrame:SetPoint("BOTTOMLEFT", PaperDollSidebarTab3, "BOTTOMRIGHT", 4, 0)
-
-		addon.general.iconFrame.icon = addon.general.iconFrame:CreateTexture(nil, "OVERLAY")
-		addon.general.iconFrame.icon:SetSize(32, 32)
-		addon.general.iconFrame.icon:SetPoint("CENTER", addon.general.iconFrame, "CENTER")
-		addon.general.iconFrame.icon:SetTexture(iconID)
-
-		addon.general.iconFrame.count = addon.general.iconFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-		addon.general.iconFrame.count:SetPoint("BOTTOMRIGHT", addon.general.iconFrame, "BOTTOMRIGHT", 1, 2)
-		addon.general.iconFrame.count:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
-		addon.general.iconFrame.count:SetText(cataclystInfo.quantity)
-		addon.general.iconFrame.count:SetTextColor(1, 0.82, 0)
-
-		if addon.db["showCatalystChargesOnCharframe"] == false then addon.general.iconFrame:Hide() end
-	end
+	addon.functions.createCatalystFrame()
 	-- add durability icon on charframe
 
 	addon.general.durabilityIconFrame = CreateFrame("Button", nil, PaperDollFrame, "BackdropTemplate")
@@ -4062,7 +4069,6 @@ local eventHandlers = {
 			local profilesPage = AceDBOptions:GetOptionsTable(addon.dbObject)
 			AceConfig:RegisterOptionsTable("EQOL_Profiles", profilesPage)
 
-			addon.functions.catalystChecks()
 			loadMain()
 			EQOL.PersistSignUpNote()
 

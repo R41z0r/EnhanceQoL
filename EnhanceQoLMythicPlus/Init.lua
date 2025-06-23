@@ -430,14 +430,10 @@ addon.MythicPlus.variables.portalCompendium = {
 			[354467] = { text = "TOP", cId = { [382] = true }, mapID = 2293 },
 			[354468] = { text = "DOS", cId = { [377] = true } },
 			[354469] = { text = "SD", cId = { [380] = true } },
-			-- Tazavesh was split into two seperate instances. Both halves
-			-- share the same teleport spell but have different mapIDs.  To
-			-- support this the mapID entry can now contain a table with the
-			-- cId as key and the associated instance mapID as value.
 			[367416] = {
 				text = "TAZA",
 				cId = { [391] = true, [392] = true },
-				mapID = { [391] = 2441, [392] = 2442 },
+				mapID = { [391] = 1989, [392] = 1990 },
 			},
 			[373190] = { text = "CN", isRaid = true }, -- Raids
 			[373192] = { text = "SFO", isRaid = true }, -- Raids
