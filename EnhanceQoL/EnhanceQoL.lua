@@ -2214,6 +2214,15 @@ local function addMiscFrame(container, d)
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["autoQuickLoot"] = value end,
 		},
+		{
+			parent = "",
+			var = "instantCatalystEnabled",
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["instantCatalystEnabled"] = value
+				addon.functions.toggleInstantCatalystButton(value)
+			end,
+		},
 	}
 
 	addon.functions.createWrapperData(data, container, L)
@@ -2624,6 +2633,7 @@ local function initMisc()
 	addon.functions.InitDBValue("hideMinimapButton", false)
 	addon.functions.InitDBValue("hideBagsBar", false)
 	addon.functions.InitDBValue("hideMicroMenu", false)
+	addon.functions.InitDBValue("instantCatalystEnabled", false)
 	--@debug@
 	addon.functions.InitDBValue("automaticallyOpenContainer", false)
 	--@end-debug@
@@ -3423,6 +3433,66 @@ function addon.functions.createCatalystFrame()
 	end
 end
 
+function addon.functions.createInstantCatalystButton()
+	if not ItemInteractionFrame or EnhanceQoLInstantCatalyst then return end
+
+	local parent = ItemInteractionFrame.ButtonFrame or ItemInteractionFrame
+	local anchor = ItemInteractionFrame.TopTileStreaks
+
+	local button = CreateFrame("Button", "EnhanceQoLInstantCatalyst", parent, "BackdropTemplate")
+	button:SetSize(32, 32)
+	button:SetEnabled(false)
+
+	local icon = button:CreateTexture(nil, "ARTWORK")
+	icon:SetAllPoints(button)
+	icon:SetTexture("Interface\\AddOns\\EnhanceQoL\\Icons\\InstantCatalyst.tga")
+	button.icon = icon
+
+	button:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:ClearLines()
+		GameTooltip:AddLine(L["Instant Catalyst"])
+		GameTooltip:Show()
+	end)
+	button:SetScript("OnLeave", function(self) GameTooltip:Hide() end)
+
+	if anchor then
+		button:SetPoint("RIGHT", anchor, "RIGHT", -2, 0)
+	else
+		button:SetPoint("BOTTOM", parent, "BOTTOM", 0, 4)
+	end
+
+	button:SetScript("OnClick", function() C_ItemInteraction.PerformItemInteraction() end)
+
+	ItemInteractionFrame:HookScript("OnShow", function()
+		button:SetEnabled(false)
+		button.icon:SetDesaturated(true)
+	end)
+end
+
+function addon.functions.toggleInstantCatalystButton(value)
+	if not C_AddOns.IsAddOnLoaded("Blizzard_ItemInteractionUI") then return end
+	if not ItemInteractionFrame then return end
+
+	if value then
+		if not EnhanceQoLInstantCatalyst then addon.functions.createInstantCatalystButton() end
+		if EnhanceQoLInstantCatalyst then
+			EnhanceQoLInstantCatalyst:Show()
+			if ItemInteractionFrame:IsShown() then
+				if not ItemInteractionFrame.ButtonFrame.ActionButton:IsEnabled() then
+					EnhanceQoLInstantCatalyst:SetEnabled(false)
+					EnhanceQoLInstantCatalyst.icon:SetDesaturated(true)
+				else
+					EnhanceQoLInstantCatalyst:SetEnabled(true)
+					EnhanceQoLInstantCatalyst.icon:SetDesaturated(false)
+				end
+			end
+		end
+	elseif EnhanceQoLInstantCatalyst then
+		EnhanceQoLInstantCatalyst:Hide()
+	end
+end
+
 local function initCharacter()
 	addon.functions.InitDBValue("showIlvlOnBankFrame", false)
 	addon.functions.InitDBValue("showIlvlOnMerchantframe", false)
@@ -4086,11 +4156,7 @@ local eventHandlers = {
 
 			checkBagIgnoreJunk()
 		end
-		if arg1 == "Blizzard_ItemInteractionUI" then
-			if addon.db["instantCatalystEnabled"] then
-
-			end
-		end
+		if arg1 == "Blizzard_ItemInteractionUI" then addon.functions.toggleInstantCatalystButton(addon.db["instantCatalystEnabled"]) end
 	end,
 	--@debug@
 	["BAG_UPDATE_DELAYED"] = function(arg1)
@@ -4191,10 +4257,25 @@ local eventHandlers = {
 	["ITEM_INTERACTION_ITEM_SELECTION_UPDATED"] = function(arg1)
 		if not ItemInteractionFrame:IsShown() then return end
 		if not EnhanceQoLInstantCatalyst then return end
-		if arg1 == nil then
-			-- disable my own button
-		else
-			-- enable my own button
+		EnhanceQoLInstantCatalyst:SetEnabled(false)
+		EnhanceQoLInstantCatalyst.icon:SetDesaturated(true)
+		if arg1 ~= nil then
+			local item
+			if arg1.bagID and arg1.slotIndex then
+				item = ItemLocation:CreateFromBagAndSlot(arg1.bagID, arg1.slotIndex)
+			elseif arg1.equipmentSlotIndex then
+				item = ItemLocation:CreateFromEquipmentSlot(arg1.equipmentSlotIndex)
+			end
+			if not item then return end
+			local conversionCost = C_ItemInteraction.GetItemConversionCurrencyCost(item)
+			if not conversionCost then return end
+			if conversionCost.amount > 0 and conversionCost.currencyID ~= 0 then
+				local cInfo = C_CurrencyInfo.GetCurrencyInfo(conversionCost.currencyID)
+				if not cInfo then return end
+				if cInfo.quantity == 0 then return end
+			end
+			EnhanceQoLInstantCatalyst:SetEnabled(true)
+			EnhanceQoLInstantCatalyst.icon:SetDesaturated(false)
 		end
 	end,
 	["INVENTORY_SEARCH_UPDATE"] = function()

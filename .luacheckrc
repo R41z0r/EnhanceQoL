@@ -126,6 +126,8 @@ globals = {
 	"ObjectiveTrackerAnimLineState",
 	"ContainerFrameContainer",
 	"ContainerFrame1",
+	"EnhanceQoLInstantCatalyst",
+	"ItemInteractionFrame",
 	"DungeonTeleportFrame",
 	"ContainerFrameCombinedBags",
 	"COMMUNITY_MEMBER_ROLE_NAME_LEADER",
