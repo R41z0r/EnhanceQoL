@@ -132,6 +132,7 @@ globals = {
 	"ContainerFrameCombinedBags",
 	"COMMUNITY_MEMBER_ROLE_NAME_LEADER",
 	"PaperDollSidebarTab3",
+	"C_ItemInteraction",
 	"MonkHarmonyBarFrame",
 	"C_CooldownViewer",
 	"EssentialCooldownViewer",
