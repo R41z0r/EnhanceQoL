@@ -94,6 +94,7 @@ L["ignoreWarbandCompleted"] = "Don't automatically handle %s %s"
 L["autoQuickLoot"] = "Quick loot items"
 L["openCharframeOnUpgrade"] = "Open the character frame when upgrading items at the vendor"
 L["instantCatalystEnabled"] = "Instant Catalyst button"
+L["Instant Catalyst"] = "Instant Catalyst"
 
 L["headerClassInfo"] = "These settings only apply to %s"
 
