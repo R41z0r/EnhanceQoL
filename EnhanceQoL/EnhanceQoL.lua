@@ -4255,7 +4255,7 @@ local eventHandlers = {
 		if addon.db["showInfoOnInspectFrame"] then onInspect(arg1) end
 	end,
 	["ITEM_INTERACTION_ITEM_SELECTION_UPDATED"] = function(arg1)
-		if not ItemInteractionFrame:IsShown() then return end
+		if not ItemInteractionFrame or not ItemInteractionFrame:IsShown() then return end
 		if not EnhanceQoLInstantCatalyst then return end
 		EnhanceQoLInstantCatalyst:SetEnabled(false)
 		EnhanceQoLInstantCatalyst.icon:SetDesaturated(true)

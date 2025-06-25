@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.22.1] – 2025-06-25
+### 🐛 Fixed
+- There was a rare LUA error when joining instances and hover over currencies
+- Upgrading Items sometimes result in a LUA error when **Instant Catalyst** was enabled
+
 ## [3.22.0] – 2025-06-24
 ### ✨ Added
 - **TWW S3 Catalyst Currency**
