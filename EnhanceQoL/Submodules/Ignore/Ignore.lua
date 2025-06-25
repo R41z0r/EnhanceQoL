@@ -234,8 +234,16 @@ removeEntryByIndex = function(index)
 end
 
 local function removeEntry(name)
-	if origDelIgnore then origDelIgnore(name) end
-	local player, server = strsplit("-", name)
+        if origDelIgnore then
+                local ignored
+                if C_FriendList and C_FriendList.IsIgnored then
+                        ignored = C_FriendList.IsIgnored(name)
+                elseif IsIgnored then
+                        ignored = IsIgnored(name)
+                end
+                if ignored then origDelIgnore(name) end
+        end
+        local player, server = strsplit("-", name)
 	for i, entry in ipairs(Ignore.entries) do
 		if entry.player == player and entry.server == (server or "") then
 			table.remove(Ignore.entries, i)
