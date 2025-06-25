@@ -13,6 +13,7 @@ addon.Ignore = Ignore
 Ignore.entries = Ignore.entries or {}
 Ignore.selectedIndex = nil
 Ignore.rows = {}
+Ignore.searchText = Ignore.searchText or ""
 
 local widths = { 120, 120, 70, 90, 90, 150 }
 local titles = { "Player Name", "Server Name", "Date", "Expires", "Note" }
@@ -27,9 +28,12 @@ end
 local function refreshList()
 	if not Ignore.scrollFrame then return end
 	Ignore.scrollFrame:ReleaseChildren()
-	wipe(Ignore.rows)
+        wipe(Ignore.rows)
 
-	local header = AceGUI:Create("SimpleGroup")
+        local search = Ignore.searchText and Ignore.searchText:lower() or ""
+        local filtering = search ~= ""
+
+        local header = AceGUI:Create("SimpleGroup")
 	header:SetFullWidth(true)
 	header:SetLayout("Flow")
 	for i, col in ipairs(titles) do
@@ -40,8 +44,14 @@ local function refreshList()
 	end
 	Ignore.scrollFrame:AddChild(header)
 
-	for idx, data in ipairs(Ignore.entries) do
-		local row = AceGUI:Create("SimpleGroup")
+        for idx, data in ipairs(Ignore.entries) do
+                if
+                        not filtering
+                        or (data.player and data.player:lower():find(search, 1, true))
+                        or (data.server and data.server:lower():find(search, 1, true))
+                        or (data.note and data.note:lower():find(search, 1, true))
+                then
+                        local row = AceGUI:Create("SimpleGroup")
 		row:SetFullWidth(true)
 		row:SetLayout("Flow")
 		row.index = idx
@@ -86,10 +96,11 @@ local function refreshList()
 			lbl:SetWidth(widths[i])
 			row:AddChild(lbl)
 		end
-		Ignore.rows[idx] = row
-		Ignore.scrollFrame:AddChild(row)
-	end
-	updateCounter()
+                Ignore.rows[idx] = row
+                Ignore.scrollFrame:AddChild(row)
+                end
+        end
+        updateCounter()
 end
 
 function Ignore:CreateUI()
@@ -99,10 +110,14 @@ function Ignore:CreateUI()
 	frame:SetWidth(650)
 	frame:SetHeight(400)
 	frame:SetLayout("List")
-	frame:SetCallback("OnClose", function(widget)
-		AceGUI:Release(widget)
-		self.window = nil
-	end)
+        frame:SetCallback("OnClose", function(widget)
+                AceGUI:Release(widget)
+                if self.searchBox then
+                        AceGUI:Release(self.searchBox)
+                        self.searchBox = nil
+                end
+                self.window = nil
+        end)
 
 	local spacer = AceGUI:Create("Label")
 	spacer:SetText(" ")
@@ -114,7 +129,20 @@ function Ignore:CreateUI()
 	counter:SetText("Entries: 0")
 	counter:SetFullWidth(true)
 	frame:AddChild(counter)
-	self.counter = counter
+        self.counter = counter
+
+        local search = AceGUI:Create("EditBox")
+        search:SetWidth(150)
+        search:DisableButton(true)
+        search.frame:SetParent(frame.frame)
+        search.frame:ClearAllPoints()
+        search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
+        search:SetCallback("OnTextChanged", function(_, _, text)
+                Ignore.searchText = text or ""
+                Ignore.selectedIndex = nil
+                refreshList()
+        end)
+        self.searchBox = search
 
 	local scroll = AceGUI:Create("ScrollFrame")
 	scroll:SetLayout("List")
