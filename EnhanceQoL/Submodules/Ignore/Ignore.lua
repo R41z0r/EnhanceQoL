@@ -18,6 +18,7 @@ local widths = { 120, 120, 70, 90, 90, 150 }
 local titles = { "Player Name", "Server Name", "Date", "Expires", "Note" }
 
 local removeEntryByIndex
+local DOUBLE_CLICK_TIME = 0.5
 
 local function updateCounter()
 	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.entries) end
@@ -25,8 +26,8 @@ end
 
 local function refreshList()
 	if not Ignore.scrollFrame then return end
-        Ignore.scrollFrame:ReleaseChildren()
-        wipe(Ignore.rows)
+	Ignore.scrollFrame:ReleaseChildren()
+	wipe(Ignore.rows)
 
 	local header = AceGUI:Create("SimpleGroup")
 	header:SetFullWidth(true)
@@ -39,29 +40,39 @@ local function refreshList()
 	end
 	Ignore.scrollFrame:AddChild(header)
 
-        for idx, data in ipairs(Ignore.entries) do
-                local row = AceGUI:Create("SimpleGroup")
-                row:SetFullWidth(true)
-                row:SetLayout("Flow")
-                row.index = idx
-                row.frame:EnableMouse(true)
-                local bg = row.frame:CreateTexture(nil, "BACKGROUND")
-                bg:SetAllPoints(row.frame)
-                row.bg = bg
-                if idx == Ignore.selectedIndex then
-                        bg:SetColorTexture(1, 1, 0, 0.3)
-                else
-                        bg:SetColorTexture(0, 0, 0, 0)
-                end
-                row.frame:SetScript("OnMouseDown", function(frame)
-                        local widget = frame.obj
-                        if Ignore.selectedIndex and Ignore.rows[Ignore.selectedIndex] then
-                                local prev = Ignore.rows[Ignore.selectedIndex]
-                                if prev.bg then prev.bg:SetColorTexture(0, 0, 0, 0) end
-                        end
-                        Ignore.selectedIndex = widget.index
-                        widget.bg:SetColorTexture(1, 1, 0, 0.3)
-                end)
+	for idx, data in ipairs(Ignore.entries) do
+		local row = AceGUI:Create("SimpleGroup")
+		row:SetFullWidth(true)
+		row:SetLayout("Flow")
+		row.index = idx
+		row.frame:EnableMouse(true)
+		local bg = row.frame:CreateTexture(nil, "BACKGROUND")
+		bg:SetAllPoints(row.frame)
+		row.bg = bg
+		if idx == Ignore.selectedIndex then
+			bg:SetColorTexture(1, 1, 0, 0.3)
+		else
+			bg:SetColorTexture(0, 0, 0, 0)
+		end
+		row.frame:SetScript("OnMouseDown", function(frame)
+			local widget = frame.obj
+			if Ignore.selectedIndex and Ignore.rows[Ignore.selectedIndex] then
+				local prev = Ignore.rows[Ignore.selectedIndex]
+				if prev.bg then prev.bg:SetColorTexture(0, 0, 0, 0) end
+			end
+			Ignore.selectedIndex = widget.index
+			widget.bg:SetColorTexture(1, 1, 0, 0.3)
+
+			local now = GetTime()
+			if widget.lastClick and (now - widget.lastClick) < DOUBLE_CLICK_TIME then
+				local entry = Ignore.entries[widget.index]
+				if entry then
+					local fullName = entry.player .. "-" .. entry.server
+					StaticPopup_Show("EQOL_ADD_IGNORE", nil, nil, fullName)
+				end
+			end
+			widget.lastClick = now
+		end)
 		local values = {
 			data.player or "",
 			data.server or "",
@@ -69,15 +80,15 @@ local function refreshList()
 			data.expires or "",
 			data.note or "",
 		}
-                for i, val in ipairs(values) do
-                        local lbl = AceGUI:Create("Label")
-                        lbl:SetText(val)
-                        lbl:SetWidth(widths[i])
-                        row:AddChild(lbl)
-                end
-                Ignore.rows[idx] = row
-                Ignore.scrollFrame:AddChild(row)
-        end
+		for i, val in ipairs(values) do
+			local lbl = AceGUI:Create("Label")
+			lbl:SetText(val)
+			lbl:SetWidth(widths[i])
+			row:AddChild(lbl)
+		end
+		Ignore.rows[idx] = row
+		Ignore.scrollFrame:AddChild(row)
+	end
 	updateCounter()
 end
 
@@ -112,16 +123,16 @@ function Ignore:CreateUI()
 	frame:AddChild(scroll)
 	self.scrollFrame = scroll
 
-        local remove = AceGUI:Create("Button")
-        remove:SetText("Remove")
-        remove:SetWidth(120)
-        remove:SetCallback("OnClick", function()
-                if Ignore.selectedIndex then
-                        removeEntryByIndex(Ignore.selectedIndex)
-                        Ignore.selectedIndex = nil
-                end
-        end)
-        frame:AddChild(remove)
+	local remove = AceGUI:Create("Button")
+	remove:SetText("Remove")
+	remove:SetWidth(120)
+	remove:SetCallback("OnClick", function()
+		if Ignore.selectedIndex then
+			removeEntryByIndex(Ignore.selectedIndex)
+			Ignore.selectedIndex = nil
+		end
+	end)
+	frame:AddChild(remove)
 
 	self.window = frame
 	refreshList()
@@ -145,32 +156,32 @@ local origDelIgnoreByIndex = C_FriendList and C_FriendList.DelIgnoreByIndex
 local origDelIgnore = C_FriendList and C_FriendList.DelIgnore
 
 local function addEntry(name, note, expires)
-    local player, server = strsplit("-", name)
-    player = player or name
-    server = server or (GetRealmName()):gsub("%s", "")
-    for _, entry in ipairs(Ignore.entries) do
-        if entry.player == player and entry.server == server then
-            entry.note = note or entry.note
-            entry.expires = expires or entry.expires
-            refreshList()
-            return
-        end
-    end
-    if origAddIgnore then origAddIgnore(name) end
-    table.insert(Ignore.entries, {
-        player = player,
-        server = server,
-        date = date("%Y-%m-%d"),
-        expires = expires or "NEVER",
-        note = note or "",
-    })
-    refreshList()
+	local player, server = strsplit("-", name)
+	player = player or name
+	server = server or (GetRealmName()):gsub("%s", "")
+	for _, entry in ipairs(Ignore.entries) do
+		if entry.player == player and entry.server == server then
+			entry.note = note or entry.note
+			entry.expires = expires or entry.expires
+			refreshList()
+			return
+		end
+	end
+	if origAddIgnore then origAddIgnore(name) end
+	table.insert(Ignore.entries, {
+		player = player,
+		server = server,
+		date = date("%Y-%m-%d"),
+		expires = expires or "NEVER",
+		note = note or "",
+	})
+	refreshList()
 end
 
 removeEntryByIndex = function(index)
-        if origDelIgnoreByIndex then origDelIgnoreByIndex(index) end
-        table.remove(Ignore.entries, index)
-        refreshList()
+	if origDelIgnoreByIndex then origDelIgnoreByIndex(index) end
+	table.remove(Ignore.entries, index)
+	refreshList()
 end
 
 local function removeEntry(name)
@@ -186,20 +197,20 @@ local function removeEntry(name)
 end
 
 local function addOrRemove(name)
-    local player, server = strsplit("-", name)
-    player = player or name
-    server = server or (GetRealmName()):gsub("%s", "")
-    for _, entry in ipairs(Ignore.entries) do
-        if entry.player == player and entry.server == server then
-            removeEntry(name)
-            return
-        end
-    end
-    if C_FriendList and C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) then
-        removeEntry(name)
-    else
-        C_FriendList.AddIgnore(name)
-    end
+	local player, server = strsplit("-", name)
+	player = player or name
+	server = server or (GetRealmName()):gsub("%s", "")
+	for _, entry in ipairs(Ignore.entries) do
+		if entry.player == player and entry.server == server then
+			removeEntry(name)
+			return
+		end
+	end
+	if C_FriendList and C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) then
+		removeEntry(name)
+	else
+		C_FriendList.AddIgnore(name)
+	end
 end
 
 StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
@@ -212,14 +223,36 @@ StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
 	whileDead = true,
 	hideOnEscape = true,
 	preferredIndex = 3,
-	OnShow = function(self, name)
+	OnShow = function(self, data)
 		self:SetWidth(420)
 		self:SetHeight(220)
 		self.editBox:SetMultiLine(true)
 		self.editBox:SetHeight(80)
-		self.editBox:SetText("")
 		self.editBox:SetFocus()
+
+		local name, note, expires
+		if type(data) == "table" then
+			name = data.name
+			note = data.note
+			expires = data.expires
+		else
+			name = data
+			if name then
+				local player, server = strsplit("-", name)
+				player = player or name
+				server = server or (GetRealmName()):gsub("%s", "")
+				for _, entry in ipairs(Ignore.entries) do
+					if entry.player == player and entry.server == server then
+						note = entry.note
+						expires = entry.expires
+						break
+					end
+				end
+			end
+		end
+
 		if name then self.text:SetFormattedText("Add %s to enhanced ignore list?", "|cffffd200" .. name .. "|r") end
+		self.editBox:SetText(note or "")
 		if not self.expCheck then
 			local check = CreateFrame("CheckButton", nil, self, "ChatConfigCheckButtonTemplate")
 			check:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
@@ -243,12 +276,19 @@ StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
 		end
 		self.expCheck:ClearAllPoints()
 		self.expCheck:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
-		self.expCheck:SetChecked(false)
-		self.expBox:SetText("")
+		if expires and expires ~= "NEVER" then
+			self.expCheck:SetChecked(true)
+			self.expBox:Enable()
+			self.expBox:SetText(expires)
+		else
+			self.expCheck:SetChecked(false)
+			self.expBox:SetText("")
+			self.expBox:Disable()
+		end
 		self.expBox:SetPoint("LEFT", self.expCheck.Text, "RIGHT", 4, 0)
-		self.expBox:Disable()
 	end,
-	OnAccept = function(self, name)
+	OnAccept = function(self, data)
+		local name = type(data) == "table" and data.name or data
 		local note = self.editBox:GetText()
 		local expires
 		if self.expCheck:GetChecked() then expires = tonumber(self.expBox:GetText()) end
