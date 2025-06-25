@@ -19,6 +19,7 @@ Ignore.addFrame = Ignore.addFrame or nil
 local widths = { 120, 120, 70, 90, 150 }
 local titles = { "Player Name", "Server Name", "Date", "Expires", "Note" }
 
+local removeEntry
 local removeEntryByIndex
 local DOUBLE_CLICK_TIME = 0.5
 
@@ -194,7 +195,6 @@ function Ignore:HasFreeSlot()
 	return true
 end
 
-
 local function addEntry(name, note, expires)
 	local player, server = strsplit("-", name)
 	local myServer = (GetRealmName()):gsub("%s", "")
@@ -221,25 +221,21 @@ local function addEntry(name, note, expires)
 end
 
 removeEntryByIndex = function(index)
-        local entry = Ignore.entries[index]
-        if entry then
-                local fullName = entry.player
-                if entry.server and entry.server ~= "" then
-                        fullName = fullName .. "-" .. entry.server
-                end
-                removeEntry(fullName)
-        end
-        table.remove(Ignore.entries, index)
-        refreshList()
+	local entry = Ignore.entries[index]
+	if entry then
+		local fullName = entry.player
+		if entry.server and entry.server ~= "" then fullName = fullName .. "-" .. entry.server end
+		removeEntry(fullName)
+	end
+	table.remove(Ignore.entries, index)
+	refreshList()
 end
 
-local function removeEntry(name)
-        if origDelIgnore and IsIgnored and IsIgnored(name) then
-                origDelIgnore(name)
-        end
-        local player, server = strsplit("-", name)
-        for i, entry in ipairs(Ignore.entries) do
-                if entry.player == player and entry.server == (server or "") then
+removeEntry = function(name)
+	if origDelIgnore and IsIgnored and IsIgnored(name) then origDelIgnore(name) end
+	local player, server = strsplit("-", name)
+	for i, entry in ipairs(Ignore.entries) do
+		if entry.player == player and entry.server == (server or "") then
 			table.remove(Ignore.entries, i)
 			break
 		end
@@ -358,40 +354,38 @@ function C_FriendList.AddOrDelIgnore(name) addOrRemove(name) end
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:SetScript("OnEvent", function()
-       local numIgnores = 0
-       if C_FriendList and C_FriendList.GetNumIgnores then
-               numIgnores = C_FriendList.GetNumIgnores()
-       elseif GetNumIgnores then
-               numIgnores = GetNumIgnores()
-       end
-       for i = 1, numIgnores do
-               local name
-               if C_FriendList and C_FriendList.GetIgnoreName then
-                       name = C_FriendList.GetIgnoreName(i)
-               elseif GetIgnoreName then
-                       name = GetIgnoreName(i)
-               end
-               if name then
-                       local player, server = strsplit("-", name)
-                       player = player or name
-                       server = server or (GetRealmName()):gsub("%s", "")
-                       local found
-                       for _, entry in ipairs(Ignore.entries) do
-                               if entry.player == player and entry.server == server then
-                                       found = true
-                                       break
-                               end
-                       end
-                       if not found then
-                               table.insert(Ignore.entries, {
-                                       player = player,
-                                       server = server,
-                                       date = date("%Y-%m-%d"),
-                                       expires = "NEVER",
-                                       note = "",
-                               })
-                       end
-               end
-       end
-       refreshList()
+	local numIgnores = 0
+	if C_FriendList and C_FriendList.GetNumIgnores then
+		numIgnores = C_FriendList.GetNumIgnores()
+	elseif GetNumIgnores then
+		numIgnores = GetNumIgnores()
+	end
+	for i = 1, numIgnores do
+		local name
+		if C_FriendList and C_FriendList.GetIgnoreName then
+			name = C_FriendList.GetIgnoreName(i)
+		elseif GetIgnoreName then
+			name = GetIgnoreName(i)
+		end
+		if name then
+			local player, server = strsplit("-", name)
+			player = player or name
+			server = server or (GetRealmName()):gsub("%s", "")
+			local found
+			for _, entry in ipairs(Ignore.entries) do
+				if entry.player == player and entry.server == server then
+					found = true
+					break
+				end
+			end
+			if not found then table.insert(Ignore.entries, {
+				player = player,
+				server = server,
+				date = date("%Y-%m-%d"),
+				expires = "NEVER",
+				note = "",
+			}) end
+		end
+	end
+	refreshList()
 end)
