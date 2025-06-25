@@ -173,6 +173,7 @@ StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
 		self.editBox:SetHeight(60)
 		self.editBox:SetText("")
 		self.editBox:SetFocus()
+		if name then self.text:SetFormattedText("Add %s to enhanced ignore list?", "|cffffd200" .. name .. "|r") end
 		if not self.expCheck then
 			local check = CreateFrame("CheckButton", nil, self, "ChatConfigCheckButtonTemplate")
 			check:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
