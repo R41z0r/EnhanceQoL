@@ -2223,6 +2223,18 @@ local function addMiscFrame(container, d)
 				addon.functions.toggleInstantCatalystButton(value)
 			end,
 		},
+		{
+			parent = "",
+			var = "merchantItemsPerPage",
+			type = "Dropdown",
+			list = { [12] = "12", [18] = "18", [24] = "24" },
+			order = { 12, 18, 24 },
+			text = L["merchantItemsPerPage"],
+			callback = function(self, _, value)
+				addon.db[self.var] = tonumber(value)
+				addon.functions.updateMerchantFrameLayout()
+			end,
+		},
 	}
 
 	addon.functions.createWrapperData(data, container, L)
@@ -2490,85 +2502,113 @@ local function updateMerchantButtonInfo()
 end
 
 local function updateBuybackButtonInfo()
-       if not addon.db["showIlvlOnMerchantframe"] then return end
+	if not addon.db["showIlvlOnMerchantframe"] then return end
 
-       local itemsPerPage = BUYBACK_ITEMS_PER_PAGE or 12
-       for i = 1, itemsPerPage do
-               local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
-               local itemLink = GetBuybackItemLink(i)
+	local itemsPerPage = BUYBACK_ITEMS_PER_PAGE or 12
+	for i = 1, itemsPerPage do
+		local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
+		local itemLink = GetBuybackItemLink(i)
 
-               if itemButton then
-                       if itemLink and itemLink:find("item:") then
-                               local eItem = Item:CreateFromItemLink(itemLink)
-                               eItem:ContinueOnItemLoad(function()
-                                       local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
+		if itemButton then
+			if itemLink and itemLink:find("item:") then
+				local eItem = Item:CreateFromItemLink(itemLink)
+				eItem:ContinueOnItemLoad(function()
+					local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
 
-                                       if
-                                               (itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0))
-                                               and not (classID == 4 and subclassID == 5)
-                                       then
-                                               local link = eItem:GetItemLink()
-                                               local invSlot = select(4, C_Item.GetItemInfoInstant(link))
-                                               if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
-                                                       if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                                                       if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                                                       return
-                                               end
+					if (itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) then
+						local link = eItem:GetItemLink()
+						local invSlot = select(4, C_Item.GetItemInfoInstant(link))
+						if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
+							if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+							if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+							return
+						end
 
-                                               if not itemButton.ItemLevelText then
-                                                       itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-                                                       itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
-                                                       itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
-                                                       itemButton.ItemLevelText:SetShadowOffset(1, -1)
-                                                       itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
-                                               end
+						if not itemButton.ItemLevelText then
+							itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+							itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
+							itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
+							itemButton.ItemLevelText:SetShadowOffset(1, -1)
+							itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+						end
 
-                                               local color = eItem:GetItemQualityColor()
-                                               itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
-                                               itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
-                                               itemButton.ItemLevelText:Show()
+						local color = eItem:GetItemQualityColor()
+						itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
+						itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+						itemButton.ItemLevelText:Show()
 
-                                               local bType
-                                               if addon.db["showBindOnBagItems"] then
-                                                       local data = C_TooltipInfo.GetBuybackItem(i)
-                                                       for _, v in pairs(data.lines) do
-                                                               if v.type == 20 then
-                                                                       if v.leftText == ITEM_BIND_ON_EQUIP then
-                                                                               bType = "BoE"
-                                                                       elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
-                                                                               bType = "WuE"
-                                                                       elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
-                                                                               bType = "WB"
-                                                                       end
-                                                                       break
-                                                               end
-                                                       end
-                                               end
-                                               if bType then
-                                                       if not itemButton.ItemBoundType then
-                                                               itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
-                                                               itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
-                                                               itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+						local bType
+						if addon.db["showBindOnBagItems"] then
+							local data = C_TooltipInfo.GetBuybackItem(i)
+							for _, v in pairs(data.lines) do
+								if v.type == 20 then
+									if v.leftText == ITEM_BIND_ON_EQUIP then
+										bType = "BoE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+										bType = "WuE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+										bType = "WB"
+									end
+									break
+								end
+							end
+						end
+						if bType then
+							if not itemButton.ItemBoundType then
+								itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
+								itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
+								itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
-                                                               itemButton.ItemBoundType:SetShadowOffset(2, 2)
-                                                               itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
-                                                       end
-                                                       itemButton.ItemBoundType:SetFormattedText(bType)
-                                                       itemButton.ItemBoundType:Show()
-                                               elseif itemButton.ItemBoundType then
-                                                       itemButton.ItemBoundType:Hide()
-                                               end
-                                       else
-                                               if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                                               if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                                       end
-                               end)
-                       else
-                               if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                               if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                       end
-               end
-       end
+								itemButton.ItemBoundType:SetShadowOffset(2, 2)
+								itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+							end
+							itemButton.ItemBoundType:SetFormattedText(bType)
+							itemButton.ItemBoundType:Show()
+						elseif itemButton.ItemBoundType then
+							itemButton.ItemBoundType:Hide()
+						end
+					else
+						if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+						if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+					end
+				end)
+			else
+				if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+				if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+			end
+		end
+	end
+end
+
+function addon.functions.updateMerchantFrameLayout()
+	if not MerchantFrame then return end
+	local perPage = addon.db["merchantItemsPerPage"] or 12
+	local rows = 3
+	local columns = math.floor(perPage / rows)
+
+	MERCHANT_ITEMS_PER_PAGE = perPage
+
+	local firstButton = _G["MerchantItem1"]
+	if not firstButton then return end
+
+	local buttonWidth = firstButton:GetWidth()
+	local spacingX = 12
+	local spacingY = -16
+
+	MerchantFrame:SetWidth(45 + columns * (buttonWidth + spacingX))
+
+	for i = 1, perPage do
+		local button = _G["MerchantItem" .. i]
+		if not button then button = CreateFrame("Button", "MerchantItem" .. i, MerchantFrame, "MerchantItemTemplate") end
+		button:ClearAllPoints()
+		if i == 1 then
+			button:SetPoint("TOPLEFT", MerchantFrame, "TOPLEFT", 24, -70)
+		elseif (i - 1) % columns == 0 then
+			button:SetPoint("TOPLEFT", _G["MerchantItem" .. (i - columns)], "BOTTOMLEFT", 0, spacingY)
+		else
+			button:SetPoint("LEFT", _G["MerchantItem" .. (i - 1)], "RIGHT", spacingX, 0)
+		end
+	end
 end
 
 local function updateFlyoutButtonInfo(button)
@@ -2722,6 +2762,7 @@ local function initMisc()
 	addon.functions.InitDBValue("hideMinimapButton", false)
 	addon.functions.InitDBValue("hideBagsBar", false)
 	addon.functions.InitDBValue("hideMicroMenu", false)
+	addon.functions.InitDBValue("merchantItemsPerPage", 12)
 	addon.functions.InitDBValue("instantCatalystEnabled", false)
 	--@debug@
 	addon.functions.InitDBValue("automaticallyOpenContainer", false)
@@ -2749,6 +2790,7 @@ local function initMisc()
 	end
 
 	hooksecurefunc(MerchantFrame, "Show", function(self, button)
+		addon.functions.updateMerchantFrameLayout()
 		if addon.db["autoRepair"] then
 			if CanMerchantRepair() then
 				local repairAllCost = GetRepairAllCost()
@@ -3603,9 +3645,9 @@ local function initCharacter()
 		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
 	end
 
-       hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
-       hooksecurefunc("MerchantFrame_UpdateBuybackInfo", updateBuybackButtonInfo)
-       hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
+	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
+	hooksecurefunc("MerchantFrame_UpdateBuybackInfo", updateBuybackButtonInfo)
+	hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
 
 	if _G.AccountBankPanel then
 		hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", addon.functions.updateBags)
