@@ -345,3 +345,44 @@ function C_FriendList.DelIgnoreByIndex(index) removeEntryByIndex(index) end
 function C_FriendList.DelIgnore(name) removeEntry(name) end
 
 function C_FriendList.AddOrDelIgnore(name) addOrRemove(name) end
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_LOGIN")
+frame:SetScript("OnEvent", function()
+       local numIgnores = 0
+       if C_FriendList and C_FriendList.GetNumIgnores then
+               numIgnores = C_FriendList.GetNumIgnores()
+       elseif GetNumIgnores then
+               numIgnores = GetNumIgnores()
+       end
+       for i = 1, numIgnores do
+               local name
+               if C_FriendList and C_FriendList.GetIgnoreName then
+                       name = C_FriendList.GetIgnoreName(i)
+               elseif GetIgnoreName then
+                       name = GetIgnoreName(i)
+               end
+               if name then
+                       local player, server = strsplit("-", name)
+                       player = player or name
+                       server = server or (GetRealmName()):gsub("%s", "")
+                       local found
+                       for _, entry in ipairs(Ignore.entries) do
+                               if entry.player == player and entry.server == server then
+                                       found = true
+                                       break
+                               end
+                       end
+                       if not found then
+                               table.insert(Ignore.entries, {
+                                       player = player,
+                                       server = server,
+                                       date = date("%Y-%m-%d"),
+                                       expires = "NEVER",
+                                       note = "",
+                               })
+                       end
+               end
+       end
+       refreshList()
+end)
