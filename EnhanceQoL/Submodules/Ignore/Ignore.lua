@@ -14,7 +14,7 @@ Ignore.entries = Ignore.entries or {}
 Ignore.selectedIndex = nil
 
 local widths = { 120, 120, 70, 90, 90, 150 }
-local titles = { "Player Name", "Server Name", "Fraction", "Date", "Expires", "Note" }
+local titles = { "Player Name", "Server Name", "Date", "Expires", "Note" }
 
 local function updateCounter()
 	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.entries) end
@@ -42,7 +42,6 @@ local function refreshList()
 		local values = {
 			data.player or "",
 			data.server or "",
-			data.fraction or "",
 			data.date or "",
 			data.expires or "",
 			data.note or "",
