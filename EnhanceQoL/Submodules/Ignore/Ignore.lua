@@ -176,12 +176,13 @@ StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
 		if not self.expCheck then
 			local check = CreateFrame("CheckButton", nil, self, "ChatConfigCheckButtonTemplate")
 			check:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
-			check.text:SetText("Expires (days)")
+
+			check.Text:SetText("Expires (days)")
 			local box = CreateFrame("EditBox", nil, self, "InputBoxTemplate")
 			box:SetAutoFocus(false)
 			box:SetNumeric(true)
 			box:SetWidth(50)
-			box:SetPoint("LEFT", check.text, "RIGHT", 4, 0)
+			box:SetPoint("LEFT", check.Text, "RIGHT", 4, 0)
 			box:Disable()
 			check:SetScript("OnClick", function(btn)
 				if btn:GetChecked() then
