@@ -114,3 +114,101 @@ end
 
 SLASH_EQOLIGNORE1 = "/eig"
 SlashCmdList["EQOLIGNORE"] = function() Ignore:Toggle() end
+
+-- keep originals so we can still call Blizzard's ignore API
+local origAddIgnore = C_FriendList and C_FriendList.AddIgnore
+local origDelIgnoreByIndex = C_FriendList and C_FriendList.DelIgnoreByIndex
+local origDelIgnore = C_FriendList and C_FriendList.DelIgnore
+
+local function addEntry(name, note, expires)
+	if origAddIgnore then origAddIgnore(name) end
+	local player, server = strsplit("-", name)
+	table.insert(Ignore.entries, {
+		player = player or name,
+		server = server or "",
+		date = date("%Y-%m-%d"),
+		expires = expires or "NEVER",
+		note = note or "",
+	})
+	refreshList()
+end
+
+local function removeEntryByIndex(index)
+	if origDelIgnoreByIndex then origDelIgnoreByIndex(index) end
+	table.remove(Ignore.entries, index)
+	refreshList()
+end
+
+local function removeEntry(name)
+	if origDelIgnore then origDelIgnore(name) end
+	local player, server = strsplit("-", name)
+	for i, entry in ipairs(Ignore.entries) do
+		if entry.player == player and entry.server == (server or "") then
+			table.remove(Ignore.entries, i)
+			break
+		end
+	end
+	refreshList()
+end
+
+local function addOrRemove(name)
+	if C_FriendList and C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) then
+		removeEntry(name)
+	else
+		C_FriendList.AddIgnore(name)
+	end
+end
+
+StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
+	text = "Add player to enhanced ignore list",
+	button1 = ADD,
+	button2 = CANCEL,
+	hasEditBox = true,
+	timeout = 0,
+	whileDead = true,
+	hideOnEscape = true,
+	preferredIndex = 3,
+	OnShow = function(self, name)
+		self.editBox:SetMultiLine(true)
+		self.editBox:SetHeight(60)
+		self.editBox:SetText("")
+		self.editBox:SetFocus()
+		if not self.expCheck then
+			local check = CreateFrame("CheckButton", nil, self, "ChatConfigCheckButtonTemplate")
+			check:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
+			check.text:SetText("Expires (days)")
+			local box = CreateFrame("EditBox", nil, self, "InputBoxTemplate")
+			box:SetAutoFocus(false)
+			box:SetNumeric(true)
+			box:SetWidth(50)
+			box:SetPoint("LEFT", check.text, "RIGHT", 4, 0)
+			box:Disable()
+			check:SetScript("OnClick", function(btn)
+				if btn:GetChecked() then
+					box:Enable()
+				else
+					box:Disable()
+				end
+			end)
+			self.expCheck = check
+			self.expBox = box
+		end
+		self.expCheck:SetChecked(false)
+		self.expBox:SetText("")
+		self.expBox:Disable()
+	end,
+	OnAccept = function(self, name)
+		local note = self.editBox:GetText()
+		local expires
+		if self.expCheck:GetChecked() then expires = tonumber(self.expBox:GetText()) end
+		addEntry(name, note, expires)
+	end,
+}
+
+function C_FriendList.AddIgnore(name) StaticPopup_Show("EQOL_ADD_IGNORE", nil, nil, name) end
+
+function C_FriendList.DelIgnoreByIndex(index) removeEntryByIndex(index) end
+
+function C_FriendList.DelIgnore(name) removeEntry(name) end
+
+function C_FriendList.AddOrDelIgnore(name) addOrRemove(name) end
