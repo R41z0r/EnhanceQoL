@@ -14,6 +14,7 @@ Ignore.entries = Ignore.entries or {}
 Ignore.selectedIndex = nil
 Ignore.rows = {}
 Ignore.searchText = Ignore.searchText or ""
+Ignore.addFrame = Ignore.addFrame or nil
 
 local widths = { 120, 120, 70, 90, 90, 150 }
 local titles = { "Player Name", "Server Name", "Date", "Expires", "Note" }
@@ -28,12 +29,12 @@ end
 local function refreshList()
 	if not Ignore.scrollFrame then return end
 	Ignore.scrollFrame:ReleaseChildren()
-        wipe(Ignore.rows)
+	wipe(Ignore.rows)
 
-        local search = Ignore.searchText and Ignore.searchText:lower() or ""
-        local filtering = search ~= ""
+	local search = Ignore.searchText and Ignore.searchText:lower() or ""
+	local filtering = search ~= ""
 
-        local header = AceGUI:Create("SimpleGroup")
+	local header = AceGUI:Create("SimpleGroup")
 	header:SetFullWidth(true)
 	header:SetLayout("Flow")
 	for i, col in ipairs(titles) do
@@ -44,63 +45,63 @@ local function refreshList()
 	end
 	Ignore.scrollFrame:AddChild(header)
 
-        for idx, data in ipairs(Ignore.entries) do
-                if
-                        not filtering
-                        or (data.player and data.player:lower():find(search, 1, true))
-                        or (data.server and data.server:lower():find(search, 1, true))
-                        or (data.note and data.note:lower():find(search, 1, true))
-                then
-                        local row = AceGUI:Create("SimpleGroup")
-		row:SetFullWidth(true)
-		row:SetLayout("Flow")
-		row.index = idx
-		row.frame:EnableMouse(true)
-		local bg = row.frame:CreateTexture(nil, "BACKGROUND")
-		bg:SetAllPoints(row.frame)
-		row.bg = bg
-		if idx == Ignore.selectedIndex then
-			bg:SetColorTexture(1, 1, 0, 0.3)
-		else
-			bg:SetColorTexture(0, 0, 0, 0)
-		end
-		row.frame:SetScript("OnMouseDown", function(frame)
-			local widget = frame.obj
-			if Ignore.selectedIndex and Ignore.rows[Ignore.selectedIndex] then
-				local prev = Ignore.rows[Ignore.selectedIndex]
-				if prev.bg then prev.bg:SetColorTexture(0, 0, 0, 0) end
+	for idx, data in ipairs(Ignore.entries) do
+		if
+			not filtering
+			or (data.player and data.player:lower():find(search, 1, true))
+			or (data.server and data.server:lower():find(search, 1, true))
+			or (data.note and data.note:lower():find(search, 1, true))
+		then
+			local row = AceGUI:Create("SimpleGroup")
+			row:SetFullWidth(true)
+			row:SetLayout("Flow")
+			row.index = idx
+			row.frame:EnableMouse(true)
+			local bg = row.frame:CreateTexture(nil, "BACKGROUND")
+			bg:SetAllPoints(row.frame)
+			row.bg = bg
+			if idx == Ignore.selectedIndex then
+				bg:SetColorTexture(1, 1, 0, 0.3)
+			else
+				bg:SetColorTexture(0, 0, 0, 0)
 			end
-			Ignore.selectedIndex = widget.index
-			widget.bg:SetColorTexture(1, 1, 0, 0.3)
-
-			local now = GetTime()
-			if widget.lastClick and (now - widget.lastClick) < DOUBLE_CLICK_TIME then
-				local entry = Ignore.entries[widget.index]
-				if entry then
-					local fullName = entry.player .. "-" .. entry.server
-					StaticPopup_Show("EQOL_ADD_IGNORE", nil, nil, fullName)
+			row.frame:SetScript("OnMouseDown", function(frame)
+				local widget = frame.obj
+				if Ignore.selectedIndex and Ignore.rows[Ignore.selectedIndex] then
+					local prev = Ignore.rows[Ignore.selectedIndex]
+					if prev.bg then prev.bg:SetColorTexture(0, 0, 0, 0) end
 				end
+				Ignore.selectedIndex = widget.index
+				widget.bg:SetColorTexture(1, 1, 0, 0.3)
+
+				local now = GetTime()
+				if widget.lastClick and (now - widget.lastClick) < DOUBLE_CLICK_TIME then
+					local entry = Ignore.entries[widget.index]
+					if entry then
+						local fullName = entry.player .. "-" .. entry.server
+						Ignore:ShowAddFrame(fullName, entry.note, entry.expires)
+					end
+				end
+				widget.lastClick = now
+			end)
+			local values = {
+				data.player or "",
+				data.server or "",
+				data.date or "",
+				data.expires or "",
+				data.note or "",
+			}
+			for i, val in ipairs(values) do
+				local lbl = AceGUI:Create("Label")
+				lbl:SetText(val)
+				lbl:SetWidth(widths[i])
+				row:AddChild(lbl)
 			end
-			widget.lastClick = now
-		end)
-		local values = {
-			data.player or "",
-			data.server or "",
-			data.date or "",
-			data.expires or "",
-			data.note or "",
-		}
-		for i, val in ipairs(values) do
-			local lbl = AceGUI:Create("Label")
-			lbl:SetText(val)
-			lbl:SetWidth(widths[i])
-			row:AddChild(lbl)
+			Ignore.rows[idx] = row
+			Ignore.scrollFrame:AddChild(row)
 		end
-                Ignore.rows[idx] = row
-                Ignore.scrollFrame:AddChild(row)
-                end
-        end
-        updateCounter()
+	end
+	updateCounter()
 end
 
 function Ignore:CreateUI()
@@ -110,14 +111,14 @@ function Ignore:CreateUI()
 	frame:SetWidth(650)
 	frame:SetHeight(400)
 	frame:SetLayout("List")
-        frame:SetCallback("OnClose", function(widget)
-                AceGUI:Release(widget)
-                if self.searchBox then
-                        AceGUI:Release(self.searchBox)
-                        self.searchBox = nil
-                end
-                self.window = nil
-        end)
+	frame:SetCallback("OnClose", function(widget)
+		AceGUI:Release(widget)
+		if self.searchBox then
+			AceGUI:Release(self.searchBox)
+			self.searchBox = nil
+		end
+		self.window = nil
+	end)
 
 	local spacer = AceGUI:Create("Label")
 	spacer:SetText(" ")
@@ -129,20 +130,20 @@ function Ignore:CreateUI()
 	counter:SetText("Entries: 0")
 	counter:SetFullWidth(true)
 	frame:AddChild(counter)
-        self.counter = counter
+	self.counter = counter
 
-        local search = AceGUI:Create("EditBox")
-        search:SetWidth(150)
-        search:DisableButton(true)
-        search.frame:SetParent(frame.frame)
-        search.frame:ClearAllPoints()
-        search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
-        search:SetCallback("OnTextChanged", function(_, _, text)
-                Ignore.searchText = text or ""
-                Ignore.selectedIndex = nil
-                refreshList()
-        end)
-        self.searchBox = search
+	local search = AceGUI:Create("EditBox")
+	search:SetWidth(150)
+	search:DisableButton(true)
+	search.frame:SetParent(frame.frame)
+	search.frame:ClearAllPoints()
+	search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
+	search:SetCallback("OnTextChanged", function(_, _, text)
+		Ignore.searchText = text or ""
+		Ignore.selectedIndex = nil
+		refreshList()
+	end)
+	self.searchBox = search
 
 	local scroll = AceGUI:Create("ScrollFrame")
 	scroll:SetLayout("List")
@@ -241,90 +242,90 @@ local function addOrRemove(name)
 	end
 end
 
-StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
-	text = "Add player to enhanced ignore list",
-	button1 = ADD,
-	button2 = CANCEL,
-	hasEditBox = true,
-	editBoxWidth = 350,
-	timeout = 0,
-	whileDead = true,
-	hideOnEscape = true,
-	preferredIndex = 3,
-	OnShow = function(self, data)
-		self:SetWidth(420)
-		self:SetHeight(220)
-		self.editBox:SetMultiLine(true)
-		self.editBox:SetHeight(80)
-		self.editBox:SetFocus()
+function Ignore:ShowAddFrame(name, note, expires)
+	if not name then return end
 
-		local name, note, expires
-		if type(data) == "table" then
-			name = data.name
-			note = data.note
-			expires = data.expires
-		else
-			name = data
-			if name then
-				local player, server = strsplit("-", name)
-				player = player or name
-				server = server or (GetRealmName()):gsub("%s", "")
-				for _, entry in ipairs(Ignore.entries) do
-					if entry.player == player and entry.server == server then
-						note = entry.note
-						expires = entry.expires
-						break
-					end
-				end
-			end
-		end
+	if self.addFrame then
+		AceGUI:Release(self.addFrame)
+		self.addFrame = nil
+	end
 
-		if name then self.text:SetFormattedText("Add %s to enhanced ignore list?", "|cffffd200" .. name .. "|r") end
-		self.editBox:SetText(note or "")
-		if not self.expCheck then
-			local check = CreateFrame("CheckButton", nil, self, "ChatConfigCheckButtonTemplate")
-			check:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
+	local frame = AceGUI:Create("Window")
+	frame:SetTitle("Enhanced Ignore")
+	frame:SetWidth(420)
+	frame:SetHeight(220)
+	frame:SetLayout("List")
+	frame:SetCallback("OnClose", function(widget)
+		AceGUI:Release(widget)
+		Ignore.addFrame = nil
+	end)
 
-			check.Text:SetText("Expires (days)")
-			local box = CreateFrame("EditBox", nil, self, "InputBoxTemplate")
-			box:SetAutoFocus(false)
-			box:SetNumeric(true)
-			box:SetWidth(50)
-			box:SetPoint("LEFT", check.Text, "RIGHT", 4, 0)
-			box:Disable()
-			check:SetScript("OnClick", function(btn)
-				if btn:GetChecked() then
-					box:Enable()
-				else
-					box:Disable()
-				end
-			end)
-			self.expCheck = check
-			self.expBox = box
-		end
-		self.expCheck:ClearAllPoints()
-		self.expCheck:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
-		if expires and expires ~= "NEVER" then
-			self.expCheck:SetChecked(true)
-			self.expBox:Enable()
-			self.expBox:SetText(expires)
-		else
-			self.expCheck:SetChecked(false)
-			self.expBox:SetText("")
-			self.expBox:Disable()
-		end
-		self.expBox:SetPoint("LEFT", self.expCheck.Text, "RIGHT", 4, 0)
-	end,
-	OnAccept = function(self, data)
-		local name = type(data) == "table" and data.name or data
-		local note = self.editBox:GetText()
-		local expires
-		if self.expCheck:GetChecked() then expires = tonumber(self.expBox:GetText()) end
-		addEntry(name, note, expires)
-	end,
-}
+	local nameLabel = AceGUI:Create("Label")
+	nameLabel:SetText("|cffffd200" .. name .. "|r")
+	nameLabel:SetFullWidth(true)
+	frame:AddChild(nameLabel)
 
-function C_FriendList.AddIgnore(name) StaticPopup_Show("EQOL_ADD_IGNORE", nil, nil, name) end
+	local editBox = AceGUI:Create("MultiLineEditBox")
+	editBox:SetFullWidth(true)
+	editBox:SetLabel("Note")
+	editBox:SetNumLines(4)
+	editBox:DisableButton(true)
+	if note then editBox:SetText(note) end
+	frame:AddChild(editBox)
+
+	local expGroup = AceGUI:Create("SimpleGroup")
+	expGroup:SetFullWidth(true)
+	expGroup:SetLayout("Flow")
+	frame:AddChild(expGroup)
+
+	local check = AceGUI:Create("CheckBox")
+	check:SetLabel("Expires (days)")
+	expGroup:AddChild(check)
+
+	local numBox = AceGUI:Create("EditBox")
+	numBox:SetWidth(60)
+	numBox:SetDisabled(true)
+	expGroup:AddChild(numBox)
+
+	check:SetCallback("OnValueChanged", function(_, _, value) numBox:SetDisabled(not value) end)
+
+	if expires and expires ~= "NEVER" then
+		check:SetValue(true)
+		numBox:SetDisabled(false)
+		numBox:SetText(tostring(expires))
+	else
+		check:SetValue(false)
+		numBox:SetText("")
+		numBox:SetDisabled(true)
+	end
+
+	local btnGroup = AceGUI:Create("SimpleGroup")
+	btnGroup:SetFullWidth(true)
+	btnGroup:SetLayout("Flow")
+	frame:AddChild(btnGroup)
+
+	local addBtn = AceGUI:Create("Button")
+	addBtn:SetText("Add/Save")
+	addBtn:SetWidth(120)
+	addBtn:SetCallback("OnClick", function()
+		local n = editBox:GetText()
+		local exp
+		if check:GetValue() then exp = tonumber(numBox:GetText()) end
+		addEntry(name, n, exp)
+		frame:Hide()
+	end)
+	btnGroup:AddChild(addBtn)
+
+	local cancelBtn = AceGUI:Create("Button")
+	cancelBtn:SetText(CANCEL)
+	cancelBtn:SetWidth(120)
+	cancelBtn:SetCallback("OnClick", function() frame:Hide() end)
+	btnGroup:AddChild(cancelBtn)
+
+	self.addFrame = frame
+end
+
+function C_FriendList.AddIgnore(name) Ignore:ShowAddFrame(name) end
 
 function C_FriendList.DelIgnoreByIndex(index) removeEntryByIndex(index) end
 
