@@ -110,6 +110,7 @@ globals = {
 	"C_CraftingOrders",
 	"SELL_ALL_JUNK_ITEMS_POPUP",
 	"MERCHANT_ITEMS_PER_PAGE",
+	"BUYBACK_ITEMS_PER_PAGE",
 	"EquipmentManager_UnpackLocation",
 	"AccountBankPanel",
 	"ItemLocation",
