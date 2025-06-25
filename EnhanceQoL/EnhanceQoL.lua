@@ -2489,6 +2489,88 @@ local function updateMerchantButtonInfo()
 	end
 end
 
+local function updateBuybackButtonInfo()
+       if not addon.db["showIlvlOnMerchantframe"] then return end
+
+       local itemsPerPage = BUYBACK_ITEMS_PER_PAGE or 12
+       for i = 1, itemsPerPage do
+               local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
+               local itemLink = GetBuybackItemLink(i)
+
+               if itemButton then
+                       if itemLink and itemLink:find("item:") then
+                               local eItem = Item:CreateFromItemLink(itemLink)
+                               eItem:ContinueOnItemLoad(function()
+                                       local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
+
+                                       if
+                                               (itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0))
+                                               and not (classID == 4 and subclassID == 5)
+                                       then
+                                               local link = eItem:GetItemLink()
+                                               local invSlot = select(4, C_Item.GetItemInfoInstant(link))
+                                               if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
+                                                       if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+                                                       if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+                                                       return
+                                               end
+
+                                               if not itemButton.ItemLevelText then
+                                                       itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+                                                       itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
+                                                       itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
+                                                       itemButton.ItemLevelText:SetShadowOffset(1, -1)
+                                                       itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+                                               end
+
+                                               local color = eItem:GetItemQualityColor()
+                                               itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
+                                               itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+                                               itemButton.ItemLevelText:Show()
+
+                                               local bType
+                                               if addon.db["showBindOnBagItems"] then
+                                                       local data = C_TooltipInfo.GetBuybackItem(i)
+                                                       for _, v in pairs(data.lines) do
+                                                               if v.type == 20 then
+                                                                       if v.leftText == ITEM_BIND_ON_EQUIP then
+                                                                               bType = "BoE"
+                                                                       elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+                                                                               bType = "WuE"
+                                                                       elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+                                                                               bType = "WB"
+                                                                       end
+                                                                       break
+                                                               end
+                                                       end
+                                               end
+                                               if bType then
+                                                       if not itemButton.ItemBoundType then
+                                                               itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
+                                                               itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
+                                                               itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+
+                                                               itemButton.ItemBoundType:SetShadowOffset(2, 2)
+                                                               itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+                                                       end
+                                                       itemButton.ItemBoundType:SetFormattedText(bType)
+                                                       itemButton.ItemBoundType:Show()
+                                               elseif itemButton.ItemBoundType then
+                                                       itemButton.ItemBoundType:Hide()
+                                               end
+                                       else
+                                               if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+                                               if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+                                       end
+                               end)
+                       else
+                               if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+                               if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+                       end
+               end
+       end
+end
+
 local function updateFlyoutButtonInfo(button)
 	if not button then return end
 
@@ -3521,8 +3603,9 @@ local function initCharacter()
 		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
 	end
 
-	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
-	hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
+       hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
+       hooksecurefunc("MerchantFrame_UpdateBuybackInfo", updateBuybackButtonInfo)
+       hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
 
 	if _G.AccountBankPanel then
 		hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", addon.functions.updateBags)
