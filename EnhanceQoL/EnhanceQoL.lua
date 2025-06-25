@@ -2421,12 +2421,16 @@ local function updateMerchantButtonInfo()
 						-- local itemName, _, _, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(itemLink)
 						local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
 
-						if
-							(itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
-						then
-							local link = eItem:GetItemLink()
-							local invSlot = select(4, C_Item.GetItemInfoInstant(link))
-							if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then return end
+                                                if
+                                                        (itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) -- Cosmetic
+                                                then
+                                                        local link = eItem:GetItemLink()
+                                                        local invSlot = select(4, C_Item.GetItemInfoInstant(link))
+                                                        if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
+                                                                if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+                                                                if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+                                                                return
+                                                        end
 
 							if not itemButton.ItemLevelText then
 								itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
@@ -2457,25 +2461,28 @@ local function updateMerchantButtonInfo()
 									end
 								end
 							end
-							if bType then
-								if not itemButton.ItemBoundType then
-									itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
-									itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
-									itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+                                                        if bType then
+                                                                if not itemButton.ItemBoundType then
+                                                                        itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
+                                                                        itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
+                                                                        itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
-									itemButton.ItemBoundType:SetShadowOffset(2, 2)
-									itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
-								end
-								itemButton.ItemBoundType:SetFormattedText(bType)
-								itemButton.ItemBoundType:Show()
-							elseif itemButton.ItemBoundType then
-								itemButton.ItemBoundType:Hide()
-							end
-						end
-					end)
-				else
-					if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-					if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+                                                                        itemButton.ItemBoundType:SetShadowOffset(2, 2)
+                                                                        itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+                                                                end
+                                                                itemButton.ItemBoundType:SetFormattedText(bType)
+                                                                itemButton.ItemBoundType:Show()
+                                                        elseif itemButton.ItemBoundType then
+                                                                itemButton.ItemBoundType:Hide()
+                                                        end
+                                                else
+                                                        if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+                                                        if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+                                                end
+                                        end)
+                                else
+                                        if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+                                        if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
 				end
 			end
 		end
