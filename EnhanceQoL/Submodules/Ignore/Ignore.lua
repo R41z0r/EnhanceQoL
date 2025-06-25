@@ -16,7 +16,7 @@ Ignore.rows = {}
 Ignore.searchText = Ignore.searchText or ""
 Ignore.addFrame = Ignore.addFrame or nil
 
-local widths = { 120, 120, 70, 90, 90, 150 }
+local widths = { 120, 120, 70, 90, 150 }
 local titles = { "Player Name", "Server Name", "Date", "Expires", "Note" }
 
 local removeEntryByIndex
