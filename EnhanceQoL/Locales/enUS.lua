@@ -42,7 +42,6 @@ L["misc_auctionhouse_sellable"] = "Can Sell in Auction House"
 
 L["showIlvlOnBankFrame"] = "Display item level on the Bank Frame"
 L["showIlvlOnMerchantframe"] = "Display item level on the Merchant Frame"
-L["merchantItemsPerPage"] = "Items shown per Merchant page"
 L["showIlvlOnCharframe"] = "Display item level on Character Equipment Frame"
 L["showGemsOnCharframe"] = "Display gem slots on Character Equipment Frame"
 L["showBindOnBagItems"] = "Display %s (BoE), %s (WuE), and %s (WB) as an addition to item level on items"

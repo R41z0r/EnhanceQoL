@@ -2223,18 +2223,6 @@ local function addMiscFrame(container, d)
 				addon.functions.toggleInstantCatalystButton(value)
 			end,
 		},
-		{
-			parent = "",
-			var = "merchantItemsPerPage",
-			type = "Dropdown",
-			list = { [12] = "12", [18] = "18", [24] = "24" },
-			order = { 12, 18, 24 },
-			text = L["merchantItemsPerPage"],
-			callback = function(self, _, value)
-				addon.db[self.var] = tonumber(value)
-				addon.functions.updateMerchantFrameLayout()
-			end,
-		},
 	}
 
 	addon.functions.createWrapperData(data, container, L)
@@ -2250,35 +2238,35 @@ local function addQuestFrame(container, d)
 	wrapper:AddChild(groupCore)
 
 	local groupData = {
-		{
-			parent = "",
-			var = "autoChooseQuest",
-			text = L["autoChooseQuest"],
-			type = "CheckBox",
-			callback = function(self, _, value) addon.db[self.var] = value end,
-			desc = L["interruptWithShift"],
-		},
-		{
-			parent = "",
-			var = "ignoreDailyQuests",
-			text = L["ignoreDailyQuests"]:format(QUESTS_LABEL),
-			type = "CheckBox",
-			callback = function(self, _, value) addon.db[self.var] = value end,
-		},
-		{
-			parent = "",
-			var = "ignoreWarbandCompleted",
-			text = L["ignoreWarbandCompleted"]:format(ACCOUNT_COMPLETED_QUEST_LABEL, QUESTS_LABEL),
-			type = "CheckBox",
-			callback = function(self, _, value) addon.db[self.var] = value end,
-		},
-		{
-			parent = "",
-			var = "ignoreTrivialQuests",
-			text = L["ignoreTrivialQuests"]:format(QUESTS_LABEL),
-			type = "CheckBox",
-			callback = function(self, _, value) addon.db[self.var] = value end,
-		},
+               {
+                       parent = "",
+                       var = "autoChooseQuest",
+                       text = L["autoChooseQuest"],
+                       type = "CheckBox",
+                       callback = function(_, _, value) addon.db["autoChooseQuest"] = value end,
+                       desc = L["interruptWithShift"],
+               },
+               {
+                       parent = "",
+                       var = "ignoreDailyQuests",
+                       text = L["ignoreDailyQuests"]:format(QUESTS_LABEL),
+                       type = "CheckBox",
+                       callback = function(_, _, value) addon.db["ignoreDailyQuests"] = value end,
+               },
+               {
+                       parent = "",
+                       var = "ignoreWarbandCompleted",
+                       text = L["ignoreWarbandCompleted"]:format(ACCOUNT_COMPLETED_QUEST_LABEL, QUESTS_LABEL),
+                       type = "CheckBox",
+                       callback = function(_, _, value) addon.db["ignoreWarbandCompleted"] = value end,
+               },
+               {
+                       parent = "",
+                       var = "ignoreTrivialQuests",
+                       text = L["ignoreTrivialQuests"]:format(QUESTS_LABEL),
+                       type = "CheckBox",
+                       callback = function(_, _, value) addon.db["ignoreTrivialQuests"] = value end,
+               },
 	}
 	table.sort(groupData, function(a, b)
 		local textA = a.var
@@ -2580,36 +2568,6 @@ local function updateBuybackButtonInfo()
 	end
 end
 
-function addon.functions.updateMerchantFrameLayout()
-	if not MerchantFrame then return end
-	local perPage = addon.db["merchantItemsPerPage"] or 12
-	local rows = 3
-	local columns = math.floor(perPage / rows)
-
-	MERCHANT_ITEMS_PER_PAGE = perPage
-
-	local firstButton = _G["MerchantItem1"]
-	if not firstButton then return end
-
-	local buttonWidth = firstButton:GetWidth()
-	local spacingX = 12
-	local spacingY = -16
-
-	MerchantFrame:SetWidth(45 + columns * (buttonWidth + spacingX))
-
-	for i = 1, perPage do
-		local button = _G["MerchantItem" .. i]
-		if not button then button = CreateFrame("Button", "MerchantItem" .. i, MerchantFrame, "MerchantItemTemplate") end
-		button:ClearAllPoints()
-		if i == 1 then
-			button:SetPoint("TOPLEFT", MerchantFrame, "TOPLEFT", 24, -70)
-		elseif (i - 1) % columns == 0 then
-			button:SetPoint("TOPLEFT", _G["MerchantItem" .. (i - columns)], "BOTTOMLEFT", 0, spacingY)
-		else
-			button:SetPoint("LEFT", _G["MerchantItem" .. (i - 1)], "RIGHT", spacingX, 0)
-		end
-	end
-end
 
 local function updateFlyoutButtonInfo(button)
 	if not button then return end
@@ -2762,7 +2720,6 @@ local function initMisc()
 	addon.functions.InitDBValue("hideMinimapButton", false)
 	addon.functions.InitDBValue("hideBagsBar", false)
 	addon.functions.InitDBValue("hideMicroMenu", false)
-	addon.functions.InitDBValue("merchantItemsPerPage", 12)
 	addon.functions.InitDBValue("instantCatalystEnabled", false)
 	--@debug@
 	addon.functions.InitDBValue("automaticallyOpenContainer", false)
@@ -2789,11 +2746,10 @@ local function initMisc()
 		end
 	end
 
-	hooksecurefunc(MerchantFrame, "Show", function(self, button)
-		addon.functions.updateMerchantFrameLayout()
-		if addon.db["autoRepair"] then
-			if CanMerchantRepair() then
-				local repairAllCost = GetRepairAllCost()
+       hooksecurefunc(MerchantFrame, "Show", function(self, button)
+               if addon.db["autoRepair"] then
+                       if CanMerchantRepair() then
+                               local repairAllCost = GetRepairAllCost()
 				if repairAllCost and repairAllCost > 0 then
 					RepairAllItems()
 					PlaySound(SOUNDKIT.ITEM_REPAIR)

@@ -37,6 +37,7 @@ table.sort(addon.Vendor.variables.tabKeyNames)
 
 addon.functions.InitDBValue("vendorSwapAutoSellShift", false)
 addon.functions.InitDBValue("vendorOnly12Items", true)
+addon.functions.InitDBValue("merchantItemsPerPage", 12)
 
 for key, value in pairs(addon.Vendor.variables.tabNames) do
 	addon.functions.InitDBValue("vendor" .. value .. "Enable", false)

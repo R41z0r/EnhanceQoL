@@ -146,11 +146,58 @@ local function checkItem()
 	end
 end
 
+function addon.Vendor.functions.updateMerchantFrameLayout()
+       if not MerchantFrame then return end
+       local perPage = addon.db["merchantItemsPerPage"] or 12
+       local rows = 3
+       local columns = math.floor(perPage / rows)
+
+       MERCHANT_ITEMS_PER_PAGE = perPage
+       BUYBACK_ITEMS_PER_PAGE = perPage
+
+       local firstButton = _G["MerchantItem1"]
+       if not firstButton then return end
+
+       local buttonWidth = firstButton:GetWidth()
+       local spacingX = 12
+       local spacingY = -16
+
+       MerchantFrame:SetWidth(45 + columns * (buttonWidth + spacingX))
+
+       for i = 1, perPage do
+               local button = _G["MerchantItem" .. i]
+               if not button then button = CreateFrame("Button", "MerchantItem" .. i, MerchantFrame, "MerchantItemTemplate") end
+               button:ClearAllPoints()
+               if i == 1 then
+                       button:SetPoint("TOPLEFT", MerchantFrame, "TOPLEFT", 24, -70)
+               elseif (i - 1) % columns == 0 then
+                       button:SetPoint("TOPLEFT", _G["MerchantItem" .. (i - columns)], "BOTTOMLEFT", 0, spacingY)
+               else
+                       button:SetPoint("LEFT", _G["MerchantItem" .. (i - 1)], "RIGHT", spacingX, 0)
+               end
+       end
+
+       _G.MerchantPrevPageButton:ClearAllPoints()
+       _G.MerchantPrevPageButton:SetPoint("BOTTOMLEFT", MerchantFrame, "BOTTOMLEFT", 60, 35)
+
+       _G.MerchantNextPageButton:ClearAllPoints()
+       _G.MerchantNextPageButton:SetPoint("BOTTOMRIGHT", MerchantFrame, "BOTTOMRIGHT", -60, 35)
+
+       if _G.MerchantPageText then
+               _G.MerchantPageText:ClearAllPoints()
+               _G.MerchantPageText:SetPoint("BOTTOM", MerchantFrame, "BOTTOM", 0, 35)
+       end
+
+       _G.MerchantFrame_UpdateMerchantInfo()
+       _G.MerchantFrame_UpdateBuybackInfo()
+end
+
 local eventHandlers = {
-	["MERCHANT_SHOW"] = function()
-		if (IsShiftKeyDown() and addon.db["vendorSwapAutoSellShift"] == false) or (addon.db["vendorSwapAutoSellShift"] and not IsShiftKeyDown()) then return end
-		checkItem()
-	end,
+       ["MERCHANT_SHOW"] = function()
+               addon.Vendor.functions.updateMerchantFrameLayout()
+               if (IsShiftKeyDown() and addon.db["vendorSwapAutoSellShift"] == false) or (addon.db["vendorSwapAutoSellShift"] and not IsShiftKeyDown()) then return end
+               checkItem()
+       end,
 	["ITEM_DATA_LOAD_RESULT"] = function(arg1, arg2)
 		if arg2 == false and addon.aceFrame:IsShown() and lastEbox then
 			StaticPopupDialogs["VendorWrongItemID"] = {
@@ -397,16 +444,23 @@ local function addGeneralFrame(container)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local data = {
-		{ text = L["vendorSwapAutoSellShift"], var = "vendorSwapAutoSellShift" },
-		{ text = L["vendorOnly12Items"], var = "vendorOnly12Items" },
-	}
-	table.sort(data, function(a, b) return a.text < b.text end)
+       local data = {
+               { text = L["vendorSwapAutoSellShift"], var = "vendorSwapAutoSellShift" },
+               { text = L["vendorOnly12Items"], var = "vendorOnly12Items" },
+       }
+       table.sort(data, function(a, b) return a.text < b.text end)
 
-	for _, cbData in ipairs(data) do
-		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, checked) addon.db[cbData.var] = checked end)
-		groupCore:AddChild(cbElement)
-	end
+       for _, cbData in ipairs(data) do
+               local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, checked) addon.db[cbData.var] = checked end)
+               groupCore:AddChild(cbElement)
+       end
+
+       local drop = addon.functions.createDropdownAce(L["merchantItemsPerPage"], { [12] = "12", [18] = "18", [24] = "24" }, { 12, 18, 24 }, function(self, _, value)
+               addon.db["merchantItemsPerPage"] = tonumber(value)
+               addon.Vendor.functions.updateMerchantFrameLayout()
+       end)
+       drop:SetValue(addon.db["merchantItemsPerPage"])
+       groupCore:AddChild(drop)
 end
 
 addon.variables.statusTable.groups["vendor"] = true
