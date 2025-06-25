@@ -183,11 +183,24 @@ SlashCmdList["EQOLIGNORE"] = function() Ignore:Toggle() end
 local origAddIgnore = C_FriendList and C_FriendList.AddIgnore
 local origDelIgnoreByIndex = C_FriendList and C_FriendList.DelIgnoreByIndex
 local origDelIgnore = C_FriendList and C_FriendList.DelIgnore
+function Ignore:HasFreeSlot()
+	local num = 0
+	if C_FriendList and C_FriendList.GetNumIgnores then
+		num = C_FriendList.GetNumIgnores()
+	elseif GetNumIgnores then
+		num = GetNumIgnores()
+	end
+	if MAX_IGNORE then return num < MAX_IGNORE end
+	return true
+end
+
 
 local function addEntry(name, note, expires)
 	local player, server = strsplit("-", name)
+	local myServer = (GetRealmName()):gsub("%s", "")
+	local sameRealm = not server or server == myServer
 	player = player or name
-	server = server or (GetRealmName()):gsub("%s", "")
+	server = server or myServer
 	for _, entry in ipairs(Ignore.entries) do
 		if entry.player == player and entry.server == server then
 			entry.note = note or entry.note
@@ -196,7 +209,7 @@ local function addEntry(name, note, expires)
 			return
 		end
 	end
-	if origAddIgnore then origAddIgnore(name) end
+	if origAddIgnore and sameRealm and Ignore:HasFreeSlot() then origAddIgnore(name) end
 	table.insert(Ignore.entries, {
 		player = player,
 		server = server,
