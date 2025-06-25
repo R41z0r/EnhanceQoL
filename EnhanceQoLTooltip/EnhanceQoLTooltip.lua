@@ -35,9 +35,12 @@ local function checkCurrency(tooltip, id)
 	if not addon.db["TooltipShowCurrencyAccountWide"] then return end
 	local charList = C_CurrencyInfo.FetchCurrencyDataFromAccountCharacters(id)
 
-	local playerName, playerRealm = UnitFullName("player")
-	local playerFullName = playerName .. "-" .. playerRealm
-	local playerQty = C_CurrencyInfo.GetCurrencyInfo(id).quantity or 0
+        local playerName, playerRealm = UnitFullName("player")
+        if not playerRealm or playerRealm == "" then
+                playerRealm = GetRealmName():gsub("%s+", "")
+        end
+        local playerFullName = playerName .. "-" .. playerRealm
+        local playerQty = C_CurrencyInfo.GetCurrencyInfo(id).quantity or 0
 
 	if nil == charList or #charList == 0 then
 		-- no warband resources - just skip all to only show the player itself by blizzard
