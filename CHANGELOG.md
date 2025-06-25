@@ -2,8 +2,9 @@
 
 ## [3.22.1] – 2025-06-25
 ### 🐛 Fixed
-- There was a rare LUA error when joining instances and hover over currencies
-- Upgrading Items sometimes result in a LUA error when **Instant Catalyst** was enabled
+- Fixed a rare Lua error that occurred when joining instances and **hovering over currencies**.
+- Upgrading items sometimes **resulted** in a Lua error when **Instant Catalyst** was enabled.
+- While visiting a merchant, **incorrect item-level information** was occasionally displayed.
 
 ## [3.22.0] – 2025-06-24
 ### ✨ Added
