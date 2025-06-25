@@ -202,11 +202,13 @@ local function addEntry(name, note, expires)
 	player = player or name
 	server = server or myServer
 	for _, entry in ipairs(Ignore.entries) do
-		if entry.player == player and entry.server == server then
-			entry.note = note or entry.note
-			entry.expires = expires or entry.expires
-			refreshList()
-			return
+               if entry.player == player and entry.server == server then
+                       if note ~= nil then entry.note = note end
+                       if expires ~= nil then
+                               entry.expires = expires ~= "" and expires or "NEVER"
+                       end
+                       refreshList()
+                       return
 		end
 	end
 	if origAddIgnore and sameRealm and Ignore:HasFreeSlot() then origAddIgnore(name) end
@@ -300,21 +302,26 @@ function Ignore:ShowAddFrame(name, note, expires)
 	expGroup:AddChild(check)
 
 	local numBox = AceGUI:Create("EditBox")
-	numBox:SetWidth(60)
-	numBox:SetDisabled(true)
-	expGroup:AddChild(numBox)
+       numBox:SetWidth(60)
+       numBox:SetDisabled(true)
+       expGroup:AddChild(numBox)
 
-	check:SetCallback("OnValueChanged", function(_, _, value) numBox:SetDisabled(not value) end)
+       check:SetCallback("OnValueChanged", function(_, _, value)
+               numBox:SetDisabled(not value)
+               numBox.frame:SetShown(value)
+       end)
 
-	if expires and expires ~= "NEVER" then
-		check:SetValue(true)
-		numBox:SetDisabled(false)
-		numBox:SetText(tostring(expires))
-	else
-		check:SetValue(false)
-		numBox:SetText("")
-		numBox:SetDisabled(true)
-	end
+       if expires and expires ~= "NEVER" then
+               check:SetValue(true)
+               numBox:SetDisabled(false)
+               numBox.frame:Show()
+               numBox:SetText(tostring(expires))
+       else
+               check:SetValue(false)
+               numBox:SetText("")
+               numBox:SetDisabled(true)
+               numBox.frame:Hide()
+       end
 
 	local btnGroup = AceGUI:Create("SimpleGroup")
 	btnGroup:SetFullWidth(true)
@@ -324,13 +331,13 @@ function Ignore:ShowAddFrame(name, note, expires)
 	local addBtn = AceGUI:Create("Button")
 	addBtn:SetText("Add/Save")
 	addBtn:SetWidth(120)
-	addBtn:SetCallback("OnClick", function()
-		local n = editBox:GetText()
-		local exp
-		if check:GetValue() then exp = tonumber(numBox:GetText()) end
-		addEntry(name, n, exp)
-		frame:Hide()
-	end)
+       addBtn:SetCallback("OnClick", function()
+               local n = editBox:GetText()
+               local exp = ""
+               if check:GetValue() then exp = tonumber(numBox:GetText()) end
+               addEntry(name, n, exp)
+               frame:Hide()
+       end)
 	btnGroup:AddChild(addBtn)
 
 	local cancelBtn = AceGUI:Create("Button")
