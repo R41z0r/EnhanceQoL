@@ -12,9 +12,12 @@ addon.Ignore = Ignore
 
 Ignore.entries = Ignore.entries or {}
 Ignore.selectedIndex = nil
+Ignore.rows = {}
 
 local widths = { 120, 120, 70, 90, 90, 150 }
 local titles = { "Player Name", "Server Name", "Date", "Expires", "Note" }
+
+local removeEntryByIndex
 
 local function updateCounter()
 	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.entries) end
@@ -22,7 +25,8 @@ end
 
 local function refreshList()
 	if not Ignore.scrollFrame then return end
-	Ignore.scrollFrame:ReleaseChildren()
+        Ignore.scrollFrame:ReleaseChildren()
+        wipe(Ignore.rows)
 
 	local header = AceGUI:Create("SimpleGroup")
 	header:SetFullWidth(true)
@@ -35,10 +39,29 @@ local function refreshList()
 	end
 	Ignore.scrollFrame:AddChild(header)
 
-	for idx, data in ipairs(Ignore.entries) do
-		local row = AceGUI:Create("SimpleGroup")
-		row:SetFullWidth(true)
-		row:SetLayout("Flow")
+        for idx, data in ipairs(Ignore.entries) do
+                local row = AceGUI:Create("SimpleGroup")
+                row:SetFullWidth(true)
+                row:SetLayout("Flow")
+                row.index = idx
+                row.frame:EnableMouse(true)
+                local bg = row.frame:CreateTexture(nil, "BACKGROUND")
+                bg:SetAllPoints(row.frame)
+                row.bg = bg
+                if idx == Ignore.selectedIndex then
+                        bg:SetColorTexture(1, 1, 0, 0.3)
+                else
+                        bg:SetColorTexture(0, 0, 0, 0)
+                end
+                row.frame:SetScript("OnMouseDown", function(frame)
+                        local widget = frame.obj
+                        if Ignore.selectedIndex and Ignore.rows[Ignore.selectedIndex] then
+                                local prev = Ignore.rows[Ignore.selectedIndex]
+                                if prev.bg then prev.bg:SetColorTexture(0, 0, 0, 0) end
+                        end
+                        Ignore.selectedIndex = widget.index
+                        widget.bg:SetColorTexture(1, 1, 0, 0.3)
+                end)
 		local values = {
 			data.player or "",
 			data.server or "",
@@ -46,14 +69,15 @@ local function refreshList()
 			data.expires or "",
 			data.note or "",
 		}
-		for i, val in ipairs(values) do
-			local lbl = AceGUI:Create("Label")
-			lbl:SetText(val)
-			lbl:SetWidth(widths[i])
-			row:AddChild(lbl)
-		end
-		Ignore.scrollFrame:AddChild(row)
-	end
+                for i, val in ipairs(values) do
+                        local lbl = AceGUI:Create("Label")
+                        lbl:SetText(val)
+                        lbl:SetWidth(widths[i])
+                        row:AddChild(lbl)
+                end
+                Ignore.rows[idx] = row
+                Ignore.scrollFrame:AddChild(row)
+        end
 	updateCounter()
 end
 
@@ -88,16 +112,16 @@ function Ignore:CreateUI()
 	frame:AddChild(scroll)
 	self.scrollFrame = scroll
 
-	local remove = AceGUI:Create("Button")
-	remove:SetText("Remove")
-	remove:SetWidth(120)
-	remove:SetCallback("OnClick", function()
-		if #self.entries > 0 then
-			table.remove(self.entries)
-			refreshList()
-		end
-	end)
-	frame:AddChild(remove)
+        local remove = AceGUI:Create("Button")
+        remove:SetText("Remove")
+        remove:SetWidth(120)
+        remove:SetCallback("OnClick", function()
+                if Ignore.selectedIndex then
+                        removeEntryByIndex(Ignore.selectedIndex)
+                        Ignore.selectedIndex = nil
+                end
+        end)
+        frame:AddChild(remove)
 
 	self.window = frame
 	refreshList()
@@ -143,10 +167,10 @@ local function addEntry(name, note, expires)
     refreshList()
 end
 
-local function removeEntryByIndex(index)
-	if origDelIgnoreByIndex then origDelIgnoreByIndex(index) end
-	table.remove(Ignore.entries, index)
-	refreshList()
+removeEntryByIndex = function(index)
+        if origDelIgnoreByIndex then origDelIgnoreByIndex(index) end
+        table.remove(Ignore.entries, index)
+        refreshList()
 end
 
 local function removeEntry(name)
