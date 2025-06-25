@@ -121,16 +121,26 @@ local origDelIgnoreByIndex = C_FriendList and C_FriendList.DelIgnoreByIndex
 local origDelIgnore = C_FriendList and C_FriendList.DelIgnore
 
 local function addEntry(name, note, expires)
-	if origAddIgnore then origAddIgnore(name) end
-	local player, server = strsplit("-", name)
-	table.insert(Ignore.entries, {
-		player = player or name,
-		server = server or (GetRealmName()):gsub("%s", ""),
-		date = date("%Y-%m-%d"),
-		expires = expires or "NEVER",
-		note = note or "",
-	})
-	refreshList()
+    local player, server = strsplit("-", name)
+    player = player or name
+    server = server or (GetRealmName()):gsub("%s", "")
+    for _, entry in ipairs(Ignore.entries) do
+        if entry.player == player and entry.server == server then
+            entry.note = note or entry.note
+            entry.expires = expires or entry.expires
+            refreshList()
+            return
+        end
+    end
+    if origAddIgnore then origAddIgnore(name) end
+    table.insert(Ignore.entries, {
+        player = player,
+        server = server,
+        date = date("%Y-%m-%d"),
+        expires = expires or "NEVER",
+        note = note or "",
+    })
+    refreshList()
 end
 
 local function removeEntryByIndex(index)
@@ -152,11 +162,20 @@ local function removeEntry(name)
 end
 
 local function addOrRemove(name)
-	if C_FriendList and C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) then
-		removeEntry(name)
-	else
-		C_FriendList.AddIgnore(name)
-	end
+    local player, server = strsplit("-", name)
+    player = player or name
+    server = server or (GetRealmName()):gsub("%s", "")
+    for _, entry in ipairs(Ignore.entries) do
+        if entry.player == player and entry.server == server then
+            removeEntry(name)
+            return
+        end
+    end
+    if C_FriendList and C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) then
+        removeEntry(name)
+    else
+        C_FriendList.AddIgnore(name)
+    end
 end
 
 StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
