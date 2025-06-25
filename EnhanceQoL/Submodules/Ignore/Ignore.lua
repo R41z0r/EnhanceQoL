@@ -221,9 +221,16 @@ local function addEntry(name, note, expires)
 end
 
 removeEntryByIndex = function(index)
-	if origDelIgnoreByIndex then origDelIgnoreByIndex(index) end
-	table.remove(Ignore.entries, index)
-	refreshList()
+        local entry = Ignore.entries[index]
+        if entry then
+                local fullName = entry.player
+                if entry.server and entry.server ~= "" then
+                        fullName = fullName .. "-" .. entry.server
+                end
+                removeEntry(fullName)
+        end
+        table.remove(Ignore.entries, index)
+        refreshList()
 end
 
 local function removeEntry(name)
