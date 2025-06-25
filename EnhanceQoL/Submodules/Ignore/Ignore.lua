@@ -161,22 +161,25 @@ end
 
 StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
 	text = "Add player to enhanced ignore list",
-	button1 = ADD,
-	button2 = CANCEL,
-	hasEditBox = true,
-	timeout = 0,
-	whileDead = true,
-	hideOnEscape = true,
-	preferredIndex = 3,
-	OnShow = function(self, name)
-		self.editBox:SetMultiLine(true)
-		self.editBox:SetHeight(60)
-		self.editBox:SetText("")
-		self.editBox:SetFocus()
-		if name then self.text:SetFormattedText("Add %s to enhanced ignore list?", "|cffffd200" .. name .. "|r") end
-		if not self.expCheck then
-			local check = CreateFrame("CheckButton", nil, self, "ChatConfigCheckButtonTemplate")
-			check:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
+        button1 = ADD,
+        button2 = CANCEL,
+        hasEditBox = true,
+        editBoxWidth = 350,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3,
+        OnShow = function(self, name)
+                self:SetWidth(420)
+                self:SetHeight(220)
+                self.editBox:SetMultiLine(true)
+                self.editBox:SetHeight(80)
+                self.editBox:SetText("")
+                self.editBox:SetFocus()
+                if name then self.text:SetFormattedText("Add %s to enhanced ignore list?", "|cffffd200" .. name .. "|r") end
+                if not self.expCheck then
+                        local check = CreateFrame("CheckButton", nil, self, "ChatConfigCheckButtonTemplate")
+                        check:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
 
 			check.Text:SetText("Expires (days)")
 			local box = CreateFrame("EditBox", nil, self, "InputBoxTemplate")
@@ -192,13 +195,16 @@ StaticPopupDialogs["EQOL_ADD_IGNORE"] = {
 					box:Disable()
 				end
 			end)
-			self.expCheck = check
-			self.expBox = box
-		end
-		self.expCheck:SetChecked(false)
-		self.expBox:SetText("")
-		self.expBox:Disable()
-	end,
+                        self.expCheck = check
+                        self.expBox = box
+                end
+                self.expCheck:ClearAllPoints()
+                self.expCheck:SetPoint("TOPLEFT", self.editBox, "BOTTOMLEFT", -2, -4)
+                self.expCheck:SetChecked(false)
+                self.expBox:SetText("")
+                self.expBox:SetPoint("LEFT", self.expCheck.Text, "RIGHT", 4, 0)
+                self.expBox:Disable()
+        end,
 	OnAccept = function(self, name)
 		local note = self.editBox:GetText()
 		local expires
