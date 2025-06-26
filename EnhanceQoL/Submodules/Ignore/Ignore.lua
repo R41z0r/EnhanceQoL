@@ -210,19 +210,12 @@ function Ignore:CreateUI()
 		listWidth = listWidth + w
 	end
 
-<<<<<<< dhfydv-codex/code-in-acegui-umschreiben-und-anpassen
 	local header = CreateFrame("Frame", nil, frame.content)
 	header:SetPoint("TOPLEFT", 20, -10)
 	header:SetHeight(ROW_HEIGHT)
 	local x = 0
 	for idx, col in ipairs({
-=======
-	local header = CreateFrame("Frame", nil, frame.frame)
-	header:SetPoint("TOPLEFT", 20, -90)
-	header:SetHeight(ROW_HEIGHT)
-	local x = 0
-	for _, col in ipairs({
->>>>>>> IgnoreTest
+
 		{ text = "Player", width = widths[1], key = "player" },
 		{ text = "Server", width = widths[2], key = "server" },
 		{ text = "Listed", width = widths[3], key = "listed" },
@@ -265,18 +258,14 @@ function Ignore:CreateUI()
 		x = x + col.width
 	end
 
-<<<<<<< dhfydv-codex/code-in-acegui-umschreiben-und-anpassen
 	local scrollFrame = CreateFrame("ScrollFrame", "EQOLIgnoreScrollFrame", frame.content, "FauxScrollFrameTemplate")
-=======
-	local scrollFrame = CreateFrame("ScrollFrame", "EQOLIgnoreScrollFrame", frame.frame, "FauxScrollFrameTemplate")
->>>>>>> IgnoreTest
+
 	scrollFrame:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -2)
 	scrollFrame:SetWidth(listWidth)
 	scrollFrame:SetHeight(NUM_ROWS * ROW_HEIGHT)
 	scrollFrame:SetScript("OnVerticalScroll", function(self, offset)
 		FauxScrollFrame_OnVerticalScroll(self, offset, ROW_HEIGHT, function() Ignore:UpdateRows() end)
 	end)
-<<<<<<< dhfydv-codex/code-in-acegui-umschreiben-und-anpassen
 	local bg = scrollFrame:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints(scrollFrame)
 	bg:SetColorTexture(0, 0, 0, 0.25)
@@ -284,12 +273,7 @@ function Ignore:CreateUI()
 
 	for i = 1, NUM_ROWS do
 		local row = CreateFrame("Button", nil, frame.content)
-=======
-	Ignore.scrollFrame = scrollFrame
 
-	for i = 1, NUM_ROWS do
-		local row = CreateFrame("Button", nil, frame.frame)
->>>>>>> IgnoreTest
 		Mixin(row, IgnoreRowTemplate)
 		row:OnAcquired()
 		row:SetWidth(listWidth)
