@@ -250,10 +250,13 @@ function EQOLIgnoreFrame_OnLoad(frame)
 	end)
 
 	Ignore.removeBtn:SetScript("OnClick", function()
-		if Ignore.selectedIndex then
-			removeEntryByIndex(Ignore.selectedIndex)
-			Ignore.selectedIndex = nil
+		local entry = Ignore.filtered[Ignore.selectedIndex]
+		if entry then
+			local name = entry.player
+			if entry.server and entry.server ~= "" then name = name .. "-" .. entry.server end
+			removeEntry(name)
 		end
+		Ignore.selectedIndex = nil
 		RefreshList()
 	end)
 
