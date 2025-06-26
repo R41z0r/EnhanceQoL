@@ -6,6 +6,7 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
+-- luacheck: globals EQOLIgnoreFrame EQOLIgnoreFrame_OnLoad HybridScrollFrame_CreateButtons
 local AceGUI = addon.AceGUI
 local Ignore = addon.Ignore or {}
 addon.Ignore = Ignore
@@ -140,18 +141,18 @@ end
 local function RefreshList()
 	FilterEntries()
 	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.filtered) end
-	if Ignore.scrollFrame then
-		FauxScrollFrame_Update(Ignore.scrollFrame, #Ignore.filtered, NUM_ROWS, ROW_HEIGHT)
-		Ignore:UpdateRows()
-	end
+        if Ignore.scrollFrame then
+                HybridScrollFrame_Update(Ignore.scrollFrame, #Ignore.filtered * ROW_HEIGHT, NUM_ROWS * ROW_HEIGHT)
+                Ignore:UpdateRows()
+        end
 end
 
 function Ignore:UpdateRows()
-	if not self.scrollFrame then return end
-	local offset = FauxScrollFrame_GetOffset(self.scrollFrame)
-	for i, row in ipairs(self.rows) do
-		local idx = i + offset
-		local e = self.filtered[idx]
+        if not self.scrollFrame then return end
+        local offset = HybridScrollFrame_GetOffset(self.scrollFrame)
+        for i, row in ipairs(self.rows) do
+                local idx = i + offset
+                local e = self.filtered[idx]
 		if e then
 			row:Init({
 				index = idx,
@@ -168,174 +169,99 @@ function Ignore:UpdateRows()
 	end
 end
 
-function Ignore:CreateUI()
-	if self.window then return end
-	local frame = AceGUI:Create("Window")
-	frame:SetTitle("Enhanced Ignore")
-	frame:SetWidth(650)
-	frame:SetHeight(440)
-	frame:SetLayout("List")
-	frame:SetCallback("OnClose", function(widget)
-		AceGUI:Release(widget)
-		if self.searchBox then
-			AceGUI:Release(self.searchBox)
-			self.searchBox = nil
-		end
-		self.window = nil
-		Ignore.searchText = ""
-	end)
+-- Frame created from XML
+function EQOLIgnoreFrame_OnLoad(frame)
+        Ignore.frame = frame
+        Ignore.counter = frame.Counter
+        Ignore.searchBox = frame.SearchBox
+        Ignore.header = frame.Header
+        Ignore.scrollFrame = frame.ScrollFrame
+        Ignore.removeBtn = frame.RemoveButton
 
-	local spacer = AceGUI:Create("Label")
-	spacer:SetText(" ")
-	spacer:SetFullWidth(true)
-	spacer:SetHeight(15)
-	frame:AddChild(spacer)
+        local listWidth = 0
+        for _, w in ipairs(widths) do
+                listWidth = listWidth + w
+        end
 
-	local counter = AceGUI:Create("Heading")
-	counter:SetText("Entries: 0")
-	counter:SetFullWidth(true)
-	frame:AddChild(counter)
-	self.counter = counter
+        local x = 0
+        for idx, col in ipairs({
+                { text = "Player", width = widths[1], key = "player" },
+                { text = "Server", width = widths[2], key = "server" },
+                { text = "Listed", width = widths[3], key = "listed" },
+                { text = "Expires", width = widths[4], key = "expire" },
+                { text = "Note", width = widths[5], key = "note" },
+        }) do
+                local h = CreateFrame("Button", "EQOLIgnoreHeader" .. idx, frame.Header, "WhoFrameColumnHeaderTemplate")
+                h:SetWidth(col.width)
+                if col.key == "note" then
+                        _G[h:GetName() .. "Middle"]:SetWidth(col.width - 60)
+                else
+                        _G[h:GetName() .. "Middle"]:SetWidth(col.width - 9)
+                end
+                h:SetHeight(ROW_HEIGHT)
+                h:SetPoint("LEFT", x, 0)
+                if h.Text then
+                        h.Text:SetText(col.text)
+                else
+                        h:SetText(col.text)
+                end
+                h.sortKey = col.key
+                h:SetScript("OnClick", function(self)
+                        Ignore.sortAsc = (Ignore.currentSort ~= self.sortKey) and true or not Ignore.sortAsc
+                        Ignore.currentSort = self.sortKey
+                        table.sort(Ignore.filtered, function(a, b)
+                                local av, bv
+                                if self.sortKey == "listed" then
+                                        av = Ignore.daysFromToday(a.date or "")
+                                        bv = Ignore.daysFromToday(b.date or "")
+                                elseif self.sortKey == "expire" then
+                                        av = Ignore:GetExpireText(a)
+                                        bv = Ignore:GetExpireText(b)
+                                else
+                                        av = tostring(a[self.sortKey] or "")
+                                        bv = tostring(b[self.sortKey] or "")
+                                end
+                                if Ignore.sortAsc then
+                                        return av < bv
+                                else
+                                        return av > bv
+                                end
+                        end)
+                        Ignore:UpdateRows()
+                end)
+                x = x + col.width
+        end
 
-	local search = AceGUI:Create("EditBox")
-	search:SetWidth(150)
-	search:DisableButton(true)
-	search:SetCallback("OnTextChanged", function(_, _, text)
-		Ignore.searchText = text or ""
-		Ignore.selectedIndex = nil
-		RefreshList()
-	end)
-	frame:AddChild(search)
-	search.frame:ClearAllPoints()
-	search.frame:SetPoint("TOPRIGHT", frame.content, "TOPRIGHT", -20, -10)
-	self.searchBox = search
+        Ignore.rows = HybridScrollFrame_CreateButtons(Ignore.scrollFrame, "EQOLIgnoreRowTemplate", 0, -2)
+        for _, row in ipairs(Ignore.rows) do
+                Mixin(row, IgnoreRowTemplate)
+                row:OnAcquired()
+        end
+        Ignore.scrollFrame.update = function() Ignore:UpdateRows() end
 
-	-- Create a dedicated container for custom UI within the AceGUI window
-	local group = AceGUI:Create("SimpleGroup")
-	group:SetFullWidth(true)
-	group:SetFullHeight(true)
-	group:SetLayout("Fill")
-	frame:AddChild(group)
-	-- Use this group's frame for manual CreateFrame parenting
-	local container = group.frame
+        frame.SearchBox:SetScript("OnTextChanged", function(self)
+                Ignore.searchText = self:GetText() or ""
+                Ignore.selectedIndex = nil
+                RefreshList()
+        end)
 
-	local listWidth = 0
-	for _, w in ipairs(widths) do
-		listWidth = listWidth + w
-	end
+        frame.RemoveButton:SetScript("OnClick", function()
+                if Ignore.selectedIndex then
+                        removeEntryByIndex(Ignore.selectedIndex)
+                        Ignore.selectedIndex = nil
+                end
+                RefreshList()
+        end)
 
-	-- Header container for column titles
-	local header = CreateFrame("Frame", nil, container)
-	header:SetParent(container) -- parent to the AceGUI content region
-	header:Show()
-	header:SetPoint("TOPLEFT", container, "TOPLEFT", 7, 0)
-	header:SetHeight(ROW_HEIGHT)
-	header:SetWidth(listWidth + 5) -- match total list width
-	local x = 0
-	for idx, col in ipairs({
-		{ text = "Player", width = widths[1], key = "player" },
-		{ text = "Server", width = widths[2], key = "server" },
-		{ text = "Listed", width = widths[3], key = "listed" },
-		{ text = "Expires", width = widths[4], key = "expire" },
-		{ text = "Note", width = widths[5], key = "note" },
-	}) do
-		local h = CreateFrame("Button", "EQOLIgnoreHeader" .. idx, header, "WhoFrameColumnHeaderTemplate")
-		h:SetWidth(col.width)
-		if col.key == "note" then
-			_G[h:GetName() .. "Middle"]:SetWidth(col.width - 60)
-		else
-			_G[h:GetName() .. "Middle"]:SetWidth(col.width - 9)
-		end
-		h:SetHeight(ROW_HEIGHT)
-		h:SetPoint("LEFT", x, 0)
-		if h.Text then
-			h.Text:SetText(col.text)
-		else
-			h:SetText(col.text)
-		end
-		h.sortKey = col.key
-		h:SetScript("OnClick", function(self)
-			Ignore.sortAsc = (Ignore.currentSort ~= self.sortKey) and true or not Ignore.sortAsc
-			Ignore.currentSort = self.sortKey
-			table.sort(Ignore.filtered, function(a, b)
-				local av, bv
-				if self.sortKey == "listed" then
-					av = Ignore.daysFromToday(a.date or "")
-					bv = Ignore.daysFromToday(b.date or "")
-				elseif self.sortKey == "expire" then
-					av = Ignore:GetExpireText(a)
-					bv = Ignore:GetExpireText(b)
-				else
-					av = tostring(a[self.sortKey] or "")
-					bv = tostring(b[self.sortKey] or "")
-				end
-				if Ignore.sortAsc then
-					return av < bv
-				else
-					return av > bv
-				end
-			end)
-			Ignore:UpdateRows()
-		end)
-		x = x + col.width
-	end
-
-	local scrollFrame = CreateFrame("ScrollFrame", "EQOLIgnoreScrollFrame", container, "FauxScrollFrameTemplate")
-	scrollFrame:SetParent(container) -- ensure proper AceGUI parenting
-	scrollFrame:Show()
-
-	scrollFrame:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -5)
-	scrollFrame:SetHeight((NUM_ROWS * ROW_HEIGHT))
-	scrollFrame:SetWidth(listWidth - 50)
-	-- Fill to bottom-right of container, leave space for Remove button
-	-- scrollFrame:SetPoint("BOTTOMRIGHT", container, "BOTTOMRIGHT", -20, 50)
-	scrollFrame:SetScript("OnVerticalScroll", function(self, offset)
-		FauxScrollFrame_OnVerticalScroll(self, offset, ROW_HEIGHT, function() Ignore:UpdateRows() end)
-	end)
-	local bg = scrollFrame:CreateTexture(nil, "BACKGROUND")
-	bg:SetAllPoints(scrollFrame)
-	bg:SetColorTexture(0, 0, 0, 0.7)
-	Ignore.scrollFrame = scrollFrame
-
-	local scrollChild = CreateFrame("Frame", nil, scrollFrame)
-	scrollChild:SetSize(listWidth, NUM_ROWS * ROW_HEIGHT)
-	scrollFrame:SetScrollChild(scrollChild)
-
-	for i = 1, NUM_ROWS do
-		local row = CreateFrame("Button", nil, scrollChild)
-		row:SetParent(scrollChild)
-		row:Show()
-		Mixin(row, IgnoreRowTemplate)
-		row:OnAcquired()
-		row:SetWidth(listWidth)
-		row:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 7, -((i - 1) * ROW_HEIGHT) - 5)
-		Ignore.rows[i] = row
-	end
-
-	-- Manual Remove button inside container
-	local removeBtn = CreateFrame("Button", nil, container, "UIPanelButtonTemplate")
-	removeBtn:SetSize(120, 22)
-	removeBtn:SetPoint("BOTTOMLEFT", frame.frame, "BOTTOMLEFT", 10, 10)
-	removeBtn:SetText("Remove")
-	removeBtn:SetScript("OnClick", function()
-		if Ignore.selectedIndex then
-			removeEntryByIndex(Ignore.selectedIndex)
-			Ignore.selectedIndex = nil
-		end
-		RefreshList()
-	end)
-
-	self.window = frame
-	RefreshList()
+        RefreshList()
 end
 
 function Ignore:Toggle()
-	if self.window and self.window.frame:IsShown() then
-		self.window:Hide()
-	else
-		self:CreateUI()
-		self.window:Show()
-	end
+        if EQOLIgnoreFrame:IsShown() then
+                EQOLIgnoreFrame:Hide()
+        else
+                EQOLIgnoreFrame:Show()
+        end
 end
 
 SLASH_EQOLIGNORE1 = "/eig"

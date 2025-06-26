@@ -1,0 +1,64 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+    <Button name="EQOLIgnoreRowTemplate" virtual="true">
+        <Size x="630" y="20"/>
+        <Scripts>
+            <OnLoad>
+                self:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight");
+                self:RegisterForClicks("LeftButtonUp");
+            </OnLoad>
+        </Scripts>
+    </Button>
+
+    <Frame name="EQOLIgnoreFrame" inherits="BasicFrameTemplateWithInset" parent="UIParent" hidden="true">
+        <Size x="650" y="440"/>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>EQOLIgnoreFrame_OnLoad(self);</OnLoad>
+        </Scripts>
+        <Frames>
+            <EditBox name="$parentSearchBox" inherits="SearchBoxTemplate">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-40" y="-33"/>
+                </Anchors>
+            </EditBox>
+            <FontString name="$parentCounter" inherits="GameFontNormal">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="15" y="-33"/>
+                </Anchors>
+                <Text>Entries: 0</Text>
+            </FontString>
+            <Frame name="$parentHeader" inherits="BackdropTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="10" y="-58"/>
+                    <Anchor point="TOPRIGHT" x="-28" y="-58"/>
+                </Anchors>
+                <Size x="0" y="20"/>
+            </Frame>
+            <ScrollFrame name="$parentScrollFrame" inherits="HybridScrollFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentHeader" relativePoint="BOTTOMLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" x="-28" y="48"/>
+                </Anchors>
+                <Frames>
+                    <Frame name="$parentScrollChild">
+                        <Anchors>
+                            <Anchor point="TOPLEFT"/>
+                        </Anchors>
+                    </Frame>
+                </Frames>
+            </ScrollFrame>
+            <Button name="$parentRemoveButton" inherits="UIPanelButtonTemplate">
+                <Size x="120" y="22"/>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" x="15" y="15"/>
+                </Anchors>
+                <Text>Remove</Text>
+            </Button>
+        </Frames>
+    </Frame>
+</Ui>
