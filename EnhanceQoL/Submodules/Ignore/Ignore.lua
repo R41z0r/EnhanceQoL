@@ -200,6 +200,13 @@ function Ignore:CreateUI()
         -- The scroll frame must be named so the template can locate its
         -- scrollbar during the OnLoad script.
         local scroll = CreateFrame("ScrollFrame", "EQOLIgnoreScrollFrame", frame.frame, "HybridScrollFrameTemplate")
+<<<<<<< codex/fix-attempt-to-index-nil-field--scrollbar
+        -- In some environments the HybridScrollFrameTemplate OnLoad doesn't
+        -- run when the frame is created dynamically, so manually grab the
+        -- scrollbar created by the template if needed.
+        scroll.scrollBar = scroll.scrollBar or _G[scroll:GetName() .. "ScrollBar"]
+=======
+>>>>>>> IgnoreTest
         scroll:SetPoint("TOPLEFT", frame.frame, "TOPLEFT", 20, -90)
         scroll:SetPoint("BOTTOMRIGHT", frame.frame, "BOTTOMRIGHT", -45, 50)
         scroll.scrollBar:SetPoint("TOPLEFT", scroll, "TOPRIGHT", 0, -16)
