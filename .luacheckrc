@@ -19797,6 +19797,9 @@ globals = {
 	"AUCTION_HOUSE_SELLER_YOU",
 	"COPY_CHARACTER_NAME",
 	"ChatFrame_SendTell",
-	"ChatEdit_SetLastTellTarget",
-	"ChatEdit_SetLastToldTarget",
+        "ChatEdit_SetLastTellTarget",
+        "ChatEdit_SetLastToldTarget",
+        "HybridScrollFrame_GetOffset",
+        "HybridScrollFrame_Update",
+        "MAX_IGNORE",
 }
