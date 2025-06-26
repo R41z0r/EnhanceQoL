@@ -148,8 +148,32 @@ local function FilterEntries()
 	end
 end
 
+local function SortFiltered()
+	if not Ignore.currentSort then return end
+	local key = Ignore.currentSort
+	table.sort(Ignore.filtered, function(a, b)
+		local av, bv
+		if key == "listed" then
+			av = Ignore.daysFromToday(a.date or "")
+			bv = Ignore.daysFromToday(b.date or "")
+		elseif key == "expire" then
+			av = Ignore:GetExpireText(a)
+			bv = Ignore:GetExpireText(b)
+		else
+			av = tostring(a[key] or "")
+			bv = tostring(b[key] or "")
+		end
+		if Ignore.sortAsc then
+			return av < bv
+		else
+			return av > bv
+		end
+	end)
+end
+
 local function RefreshList()
 	FilterEntries()
+	SortFiltered()
 	if Ignore.counter then Ignore.counter:SetText(format(L["IgnoreEntries"], #Ignore.filtered)) end
 	if Ignore.scrollFrame then
 		HybridScrollFrame_Update(Ignore.scrollFrame, #Ignore.filtered * ROW_HEIGHT, NUM_ROWS * ROW_HEIGHT)
@@ -215,24 +239,7 @@ function EQOLIgnoreFrame_OnLoad(frame)
 			colH:SetScript("OnClick", function(self)
 				Ignore.sortAsc = (Ignore.currentSort ~= self.sortKey) and true or not Ignore.sortAsc
 				Ignore.currentSort = self.sortKey
-				table.sort(Ignore.filtered, function(a, b)
-					local av, bv
-					if self.sortKey == "listed" then
-						av = Ignore.daysFromToday(a.date or "")
-						bv = Ignore.daysFromToday(b.date or "")
-					elseif self.sortKey == "expire" then
-						av = Ignore:GetExpireText(a)
-						bv = Ignore:GetExpireText(b)
-					else
-						av = tostring(a[self.sortKey] or "")
-						bv = tostring(b[self.sortKey] or "")
-					end
-					if Ignore.sortAsc then
-						return av < bv
-					else
-						return av > bv
-					end
-				end)
+				SortFiltered()
 				Ignore:UpdateRows()
 			end)
 		end
