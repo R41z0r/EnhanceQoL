@@ -308,6 +308,7 @@ function Ignore:CreateUI()
        scrollChild:SetPoint("TOPLEFT")
        scrollChild:SetPoint("TOPRIGHT")
        scrollChild:SetHeight(NUM_ROWS * ROW_HEIGHT)
+       scrollChild:SetWidth(listWidth)
        scrollFrame:SetScrollChild(scrollChild)
        Ignore.scrollChild = scrollChild
 
@@ -320,7 +321,13 @@ function Ignore:CreateUI()
 		row:SetWidth(listWidth)
 		-- Anchor rows directly to the scrollChild so scrolling works correctly
 		-- without relying on the header frame.
-		row:SetPoint("TOPLEFT", scrollChild, "TOPLEFT", 7, -((i - 1) * ROW_HEIGHT))
+               row:SetPoint(
+                       "TOPLEFT",
+                       scrollChild,
+                       "TOPLEFT",
+                       7,
+                       -((i - 1) * ROW_HEIGHT) - 5
+               )
 		Ignore.rows[i] = row
 	end
 
