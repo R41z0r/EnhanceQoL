@@ -212,3 +212,14 @@ L["persistAuctionHouseFilter"] = "Remember Auction House filters for this sessio
 L["Excluded NPCs"] = "Excluded NPCs"
 L["hideDynamicFlightBar"] = "Hide %s Vigor bar while on the ground"
 L["InvalidExpiration"] = "Invalid expiration value"
+
+-- Ignore module
+L["IgnorePlayer"] = "Player"
+L["IgnoreServer"] = "Server"
+L["IgnoreListed"] = "Listed"
+L["IgnoreExpires"] = "Expires"
+L["IgnoreNote"] = "Note"
+L["IgnoreEntries"] = "Entries: %d"
+L["IgnoreWindowTitle"] = "Enhanced Ignore"
+L["IgnoreExpiresDays"] = "Expires (days)"
+L["IgnoreAddSave"] = "Add/Save"

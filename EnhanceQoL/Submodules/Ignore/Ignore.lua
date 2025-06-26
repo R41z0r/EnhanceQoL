@@ -6,6 +6,8 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 
+local L = addon.L
+
 -- luacheck: globals EQOLIgnoreFrame EQOLIgnoreFrame_OnLoad HybridScrollFrame_CreateButtons
 local AceGUI = addon.AceGUI
 local Ignore = addon.Ignore or {}
@@ -40,7 +42,13 @@ end
 local ROW_HEIGHT = 20
 
 local widths = { 130, 150, 60, 60, 205 }
-local titles = { "Player", "Server", "Listed", "Expires", "Note" }
+local titles = {
+	L["IgnorePlayer"],
+	L["IgnoreServer"],
+	L["IgnoreListed"],
+	L["IgnoreExpires"],
+	L["IgnoreNote"],
+}
 local DOUBLE_CLICK_TIME = 0.5
 
 Ignore.currentSort = nil
@@ -142,7 +150,7 @@ end
 
 local function RefreshList()
 	FilterEntries()
-	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.filtered) end
+	if Ignore.counter then Ignore.counter:SetText(format(L["IgnoreEntries"], #Ignore.filtered)) end
 	if Ignore.scrollFrame then
 		HybridScrollFrame_Update(Ignore.scrollFrame, #Ignore.filtered * ROW_HEIGHT, NUM_ROWS * ROW_HEIGHT)
 		Ignore:UpdateRows()
@@ -192,11 +200,11 @@ function EQOLIgnoreFrame_OnLoad(frame)
 	local x = 0
 	local c = 1
 	for idx, col in ipairs({
-		{ text = "Player", width = widths[1], key = "player" },
-		{ text = "Server", width = widths[2], key = "server" },
-		{ text = "Listed", width = widths[3], key = "listed" },
-		{ text = "Expires", width = widths[4], key = "expire" },
-		{ text = "Note", width = widths[5], key = "note" },
+		{ text = L["IgnorePlayer"], width = widths[1], key = "player" },
+		{ text = L["IgnoreServer"], width = widths[2], key = "server" },
+		{ text = L["IgnoreListed"], width = widths[3], key = "listed" },
+		{ text = L["IgnoreExpires"], width = widths[4], key = "expire" },
+		{ text = L["IgnoreNote"], width = widths[5], key = "note" },
 	}) do
 		local colH = _G[fn .. "HeaderCol" .. c]
 		if colH then
@@ -364,7 +372,7 @@ function Ignore:ShowAddFrame(name, note, expires)
 	end
 
 	local frame = AceGUI:Create("Window")
-	frame:SetTitle("Enhanced Ignore")
+	frame:SetTitle(L["IgnoreWindowTitle"])
 	frame:SetWidth(420)
 	frame:SetHeight(220)
 	frame:SetLayout("List")
@@ -380,7 +388,7 @@ function Ignore:ShowAddFrame(name, note, expires)
 
 	local editBox = AceGUI:Create("MultiLineEditBox")
 	editBox:SetFullWidth(true)
-	editBox:SetLabel("Note")
+	editBox:SetLabel(L["IgnoreNote"])
 	editBox:SetNumLines(4)
 	editBox:DisableButton(true)
 	if note then editBox:SetText(note) end
@@ -392,7 +400,7 @@ function Ignore:ShowAddFrame(name, note, expires)
 	frame:AddChild(expGroup)
 
 	local check = AceGUI:Create("CheckBox")
-	check:SetLabel("Expires (days)")
+	check:SetLabel(L["IgnoreExpiresDays"])
 	expGroup:AddChild(check)
 
 	local numBox = AceGUI:Create("EditBox")
@@ -424,7 +432,7 @@ function Ignore:ShowAddFrame(name, note, expires)
 	frame:AddChild(btnGroup)
 
 	local addBtn = AceGUI:Create("Button")
-	addBtn:SetText("Add/Save")
+	addBtn:SetText(L["IgnoreAddSave"])
 	addBtn:SetWidth(120)
 	addBtn:SetCallback("OnClick", function()
 		local n = editBox:GetText()
