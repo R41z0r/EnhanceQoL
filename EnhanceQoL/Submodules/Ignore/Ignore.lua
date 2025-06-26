@@ -112,14 +112,15 @@ function Ignore:CreateUI()
 	frame:SetWidth(650)
 	frame:SetHeight(400)
 	frame:SetLayout("List")
-	frame:SetCallback("OnClose", function(widget)
-		AceGUI:Release(widget)
-		if self.searchBox then
-			AceGUI:Release(self.searchBox)
-			self.searchBox = nil
-		end
-		self.window = nil
-	end)
+       frame:SetCallback("OnClose", function(widget)
+               AceGUI:Release(widget)
+               if self.searchBox then
+                       AceGUI:Release(self.searchBox)
+                       self.searchBox = nil
+               end
+               self.window = nil
+               Ignore.searchText = ""
+       end)
 
 	local spacer = AceGUI:Create("Label")
 	spacer:SetText(" ")
