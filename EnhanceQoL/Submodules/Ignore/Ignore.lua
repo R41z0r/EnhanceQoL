@@ -134,18 +134,18 @@ function Ignore:CreateUI()
 	frame:AddChild(counter)
 	self.counter = counter
 
-	local search = AceGUI:Create("EditBox")
-	search:SetWidth(150)
-	search:DisableButton(true)
-	search.frame:SetParent(frame.frame)
-	search.frame:ClearAllPoints()
-	search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
-	search:SetCallback("OnTextChanged", function(_, _, text)
-		Ignore.searchText = text or ""
-		Ignore.selectedIndex = nil
-		refreshList()
-	end)
-	self.searchBox = search
+        local search = AceGUI:Create("EditBox")
+        search:SetWidth(150)
+        search:DisableButton(true)
+        search:SetCallback("OnTextChanged", function(_, _, text)
+                Ignore.searchText = text or ""
+                Ignore.selectedIndex = nil
+                refreshList()
+        end)
+        frame:AddChild(search)
+        search.frame:ClearAllPoints()
+        search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
+        self.searchBox = search
 
 	local scroll = AceGUI:Create("ScrollFrame")
 	scroll:SetLayout("List")
