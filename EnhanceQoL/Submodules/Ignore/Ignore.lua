@@ -291,9 +291,9 @@ function Ignore:CreateUI()
 	scrollFrame:SetParent(container) -- ensure proper AceGUI parenting
 	scrollFrame:Show()
 
-	scrollFrame:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -5)
-	scrollFrame:SetHeight((NUM_ROWS * ROW_HEIGHT) - 25)
-	scrollFrame:SetWidth(listWidth - 50)
+       scrollFrame:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -5)
+       scrollFrame:SetHeight(NUM_ROWS * ROW_HEIGHT)
+       scrollFrame:SetWidth(listWidth - 50)
 	-- Fill to bottom-right of container, leave space for Remove button
 	-- scrollFrame:SetPoint("BOTTOMRIGHT", container, "BOTTOMRIGHT", -20, 50)
 	scrollFrame:SetScript("OnVerticalScroll", function(self, offset)
@@ -306,9 +306,7 @@ function Ignore:CreateUI()
 
        local scrollChild = CreateFrame("Frame", nil, scrollFrame)
        scrollChild:SetPoint("TOPLEFT")
-       scrollChild:SetPoint("TOPRIGHT")
-       scrollChild:SetHeight(NUM_ROWS * ROW_HEIGHT)
-       scrollChild:SetWidth(listWidth)
+       scrollChild:SetSize(listWidth, NUM_ROWS * ROW_HEIGHT)
        scrollFrame:SetScrollChild(scrollChild)
        Ignore.scrollChild = scrollChild
 
