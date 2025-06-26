@@ -550,6 +550,7 @@ addon.Drinks.drinkList = { -- Special Food
 	{ key = "SourTopazBites", id = 228493, requiredLevel = 1, mana = 3700000, isBuffFood = true, isEarthenFood = true, earthenOnly = true },
 	-- Mana of this spell is adjusted per level
 	{ key = "QuietContemplation", id = 461063, requiredLevel = 1, mana = 3700000, isBuffFood = false, isEarthenFood = true, earthenOnly = true, isSpell = true },
+	{ key = "Recuperate", id = 1231411, requiredLevel = 1, mana = 0, isBuffFood = false, isSpell = true, isHealthOnly = true },
 }
 
 table.sort(addon.Drinks.drinkList, function(a, b) return a.mana > b.mana end)
@@ -579,6 +580,7 @@ function addon.functions.updateAllowedDrinks()
 	local preferMage = db.preferMageFood
 	local ignoreBuff = db.ignoreBuffFood
 	local ignoreGems = db.ignoreGemsEarthen
+	local allowRecuperate = db.allowRecuperate
 
 	-- iterate only once over the master list
 	for i = 1, #addon.Drinks.drinkList do
@@ -588,7 +590,7 @@ function addon.functions.updateAllowedDrinks()
 
 		local req = drink.requiredLevel
 		local dMana = drink.isMageFood and mana or drink.mana
-		if req <= playerLevel and dMana >= minManaValue then
+		if req <= playerLevel and (dMana >= minManaValue or (allowRecuperate and drink.id == 1231411)) then
 			if
 				not (drink.isBuffFood and ignoreBuff)
 				and not (isEarthen and not drink.isEarthenFood)
