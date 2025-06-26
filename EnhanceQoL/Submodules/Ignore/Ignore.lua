@@ -51,7 +51,7 @@ local titles = {
 }
 local DOUBLE_CLICK_TIME = 0.5
 
-Ignore.currentSort = nil
+Ignore.currentSort = "player"
 Ignore.sortAsc = true
 
 local NUM_ROWS = 14
