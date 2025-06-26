@@ -78,7 +78,12 @@ function IgnoreRowTemplate:Init(elementData)
 	self.cols[2]:SetText(elementData.server or "")
 	self.cols[3]:SetText(elementData.listed or "")
 	self.cols[4]:SetText(elementData.expire or "")
-	self.cols[5]:SetText(elementData.note or "")
+	do
+		local noteText = elementData.note or ""
+		local maxLen = 30
+		if #noteText > maxLen then noteText = noteText:sub(1, maxLen - 3) .. "..." end
+		self.cols[5]:SetText(noteText)
+	end
 
 	if self.index == Ignore.selectedIndex then
 		self.bg:SetColorTexture(1, 1, 0, 0.3)
@@ -205,17 +210,29 @@ function Ignore:CreateUI()
 	search.frame:SetPoint("TOPRIGHT", frame.content, "TOPRIGHT", -20, -10)
 	self.searchBox = search
 
+	-- Create a dedicated container for custom UI within the AceGUI window
+	local group = AceGUI:Create("SimpleGroup")
+	group:SetFullWidth(true)
+	group:SetFullHeight(true)
+	group:SetLayout("Fill")
+	frame:AddChild(group)
+	-- Use this group's frame for manual CreateFrame parenting
+	local container = group.frame
+
 	local listWidth = 0
 	for _, w in ipairs(widths) do
 		listWidth = listWidth + w
 	end
 
-	local header = CreateFrame("Frame", nil, frame.content)
-	header:SetPoint("TOPLEFT", 20, -10)
+	-- Header container for column titles
+	local header = CreateFrame("Frame", nil, container)
+	header:SetParent(container) -- parent to the AceGUI content region
+	header:Show()
+	header:SetPoint("TOPLEFT", container, "TOPLEFT", 7, 0)
 	header:SetHeight(ROW_HEIGHT)
+	header:SetWidth(listWidth + 5) -- match total list width
 	local x = 0
 	for idx, col in ipairs({
-
 		{ text = "Player", width = widths[1], key = "player" },
 		{ text = "Server", width = widths[2], key = "server" },
 		{ text = "Listed", width = widths[3], key = "listed" },
@@ -224,6 +241,11 @@ function Ignore:CreateUI()
 	}) do
 		local h = CreateFrame("Button", "EQOLIgnoreHeader" .. idx, header, "WhoFrameColumnHeaderTemplate")
 		h:SetWidth(col.width)
+		if col.key == "note" then
+			_G[h:GetName() .. "Middle"]:SetWidth(col.width - 60)
+		else
+			_G[h:GetName() .. "Middle"]:SetWidth(col.width - 9)
+		end
 		h:SetHeight(ROW_HEIGHT)
 		h:SetPoint("LEFT", x, 0)
 		if h.Text then
@@ -258,39 +280,50 @@ function Ignore:CreateUI()
 		x = x + col.width
 	end
 
-	local scrollFrame = CreateFrame("ScrollFrame", "EQOLIgnoreScrollFrame", frame.content, "FauxScrollFrameTemplate")
+	local scrollFrame = CreateFrame("ScrollFrame", "EQOLIgnoreScrollFrame", container, "FauxScrollFrameTemplate")
+	scrollFrame:SetParent(container) -- ensure proper AceGUI parenting
+	scrollFrame:Show()
 
-	scrollFrame:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -2)
-	scrollFrame:SetWidth(listWidth)
-	scrollFrame:SetHeight(NUM_ROWS * ROW_HEIGHT)
+	scrollFrame:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -5)
+	scrollFrame:SetHeight((NUM_ROWS * ROW_HEIGHT) - 25)
+	scrollFrame:SetWidth(listWidth - 50)
+	-- Fill to bottom-right of container, leave space for Remove button
+	-- scrollFrame:SetPoint("BOTTOMRIGHT", container, "BOTTOMRIGHT", -20, 50)
 	scrollFrame:SetScript("OnVerticalScroll", function(self, offset)
 		FauxScrollFrame_OnVerticalScroll(self, offset, ROW_HEIGHT, function() Ignore:UpdateRows() end)
 	end)
 	local bg = scrollFrame:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints(scrollFrame)
-	bg:SetColorTexture(0, 0, 0, 0.25)
+	bg:SetColorTexture(0, 0, 0, 0.7)
 	Ignore.scrollFrame = scrollFrame
 
-	for i = 1, NUM_ROWS do
-		local row = CreateFrame("Button", nil, frame.content)
+	local scrollChild = CreateFrame("Frame", nil, scrollFrame)
+	scrollChild:SetSize(listWidth, NUM_ROWS * ROW_HEIGHT)
+	scrollFrame:SetScrollChild(scrollChild)
 
+	for i = 1, NUM_ROWS do
+		local row = CreateFrame("Button", nil, scrollChild)
+		row:SetParent(scrollChild)
+		row:Show()
 		Mixin(row, IgnoreRowTemplate)
 		row:OnAcquired()
 		row:SetWidth(listWidth)
-		row:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 0, -((i - 1) * ROW_HEIGHT))
+		row:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 7, -((i - 1) * ROW_HEIGHT) - 5)
 		Ignore.rows[i] = row
 	end
 
-	local remove = AceGUI:Create("Button")
-	remove:SetText("Remove")
-	remove:SetWidth(120)
-	remove:SetCallback("OnClick", function()
+	-- Manual Remove button inside container
+	local removeBtn = CreateFrame("Button", nil, container, "UIPanelButtonTemplate")
+	removeBtn:SetSize(120, 22)
+	removeBtn:SetPoint("BOTTOMLEFT", frame.frame, "BOTTOMLEFT", 10, 10)
+	removeBtn:SetText("Remove")
+	removeBtn:SetScript("OnClick", function()
 		if Ignore.selectedIndex then
 			removeEntryByIndex(Ignore.selectedIndex)
 			Ignore.selectedIndex = nil
 		end
+		RefreshList()
 	end)
-	frame:AddChild(remove)
 
 	self.window = frame
 	RefreshList()
