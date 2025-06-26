@@ -173,7 +173,9 @@ function Ignore:CreateUI()
 	search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
 	self.searchBox = search
 
-	local scrollBox = CreateFrame("Frame", "EQOLIgnoreScrollBox", frame.frame, "WowScrollBoxListTemplate")
+	-- WowScrollBoxListTemplate isn't present in all environments; fallback to
+	-- the base WowScrollBoxList if the template is missing.
+	local scrollBox = CreateFrame("Frame", "EQOLIgnoreScrollBox", frame.frame, "WowScrollBoxList")
 	local scrollBar = CreateFrame("Frame", "EQOLIgnoreScrollBar", frame.frame, "WowScrollBoxListScrollBarTemplate")
 	scrollBox:SetPoint("TOPLEFT", 20, -90)
 	scrollBox:SetPoint("BOTTOMRIGHT", -45, 50)
