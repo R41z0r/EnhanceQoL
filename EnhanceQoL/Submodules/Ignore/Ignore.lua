@@ -434,6 +434,9 @@ function Ignore:ShowAddFrame(name, note, expires)
 	end)
 	btnGroup:AddChild(addBtn)
 
+	editBox:SetFocus()
+	if editBox.editBox and addBtn.frame then editBox.editBox:SetScript("OnEnterPressed", function() addBtn.frame:Click() end) end
+
 	local cancelBtn = AceGUI:Create("Button")
 	cancelBtn:SetText(CANCEL)
 	cancelBtn:SetWidth(120)
@@ -443,7 +446,22 @@ function Ignore:ShowAddFrame(name, note, expires)
 	self.addFrame = frame
 end
 
-function C_FriendList.AddIgnore(name) Ignore:ShowAddFrame(name) end
+function C_FriendList.AddIgnore(name)
+	if not name or name == "" then
+		if UnitExists("target") and UnitIsPlayer("target") then
+			local n, realm = UnitName("target")
+			if n then
+				if realm and realm ~= "" then
+					name = n .. "-" .. realm
+				else
+					name = n
+				end
+			end
+		end
+	end
+	if not name or name == "" then return end
+	Ignore:ShowAddFrame(name)
+end
 
 function C_FriendList.DelIgnoreByIndex(index) removeEntryByIndex(index) end
 
