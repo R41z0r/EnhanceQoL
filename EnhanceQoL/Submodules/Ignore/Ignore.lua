@@ -8,7 +8,7 @@ end
 
 local L = addon.L
 
--- luacheck: globals EQOLIgnoreFrame EQOLIgnoreFrame_OnLoad HybridScrollFrame_CreateButtons
+-- luacheck: globals EQOLIgnoreFrame EQOLIgnoreFrame_OnLoad HybridScrollFrame_CreateButtons DeclineGuildInvite
 local AceGUI = addon.AceGUI
 local Ignore = addon.Ignore or {}
 addon.Ignore = Ignore
@@ -30,6 +30,20 @@ end
 Ignore:RebuildLookup()
 
 local IsIgnored = IsIgnored or C_FriendList.IsIgnored
+
+function Ignore:IsPlayerIgnored(name)
+	if not name or name == "" then return false end
+	local player, server = strsplit("-", name)
+	player = player or name
+	server = server or (GetRealmName()):gsub("%s", "")
+	local key = player .. "-" .. server
+	if self.entryLookup[key] then return true end
+	if IsIgnored then
+		if IsIgnored(name) then return true end
+		if server == (GetRealmName()):gsub("%s", "") and IsIgnored(player) then return true end
+	end
+	return false
+end
 
 function Ignore.daysFromToday(dateStr)
 	if not dateStr then return 0 end
@@ -600,6 +614,33 @@ Ignore.groupCheckFrame:SetScript("OnEvent", function()
 
 	Ignore.groupCheckFrame.lastPartySize = size
 	Ignore.groupCheckFrame.lastIgnored = count
+end)
+
+Ignore.interactionBlocker = Ignore.interactionBlocker or CreateFrame("Frame")
+for _, evt in ipairs({ "PARTY_INVITE_REQUEST", "DUEL_REQUESTED", "PET_BATTLE_PVP_DUEL_REQUESTED", "TRADE_SHOW", "GUILD_INVITE_REQUEST" }) do
+	Ignore.interactionBlocker:RegisterEvent(evt)
+end
+Ignore.interactionBlocker:SetScript("OnEvent", function(_, event, ...)
+	local name = ...
+	if event == "TRADE_SHOW" then name = UnitFullName("npc") end
+	if Ignore:IsPlayerIgnored(name or "") then
+		if event == "PARTY_INVITE_REQUEST" then
+			DeclineGroup()
+			StaticPopup_Hide("PARTY_INVITE")
+		elseif event == "GUILD_INVITE_REQUEST" then
+			DeclineGuildInvite()
+			StaticPopup_Hide("GUILD_INVITE")
+		elseif event == "DUEL_REQUESTED" then
+			CancelDuel()
+			StaticPopup_Hide("DUEL_REQUESTED")
+		elseif event == "PET_BATTLE_PVP_DUEL_REQUESTED" then
+			C_PetBattles.CancelPVPDuel()
+			StaticPopup_Hide("PET_BATTLE_PVP_DUEL_REQUESTED")
+		elseif event == "TRADE_SHOW" then
+			CancelTrade()
+			StaticPopup_Hide("TRADE")
+		end
+	end
 end)
 
 -- frame to check ignored members in current group
