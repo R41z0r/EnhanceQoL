@@ -12,7 +12,6 @@ addon.Ignore = Ignore
 
 Ignore.entries = Ignore.entries or {}
 Ignore.selectedIndex = nil
-Ignore.rows = {}
 Ignore.searchText = Ignore.searchText or ""
 Ignore.addFrame = Ignore.addFrame or nil
 
@@ -24,135 +23,112 @@ local widths = { 120, 120, 70, 90, 150 }
 local titles = { "Player Name", "Server Name", "Date", "Expires", "Note" }
 local DOUBLE_CLICK_TIME = 0.5
 
-local IgnoreRowMixin = {}
+Ignore.currentSort = nil
+Ignore.sortAsc = true
 
-function IgnoreRowMixin:Init()
-    self.bg = self:CreateTexture(nil, "BACKGROUND")
-    self.bg:SetAllPoints(self)
-    self.bg:SetColorTexture(0, 0, 0, 0)
+local provider = CreateDataProvider()
+Ignore.provider = provider
 
-    self.cols = {}
-    local x = 0
-    for i, width in ipairs(widths) do
-        local fs = self:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-        fs:SetPoint("LEFT", x, 0)
-        fs:SetWidth(width)
-        fs:SetJustifyH("LEFT")
-        self.cols[i] = fs
-        x = x + width
-    end
+local IgnoreRowTemplate = {}
 
-    self:SetHeight(ROW_HEIGHT)
-    self:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
-    self:RegisterForClicks("LeftButtonUp")
+function IgnoreRowTemplate:OnAcquired()
+	if not self.initialized then
+		self.bg = self:CreateTexture(nil, "BACKGROUND")
+		self.bg:SetAllPoints(self)
+		self.bg:SetColorTexture(0, 0, 0, 0)
+
+		self.cols = {}
+		local x = 0
+		for i, width in ipairs(widths) do
+			local fs = self:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+			fs:SetPoint("LEFT", x, 0)
+			fs:SetWidth(width)
+			fs:SetJustifyH("LEFT")
+			self.cols[i] = fs
+			x = x + width
+		end
+
+		self:SetHighlightTexture("Interface/QuestFrame/UI-QuestTitleHighlight")
+		self:RegisterForClicks("LeftButtonUp")
+		self.initialized = true
+	end
+	self:SetHeight(ROW_HEIGHT)
 end
 
-function IgnoreRowMixin:Populate(data, index)
-    self.index = index
-    self.cols[1]:SetText(data.player or "")
-    self.cols[2]:SetText(data.server or "")
-    self.cols[3]:SetText(data.date or "")
-    self.cols[4]:SetText(data.expires or "")
-    self.cols[5]:SetText(data.note or "")
+function IgnoreRowTemplate:Init(elementData)
+	self.index = elementData.index
+	self.cols[1]:SetText(elementData.player or "")
+	self.cols[2]:SetText(elementData.server or "")
+	self.cols[3]:SetText(elementData.date or "")
+	self.cols[4]:SetText(elementData.expires or "")
+	self.cols[5]:SetText(elementData.note or "")
+
+	if self.index == Ignore.selectedIndex then
+		self.bg:SetColorTexture(1, 1, 0, 0.3)
+	else
+		self.bg:SetColorTexture(0, 0, 0, 0)
+	end
 end
 
-function IgnoreRowMixin:OnClick()
-    if Ignore.selectedIndex and Ignore.rows[Ignore.selectedIndex] then
-        local prev = Ignore.rows[Ignore.selectedIndex]
-        if prev.bg then prev.bg:SetColorTexture(0, 0, 0, 0) end
-    end
+function IgnoreRowTemplate:OnClick()
+	Ignore.selectedIndex = self.index
+	Ignore.scrollBox:ForEachFrame(function(frame)
+		if frame.bg then
+			if frame.index == Ignore.selectedIndex then
+				frame.bg:SetColorTexture(1, 1, 0, 0.3)
+			else
+				frame.bg:SetColorTexture(0, 0, 0, 0)
+			end
+		end
+	end)
 
-    Ignore.selectedIndex = self.index
-    self.bg:SetColorTexture(1, 1, 0, 0.3)
-
-    local now = GetTime()
-    if self.lastClick and (now - self.lastClick) < DOUBLE_CLICK_TIME then
-        local entry = Ignore.filtered[self.index]
-        if entry then
-            local fullName = entry.player
-            if entry.server and entry.server ~= "" then
-                fullName = fullName .. "-" .. entry.server
-            end
-            Ignore:ShowAddFrame(fullName, entry.note, entry.expires)
-        end
-    end
-    self.lastClick = now
+	local now = GetTime()
+	if self.lastClick and (now - self.lastClick) < DOUBLE_CLICK_TIME then
+		local entry = Ignore.filtered[self.index]
+		if entry then
+			local fullName = entry.player
+			if entry.server and entry.server ~= "" then fullName = fullName .. "-" .. entry.server end
+			Ignore:ShowAddFrame(fullName, entry.note, entry.expires)
+		end
+	end
+	self.lastClick = now
 end
 
 local removeEntry
 local removeEntryByIndex
 
-local function updateCounter()
-	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.entries) end
+local function FilterEntries()
+	wipe(Ignore.filtered)
+
+	local search = Ignore.searchText and Ignore.searchText:lower() or ""
+	local filtering = search ~= ""
+
+	for _, data in ipairs(Ignore.entries) do
+		if
+			not filtering
+			or (data.player and data.player:lower():find(search, 1, true))
+			or (data.server and data.server:lower():find(search, 1, true))
+			or (data.note and data.note:lower():find(search, 1, true))
+		then
+			table.insert(Ignore.filtered, data)
+		end
+	end
 end
 
-local function refreshList()
-    if not Ignore.scrollFrame then return end
-
-    wipe(Ignore.rows)
-    wipe(Ignore.filtered)
-
-    local search = Ignore.searchText and Ignore.searchText:lower() or ""
-    local filtering = search ~= ""
-
-    for _, data in ipairs(Ignore.entries) do
-        if
-            not filtering
-            or (data.player and data.player:lower():find(search, 1, true))
-            or (data.server and data.server:lower():find(search, 1, true))
-            or (data.note and data.note:lower():find(search, 1, true))
-        then
-            table.insert(Ignore.filtered, data)
-        end
-    end
-
-    local scrollFrame = Ignore.scrollFrame
-    local buttons = scrollFrame.buttons or {}
-    local numButtons = math.floor(scrollFrame:GetHeight() / ROW_HEIGHT) + 1
-    local scrollChild = scrollFrame.scrollChild
-    if not scrollChild then
-        scrollChild = CreateFrame("Frame", nil, scrollFrame)
-        scrollChild:SetSize(1,1)
-        scrollFrame:SetScrollChild(scrollChild)
-        scrollFrame.scrollChild = scrollChild
-    end
-    for i = #buttons + 1, numButtons do
-        local btn = CreateFrame("Button", nil, scrollChild)
-        Mixin(btn, IgnoreRowMixin)
-        btn:Init()
-        if i == 1 then
-            btn:SetPoint("TOPLEFT")
-        else
-            btn:SetPoint("TOPLEFT", buttons[i-1], "BOTTOMLEFT")
-        end
-        btn:SetPoint("RIGHT", scrollChild)
-        btn:SetScript("OnClick", function(b) IgnoreRowMixin.OnClick(b) end)
-        buttons[i] = btn
-    end
-    scrollFrame.buttons = buttons
-
-    local offset = HybridScrollFrame_GetOffset(scrollFrame)
-    for i, button in ipairs(buttons) do
-        local idx = i + offset
-        local data = Ignore.filtered[idx]
-        if data then
-            button:Show()
-            button:Populate(data, idx)
-            Ignore.rows[idx] = button
-            if idx == Ignore.selectedIndex then
-                button.bg:SetColorTexture(1, 1, 0, 0.3)
-            else
-                button.bg:SetColorTexture(0, 0, 0, 0)
-            end
-        else
-            button:Hide()
-        end
-    end
-
-    local contentHeight = #Ignore.filtered * ROW_HEIGHT
-    scrollChild:SetHeight(contentHeight)
-    HybridScrollFrame_Update(scrollFrame, contentHeight, scrollFrame:GetHeight())
-    updateCounter()
+local function RefreshProvider()
+	FilterEntries()
+	provider:Flush()
+	for idx, e in ipairs(Ignore.filtered) do
+		provider:Insert({
+			index = idx,
+			player = e.player,
+			server = e.server,
+			date = e.date,
+			expires = e.expires,
+			note = e.note,
+		})
+	end
+	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.filtered) end
 end
 
 function Ignore:CreateUI()
@@ -162,15 +138,15 @@ function Ignore:CreateUI()
 	frame:SetWidth(650)
 	frame:SetHeight(400)
 	frame:SetLayout("List")
-       frame:SetCallback("OnClose", function(widget)
-               AceGUI:Release(widget)
-               if self.searchBox then
-                       AceGUI:Release(self.searchBox)
-                       self.searchBox = nil
-               end
-               self.window = nil
-               Ignore.searchText = ""
-       end)
+	frame:SetCallback("OnClose", function(widget)
+		AceGUI:Release(widget)
+		if self.searchBox then
+			AceGUI:Release(self.searchBox)
+			self.searchBox = nil
+		end
+		self.window = nil
+		Ignore.searchText = ""
+	end)
 
 	local spacer = AceGUI:Create("Label")
 	spacer:SetText(" ")
@@ -184,49 +160,65 @@ function Ignore:CreateUI()
 	frame:AddChild(counter)
 	self.counter = counter
 
-        local search = AceGUI:Create("EditBox")
-        search:SetWidth(150)
-        search:DisableButton(true)
-        search:SetCallback("OnTextChanged", function(_, _, text)
-                Ignore.searchText = text or ""
-                Ignore.selectedIndex = nil
-                refreshList()
-        end)
-        frame:AddChild(search)
-        search.frame:ClearAllPoints()
-        search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
-        self.searchBox = search
+	local search = AceGUI:Create("EditBox")
+	search:SetWidth(150)
+	search:DisableButton(true)
+	search:SetCallback("OnTextChanged", function(_, _, text)
+		Ignore.searchText = text or ""
+		Ignore.selectedIndex = nil
+		RefreshProvider()
+	end)
+	frame:AddChild(search)
+	search.frame:ClearAllPoints()
+	search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
+	self.searchBox = search
 
-        -- The scroll frame must be named so the template can locate its
-        -- scrollbar during the OnLoad script.
-        local scroll = CreateFrame("ScrollFrame", "EQOLIgnoreScrollFrame", frame.frame, "HybridScrollFrameTemplate")
-<<<<<<< codex/fix-attempt-to-index-nil-field--scrollbar
-        -- In some environments the HybridScrollFrameTemplate OnLoad doesn't
-        -- run when the frame is created dynamically, so manually grab the
-        -- scrollbar created by the template if needed.
-        scroll.scrollBar = scroll.scrollBar or _G[scroll:GetName() .. "ScrollBar"]
-=======
->>>>>>> IgnoreTest
-        scroll:SetPoint("TOPLEFT", frame.frame, "TOPLEFT", 20, -90)
-        scroll:SetPoint("BOTTOMRIGHT", frame.frame, "BOTTOMRIGHT", -45, 50)
-        scroll.scrollBar:SetPoint("TOPLEFT", scroll, "TOPRIGHT", 0, -16)
-        scroll.scrollBar:SetPoint("BOTTOMLEFT", scroll, "BOTTOMRIGHT", 0, 16)
-        scroll.update = refreshList
-        self.scrollFrame = scroll
+	local scrollBox = CreateFrame("Frame", "EQOLIgnoreScrollBox", frame.frame, "WowScrollBoxListTemplate")
+	local scrollBar = CreateFrame("Frame", "EQOLIgnoreScrollBar", frame.frame, "WowScrollBoxListScrollBarTemplate")
+	scrollBox:SetPoint("TOPLEFT", 20, -90)
+	scrollBox:SetPoint("BOTTOMRIGHT", -45, 50)
+	scrollBar:SetPoint("TOPLEFT", scrollBox, "TOPRIGHT", 3, 0)
+	scrollBar:SetPoint("BOTTOMLEFT", scrollBox, "BOTTOMRIGHT", 3, 0)
+	Ignore.scrollBox = scrollBox
 
-        local header = CreateFrame("Frame", nil, scroll)
-        header:SetPoint("BOTTOMLEFT", scroll, "TOPLEFT", 0, 2)
-        header:SetHeight(ROW_HEIGHT)
-        header:SetWidth(550)
-        local x = 0
-        for i, col in ipairs(titles) do
-                local lbl = header:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-                lbl:SetPoint("LEFT", x, 0)
-                lbl:SetWidth(widths[i])
-                lbl:SetJustifyH("LEFT")
-                lbl:SetText(col)
-                x = x + widths[i]
-        end
+	local view = CreateScrollBoxListLinearView(ROW_HEIGHT, "Button", IgnoreRowTemplate)
+	view:SetElementInitializer("Button", function(btn, data)
+		Mixin(btn, IgnoreRowTemplate)
+		btn:Init(data)
+	end)
+
+	ScrollUtil.InitScrollBoxListWithScrollBar(scrollBox, scrollBar, view)
+	scrollBox:SetDataProvider(provider)
+
+	local header = CreateFrame("Frame", nil, scrollBox, "WhoFrameColumnHeaderTemplate")
+	header:SetPoint("BOTTOMLEFT", scrollBox, "TOPLEFT", 0, 2)
+	local x = 0
+	for _, col in ipairs({
+		{ text = "Player", width = 120, key = "player" },
+		{ text = "Realm", width = 120, key = "server" },
+		{ text = "Date", width = 70, key = "date" },
+		{ text = "Expires", width = 90, key = "expires" },
+		{ text = "Note", width = 150, key = "note" },
+	}) do
+		local h = CreateFrame("Button", nil, header, "WhoFrameColumnHeaderTemplate")
+		h:SetWidth(col.width)
+		h:SetHeight(ROW_HEIGHT)
+		h:SetPoint("LEFT", x, 0)
+		h.Text:SetText(col.text)
+		h.sortKey = col.key
+		h:SetScript("OnClick", function(self)
+			Ignore.sortAsc = (Ignore.currentSort ~= self.sortKey) and true or not Ignore.sortAsc
+			Ignore.currentSort = self.sortKey
+			provider:Sort(function(a, b)
+				if Ignore.sortAsc then
+					return tostring(a[self.sortKey]) < tostring(b[self.sortKey])
+				else
+					return tostring(a[self.sortKey]) > tostring(b[self.sortKey])
+				end
+			end)
+		end)
+		x = x + col.width
+	end
 
 	local remove = AceGUI:Create("Button")
 	remove:SetText("Remove")
@@ -240,7 +232,7 @@ function Ignore:CreateUI()
 	frame:AddChild(remove)
 
 	self.window = frame
-	refreshList()
+	RefreshProvider()
 end
 
 function Ignore:Toggle()
@@ -277,13 +269,11 @@ local function addEntry(name, note, expires)
 	player = player or name
 	server = server or myServer
 	for _, entry in ipairs(Ignore.entries) do
-               if entry.player == player and entry.server == server then
-                       if note ~= nil then entry.note = note end
-                       if expires ~= nil then
-                               entry.expires = expires ~= "" and expires or "NEVER"
-                       end
-                       refreshList()
-                       return
+		if entry.player == player and entry.server == server then
+			if note ~= nil then entry.note = note end
+			if expires ~= nil then entry.expires = expires ~= "" and expires or "NEVER" end
+			RefreshProvider()
+			return
 		end
 	end
 	if origAddIgnore and sameRealm and Ignore:HasFreeSlot() then origAddIgnore(name) end
@@ -294,17 +284,17 @@ local function addEntry(name, note, expires)
 		expires = expires or "NEVER",
 		note = note or "",
 	})
-	refreshList()
+	RefreshProvider()
 end
 
 removeEntryByIndex = function(index)
-        local entry = Ignore.entries[index]
-        if entry then
-                local fullName = entry.player
-                if entry.server and entry.server ~= "" then fullName = fullName .. "-" .. entry.server end
-                removeEntry(fullName)
-        end
-        refreshList()
+	local entry = Ignore.entries[index]
+	if entry then
+		local fullName = entry.player
+		if entry.server and entry.server ~= "" then fullName = fullName .. "-" .. entry.server end
+		removeEntry(fullName)
+	end
+	RefreshProvider()
 end
 
 removeEntry = function(name)
@@ -316,7 +306,7 @@ removeEntry = function(name)
 			break
 		end
 	end
-	refreshList()
+	RefreshProvider()
 end
 
 local function addOrRemove(name)
@@ -377,26 +367,26 @@ function Ignore:ShowAddFrame(name, note, expires)
 	expGroup:AddChild(check)
 
 	local numBox = AceGUI:Create("EditBox")
-       numBox:SetWidth(60)
-       numBox:SetDisabled(true)
-       expGroup:AddChild(numBox)
+	numBox:SetWidth(60)
+	numBox:SetDisabled(true)
+	expGroup:AddChild(numBox)
 
-       check:SetCallback("OnValueChanged", function(_, _, value)
-               numBox:SetDisabled(not value)
-               numBox.frame:SetShown(value)
-       end)
+	check:SetCallback("OnValueChanged", function(_, _, value)
+		numBox:SetDisabled(not value)
+		numBox.frame:SetShown(value)
+	end)
 
-       if expires and expires ~= "NEVER" then
-               check:SetValue(true)
-               numBox:SetDisabled(false)
-               numBox.frame:Show()
-               numBox:SetText(tostring(expires))
-       else
-               check:SetValue(false)
-               numBox:SetText("")
-               numBox:SetDisabled(true)
-               numBox.frame:Hide()
-       end
+	if expires and expires ~= "NEVER" then
+		check:SetValue(true)
+		numBox:SetDisabled(false)
+		numBox.frame:Show()
+		numBox:SetText(tostring(expires))
+	else
+		check:SetValue(false)
+		numBox:SetText("")
+		numBox:SetDisabled(true)
+		numBox.frame:Hide()
+	end
 
 	local btnGroup = AceGUI:Create("SimpleGroup")
 	btnGroup:SetFullWidth(true)
@@ -406,13 +396,13 @@ function Ignore:ShowAddFrame(name, note, expires)
 	local addBtn = AceGUI:Create("Button")
 	addBtn:SetText("Add/Save")
 	addBtn:SetWidth(120)
-       addBtn:SetCallback("OnClick", function()
-               local n = editBox:GetText()
-               local exp = ""
-               if check:GetValue() then exp = tonumber(numBox:GetText()) end
-               addEntry(name, n, exp)
-               frame:Hide()
-       end)
+	addBtn:SetCallback("OnClick", function()
+		local n = editBox:GetText()
+		local exp = ""
+		if check:GetValue() then exp = tonumber(numBox:GetText()) end
+		addEntry(name, n, exp)
+		frame:Hide()
+	end)
 	btnGroup:AddChild(addBtn)
 
 	local cancelBtn = AceGUI:Create("Button")
@@ -468,5 +458,5 @@ frame:SetScript("OnEvent", function()
 			}) end
 		end
 	end
-	refreshList()
+	RefreshProvider()
 end)
