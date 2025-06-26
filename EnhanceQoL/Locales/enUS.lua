@@ -211,3 +211,4 @@ L["persistAuctionHouseFilter"] = "Remember Auction House filters for this sessio
 
 L["Excluded NPCs"] = "Excluded NPCs"
 L["hideDynamicFlightBar"] = "Hide %s Vigor bar while on the ground"
+L["InvalidExpiration"] = "Invalid expiration value"

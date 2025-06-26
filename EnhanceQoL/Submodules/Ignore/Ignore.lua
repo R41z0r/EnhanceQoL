@@ -403,6 +403,7 @@ function Ignore:ShowAddFrame(name, note, expires)
 	check:SetCallback("OnValueChanged", function(_, _, value)
 		numBox:SetDisabled(not value)
 		numBox.frame:SetShown(value)
+		if not value then numBox:SetText("") end
 	end)
 
 	if expires and expires ~= NEVER then
@@ -428,7 +429,13 @@ function Ignore:ShowAddFrame(name, note, expires)
 	addBtn:SetCallback("OnClick", function()
 		local n = editBox:GetText()
 		local exp = ""
-		if check:GetValue() then exp = tonumber(numBox:GetText()) end
+		if check:GetValue() then
+			exp = tonumber(numBox:GetText())
+			if not exp then
+				print(addon.L["InvalidExpiration"])
+				return
+			end
+		end
 		addEntry(name, n, exp)
 		frame:Hide()
 	end)
