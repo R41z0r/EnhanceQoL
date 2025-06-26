@@ -326,7 +326,7 @@ function Ignore:CreateUI()
                        scrollChild,
                        "TOPLEFT",
                        7,
-                       -((i - 1) * ROW_HEIGHT) - 5
+                       -((i - 1) * ROW_HEIGHT)
                )
 		Ignore.rows[i] = row
 	end
