@@ -529,3 +529,64 @@ frame:SetScript("OnEvent", function()
 	end
 	RefreshList()
 end)
+
+-- frame to check ignored members in current group
+Ignore.groupCheckFrame = Ignore.groupCheckFrame or CreateFrame("Frame")
+Ignore.groupCheckFrame.members = {}
+Ignore.groupCheckFrame.lastPartySize = 0
+Ignore.groupCheckFrame.lastIgnored = 0
+Ignore.groupCheckFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+Ignore.groupCheckFrame:SetScript("OnEvent", function()
+        local partyMembers = Ignore.groupCheckFrame.members
+        wipe(partyMembers)
+
+        local size = GetNumGroupMembers()
+        if size == 0 then
+                Ignore.groupCheckFrame.lastPartySize = 0
+                Ignore.groupCheckFrame.lastIgnored = 0
+                return
+        end
+
+        local prefix = IsInRaid() and "raid" or "party"
+        local loops = IsInRaid() and size or (size - 1)
+        for i = 1, loops do
+                local unit = prefix .. i
+                if UnitExists(unit) then
+                        local n, r = UnitFullName(unit)
+                        if n then
+                                r = r or (GetRealmName()):gsub("%s", "")
+                                partyMembers[n .. "-" .. r] = true
+                        end
+                end
+        end
+
+        local pn, pr = UnitFullName("player")
+        pr = pr or (GetRealmName()):gsub("%s", "")
+        if pn then partyMembers[pn .. "-" .. pr] = true end
+
+        local ignored = {}
+        local count = 0
+        for _, entry in ipairs(Ignore.entries) do
+                local full = entry.player .. "-" .. entry.server
+                if partyMembers[full] then
+                        table.insert(ignored, full)
+                        count = count + 1
+                end
+        end
+
+        if count > Ignore.groupCheckFrame.lastIgnored then
+                local names = table.concat(ignored, "\n")
+                StaticPopupDialogs["EQOL_IGNORE_GROUP"] = {
+                        text = L["IgnoreGroupPopupText"]:format(names),
+                        button1 = OKAY,
+                        timeout = 0,
+                        whileDead = true,
+                        hideOnEscape = true,
+                        preferredIndex = 3,
+                }
+                StaticPopup_Show("EQOL_IGNORE_GROUP", L["IgnoreGroupPopupTitle"])
+        end
+
+        Ignore.groupCheckFrame.lastPartySize = size
+        Ignore.groupCheckFrame.lastIgnored = count
+end)
