@@ -22,10 +22,10 @@ Ignore.addFrame = Ignore.addFrame or nil
 Ignore.filtered = {}
 
 function Ignore:RebuildLookup()
-        wipe(self.entryLookup)
-        for _, entry in ipairs(self.entries) do
-                self.entryLookup[entry.player .. "-" .. entry.server] = entry
-        end
+	wipe(self.entryLookup)
+	for _, entry in ipairs(self.entries) do
+		self.entryLookup[entry.player .. "-" .. entry.server] = entry
+	end
 end
 Ignore:RebuildLookup()
 
@@ -314,74 +314,74 @@ function Ignore:HasFreeSlot()
 end
 
 local function addEntry(name, note, expires)
-        local player, server = strsplit("-", name)
-        local myServer = (GetRealmName()):gsub("%s", "")
-        local sameRealm = not server or server == myServer
-        player = player or name
-        server = server or myServer
-        local key = player .. "-" .. server
-        local entry = Ignore.entryLookup[key]
-        if entry then
-                if note ~= nil then entry.note = note end
-                if expires ~= nil then entry.expires = expires ~= "" and expires or NEVER end
-                RefreshList()
-                return
-        end
-        if origAddIgnore and sameRealm and Ignore:HasFreeSlot() then origAddIgnore(name) end
-        local newEntry = {
-                player = player,
-                server = server,
-                date = date("%Y-%m-%d"),
-                expires = expires or NEVER,
-                note = note or "",
-        }
-        table.insert(Ignore.entries, newEntry)
-        Ignore.entryLookup[key] = newEntry
-        RefreshList()
+	local player, server = strsplit("-", name)
+	local myServer = (GetRealmName()):gsub("%s", "")
+	local sameRealm = not server or server == myServer
+	player = player or name
+	server = server or myServer
+	local key = player .. "-" .. server
+	local entry = Ignore.entryLookup[key]
+	if entry then
+		if note ~= nil then entry.note = note end
+		if expires ~= nil then entry.expires = expires ~= "" and expires or NEVER end
+		RefreshList()
+		return
+	end
+	if origAddIgnore and sameRealm and Ignore:HasFreeSlot() then origAddIgnore(name) end
+	local newEntry = {
+		player = player,
+		server = server,
+		date = date("%Y-%m-%d"),
+		expires = expires or NEVER,
+		note = note or "",
+	}
+	table.insert(Ignore.entries, newEntry)
+	Ignore.entryLookup[key] = newEntry
+	RefreshList()
 end
 
 removeEntryByIndex = function(index)
-        local entry = Ignore.entries[index]
-        if entry then
-                local fullName = entry.player .. "-" .. entry.server
-                Ignore.entryLookup[fullName] = nil
-                table.remove(Ignore.entries, index)
-        end
-        RefreshList()
+	local entry = Ignore.entries[index]
+	if entry then
+		local fullName = entry.player .. "-" .. entry.server
+		Ignore.entryLookup[fullName] = nil
+		table.remove(Ignore.entries, index)
+	end
+	RefreshList()
 end
 
 removeEntry = function(name)
-        local player, server = strsplit("-", name)
-        if server == (GetRealmName()):gsub("%s", "") then name = player end
+	local player, server = strsplit("-", name)
+	if server == (GetRealmName()):gsub("%s", "") then name = player end
 
-        if origDelIgnore and IsIgnored and IsIgnored(name) then origDelIgnore(name) end
-        local key = player .. "-" .. (server or "")
-        local entry = Ignore.entryLookup[key]
-        if entry then
-                for i, e in ipairs(Ignore.entries) do
-                        if e == entry then
-                                table.remove(Ignore.entries, i)
-                                break
-                        end
-                end
-                Ignore.entryLookup[key] = nil
-        end
-        RefreshList()
+	if origDelIgnore and IsIgnored and IsIgnored(name) then origDelIgnore(name) end
+	local key = player .. "-" .. (server or "")
+	local entry = Ignore.entryLookup[key]
+	if entry then
+		for i, e in ipairs(Ignore.entries) do
+			if e == entry then
+				table.remove(Ignore.entries, i)
+				break
+			end
+		end
+		Ignore.entryLookup[key] = nil
+	end
+	RefreshList()
 end
 
 local function addOrRemove(name)
-        local player, server = strsplit("-", name)
-        player = player or name
-        server = server or (GetRealmName()):gsub("%s", "")
-        if Ignore.entryLookup[player .. "-" .. server] then
-                removeEntry(name)
-                return
-        end
-        if IsIgnored and IsIgnored(name) then
-                removeEntry(name)
-        else
-                C_FriendList.AddIgnore(name)
-        end
+	local player, server = strsplit("-", name)
+	player = player or name
+	server = server or (GetRealmName()):gsub("%s", "")
+	if Ignore.entryLookup[player .. "-" .. server] then
+		removeEntry(name)
+		return
+	end
+	if IsIgnored and IsIgnored(name) then
+		removeEntry(name)
+	else
+		C_FriendList.AddIgnore(name)
+	end
 end
 
 function Ignore:ShowAddFrame(name, note, expires)
@@ -514,32 +514,32 @@ frame:SetScript("OnEvent", function()
 	elseif GetNumIgnores then
 		numIgnores = GetNumIgnores()
 	end
-        for i = 1, numIgnores do
-                local name
-                if C_FriendList and C_FriendList.GetIgnoreName then
-                        name = C_FriendList.GetIgnoreName(i)
-                elseif GetIgnoreName then
-                        name = GetIgnoreName(i)
-                end
-                if name then
-                        local player, server = strsplit("-", name)
-                        player = player or name
-                        server = server or (GetRealmName()):gsub("%s", "")
-                        local key = player .. "-" .. server
-                        if not Ignore.entryLookup[key] then
-                                local e = {
-                                        player = player,
-                                        server = server,
-                                        date = date("%Y-%m-%d"),
-                                        expires = NEVER,
-                                        note = "",
-                                }
-                                table.insert(Ignore.entries, e)
-                                Ignore.entryLookup[key] = e
-                        end
-                end
-        end
-        RefreshList()
+	for i = 1, numIgnores do
+		local name
+		if C_FriendList and C_FriendList.GetIgnoreName then
+			name = C_FriendList.GetIgnoreName(i)
+		elseif GetIgnoreName then
+			name = GetIgnoreName(i)
+		end
+		if name then
+			local player, server = strsplit("-", name)
+			player = player or name
+			server = server or (GetRealmName()):gsub("%s", "")
+			local key = player .. "-" .. server
+			if not Ignore.entryLookup[key] then
+				local e = {
+					player = player,
+					server = server,
+					date = date("%Y-%m-%d"),
+					expires = NEVER,
+					note = "",
+				}
+				table.insert(Ignore.entries, e)
+				Ignore.entryLookup[key] = e
+			end
+		end
+	end
+	RefreshList()
 end)
 
 -- frame to check ignored members in current group
@@ -549,57 +549,57 @@ Ignore.groupCheckFrame.lastPartySize = 0
 Ignore.groupCheckFrame.lastIgnored = 0
 Ignore.groupCheckFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 Ignore.groupCheckFrame:SetScript("OnEvent", function()
-        local partyMembers = Ignore.groupCheckFrame.members
-        wipe(partyMembers)
+	local partyMembers = Ignore.groupCheckFrame.members
+	wipe(partyMembers)
 
-        local size = GetNumGroupMembers()
-        if size == 0 then
-                Ignore.groupCheckFrame.lastPartySize = 0
-                Ignore.groupCheckFrame.lastIgnored = 0
-                return
-        end
+	local size = GetNumGroupMembers()
+	if size == 0 then
+		Ignore.groupCheckFrame.lastPartySize = 0
+		Ignore.groupCheckFrame.lastIgnored = 0
+		return
+	end
 
-        local prefix = IsInRaid() and "raid" or "party"
-        local loops = IsInRaid() and size or (size - 1)
-        for i = 1, loops do
-                local unit = prefix .. i
-                if UnitExists(unit) then
-                        local n, r = UnitFullName(unit)
-                        if n then
-                                r = r or (GetRealmName()):gsub("%s", "")
-                                partyMembers[n .. "-" .. r] = true
-                        end
-                end
-        end
+	local prefix = IsInRaid() and "raid" or "party"
+	local loops = IsInRaid() and size or (size - 1)
+	for i = 1, loops do
+		local unit = prefix .. i
+		if UnitExists(unit) then
+			local n, r = UnitFullName(unit)
+			if n then
+				r = r or (GetRealmName()):gsub("%s", "")
+				partyMembers[n .. "-" .. r] = true
+			end
+		end
+	end
 
-        local pn, pr = UnitFullName("player")
-        pr = pr or (GetRealmName()):gsub("%s", "")
-        if pn then partyMembers[pn .. "-" .. pr] = true end
+	local pn, pr = UnitFullName("player")
+	pr = pr or (GetRealmName()):gsub("%s", "")
+	if pn then partyMembers[pn .. "-" .. pr] = true end
 
-        local ignored = {}
-        local count = 0
-        for name in pairs(partyMembers) do
-                if Ignore.entryLookup[name] then
-                        table.insert(ignored, name)
-                        count = count + 1
-                end
-        end
+	local ignored = {}
+	local count = 0
+	for name in pairs(partyMembers) do
+		if Ignore.entryLookup[name] then
+			table.insert(ignored, name)
+			count = count + 1
+		end
+	end
 
-        if count > Ignore.groupCheckFrame.lastIgnored then
-                local names = table.concat(ignored, "\n")
-                StaticPopupDialogs["EQOL_IGNORE_GROUP"] = {
-                        text = L["IgnoreGroupPopupText"]:format(names),
-                        button1 = OKAY,
-                        timeout = 0,
-                        whileDead = true,
-                        hideOnEscape = true,
-                        preferredIndex = 3,
-                }
-                StaticPopup_Show("EQOL_IGNORE_GROUP")
-        end
+	if count > Ignore.groupCheckFrame.lastIgnored then
+		local names = table.concat(ignored, "\n")
+		StaticPopupDialogs["EQOL_IGNORE_GROUP"] = {
+			text = L["IgnoreGroupPopupText"]:format(names),
+			button1 = OKAY,
+			timeout = 0,
+			whileDead = true,
+			hideOnEscape = true,
+			preferredIndex = 3,
+		}
+		StaticPopup_Show("EQOL_IGNORE_GROUP")
+	end
 
-        Ignore.groupCheckFrame.lastPartySize = size
-        Ignore.groupCheckFrame.lastIgnored = count
+	Ignore.groupCheckFrame.lastPartySize = size
+	Ignore.groupCheckFrame.lastIgnored = count
 end)
 
 -- frame to check ignored members in current group
@@ -609,56 +609,56 @@ Ignore.groupCheckFrame.lastPartySize = 0
 Ignore.groupCheckFrame.lastIgnored = 0
 Ignore.groupCheckFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 Ignore.groupCheckFrame:SetScript("OnEvent", function()
-        local partyMembers = Ignore.groupCheckFrame.members
-        wipe(partyMembers)
+	local partyMembers = Ignore.groupCheckFrame.members
+	wipe(partyMembers)
 
-        local size = GetNumGroupMembers()
-        if size == 0 then
-                Ignore.groupCheckFrame.lastPartySize = 0
-                Ignore.groupCheckFrame.lastIgnored = 0
-                return
-        end
+	local size = GetNumGroupMembers()
+	if size == 0 then
+		Ignore.groupCheckFrame.lastPartySize = 0
+		Ignore.groupCheckFrame.lastIgnored = 0
+		return
+	end
 
-        local prefix = IsInRaid() and "raid" or "party"
-        local loops = IsInRaid() and size or (size - 1)
-        for i = 1, loops do
-                local unit = prefix .. i
-                if UnitExists(unit) then
-                        local n, r = UnitFullName(unit)
-                        if n then
-                                r = r or (GetRealmName()):gsub("%s", "")
-                                partyMembers[n .. "-" .. r] = true
-                        end
-                end
-        end
+	local prefix = IsInRaid() and "raid" or "party"
+	local loops = IsInRaid() and size or (size - 1)
+	for i = 1, loops do
+		local unit = prefix .. i
+		if UnitExists(unit) then
+			local n, r = UnitFullName(unit)
+			if n then
+				r = r or (GetRealmName()):gsub("%s", "")
+				partyMembers[n .. "-" .. r] = true
+			end
+		end
+	end
 
-        local pn, pr = UnitFullName("player")
-        pr = pr or (GetRealmName()):gsub("%s", "")
-        if pn then partyMembers[pn .. "-" .. pr] = true end
+	local pn, pr = UnitFullName("player")
+	pr = pr or (GetRealmName()):gsub("%s", "")
+	if pn then partyMembers[pn .. "-" .. pr] = true end
 
-        local ignored = {}
-        local count = 0
-        for _, entry in ipairs(Ignore.entries) do
-                local full = entry.player .. "-" .. entry.server
-                if partyMembers[full] then
-                        table.insert(ignored, full)
-                        count = count + 1
-                end
-        end
+	local ignored = {}
+	local count = 0
+	for _, entry in ipairs(Ignore.entries) do
+		local full = entry.player .. "-" .. entry.server
+		if partyMembers[full] then
+			table.insert(ignored, full)
+			count = count + 1
+		end
+	end
 
-        if count > Ignore.groupCheckFrame.lastIgnored then
-                local names = table.concat(ignored, "\n")
-                StaticPopupDialogs["EQOL_IGNORE_GROUP"] = {
-                        text = L["IgnoreGroupPopupText"]:format(names),
-                        button1 = OKAY,
-                        timeout = 0,
-                        whileDead = true,
-                        hideOnEscape = true,
-                        preferredIndex = 3,
-                }
-                StaticPopup_Show("EQOL_IGNORE_GROUP", L["IgnoreGroupPopupTitle"])
-        end
+	if count > Ignore.groupCheckFrame.lastIgnored then
+		local names = table.concat(ignored, "\n")
+		StaticPopupDialogs["EQOL_IGNORE_GROUP"] = {
+			text = L["IgnoreGroupPopupText"]:format(names),
+			button1 = OKAY,
+			timeout = 0,
+			whileDead = true,
+			hideOnEscape = true,
+			preferredIndex = 3,
+		}
+		StaticPopup_Show("EQOL_IGNORE_GROUP", L["IgnoreGroupPopupTitle"])
+	end
 
-        Ignore.groupCheckFrame.lastPartySize = size
-        Ignore.groupCheckFrame.lastIgnored = count
+	Ignore.groupCheckFrame.lastPartySize = size
+	Ignore.groupCheckFrame.lastIgnored = count
 end)
