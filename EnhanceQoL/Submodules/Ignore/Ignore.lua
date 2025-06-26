@@ -64,7 +64,7 @@ end
 
 local ROW_HEIGHT = 20
 
-local widths = { 130, 150, 60, 60, 205 }
+local widths = { 130, 150, 60, 60, 210 }
 local titles = {
 	L["IgnorePlayer"],
 	L["IgnoreServer"],
@@ -270,7 +270,7 @@ function EQOLIgnoreFrame_OnLoad(frame)
 	end
 
 	-- Create buttons and retrieve them from the scrollFrame.buttons table
-	HybridScrollFrame_CreateButtons(Ignore.scrollFrame, "EQOLIgnoreRowTemplate", 10, -2)
+	HybridScrollFrame_CreateButtons(Ignore.scrollFrame, "EQOLIgnoreRowTemplate", 5, -2)
 	local rows = Ignore.scrollFrame.buttons or {}
 	Ignore.rows = rows
 
