@@ -45,6 +45,7 @@ Ignore.sortAsc = true
 
 local NUM_ROWS = 14
 Ignore.rows = {}
+Ignore.scrollChild = Ignore.scrollChild or nil
 
 local IgnoreRowTemplate = {}
 
@@ -138,12 +139,16 @@ local function FilterEntries()
 end
 
 local function RefreshList()
-	FilterEntries()
-	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.filtered) end
-	if Ignore.scrollFrame then
-		FauxScrollFrame_Update(Ignore.scrollFrame, #Ignore.filtered, NUM_ROWS, ROW_HEIGHT)
-		Ignore:UpdateRows()
-	end
+        FilterEntries()
+        if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.filtered) end
+        if Ignore.scrollChild then
+                local h = math.max(#Ignore.filtered, NUM_ROWS) * ROW_HEIGHT
+                Ignore.scrollChild:SetHeight(h)
+        end
+        if Ignore.scrollFrame then
+                FauxScrollFrame_Update(Ignore.scrollFrame, #Ignore.filtered, NUM_ROWS, ROW_HEIGHT)
+                Ignore:UpdateRows()
+        end
 end
 
 function Ignore:UpdateRows()
@@ -175,15 +180,17 @@ function Ignore:CreateUI()
 	frame:SetWidth(650)
 	frame:SetHeight(400)
 	frame:SetLayout("List")
-	frame:SetCallback("OnClose", function(widget)
-		AceGUI:Release(widget)
-		if self.searchBox then
-			AceGUI:Release(self.searchBox)
-			self.searchBox = nil
-		end
-		self.window = nil
-		Ignore.searchText = ""
-	end)
+       frame:SetCallback("OnClose", function(widget)
+               AceGUI:Release(widget)
+               if self.searchBox then
+                       AceGUI:Release(self.searchBox)
+                       self.searchBox = nil
+               end
+               Ignore.scrollFrame = nil
+               Ignore.scrollChild = nil
+               self.window = nil
+               Ignore.searchText = ""
+       end)
 
 	local spacer = AceGUI:Create("Label")
 	spacer:SetText(" ")
@@ -297,9 +304,12 @@ function Ignore:CreateUI()
 	bg:SetColorTexture(0, 0, 0, 0.7)
 	Ignore.scrollFrame = scrollFrame
 
-	local scrollChild = CreateFrame("Frame", nil, scrollFrame)
-	scrollChild:SetSize(listWidth, NUM_ROWS * ROW_HEIGHT)
-	scrollFrame:SetScrollChild(scrollChild)
+       local scrollChild = CreateFrame("Frame", nil, scrollFrame)
+       scrollChild:SetPoint("TOPLEFT")
+       scrollChild:SetPoint("TOPRIGHT")
+       scrollChild:SetHeight(NUM_ROWS * ROW_HEIGHT)
+       scrollFrame:SetScrollChild(scrollChild)
+       Ignore.scrollChild = scrollChild
 
 	for i = 1, NUM_ROWS do
 		local row = CreateFrame("Button", nil, scrollChild)
@@ -308,7 +318,9 @@ function Ignore:CreateUI()
 		Mixin(row, IgnoreRowTemplate)
 		row:OnAcquired()
 		row:SetWidth(listWidth)
-		row:SetPoint("TOPLEFT", header, "BOTTOMLEFT", 7, -((i - 1) * ROW_HEIGHT) - 5)
+		-- Anchor rows directly to the scrollChild so scrolling works correctly
+		-- without relying on the header frame.
+		row:SetPoint("TOPLEFT", scrollChild, "TOPLEFT", 7, -((i - 1) * ROW_HEIGHT))
 		Ignore.rows[i] = row
 	end
 
