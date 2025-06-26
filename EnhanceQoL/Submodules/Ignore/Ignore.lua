@@ -197,7 +197,9 @@ function Ignore:CreateUI()
         search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
         self.searchBox = search
 
-        local scroll = CreateFrame("ScrollFrame", nil, frame.frame, "HybridScrollFrameTemplate")
+        -- The scroll frame must be named so the template can locate its
+        -- scrollbar during the OnLoad script.
+        local scroll = CreateFrame("ScrollFrame", "EQOLIgnoreScrollFrame", frame.frame, "HybridScrollFrameTemplate")
         scroll:SetPoint("TOPLEFT", frame.frame, "TOPLEFT", 20, -90)
         scroll:SetPoint("BOTTOMRIGHT", frame.frame, "BOTTOMRIGHT", -45, 50)
         scroll.scrollBar:SetPoint("TOPLEFT", scroll, "TOPRIGHT", 0, -16)
