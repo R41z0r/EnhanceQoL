@@ -18,6 +18,8 @@ Ignore.addFrame = Ignore.addFrame or nil
 
 Ignore.filtered = {}
 
+local IsIgnored = IsIgnored or C_FriendList.IsIgnored
+
 function Ignore.daysFromToday(dateStr)
 	if not dateStr then return 0 end
 	local y, m, d = dateStr:match("(%d+)%-(%d+)%-(%d+)")
@@ -37,7 +39,7 @@ end
 
 local ROW_HEIGHT = 20
 
-local widths = { 130, 150, 60, 60, 230 }
+local widths = { 130, 150, 60, 60, 205 }
 local titles = { "Player", "Server", "Listed", "Expires", "Note" }
 local DOUBLE_CLICK_TIME = 0.5
 
@@ -141,18 +143,18 @@ end
 local function RefreshList()
 	FilterEntries()
 	if Ignore.counter then Ignore.counter:SetText("Entries: " .. #Ignore.filtered) end
-        if Ignore.scrollFrame then
-                HybridScrollFrame_Update(Ignore.scrollFrame, #Ignore.filtered * ROW_HEIGHT, NUM_ROWS * ROW_HEIGHT)
-                Ignore:UpdateRows()
-        end
+	if Ignore.scrollFrame then
+		HybridScrollFrame_Update(Ignore.scrollFrame, #Ignore.filtered * ROW_HEIGHT, NUM_ROWS * ROW_HEIGHT)
+		Ignore:UpdateRows()
+	end
 end
 
 function Ignore:UpdateRows()
-        if not self.scrollFrame then return end
-        local offset = HybridScrollFrame_GetOffset(self.scrollFrame)
-        for i, row in ipairs(self.rows) do
-                local idx = i + offset
-                local e = self.filtered[idx]
+	if not self.scrollFrame then return end
+	local offset = HybridScrollFrame_GetOffset(self.scrollFrame)
+	for i, row in ipairs(self.rows) do
+		local idx = i + offset
+		local e = self.filtered[idx]
 		if e then
 			row:Init({
 				index = idx,
@@ -171,97 +173,99 @@ end
 
 -- Frame created from XML
 function EQOLIgnoreFrame_OnLoad(frame)
-        Ignore.frame = frame
-        Ignore.counter = frame.Counter
-        Ignore.searchBox = frame.SearchBox
-        Ignore.header = frame.Header
-        Ignore.scrollFrame = frame.ScrollFrame
-        Ignore.removeBtn = frame.RemoveButton
+	Ignore.frame = frame
+	local fn = frame:GetName()
+	Ignore.counter = _G[fn .. "Counter"]
+	Ignore.searchBox = _G[fn .. "SearchBox"]
+	Ignore.header = _G[fn .. "Header"]
+	Ignore.scrollFrame = _G[fn .. "ScrollFrame"]
+	-- Ensure scrollFrame.scrollBar references the XML-declared slider
+	Ignore.scrollFrame.scrollBar = _G[fn .. "ScrollFrameScrollBar"]
+	Ignore.removeBtn = _G[fn .. "RemoveButton"]
+	Ignore.removeBtn:SetText(REMOVE)
 
-        local listWidth = 0
-        for _, w in ipairs(widths) do
-                listWidth = listWidth + w
-        end
+	local listWidth = 0
+	for _, w in ipairs(widths) do
+		listWidth = listWidth + w
+	end
 
-        local x = 0
-        for idx, col in ipairs({
-                { text = "Player", width = widths[1], key = "player" },
-                { text = "Server", width = widths[2], key = "server" },
-                { text = "Listed", width = widths[3], key = "listed" },
-                { text = "Expires", width = widths[4], key = "expire" },
-                { text = "Note", width = widths[5], key = "note" },
-        }) do
-                local h = CreateFrame("Button", "EQOLIgnoreHeader" .. idx, frame.Header, "WhoFrameColumnHeaderTemplate")
-                h:SetWidth(col.width)
-                if col.key == "note" then
-                        _G[h:GetName() .. "Middle"]:SetWidth(col.width - 60)
-                else
-                        _G[h:GetName() .. "Middle"]:SetWidth(col.width - 9)
-                end
-                h:SetHeight(ROW_HEIGHT)
-                h:SetPoint("LEFT", x, 0)
-                if h.Text then
-                        h.Text:SetText(col.text)
-                else
-                        h:SetText(col.text)
-                end
-                h.sortKey = col.key
-                h:SetScript("OnClick", function(self)
-                        Ignore.sortAsc = (Ignore.currentSort ~= self.sortKey) and true or not Ignore.sortAsc
-                        Ignore.currentSort = self.sortKey
-                        table.sort(Ignore.filtered, function(a, b)
-                                local av, bv
-                                if self.sortKey == "listed" then
-                                        av = Ignore.daysFromToday(a.date or "")
-                                        bv = Ignore.daysFromToday(b.date or "")
-                                elseif self.sortKey == "expire" then
-                                        av = Ignore:GetExpireText(a)
-                                        bv = Ignore:GetExpireText(b)
-                                else
-                                        av = tostring(a[self.sortKey] or "")
-                                        bv = tostring(b[self.sortKey] or "")
-                                end
-                                if Ignore.sortAsc then
-                                        return av < bv
-                                else
-                                        return av > bv
-                                end
-                        end)
-                        Ignore:UpdateRows()
-                end)
-                x = x + col.width
-        end
+	local x = 0
+	local c = 1
+	for idx, col in ipairs({
+		{ text = "Player", width = widths[1], key = "player" },
+		{ text = "Server", width = widths[2], key = "server" },
+		{ text = "Listed", width = widths[3], key = "listed" },
+		{ text = "Expires", width = widths[4], key = "expire" },
+		{ text = "Note", width = widths[5], key = "note" },
+	}) do
+		local colH = _G[fn .. "HeaderCol" .. c]
+		if colH then
+			colH:SetWidth(col.width)
+			_G[fn .. "HeaderCol" .. c .. "Middle"]:SetWidth(col.width - 9)
+			colH:SetText(col.text)
+			colH.sortKey = col.key
+			colH:SetScript("OnClick", function(self)
+				Ignore.sortAsc = (Ignore.currentSort ~= self.sortKey) and true or not Ignore.sortAsc
+				Ignore.currentSort = self.sortKey
+				table.sort(Ignore.filtered, function(a, b)
+					local av, bv
+					if self.sortKey == "listed" then
+						av = Ignore.daysFromToday(a.date or "")
+						bv = Ignore.daysFromToday(b.date or "")
+					elseif self.sortKey == "expire" then
+						av = Ignore:GetExpireText(a)
+						bv = Ignore:GetExpireText(b)
+					else
+						av = tostring(a[self.sortKey] or "")
+						bv = tostring(b[self.sortKey] or "")
+					end
+					if Ignore.sortAsc then
+						return av < bv
+					else
+						return av > bv
+					end
+				end)
+				Ignore:UpdateRows()
+			end)
+		end
+		c = c + 1
+	end
 
-        Ignore.rows = HybridScrollFrame_CreateButtons(Ignore.scrollFrame, "EQOLIgnoreRowTemplate", 0, -2)
-        for _, row in ipairs(Ignore.rows) do
-                Mixin(row, IgnoreRowTemplate)
-                row:OnAcquired()
-        end
-        Ignore.scrollFrame.update = function() Ignore:UpdateRows() end
+	-- Create buttons and retrieve them from the scrollFrame.buttons table
+	HybridScrollFrame_CreateButtons(Ignore.scrollFrame, "EQOLIgnoreRowTemplate", 10, -2)
+	local rows = Ignore.scrollFrame.buttons or {}
+	Ignore.rows = rows
 
-        frame.SearchBox:SetScript("OnTextChanged", function(self)
-                Ignore.searchText = self:GetText() or ""
-                Ignore.selectedIndex = nil
-                RefreshList()
-        end)
+	-- Initialize each button via our template mixin
+	for _, row in ipairs(rows) do
+		Mixin(row, IgnoreRowTemplate)
+		row:OnAcquired()
+	end
+	Ignore.scrollFrame.update = function() Ignore:UpdateRows() end
 
-        frame.RemoveButton:SetScript("OnClick", function()
-                if Ignore.selectedIndex then
-                        removeEntryByIndex(Ignore.selectedIndex)
-                        Ignore.selectedIndex = nil
-                end
-                RefreshList()
-        end)
+	Ignore.searchBox:SetScript("OnTextChanged", function(self)
+		Ignore.searchText = self:GetText() or ""
+		Ignore.selectedIndex = nil
+		RefreshList()
+	end)
 
-        RefreshList()
+	Ignore.removeBtn:SetScript("OnClick", function()
+		if Ignore.selectedIndex then
+			removeEntryByIndex(Ignore.selectedIndex)
+			Ignore.selectedIndex = nil
+		end
+		RefreshList()
+	end)
+
+	RefreshList()
 end
 
 function Ignore:Toggle()
-        if EQOLIgnoreFrame:IsShown() then
-                EQOLIgnoreFrame:Hide()
-        else
-                EQOLIgnoreFrame:Show()
-        end
+	if EQOLIgnoreFrame:IsShown() then
+		EQOLIgnoreFrame:Hide()
+	else
+		EQOLIgnoreFrame:Show()
+	end
 end
 
 SLASH_EQOLIGNORE1 = "/eig"
@@ -291,7 +295,7 @@ local function addEntry(name, note, expires)
 	for _, entry in ipairs(Ignore.entries) do
 		if entry.player == player and entry.server == server then
 			if note ~= nil then entry.note = note end
-			if expires ~= nil then entry.expires = expires ~= "" and expires or "NEVER" end
+			if expires ~= nil then entry.expires = expires ~= "" and expires or NEVER end
 			RefreshList()
 			return
 		end
@@ -301,7 +305,7 @@ local function addEntry(name, note, expires)
 		player = player,
 		server = server,
 		date = date("%Y-%m-%d"),
-		expires = expires or "NEVER",
+		expires = expires or NEVER,
 		note = note or "",
 	})
 	RefreshList()
@@ -318,8 +322,10 @@ removeEntryByIndex = function(index)
 end
 
 removeEntry = function(name)
-	if origDelIgnore and IsIgnored and IsIgnored(name) then origDelIgnore(name) end
 	local player, server = strsplit("-", name)
+	if server == (GetRealmName()):gsub("%s", "") then name = player end
+
+	if origDelIgnore and IsIgnored and IsIgnored(name) then origDelIgnore(name) end
 	for i, entry in ipairs(Ignore.entries) do
 		if entry.player == player and entry.server == (server or "") then
 			table.remove(Ignore.entries, i)
@@ -339,7 +345,7 @@ local function addOrRemove(name)
 			return
 		end
 	end
-	if C_FriendList and C_FriendList.IsIgnored and C_FriendList.IsIgnored(name) then
+	if IsIgnored and IsIgnored(name) then
 		removeEntry(name)
 	else
 		C_FriendList.AddIgnore(name)
@@ -396,7 +402,7 @@ function Ignore:ShowAddFrame(name, note, expires)
 		numBox.frame:SetShown(value)
 	end)
 
-	if expires and expires ~= "NEVER" then
+	if expires and expires ~= NEVER then
 		check:SetValue(true)
 		numBox:SetDisabled(false)
 		numBox.frame:Show()
@@ -473,7 +479,7 @@ frame:SetScript("OnEvent", function()
 				player = player,
 				server = server,
 				date = date("%Y-%m-%d"),
-				expires = "NEVER",
+				expires = NEVER,
 				note = "",
 			}) end
 		end
