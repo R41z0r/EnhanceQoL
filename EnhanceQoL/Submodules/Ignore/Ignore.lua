@@ -173,18 +173,23 @@ function Ignore:CreateUI()
 	search.frame:SetPoint("TOPRIGHT", frame.frame, "TOPRIGHT", -40, -32)
 	self.searchBox = search
 
-	-- WowScrollBoxListTemplate isn't present in all environments; fallback to
-	-- the base WowScrollBoxList if the template is missing.
-	local scrollBox = CreateFrame("Frame", "EQOLIgnoreScrollBox", frame.frame, "WowScrollBoxList")
-	local scrollBar = CreateFrame("Frame", "EQOLIgnoreScrollBar", frame.frame, "WowScrollBoxListScrollBarTemplate")
+	if not _G.ScrollBoxListMixin then
+		-- Retail 9.1+ ships it as a load‑on‑demand addon
+		pcall(LoadAddOn, "Blizzard_ScrollBox") -- ← wichtiger Name!
+	end
+
+	local scrollBox = CreateFrame("Frame", "EQOLIgnoreScrollBox", frame.frame, "WowScrollBoxList") -- KEIN „Template“ anhängen
 	scrollBox:SetPoint("TOPLEFT", 20, -90)
 	scrollBox:SetPoint("BOTTOMRIGHT", -45, 50)
-	scrollBar:SetPoint("TOPLEFT", scrollBox, "TOPRIGHT", 3, 0)
-	scrollBar:SetPoint("BOTTOMLEFT", scrollBox, "BOTTOMRIGHT", 3, 0)
+	-- Scroll‑Bar
+	local scrollBar = CreateFrame("EventFrame", "EQOLIgnoreScrollBar", frame.frame, "MinimalScrollBar")
+	scrollBar:SetPoint("TOPLEFT", scrollBox, "TOPRIGHT", 4, 0)
+	scrollBar:SetPoint("BOTTOMLEFT", scrollBox, "BOTTOMRIGHT", 4, 0)
 	Ignore.scrollBox = scrollBox
 
-	local view = CreateScrollBoxListLinearView(ROW_HEIGHT, "Button", IgnoreRowTemplate)
-	view:SetElementInitializer("Button", function(btn, data)
+	local TEMPLATE = "WowScrollBoxListSimpleLineTemplate" -- Blizzard‑Template
+	local view = CreateScrollBoxListLinearView(ROW_HEIGHT, TEMPLATE, IgnoreRowTemplate)
+	view:SetElementInitializer(TEMPLATE, function(btn, data)
 		Mixin(btn, IgnoreRowTemplate)
 		btn:Init(data)
 	end)
@@ -462,3 +467,164 @@ frame:SetScript("OnEvent", function()
 	end
 	RefreshProvider()
 end)
+
+---------------------------------No Feature Test ---------------------------------------
+
+local function IgnoreListDrawUpdate (self)
+
+	FauxScrollFrame_Update(self, #GlobalIgnoreDB.ignoreList, BUTTON_TOTAL, BUTTON_HEIGHT)
+	
+	if IgnoreScrollSelect > #GlobalIgnoreDB.ignoreList then
+		IgnoreScrollSelect = #GlobalIgnoreDB.ignoreList
+	end
+	
+	Tab1Frame.infotext:SetText(format(L["INFO_1"], #GlobalIgnoreDB.ignoreList))
+	
+	local offset  = FauxScrollFrame_GetOffset(self)
+	local index   = 0
+	local id      = 0
+	local pName   = ""
+	local pServer = ""
+	local pType   = ""
+	local pExpire = ""
+	local temp    = 0
+	
+	for count = 1, BUTTON_TOTAL do
+		id = count + offset
+		
+		if id <= #GlobalIgnoreDB.ignoreList then		
+			index = IgnoreScrollIndex[id] or id
+			pName = GlobalIgnoreDB.ignoreList[index]
+			temp  = string.find(pName, "-", 1, true)
+			
+			if temp then
+				pServer = prettyServer(string.sub(pName, temp + 1, string.len(pName)))
+				pName   = string.sub(pName, 1, temp - 1)
+			else
+				pServer = "All"
+			end
+			
+			if GlobalIgnoreDB.typeList[index] == "player" then
+				if GlobalIgnoreDB.factionList[index] == "Alliance" then
+					pType = "|cff335effAlliance"
+				elseif GlobalIgnoreDB.factionList[index] == "Horde" then
+					pType = "|cffe60000Horde"
+				else
+					pType = "Unknown"
+				end				  
+			elseif GlobalIgnoreDB.typeList[index] == "npc" then
+				pType = "|cffffff99NPC"
+			else
+				pType = "|cffff66ccServer"
+				pServer = prettyServer(pName)
+				pName = "All"				
+			end	
+			
+			local playerExp = (GlobalIgnoreDB.expList[index] or 0)
+			local daysExp   = playerExp - daysFromToday(GlobalIgnoreDB.dateList[index])
+
+			if playerExp == 0 then
+				pExpire = "|cff808080"..L["EXP_NVR"]
+			elseif daysExp <= 0 then
+				pExpire = "|cffff6666"..L["EXP_TDY"]
+			else
+				pExpire = daysExp.."d"
+			end
+
+			IgnoreScrollButtons[count].name:SetText(pName)
+			IgnoreScrollButtons[count].server:SetText(pServer)
+			IgnoreScrollButtons[count].type:SetText(pType)
+			IgnoreScrollButtons[count].listed:SetText(daysFromToday(GlobalIgnoreDB.dateList[index]) .. "d")
+			IgnoreScrollButtons[count].expire:SetText(pExpire)
+			IgnoreScrollButtons[count].note:SetText("|cff69CCF0"..GlobalIgnoreDB.notes[index])
+			
+			IgnoreScrollButtons[count]:SetID(id)
+			
+			if IgnoreScrollSelect == id then
+				IgnoreScrollButtons[count]:LockHighlight()
+			else
+				IgnoreScrollButtons[count]:UnlockHighlight()
+			end
+		
+			IgnoreScrollButtons[count]:Show()
+		else
+			IgnoreScrollButtons[count]:Hide()
+		end
+	end
+end
+
+local function createColumn(text, width, parent)
+	local p = _G[parent:GetName() .. "Header1"]
+
+	if p == nil then columnCount = 0 end
+
+	columnCount = columnCount + 1
+
+	local Header = CreateFrame("Button", parent:GetName() .. "Header" .. columnCount, parent, "WhoFrameColumnHeaderTemplate")
+	Header:SetWidth(width)
+	_G[parent:GetName() .. "Header" .. columnCount .. "Middle"]:SetWidth(width - 9)
+	Header:SetText(text)
+	Header:SetNormalFontObject("GameFontHighlight")
+	Header:SetID(columnCount)
+
+	if columnCount == 1 then
+		Header:SetPoint("TOPLEFT", parent, "TOPLEFT", 1, 22)
+	else
+		Header:SetPoint("LEFT", parent:GetName() .. "Header" .. columnCount - 1, "RIGHT", 0, 0)
+	end
+
+	Header:SetScript("OnClick", columnClick)
+end
+
+local MainFrame = CreateFrame("Frame", nil, UIParent, "PortraitFrameTemplate")
+
+local WINDOW_WIDTH			= 734
+local WINDOW_HEIGHT			= 400
+local WINDOW_OFFSET			= 113
+
+MainFrame:SetFrameStrata("DIALOG")
+MainFrame:SetWidth(WINDOW_WIDTH)
+MainFrame:SetHeight(WINDOW_HEIGHT)
+MainFrame:SetPoint("CENTER", UIParent)
+MainFrame:SetMovable(true)
+MainFrame:EnableMouse(true)
+MainFrame:RegisterForDrag("LeftButton", "RightButton")
+MainFrame:SetClampedToScreen(true)
+
+MainFrame:SetScript("OnMouseDown", function(self)
+	self:StartMoving()
+	self.isMoving = true
+end)
+
+MainFrame:SetScript("OnMouseUp", function(self)
+	if self.isMoving then
+		self:StopMovingOrSizing()
+		self.isMoving = false
+	end
+end)
+local icon = MainFrame:CreateTexture("$parentIcon", "OVERLAY", nil, -8)
+
+icon:SetSize(60, 60)
+icon:SetPoint("TOPLEFT", -5, 7)
+icon:SetTexture("Interface\\FriendsFrame\\Battlenet-Portrait")
+
+local Tab1Frame = CreateFrame("Frame", "GILFrame1", MainFrame, "InsetFrameTemplate")
+
+Tab1Frame:SetWidth(WINDOW_WIDTH - 19)
+Tab1Frame:SetHeight(WINDOW_HEIGHT - WINDOW_OFFSET)
+Tab1Frame:SetPoint("TOPLEFT", MainFrame, "TOPLEFT", 8, -84)
+
+Tab1Frame:SetScript("OnShow", function(self) IgnoreListDrawUpdate(IgnoreScrollFrame) end)
+local COL_NAME = 130
+local COL_SERVER = 150
+local COL_TYPE = 60
+local COL_LISTED = 53
+local COL_EXPIRE = 56
+local COL_NOTES = 241
+
+createColumn("COL_1", COL_NAME, Tab1Frame)
+createColumn("COL_2", COL_SERVER, Tab1Frame)
+createColumn("COL_3", COL_TYPE, Tab1Frame)
+createColumn("COL_4", COL_LISTED, Tab1Frame)
+createColumn("COL_5", COL_EXPIRE, Tab1Frame)
+createColumn("COL_6", COL_NOTES, Tab1Frame)
