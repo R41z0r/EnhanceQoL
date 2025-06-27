@@ -20,6 +20,8 @@ Ignore.searchText = Ignore.searchText or ""
 Ignore.addFrame = Ignore.addFrame or nil
 
 Ignore.enabled = Ignore.enabled or false
+Ignore.registeredFilters = Ignore.registeredFilters or {}
+Ignore.hooksInstalled = Ignore.hooksInstalled or false
 
 local LOGIN_FRAME = CreateFrame("Frame")
 local CHAT_EVENTS = {
@@ -345,10 +347,11 @@ function Ignore:Toggle()
 	end
 end
 
--- keep originals so we can still call Blizzard's ignore API
-local origAddIgnore = C_FriendList and C_FriendList.AddIgnore
-local origDelIgnoreByIndex = C_FriendList and C_FriendList.DelIgnoreByIndex
-local origDelIgnore = C_FriendList and C_FriendList.DelIgnore
+Ignore.origAddIgnore = Ignore.origAddIgnore or (C_FriendList and C_FriendList.AddIgnore)
+Ignore.origDelIgnoreByIndex = Ignore.origDelIgnoreByIndex or (C_FriendList and C_FriendList.DelIgnoreByIndex)
+Ignore.origDelIgnore = Ignore.origDelIgnore or (C_FriendList and C_FriendList.DelIgnore)
+Ignore.origAddOrDelIgnore = Ignore.origAddOrDelIgnore or (C_FriendList and C_FriendList.AddOrDelIgnore)
+
 function Ignore:HasFreeSlot()
 	local num = 0
 	if C_FriendList and C_FriendList.GetNumIgnores then
@@ -374,7 +377,7 @@ local function addEntry(name, note, expires)
 		RefreshList()
 		return
 	end
-	--if origAddIgnore and sameRealm and Ignore:HasFreeSlot() then origAddIgnore(name) end
+	--if Ignore.origAddIgnore and sameRealm and Ignore:HasFreeSlot() then Ignore.origAddIgnore(name) end
 	local newEntry = {
 		player = player,
 		server = server,
@@ -401,7 +404,7 @@ removeEntry = function(name)
 	local player, server = strsplit("-", name)
 	if server == (GetRealmName()):gsub("%s", "") then name = player end
 
-	if origDelIgnore and IsIgnored and IsIgnored(name) then origDelIgnore(name) end
+	if Ignore.origDelIgnore and IsIgnored and IsIgnored(name) then Ignore.origDelIgnore(name) end
 	local key = Ignore:NormalizeName(player .. "-" .. (server or ""))
 	local entry = Ignore.entryLookup[key]
 	if entry then
@@ -526,7 +529,7 @@ function Ignore:ShowAddFrame(name, note, expires)
 	self.addFrame = frame
 end
 
-function C_FriendList.AddIgnore(name)
+local function hookedAddIgnore(name)
 	if not name or name == "" then
 		if UnitExists("target") and UnitIsPlayer("target") then
 			local n, realm = UnitName("target")
@@ -543,11 +546,11 @@ function C_FriendList.AddIgnore(name)
 	Ignore:ShowAddFrame(name)
 end
 
-function C_FriendList.DelIgnoreByIndex(index) removeEntryByIndex(index) end
+local function hookedDelIgnoreByIndex(index) removeEntryByIndex(index) end
 
-function C_FriendList.DelIgnore(name) removeEntry(name) end
+local function hookedDelIgnore(name) removeEntry(name) end
 
-function C_FriendList.AddOrDelIgnore(name) addOrRemove(name) end
+local function hookedAddOrDelIgnore(name) addOrRemove(name) end
 
 local monthMap = {
 	Jan = 1,
@@ -651,11 +654,47 @@ end)
 local SLASH_NAME = "EQOLIGNORE"
 local SLASH_CMD = "/eig"
 
+-- chat message filter to block messages from ignored players
+local function ignoreChatFilter(_, _, _, sender)
+	if not Ignore.enabled then return end
+	if Ignore:CheckIgnore(sender) then return true end
+	return false
+end
+
+local function hookIgnoreApi()
+	if C_FriendList and not Ignore.hooksInstalled then
+		Ignore.origAddIgnore = Ignore.origAddIgnore or C_FriendList.AddIgnore
+		Ignore.origDelIgnoreByIndex = Ignore.origDelIgnoreByIndex or C_FriendList.DelIgnoreByIndex
+		Ignore.origDelIgnore = Ignore.origDelIgnore or C_FriendList.DelIgnore
+		Ignore.origAddOrDelIgnore = Ignore.origAddOrDelIgnore or C_FriendList.AddOrDelIgnore
+
+		C_FriendList.AddIgnore = hookedAddIgnore
+		C_FriendList.DelIgnoreByIndex = hookedDelIgnoreByIndex
+		C_FriendList.DelIgnore = hookedDelIgnore
+		C_FriendList.AddOrDelIgnore = hookedAddOrDelIgnore
+		Ignore.hooksInstalled = true
+	end
+end
+
+local function unhookIgnoreApi()
+	if C_FriendList and Ignore.hooksInstalled then
+		if Ignore.origAddIgnore then C_FriendList.AddIgnore = Ignore.origAddIgnore end
+		if Ignore.origDelIgnoreByIndex then C_FriendList.DelIgnoreByIndex = Ignore.origDelIgnoreByIndex end
+		if Ignore.origDelIgnore then C_FriendList.DelIgnore = Ignore.origDelIgnore end
+		if Ignore.origAddOrDelIgnore then C_FriendList.AddOrDelIgnore = Ignore.origAddOrDelIgnore end
+		Ignore.hooksInstalled = false
+	end
+end
+
 local function updateRegistration()
 	if Ignore.enabled then
+		hookIgnoreApi()
 		LOGIN_FRAME:RegisterEvent("PLAYER_LOGIN")
 		for _, e in ipairs(CHAT_EVENTS) do
-			ChatFrame_AddMessageEventFilter(e, ignoreChatFilter)
+			if not Ignore.registeredFilters[e] then
+				ChatFrame_AddMessageEventFilter(e, ignoreChatFilter)
+				Ignore.registeredFilters[e] = true
+			end
 		end
 		for _, evt in ipairs(INTERACTION_EVENTS) do
 			Ignore.interactionBlocker:RegisterEvent(evt)
@@ -666,7 +705,10 @@ local function updateRegistration()
 	else
 		LOGIN_FRAME:UnregisterAllEvents()
 		for _, e in ipairs(CHAT_EVENTS) do
-			ChatFrame_RemoveMessageEventFilter(e, ignoreChatFilter)
+			if Ignore.registeredFilters[e] then
+				ChatFrame_RemoveMessageEventFilter(e, ignoreChatFilter)
+				Ignore.registeredFilters[e] = nil
+			end
 		end
 		for _, evt in ipairs(INTERACTION_EVENTS) do
 			Ignore.interactionBlocker:UnregisterEvent(evt)
@@ -675,6 +717,7 @@ local function updateRegistration()
 		if EQOLIgnoreFrame then EQOLIgnoreFrame:Hide() end
 		SlashCmdList[SLASH_NAME] = nil
 		_G["SLASH_" .. SLASH_NAME .. "1"] = nil
+		unhookIgnoreApi()
 	end
 end
 
@@ -743,12 +786,7 @@ Ignore.groupCheckFrame:SetScript("OnEvent", function()
 	Ignore.groupCheckFrame.lastIgnored = count
 end)
 
--- chat message filter to block messages from ignored players
-local function ignoreChatFilter(_, _, _, sender)
-	if not Ignore.enabled then return end
-	if Ignore:CheckIgnore(sender) then return true end
-	return false
-end
+if addon and addon.db and addon.db.enableIgnore ~= nil then Ignore:SetEnabled(addon.db.enableIgnore) end
 
 Ignore.interactionBlocker = Ignore.interactionBlocker or CreateFrame("Frame")
 Ignore.interactionBlocker:SetScript("OnEvent", function(_, event, ...)
