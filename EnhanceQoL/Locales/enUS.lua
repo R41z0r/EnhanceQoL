@@ -227,8 +227,10 @@ L["IgnoreGroupPopupTitle"] = "Ignored group members"
 L["IgnoreGroupPopupText"] = "The following ignored players are in your group:\n%s"
 L["Social"] = "Social"
 L["EnableAdvancedIgnore"] = "Enable advanced Ignore list"
-L["IgnoreDesc"] = "Blocks duel, pet battle, trade, invite and whisper requests from ignored players. Automatically adds same-realm names to Blizzard’s ignore list when space permits."
+L["IgnoreDesc"] =
+	'Blocks duel, pet battle, trade, invite and whisper requests from ignored players. Automatically adds same-realm names to Blizzard’s ignore list when space permits.\nIn the Dungeon Finder ignored Player are displayed as "!!! <Name> !!!"\n\nOpen the Ignore List with /eil'
 L["ImportGILDialog"] = "GlobalIgnoreList data found. Import entries and disable that addon? Both addons cannot be active together."
 L["ImportGILCancelDialog"] = "Disable the advanced ignore option or GlobalIgnoreList and reload your interface."
 L["ImportGILAccept"] = "Import & Reload"
 L["GILActivePopup"] = "Advanced ignore disabled because GlobalIgnoreList is active. Disable that addon and re-enable the option."
+L["IgnoredApplicant"] = "Player is on your Ignore list"
