@@ -109,40 +109,40 @@ function Ignore.daysFromToday(dateStr)
 end
 
 function Ignore:GetExpireText(entry)
-        if not entry or not entry.expires or entry.expires == "NEVER" then return "NEVER" end
-        local exp = tonumber(entry.expires)
-        if not exp then return tostring(entry.expires) end
-        local left = exp - self.daysFromToday(entry.date)
-        if left <= 0 then return "TODAY" end
-        return left .. "d"
+	if not entry or not entry.expires or entry.expires == NEVER then return NEVER end
+	local exp = tonumber(entry.expires)
+	if not exp then return tostring(entry.expires) end
+	local left = exp - self.daysFromToday(entry.date)
+	if left <= 0 then return "TODAY" end
+	return left .. "d"
 end
 
 function Ignore:Expire()
-        local removed = false
-        local me, realm = UnitFullName("player")
-        realm = realm or (GetRealmName()):gsub("%s", "")
-        local selfKey = self:NormalizeName(me .. "-" .. realm)
-        for i = #self.entries, 1, -1 do
-                local e = self.entries[i]
-                local key = self:NormalizeName(e.player .. "-" .. e.server)
-                if key == selfKey then
-                        table.remove(self.entries, i)
-                        self.entryLookup[key] = nil
-                        removed = true
-                else
-                        local exp = tonumber(e.expires)
-                        if exp and exp > 0 and self.daysFromToday(e.date) >= exp then
-                                local name = e.player
-                                if e.server and e.server ~= "" then name = name .. "-" .. e.server end
-                                if self.origDelIgnore and IsIgnored and IsIgnored(name) then self.origDelIgnore(name) end
-                                table.remove(self.entries, i)
-                                self.entryLookup[key] = nil
-                                print(L["IgnoreExpiredRemoved"]:format(name))
-                                removed = true
-                        end
-                end
-        end
-        if removed then self:RebuildLookup() end
+	local removed = false
+	local me, realm = UnitFullName("player")
+	realm = realm or (GetRealmName()):gsub("%s", "")
+	local selfKey = self:NormalizeName(me .. "-" .. realm)
+	for i = #self.entries, 1, -1 do
+		local e = self.entries[i]
+		local key = self:NormalizeName(e.player .. "-" .. e.server)
+		if key == selfKey then
+			table.remove(self.entries, i)
+			self.entryLookup[key] = nil
+			removed = true
+		else
+			local exp = tonumber(e.expires)
+			if exp and exp > 0 and self.daysFromToday(e.date) >= exp then
+				local name = e.player
+				if e.server and e.server ~= "" then name = name .. "-" .. e.server end
+				if self.origDelIgnore and IsIgnored and IsIgnored(name) then self.origDelIgnore(name) end
+				table.remove(self.entries, i)
+				self.entryLookup[key] = nil
+				print(L["IgnoreExpiredRemoved"]:format(name))
+				removed = true
+			end
+		end
+	end
+	if removed then self:RebuildLookup() end
 end
 
 local ROW_HEIGHT = 20
@@ -278,8 +278,8 @@ local function SortFiltered()
 end
 
 local function RefreshList()
-        Ignore:Expire()
-        FilterEntries()
+	Ignore:Expire()
+	FilterEntries()
 	SortFiltered()
 	if Ignore.counter then Ignore.counter:SetText(format(L["IgnoreEntries"], #Ignore.filtered)) end
 	if Ignore.scrollFrame then
@@ -312,23 +312,23 @@ end
 
 -- Frame created from XML
 function EQOLIgnoreFrame_OnLoad(frame)
-        Ignore.frame = frame
-        frame:SetFrameStrata("DIALOG")
-        frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-        frame.title:SetPoint("TOP", frame, "TOP", 0, -6)
-        frame.title:SetText(L["IgnoreWindowTitle"])
-        local fn = frame:GetName()
-        Ignore.counter = _G[fn .. "Counter"]
-        Ignore.searchBox = _G[fn .. "SearchBox"]
-        frame.searchLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-        frame.searchLabel:SetPoint("RIGHT", Ignore.searchBox, "LEFT", -5, 0)
-        frame.searchLabel:SetText(SEARCH .. ":")
-        Ignore.header = _G[fn .. "Header"]
-        Ignore.scrollFrame = _G[fn .. "ScrollFrame"]
+	Ignore.frame = frame
+	frame:SetFrameStrata("DIALOG")
+	frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	frame.title:SetPoint("TOP", frame, "TOP", 0, -6)
+	frame.title:SetText(L["IgnoreWindowTitle"])
+	local fn = frame:GetName()
+	Ignore.counter = _G[fn .. "Counter"]
+	Ignore.searchBox = _G[fn .. "SearchBox"]
+	frame.searchLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+	frame.searchLabel:SetPoint("RIGHT", Ignore.searchBox, "LEFT", -5, 0)
+	frame.searchLabel:SetText(SEARCH .. ":")
+	Ignore.header = _G[fn .. "Header"]
+	Ignore.scrollFrame = _G[fn .. "ScrollFrame"]
 	-- Ensure scrollFrame.scrollBar references the XML-declared slider
 	Ignore.scrollFrame.scrollBar = _G[fn .. "ScrollFrameScrollBar"]
 	Ignore.removeBtn = _G[fn .. "RemoveButton"]
-       Ignore.removeBtn:SetText(REMOVE)
+	Ignore.removeBtn:SetText(REMOVE)
 
 	local listWidth = 0
 	for _, w in ipairs(widths) do
@@ -378,32 +378,32 @@ function EQOLIgnoreFrame_OnLoad(frame)
 		RefreshList()
 	end)
 
-        Ignore.removeBtn:SetScript("OnClick", function()
-                local entry = Ignore.filtered[Ignore.selectedIndex]
-                if entry then
-                        local name = entry.player
-                        if entry.server and entry.server ~= "" then name = name .. "-" .. entry.server end
-                        removeEntry(name)
-                end
-                Ignore.selectedIndex = nil
-                RefreshList()
-        end)
+	Ignore.removeBtn:SetScript("OnClick", function()
+		local entry = Ignore.filtered[Ignore.selectedIndex]
+		if entry then
+			local name = entry.player
+			if entry.server and entry.server ~= "" then name = name .. "-" .. entry.server end
+			removeEntry(name)
+		end
+		Ignore.selectedIndex = nil
+		RefreshList()
+	end)
 
-       RefreshList()
+	RefreshList()
 
-       if FriendsFrame and not Ignore.friendsHookInstalled then
-               FriendsFrame:HookScript("OnShow", function()
-                       if addon.db.ignoreAttachFriendsFrame and Ignore.enabled then
-                               EQOLIgnoreFrame:Show()
-                               Ignore:UpdateAnchor()
-                       end
-               end)
-               FriendsFrame:HookScript("OnHide", function()
-                       if addon.db.ignoreAttachFriendsFrame then EQOLIgnoreFrame:Hide() end
-               end)
-               Ignore.friendsHookInstalled = true
-       end
-       Ignore:UpdateAnchor()
+	if FriendsFrame and not Ignore.friendsHookInstalled then
+		FriendsFrame:HookScript("OnShow", function()
+			if addon.db.ignoreAttachFriendsFrame and Ignore.enabled then
+				EQOLIgnoreFrame:Show()
+				Ignore:UpdateAnchor()
+			end
+		end)
+		FriendsFrame:HookScript("OnHide", function()
+			if addon.db.ignoreAttachFriendsFrame then EQOLIgnoreFrame:Hide() end
+		end)
+		Ignore.friendsHookInstalled = true
+	end
+	Ignore:UpdateAnchor()
 end
 
 function Ignore:Toggle()
@@ -431,22 +431,22 @@ function Ignore:HasFreeSlot()
 end
 
 local function addEntry(name, note, expires)
-        local player, server = strsplit("-", name)
-        local myServer = (GetRealmName()):gsub("%s", "")
-        local sameRealm = not server or server == myServer
-        player = player or name
-        server = server or myServer
-        local myName, myRealm = UnitFullName("player")
-        myRealm = myRealm or myServer
-        if player:lower() == (myName and myName:lower() or "") and server:lower() == myRealm:lower() then return end
-        local key = Ignore:NormalizeName(player .. "-" .. server)
-        local entry = Ignore.entryLookup[key]
-        if entry then
-                if note ~= nil then entry.note = note end
-                if expires ~= nil then entry.expires = expires > 0 and expires or NEVER end
-                RefreshList()
-                return
-        end
+	local player, server = strsplit("-", name)
+	local myServer = (GetRealmName()):gsub("%s", "")
+	local sameRealm = not server or server == myServer
+	player = player or name
+	server = server or myServer
+	local myName, myRealm = UnitFullName("player")
+	myRealm = myRealm or myServer
+	if player:lower() == (myName and myName:lower() or "") and server:lower() == myRealm:lower() then return end
+	local key = Ignore:NormalizeName(player .. "-" .. server)
+	local entry = Ignore.entryLookup[key]
+	if entry then
+		if note ~= nil then entry.note = note end
+		if expires ~= nil then entry.expires = expires > 0 and expires or NEVER end
+		RefreshList()
+		return
+	end
 	--if Ignore.origAddIgnore and sameRealm and Ignore:HasFreeSlot() then Ignore.origAddIgnore(name) end
 	local newEntry = {
 		player = player,
@@ -455,41 +455,41 @@ local function addEntry(name, note, expires)
 		expires = expires > 0 and expires or NEVER,
 		note = note or "",
 	}
-        table.insert(Ignore.entries, newEntry)
-        Ignore.entryLookup[key] = newEntry
-        print(L["IgnoreAdded"]:format(name))
-        RefreshList()
+	table.insert(Ignore.entries, newEntry)
+	Ignore.entryLookup[key] = newEntry
+	print(L["IgnoreAdded"]:format(name))
+	RefreshList()
 end
 
 removeEntryByIndex = function(index)
-        local entry = Ignore.entries[index]
-        if entry then
-                local fullName = entry.player .. "-" .. entry.server
-                Ignore.entryLookup[Ignore:NormalizeName(fullName)] = nil
-                table.remove(Ignore.entries, index)
-                print(L["IgnoreRemoved"]:format(fullName))
-        end
-        RefreshList()
+	local entry = Ignore.entries[index]
+	if entry then
+		local fullName = entry.player .. "-" .. entry.server
+		Ignore.entryLookup[Ignore:NormalizeName(fullName)] = nil
+		table.remove(Ignore.entries, index)
+		print(L["IgnoreRemoved"]:format(fullName))
+	end
+	RefreshList()
 end
 
 removeEntry = function(name)
-        local player, server = strsplit("-", name)
-        if server == (GetRealmName()):gsub("%s", "") then name = player end
+	local player, server = strsplit("-", name)
+	if server == (GetRealmName()):gsub("%s", "") then name = player end
 
 	if Ignore.origDelIgnore and IsIgnored and IsIgnored(name) then Ignore.origDelIgnore(name) end
 	local key = Ignore:NormalizeName(player .. "-" .. (server or ""))
 	local entry = Ignore.entryLookup[key]
-        if entry then
-                for i, e in ipairs(Ignore.entries) do
-                        if e == entry then
-                                table.remove(Ignore.entries, i)
-                                break
-                        end
-                end
-                Ignore.entryLookup[key] = nil
-        end
-        print(L["IgnoreRemoved"]:format(name))
-        RefreshList()
+	if entry then
+		for i, e in ipairs(Ignore.entries) do
+			if e == entry then
+				table.remove(Ignore.entries, i)
+				break
+			end
+		end
+		Ignore.entryLookup[key] = nil
+	end
+	print(L["IgnoreRemoved"]:format(name))
+	RefreshList()
 end
 
 local function addOrRemove(name)
@@ -845,19 +845,19 @@ function Ignore:SetEnabled(val)
 	else
 		Ignore.enabled = false
 	end
-       updateRegistration()
+	updateRegistration()
 end
 
 function Ignore:UpdateAnchor()
-       if not self.frame or not FriendsFrame then return end
-       self.frame:ClearAllPoints()
-       if addon.db.ignoreAnchorFriendsFrame then
-               self.frame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", 5, 0)
-               self.frame:SetMovable(false)
-       else
-               self.frame:SetPoint("CENTER")
-               self.frame:SetMovable(true)
-       end
+	if not self.frame or not FriendsFrame then return end
+	self.frame:ClearAllPoints()
+	if addon.db.ignoreAnchorFriendsFrame then
+		self.frame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", 5, 0)
+		self.frame:SetMovable(false)
+	else
+		self.frame:SetPoint("CENTER")
+		self.frame:SetMovable(true)
+	end
 end
 
 -- frame to check ignored members in current group
