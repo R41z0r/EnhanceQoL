@@ -612,9 +612,31 @@ Ignore.groupCheckFrame:SetScript("OnEvent", function()
 		StaticPopup_Show("EQOL_IGNORE_GROUP")
 	end
 
-	Ignore.groupCheckFrame.lastPartySize = size
-	Ignore.groupCheckFrame.lastIgnored = count
+Ignore.groupCheckFrame.lastPartySize = size
+Ignore.groupCheckFrame.lastIgnored = count
 end)
+
+-- chat message filter to block messages from ignored players
+local function ignoreChatFilter(_, _, _, sender)
+    if Ignore:IsPlayerIgnored(sender) then return true end
+    return false
+end
+
+for _, e in ipairs({
+    "CHAT_MSG_WHISPER",
+    "CHAT_MSG_BN_WHISPER",
+    "CHAT_MSG_GUILD",
+    "CHAT_MSG_OFFICER",
+    "CHAT_MSG_PARTY",
+    "CHAT_MSG_PARTY_LEADER",
+    "CHAT_MSG_RAID",
+    "CHAT_MSG_RAID_LEADER",
+    "CHAT_MSG_RAID_WARNING",
+    "CHAT_MSG_INSTANCE_CHAT",
+    "CHAT_MSG_INSTANCE_CHAT_LEADER",
+}) do
+    ChatFrame_AddMessageEventFilter(e, ignoreChatFilter)
+end
 
 Ignore.interactionBlocker = Ignore.interactionBlocker or CreateFrame("Frame")
 for _, evt in ipairs({ "PARTY_INVITE_REQUEST", "DUEL_REQUESTED", "PET_BATTLE_PVP_DUEL_REQUESTED", "TRADE_SHOW", "GUILD_INVITE_REQUEST" }) do
