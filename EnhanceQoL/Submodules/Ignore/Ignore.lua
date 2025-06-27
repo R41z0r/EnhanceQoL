@@ -13,8 +13,8 @@ local AceGUI = addon.AceGUI
 local Ignore = addon.Ignore or {}
 addon.Ignore = Ignore
 
-EnhanceQoL_IgnoreDB = EnhanceQoL_IgnoreDB or {}
-Ignore.entries = EnhanceQoL_IgnoreDB
+-- will be replaced with the saved table once the addon is fully loaded
+Ignore.entries = Ignore.entries or {}
 Ignore.entryLookup = Ignore.entryLookup or {}
 Ignore.selectedIndex = nil
 Ignore.searchText = Ignore.searchText or ""
@@ -23,6 +23,21 @@ Ignore.addFrame = Ignore.addFrame or nil
 Ignore.enabled = Ignore.enabled or false
 Ignore.registeredFilters = Ignore.registeredFilters or {}
 Ignore.hooksInstalled = Ignore.hooksInstalled or false
+
+-- load the saved ignore database when the addon has fully loaded
+local loader = CreateFrame("Frame")
+loader:RegisterEvent("ADDON_LOADED")
+loader:SetScript("OnEvent", function(_, event, arg1)
+       if arg1 == parentAddonName then
+               EnhanceQoL_IgnoreDB = EnhanceQoL_IgnoreDB or {}
+               Ignore.entries = EnhanceQoL_IgnoreDB
+               Ignore:RebuildLookup()
+               if addon and addon.db and addon.db.enableIgnore ~= nil then
+                       Ignore:SetEnabled(addon.db.enableIgnore)
+               end
+               loader:UnregisterEvent("ADDON_LOADED")
+       end
+end)
 
 local LOGIN_FRAME = CreateFrame("Frame")
 local CHAT_EVENTS = {
@@ -63,7 +78,6 @@ function Ignore:RebuildLookup()
 		if key then self.entryLookup[key] = entry end
 	end
 end
-Ignore:RebuildLookup()
 
 local IsIgnored = IsIgnored or C_FriendList.IsIgnored
 
@@ -787,7 +801,6 @@ Ignore.groupCheckFrame:SetScript("OnEvent", function()
 	Ignore.groupCheckFrame.lastIgnored = count
 end)
 
-if addon and addon.db and addon.db.enableIgnore ~= nil then Ignore:SetEnabled(addon.db.enableIgnore) end
 
 Ignore.interactionBlocker = Ignore.interactionBlocker or CreateFrame("Frame")
 Ignore.interactionBlocker:SetScript("OnEvent", function(_, event, ...)
