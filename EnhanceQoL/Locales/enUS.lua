@@ -211,3 +211,33 @@ L["persistAuctionHouseFilter"] = "Remember Auction House filters for this sessio
 
 L["Excluded NPCs"] = "Excluded NPCs"
 L["hideDynamicFlightBar"] = "Hide %s Vigor bar while on the ground"
+L["InvalidExpiration"] = "Invalid expiration value"
+
+-- Ignore module
+L["IgnorePlayer"] = "Player"
+L["IgnoreServer"] = "Realm"
+L["IgnoreListed"] = "Added"
+L["IgnoreExpires"] = "Expires"
+L["IgnoreNote"] = "Note"
+L["IgnoreEntries"] = "Entries: %d"
+L["IgnoreWindowTitle"] = "Enhanced Ignore"
+L["IgnoreExpiresDays"] = "Expires (days)"
+L["IgnoreAddSave"] = "Add / Save"
+L["IgnoreGroupPopupTitle"] = "Ignored group members"
+L["IgnoreGroupPopupText"] = "The following ignored players are in your group:\n%s"
+L["Social"] = "Social"
+L["EnableAdvancedIgnore"] = "Enable advanced ignore list"
+L["IgnoreAttachFriends"] = "Open with Friends list"
+L["IgnoreAttachFriendsDesc"] = "Automatically show or hide the enhanced ignore list when the Friends list opens or closes."
+L["IgnoreAnchorFriends"] = "Anchor to Friends list"
+L["IgnoreAnchorFriendsDesc"] = "Attach the enhanced ignore list to the Friends window."
+L["IgnoreDesc"] =
+	'Blocks duel, pet-battle, trade, invite and whisper requests from ignored players. Automatically adds same-realm names to Blizzard’s ignore list when space is available.\nIn the Dungeon Finder ignored players are shown as "!!! <Name> !!!".\n\nOpen the list with /eil.'
+L["ImportGILDialog"] = "GlobalIgnoreList data found. Import its entries and disable that addon? Both addons cannot be active at the same time."
+L["ImportGILCancelDialog"] = "Disable either the advanced ignore option or GlobalIgnoreList and reload your interface."
+L["ImportGILAccept"] = "Import & Reload"
+L["GILActivePopup"] = "Advanced ignore disabled because GlobalIgnoreList is active. Disable that addon and re-enable the option."
+L["IgnoredApplicant"] = "Player is on your ignore list"
+L["IgnoreAdded"] = "%s has been added to your ignore list"
+L["IgnoreRemoved"] = "%s has been removed from your ignore list"
+L["IgnoreExpiredRemoved"] = "%s was removed from your ignore list (expired)"

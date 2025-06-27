@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.23.0] – 2025-06-27
+### ✨ Added
+- **Enhanced Ignore List** – brand-new tool to manage ignored players (`/eil`, when enabled)
+  - Can open next to the Friends frame and stay anchored there, or be moved freely.
+  - Includes a search box for quick lookup.
+  - Highlights Group-Finder applicants who are on your list in red (`!!! <NAME> !!!`).
+  - Blocks:
+    - Trade requests  
+    - Duels  
+    - Pet Battles  
+    - Whispers  
+    - Yells  
+    - Emotes
+
 ## [3.22.1] – 2025-06-25
 ### 🐛 Fixed
 - Fixed a rare Lua error that occurred when joining instances and **hovering over currencies**.

@@ -92,6 +92,7 @@ frame:SetScript("OnEvent", function(_, event, ...)
 		end
 	elseif event == "CHAT_MSG_WHISPER" then
 		local msg, sender = ...
+		if addon.Ignore and addon.Ignore.CheckIgnore and addon.Ignore:CheckIgnore(sender) then return end
 		ChatIM:AddMessage(sender, msg)
 		if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
 			table.insert(ChatIM.soundQueue, sender)

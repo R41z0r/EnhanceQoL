@@ -2366,6 +2366,78 @@ local function addMapFrame(container)
 	groupCore:AddChild(cbElement)
 end
 
+local function addSocialFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			parent = "",
+			var = "enableIgnore",
+			text = L["EnableAdvancedIgnore"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["enableIgnore"] = value
+				if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
+				container:ReleaseChildren()
+				addSocialFrame(container)
+			end,
+		},
+	}
+	if addon.db["enableIgnore"] then
+		table.insert(data, {
+			parent = "",
+			var = "ignoreAttachFriendsFrame",
+			text = L["IgnoreAttachFriends"],
+			desc = L["IgnoreAttachFriendsDesc"],
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["ignoreAttachFriendsFrame"] = value end,
+		})
+		table.insert(data, {
+			parent = "",
+			var = "ignoreAnchorFriendsFrame",
+			text = L["IgnoreAnchorFriends"],
+			desc = L["IgnoreAnchorFriendsDesc"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["ignoreAnchorFriendsFrame"] = value
+				if addon.Ignore and addon.Ignore.UpdateAnchor then addon.Ignore:UpdateAnchor() end
+			end,
+		})
+	end
+
+	table.sort(data, function(a, b)
+		local textA = a.var
+		local textB = b.var
+		if a.text then
+			textA = a.text
+		else
+			textA = L[a.var]
+		end
+		if b.text then
+			textB = b.text
+		else
+			textB = L[b.var]
+		end
+		return textA < textB
+	end)
+
+	for _, checkboxData in ipairs(data) do
+		local desc
+		if checkboxData.desc then desc = checkboxData.desc end
+		local cb = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], checkboxData.callback, desc)
+		groupCore:AddChild(cb)
+	end
+
+	local wrapper = addon.functions.createWrapperData(data, container, L)
+	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["IgnoreDesc"], nil, nil, 14)
+	labelHeadline:SetFullWidth(true)
+	groupCore:AddChild(labelHeadline)
+end
+
 local function updateBankButtonInfo()
 	if not addon.db["showIlvlOnBankFrame"] then return end
 
@@ -2490,85 +2562,82 @@ local function updateMerchantButtonInfo()
 end
 
 local function updateBuybackButtonInfo()
-       if not addon.db["showIlvlOnMerchantframe"] then return end
+	if not addon.db["showIlvlOnMerchantframe"] then return end
 
-       local itemsPerPage = BUYBACK_ITEMS_PER_PAGE or 12
-       for i = 1, itemsPerPage do
-               local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
-               local itemLink = GetBuybackItemLink(i)
+	local itemsPerPage = BUYBACK_ITEMS_PER_PAGE or 12
+	for i = 1, itemsPerPage do
+		local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
+		local itemLink = GetBuybackItemLink(i)
 
-               if itemButton then
-                       if itemLink and itemLink:find("item:") then
-                               local eItem = Item:CreateFromItemLink(itemLink)
-                               eItem:ContinueOnItemLoad(function()
-                                       local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
+		if itemButton then
+			if itemLink and itemLink:find("item:") then
+				local eItem = Item:CreateFromItemLink(itemLink)
+				eItem:ContinueOnItemLoad(function()
+					local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
 
-                                       if
-                                               (itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0))
-                                               and not (classID == 4 and subclassID == 5)
-                                       then
-                                               local link = eItem:GetItemLink()
-                                               local invSlot = select(4, C_Item.GetItemInfoInstant(link))
-                                               if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
-                                                       if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                                                       if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                                                       return
-                                               end
+					if (itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) then
+						local link = eItem:GetItemLink()
+						local invSlot = select(4, C_Item.GetItemInfoInstant(link))
+						if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
+							if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+							if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+							return
+						end
 
-                                               if not itemButton.ItemLevelText then
-                                                       itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-                                                       itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
-                                                       itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
-                                                       itemButton.ItemLevelText:SetShadowOffset(1, -1)
-                                                       itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
-                                               end
+						if not itemButton.ItemLevelText then
+							itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+							itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
+							itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
+							itemButton.ItemLevelText:SetShadowOffset(1, -1)
+							itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+						end
 
-                                               local color = eItem:GetItemQualityColor()
-                                               itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
-                                               itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
-                                               itemButton.ItemLevelText:Show()
+						local color = eItem:GetItemQualityColor()
+						itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
+						itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+						itemButton.ItemLevelText:Show()
 
-                                               local bType
-                                               if addon.db["showBindOnBagItems"] then
-                                                       local data = C_TooltipInfo.GetBuybackItem(i)
-                                                       for _, v in pairs(data.lines) do
-                                                               if v.type == 20 then
-                                                                       if v.leftText == ITEM_BIND_ON_EQUIP then
-                                                                               bType = "BoE"
-                                                                       elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
-                                                                               bType = "WuE"
-                                                                       elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
-                                                                               bType = "WB"
-                                                                       end
-                                                                       break
-                                                               end
-                                                       end
-                                               end
-                                               if bType then
-                                                       if not itemButton.ItemBoundType then
-                                                               itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
-                                                               itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
-                                                               itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+						local bType
+						if addon.db["showBindOnBagItems"] then
+							local data = C_TooltipInfo.GetBuybackItem(i)
+							for _, v in pairs(data.lines) do
+								if v.type == 20 then
+									if v.leftText == ITEM_BIND_ON_EQUIP then
+										bType = "BoE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+										bType = "WuE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+										bType = "WB"
+									end
+									break
+								end
+							end
+						end
+						if bType then
+							if not itemButton.ItemBoundType then
+								itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
+								itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
+								itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
-                                                               itemButton.ItemBoundType:SetShadowOffset(2, 2)
-                                                               itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
-                                                       end
-                                                       itemButton.ItemBoundType:SetFormattedText(bType)
-                                                       itemButton.ItemBoundType:Show()
-                                               elseif itemButton.ItemBoundType then
-                                                       itemButton.ItemBoundType:Hide()
-                                               end
-                                       else
-                                               if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                                               if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                                       end
-                               end)
-                       else
-                               if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                               if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                       end
-               end
-       end
+								itemButton.ItemBoundType:SetShadowOffset(2, 2)
+								itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+							end
+							itemButton.ItemBoundType:SetFormattedText(bType)
+							itemButton.ItemBoundType:Show()
+						elseif itemButton.ItemBoundType then
+							itemButton.ItemBoundType:Hide()
+						end
+					else
+						if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+						if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+					end
+				end)
+			else
+				if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+				if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+			end
+		end
+	end
 end
 
 local function updateFlyoutButtonInfo(button)
@@ -2927,6 +2996,17 @@ end
 local function initMap()
 	addon.functions.InitDBValue("enableWayCommand", false)
 	if addon.db["enableWayCommand"] then addon.functions.registerWayCommand() end
+end
+
+local function initSocial()
+	addon.functions.InitDBValue("enableIgnore", false)
+	addon.functions.InitDBValue("ignoreAttachFriendsFrame", true)
+	addon.functions.InitDBValue("ignoreAnchorFriendsFrame", false)
+	addon.functions.InitDBValue("ignoreFramePoint", "CENTER")
+	addon.functions.InitDBValue("ignoreFrameX", 0)
+	addon.functions.InitDBValue("ignoreFrameY", 0)
+	if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
+	if addon.Ignore and addon.Ignore.UpdateAnchor then addon.Ignore:UpdateAnchor() end
 end
 
 local function initUI()
@@ -3603,9 +3683,9 @@ local function initCharacter()
 		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
 	end
 
-       hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
-       hooksecurefunc("MerchantFrame_UpdateBuybackInfo", updateBuybackButtonInfo)
-       hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
+	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
+	hooksecurefunc("MerchantFrame_UpdateBuybackInfo", updateBuybackButtonInfo)
+	hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
 
 	if _G.AccountBankPanel then
 		hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", addon.functions.updateBags)
@@ -3792,6 +3872,7 @@ local function CreateUI()
 			},
 		},
 	})
+	addon.functions.addToTree("general", { value = "social", text = L["Social"] })
 	table.insert(addon.treeGroupData, {
 		value = "profiles",
 		text = L["Profiles"],
@@ -3829,6 +3910,8 @@ local function CreateUI()
 			addChatFrame(container)
 		elseif group == "general\001ui\001minimap" then
 			addMinimapFrame(container)
+		elseif group == "general\001social" then
+			addSocialFrame(container)
 		elseif group == "general\001map" then
 			addMapFrame(container)
 		elseif group == "profiles" then
@@ -3990,8 +4073,30 @@ local function setAllHooks()
 		if addon.db["warlock_HideSoulShardBar"] then WarlockPowerFrame:Hide() end
 	end
 
+	local ignoredApplicants = {}
+
+	local function FlagIgnoredApplicants(applicantIDs)
+		if not addon.db.enableIgnore or not addon.Ignore or not addon.Ignore.CheckIgnore then return end
+		wipe(ignoredApplicants)
+		for _, applicantID in ipairs(applicantIDs) do
+			local name = C_LFGList.GetApplicantMemberInfo(applicantID, 1)
+			if type(name) == "string" then
+				local entry = addon.Ignore:CheckIgnore(name)
+				if entry then ignoredApplicants[applicantID] = entry end
+			end
+		end
+	end
+
+	local function ApplyIgnoreHighlight(memberFrame, applicantID)
+		local entry = ignoredApplicants[applicantID]
+		if not entry or not memberFrame or not memberFrame.Name then return end
+		memberFrame.Name:SetTextColor(1, 0, 0, 1)
+		memberFrame.Name:SetText("!!! " .. memberFrame.Name:GetText() .. " !!!")
+		memberFrame.eqolIgnoreEntry = entry
+	end
+
 	local function SortApplicants(applicants)
-		if addon.db["lfgSortByRio"] then
+		if addon.db.lfgSortByRio then
 			local function SortApplicantsCB(applicantID1, applicantID2)
 				local applicantInfo1 = C_LFGList.GetApplicantInfo(applicantID1)
 				local applicantInfo2 = C_LFGList.GetApplicantInfo(applicantID2)
@@ -4000,16 +4105,28 @@ local function setAllHooks()
 
 				if applicantInfo2 == nil then return true end
 
-				local _, _, localizedClass1, _, itemLevel1, _, tank1, healer1, damage1, assignedRole1, relationship1, dungeonScore1 = C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1)
-				local _, _, localizedClass2, _, itemLevel2, _, tank2, healer2, damage2, assignedRole2, relationship2, dungeonScore2 = C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1)
+				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore1 = C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1)
+				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore2 = C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1)
 
 				return dungeonScore1 > dungeonScore2
 			end
 
 			table.sort(applicants, SortApplicantsCB)
-			LFGListApplicationViewer_UpdateResults(LFGListFrame.ApplicationViewer)
 		end
+
+		FlagIgnoredApplicants(applicants)
+		LFGListApplicationViewer_UpdateResults(LFGListFrame.ApplicationViewer)
 	end
+
+	hooksecurefunc("LFGListApplicationViewer_UpdateApplicantMember", function(memberFrame, appID, memberIdx)
+		if addon.db.enableIgnore then ApplyIgnoreHighlight(memberFrame, appID) end
+	end)
+
+	hooksecurefunc("LFGListApplicationViewer_UpdateResults", function()
+		if not addon.db.enableIgnore or addon.db.lfgSortByRio then return end
+		local applicants = C_LFGList.GetApplicants() or {}
+		FlagIgnoredApplicants(applicants)
+	end)
 
 	hooksecurefunc("LFGListUtil_SortApplicants", SortApplicants)
 
@@ -4023,6 +4140,7 @@ local function setAllHooks()
 	initUnitFrame()
 	initChatFrame()
 	initMap()
+	initSocial()
 	initBagsFrame()
 end
 

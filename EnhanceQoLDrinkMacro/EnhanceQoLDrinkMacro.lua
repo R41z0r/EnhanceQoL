@@ -59,6 +59,7 @@ end
 addon.functions.InitDBValue("preferMageFood", true)
 addon.functions.InitDBValue("ignoreBuffFood", true)
 addon.functions.InitDBValue("ignoreGemsEarthen", true)
+addon.functions.InitDBValue("allowRecuperate", true)
 addon.functions.updateAllowedDrinks()
 
 local frameLoad = CreateFrame("Frame")
@@ -103,6 +104,7 @@ local function addDrinkFrame(container)
 		{ text = L["Prefer mage food"], var = "preferMageFood" },
 		{ text = L["Ignore bufffood"], var = "ignoreBuffFood" },
 		{ text = L["ignoreGemsEarthen"], var = "ignoreGemsEarthen" },
+		{ text = L["allowRecuperate"], var = "allowRecuperate", desc = L["allowRecuperateDesc"] },
 		{
 			text = L["mageFoodReminder"],
 			var = "mageFoodReminder",

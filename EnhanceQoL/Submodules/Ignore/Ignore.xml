@@ -1,0 +1,117 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+    <Button name="EQOLIgnoreRowTemplate" virtual="true">
+        <Size x="630" y="20"/>
+        <Scripts>
+            <OnLoad>
+                self:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight");
+                self:RegisterForClicks("LeftButtonUp");
+            </OnLoad>
+            <OnClick>
+                self:OnClick()
+            </OnClick>
+        </Scripts>
+    </Button>
+
+    <Frame name="EQOLIgnoreFrame" inherits="BasicFrameTemplateWithInset" parent="UIParent" hidden="true" movable="true" enableMouse="true" clampedToScreen="true">
+        <Size x="650" y="440"/>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Scripts>
+            <OnLoad>EQOLIgnoreFrame_OnLoad(self);</OnLoad>
+            <OnMouseDown>
+                if self:IsMovable() then
+                    self:StartMoving();
+                end
+                EQOLIgnoreFrameSearchBox:ClearFocus();
+            </OnMouseDown>
+            <OnMouseUp>
+                self:StopMovingOrSizing();
+            </OnMouseUp>
+        </Scripts>
+        <Frames>
+            <EditBox name="$parentSearchBox" inherits="InputBoxTemplate, AutoCompleteEditBoxTemplate">
+                <Size x="150" y="20"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-40" y="-33"/>
+                </Anchors>
+              <Scripts>
+                    <OnLoad>self:SetAutoFocus(false);</OnLoad>
+                    <OnEscapePressed>self:ClearFocus();</OnEscapePressed>
+                </Scripts>
+            </EditBox>
+            <Frame name="$parentHeader" inherits="BackdropTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="10" y="-58"/>
+                    <Anchor point="TOPRIGHT" x="-28" y="-58"/>
+                </Anchors>
+                <Frames>
+                    <Button name="$parentCol1" inherits="WhoFrameColumnHeaderTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"/>
+                        </Anchors>
+                    </Button>
+                    <Button name="$parentCol2" inherits="WhoFrameColumnHeaderTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentCol1" relativePoint="TOPRIGHT"/>
+                        </Anchors>
+                    </Button>
+                    <Button name="$parentCol3" inherits="WhoFrameColumnHeaderTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentCol2" relativePoint="TOPRIGHT"/>
+                        </Anchors>
+                    </Button>
+                    <Button name="$parentCol4" inherits="WhoFrameColumnHeaderTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentCol3" relativePoint="TOPRIGHT"/>
+                        </Anchors>
+                    </Button>
+                    <Button name="$parentCol5" inherits="WhoFrameColumnHeaderTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parentCol4" relativePoint="TOPRIGHT"/>
+                        </Anchors>
+                    </Button>
+                </Frames>
+                <Size x="630" y="20"/>  <!-- match total column width -->
+            </Frame>
+            <ScrollFrame name="$parentScrollFrame" inherits="HybridScrollFrameTemplate">
+                <Anchors>
+                    <Anchor point="TOPLEFT" relativeTo="$parentHeader" relativePoint="BOTTOMLEFT"/>
+                    <Anchor point="BOTTOMRIGHT" x="-28" y="48"/>
+                </Anchors>
+                <Frames>
+                    <!-- Scroll bar for HybridScrollFrame -->
+                    <Slider name="$parentScrollBar" inherits="HybridScrollBarTemplate">
+                        <Anchors>
+                            <Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPRIGHT" x="0" y="-16"/>
+                            <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMRIGHT" x="0" y="16"/>
+                        </Anchors>
+                    </Slider>
+                    <Frame name="$parentScrollChild">
+                        <Anchors>
+                            <Anchor point="TOPLEFT"/>
+                        </Anchors>
+                    </Frame>
+                </Frames>
+            </ScrollFrame>
+            <Button name="$parentRemoveButton" inherits="UIPanelButtonTemplate">
+                <Size x="120" y="22"/>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" x="15" y="15"/>
+                </Anchors>
+            </Button>
+        </Frames>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="$parentCounter" inherits="GameFontNormal">
+                    <Anchors>
+                        <Anchor point="TOPLEFT" x="15" y="-33"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+</Ui>
