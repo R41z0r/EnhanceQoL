@@ -2367,25 +2367,54 @@ local function addMapFrame(container)
 end
 
 local function addSocialFrame(container)
-    local data = {
-        {
-            parent = "",
-            var = "enableIgnore",
-            text = L["EnableAdvancedIgnore"],
-            type = "CheckBox",
-            callback = function(self, _, value)
-                addon.db["enableIgnore"] = value
-                if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
-            end,
-        },
-    }
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
 
-    local wrapper = addon.functions.createWrapperData(data, container, L)
-    local desc = AceGUI:Create("Label")
-    desc:SetFullWidth(true)
-    desc:SetText(L["IgnoreDesc"])
-    wrapper:AddChild(desc)
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			parent = "",
+			var = "enableIgnore",
+			text = L["EnableAdvancedIgnore"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["enableIgnore"] = value
+				if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
+			end,
+		},
+	}
+
+	table.sort(data, function(a, b)
+		local textA = a.var
+		local textB = b.var
+		if a.text then
+			textA = a.text
+		else
+			textA = L[a.var]
+		end
+		if b.text then
+			textB = b.text
+		else
+			textB = L[b.var]
+		end
+		return textA < textB
+	end)
+
+	for _, checkboxData in ipairs(data) do
+		local desc
+		if checkboxData.desc then desc = checkboxData.desc end
+		local cb = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], function(self, _, value) addon.db[checkboxData.var] = value end, desc)
+		groupCore:AddChild(cb)
+	end
+
+	local wrapper = addon.functions.createWrapperData(data, container, L)
+	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["IgnoreDesc"], nil, nil, 14)
+	labelHeadline:SetFullWidth(true)
+	groupCore:AddChild(labelHeadline)
 end
+
 local function updateBankButtonInfo()
 	if not addon.db["showIlvlOnBankFrame"] then return end
 
@@ -2510,85 +2539,82 @@ local function updateMerchantButtonInfo()
 end
 
 local function updateBuybackButtonInfo()
-       if not addon.db["showIlvlOnMerchantframe"] then return end
+	if not addon.db["showIlvlOnMerchantframe"] then return end
 
-       local itemsPerPage = BUYBACK_ITEMS_PER_PAGE or 12
-       for i = 1, itemsPerPage do
-               local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
-               local itemLink = GetBuybackItemLink(i)
+	local itemsPerPage = BUYBACK_ITEMS_PER_PAGE or 12
+	for i = 1, itemsPerPage do
+		local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
+		local itemLink = GetBuybackItemLink(i)
 
-               if itemButton then
-                       if itemLink and itemLink:find("item:") then
-                               local eItem = Item:CreateFromItemLink(itemLink)
-                               eItem:ContinueOnItemLoad(function()
-                                       local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
+		if itemButton then
+			if itemLink and itemLink:find("item:") then
+				local eItem = Item:CreateFromItemLink(itemLink)
+				eItem:ContinueOnItemLoad(function()
+					local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(itemLink)
 
-                                       if
-                                               (itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0))
-                                               and not (classID == 4 and subclassID == 5)
-                                       then
-                                               local link = eItem:GetItemLink()
-                                               local invSlot = select(4, C_Item.GetItemInfoInstant(link))
-                                               if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
-                                                       if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                                                       if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                                                       return
-                                               end
+					if (itemEquipLoc ~= "INVTYPE_NON_EQUIP_IGNORE" or (classID == 4 and subclassID == 0)) and not (classID == 4 and subclassID == 5) then
+						local link = eItem:GetItemLink()
+						local invSlot = select(4, C_Item.GetItemInfoInstant(link))
+						if nil == addon.variables.allowedEquipSlotsBagIlvl[invSlot] then
+							if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+							if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+							return
+						end
 
-                                               if not itemButton.ItemLevelText then
-                                                       itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
-                                                       itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
-                                                       itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
-                                                       itemButton.ItemLevelText:SetShadowOffset(1, -1)
-                                                       itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
-                                               end
+						if not itemButton.ItemLevelText then
+							itemButton.ItemLevelText = itemButton:CreateFontString(nil, "OVERLAY")
+							itemButton.ItemLevelText:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
+							itemButton.ItemLevelText:SetPoint("TOPRIGHT", itemButton, "TOPRIGHT", -1, -1)
+							itemButton.ItemLevelText:SetShadowOffset(1, -1)
+							itemButton.ItemLevelText:SetShadowColor(0, 0, 0, 1)
+						end
 
-                                               local color = eItem:GetItemQualityColor()
-                                               itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
-                                               itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
-                                               itemButton.ItemLevelText:Show()
+						local color = eItem:GetItemQualityColor()
+						itemButton.ItemLevelText:SetText(eItem:GetCurrentItemLevel())
+						itemButton.ItemLevelText:SetTextColor(color.r, color.g, color.b, 1)
+						itemButton.ItemLevelText:Show()
 
-                                               local bType
-                                               if addon.db["showBindOnBagItems"] then
-                                                       local data = C_TooltipInfo.GetBuybackItem(i)
-                                                       for _, v in pairs(data.lines) do
-                                                               if v.type == 20 then
-                                                                       if v.leftText == ITEM_BIND_ON_EQUIP then
-                                                                               bType = "BoE"
-                                                                       elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
-                                                                               bType = "WuE"
-                                                                       elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
-                                                                               bType = "WB"
-                                                                       end
-                                                                       break
-                                                               end
-                                                       end
-                                               end
-                                               if bType then
-                                                       if not itemButton.ItemBoundType then
-                                                               itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
-                                                               itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
-                                                               itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
+						local bType
+						if addon.db["showBindOnBagItems"] then
+							local data = C_TooltipInfo.GetBuybackItem(i)
+							for _, v in pairs(data.lines) do
+								if v.type == 20 then
+									if v.leftText == ITEM_BIND_ON_EQUIP then
+										bType = "BoE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+										bType = "WuE"
+									elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+										bType = "WB"
+									end
+									break
+								end
+							end
+						end
+						if bType then
+							if not itemButton.ItemBoundType then
+								itemButton.ItemBoundType = itemButton:CreateFontString(nil, "OVERLAY")
+								itemButton.ItemBoundType:SetFont(addon.variables.defaultFont, 10, "OUTLINE")
+								itemButton.ItemBoundType:SetPoint("BOTTOMLEFT", itemButton, "BOTTOMLEFT", 2, 2)
 
-                                                               itemButton.ItemBoundType:SetShadowOffset(2, 2)
-                                                               itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
-                                                       end
-                                                       itemButton.ItemBoundType:SetFormattedText(bType)
-                                                       itemButton.ItemBoundType:Show()
-                                               elseif itemButton.ItemBoundType then
-                                                       itemButton.ItemBoundType:Hide()
-                                               end
-                                       else
-                                               if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                                               if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                                       end
-                               end)
-                       else
-                               if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
-                               if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
-                       end
-               end
-       end
+								itemButton.ItemBoundType:SetShadowOffset(2, 2)
+								itemButton.ItemBoundType:SetShadowColor(0, 0, 0, 1)
+							end
+							itemButton.ItemBoundType:SetFormattedText(bType)
+							itemButton.ItemBoundType:Show()
+						elseif itemButton.ItemBoundType then
+							itemButton.ItemBoundType:Hide()
+						end
+					else
+						if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+						if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+					end
+				end)
+			else
+				if itemButton.ItemBoundType then itemButton.ItemBoundType:Hide() end
+				if itemButton.ItemLevelText then itemButton.ItemLevelText:Hide() end
+			end
+		end
+	end
 end
 
 local function updateFlyoutButtonInfo(button)
@@ -2945,13 +2971,13 @@ local function initChatFrame()
 end
 
 local function initMap()
-        addon.functions.InitDBValue("enableWayCommand", false)
-        if addon.db["enableWayCommand"] then addon.functions.registerWayCommand() end
+	addon.functions.InitDBValue("enableWayCommand", false)
+	if addon.db["enableWayCommand"] then addon.functions.registerWayCommand() end
 end
 
 local function initSocial()
-        addon.functions.InitDBValue("enableIgnore", false)
-        if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
+	addon.functions.InitDBValue("enableIgnore", false)
+	if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
 end
 
 local function initUI()
@@ -3628,9 +3654,9 @@ local function initCharacter()
 		hooksecurefunc(frame, "UpdateItems", addon.functions.updateBags)
 	end
 
-       hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
-       hooksecurefunc("MerchantFrame_UpdateBuybackInfo", updateBuybackButtonInfo)
-       hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
+	hooksecurefunc("MerchantFrame_UpdateMerchantInfo", updateMerchantButtonInfo)
+	hooksecurefunc("MerchantFrame_UpdateBuybackInfo", updateBuybackButtonInfo)
+	hooksecurefunc("EquipmentFlyout_DisplayButton", function(button) updateFlyoutButtonInfo(button) end)
 
 	if _G.AccountBankPanel then
 		hooksecurefunc(AccountBankPanel, "GenerateItemSlotsForSelectedTab", addon.functions.updateBags)
@@ -3791,37 +3817,37 @@ local function CreateUI()
 
 	-- Create the TreeGroup
 	addon.treeGroup = AceGUI:Create("TreeGroup")
-        addon.functions.addToTree(nil, {
-                value = "general",
-                text = L["General"],
-                children = {
-                        { value = "character", text = L["Character"] },
-                        { value = "bags", text = HUD_EDIT_MODE_BAGS_LABEL },
-                        { value = "cvar", text = "CVar" },
-                        { value = "party", text = PARTY },
-                        { value = "dungeon", text = L["Dungeon"] },
-                        { value = "misc", text = L["Misc"] },
-                        { value = "quest", text = L["Quest"] },
-                        { value = "map", text = WORLD_MAP },
-                        {
-                                value = "ui",
-                                text = BUG_CATEGORY5,
-                                children = {
-                                        { value = "auctionhouse", text = BUTTON_LAG_AUCTIONHOUSE },
-                                        { value = "actionbar", text = ACTIONBARS_LABEL },
-                                        { value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
-                                        { value = "minimap", text = MINIMAP_LABEL },
-                                        { value = "unitframe", text = UNITFRAME_LABEL },
-                                        { value = "dynamicflight", text = DYNAMIC_FLIGHT },
-                                },
-                        },
-                },
-        })
-        addon.functions.addToTree("general", { value = "social", text = L["Social"] })
-        table.insert(addon.treeGroupData, {
-                value = "profiles",
-                text = L["Profiles"],
-        })
+	addon.functions.addToTree(nil, {
+		value = "general",
+		text = L["General"],
+		children = {
+			{ value = "character", text = L["Character"] },
+			{ value = "bags", text = HUD_EDIT_MODE_BAGS_LABEL },
+			{ value = "cvar", text = "CVar" },
+			{ value = "party", text = PARTY },
+			{ value = "dungeon", text = L["Dungeon"] },
+			{ value = "misc", text = L["Misc"] },
+			{ value = "quest", text = L["Quest"] },
+			{ value = "map", text = WORLD_MAP },
+			{
+				value = "ui",
+				text = BUG_CATEGORY5,
+				children = {
+					{ value = "auctionhouse", text = BUTTON_LAG_AUCTIONHOUSE },
+					{ value = "actionbar", text = ACTIONBARS_LABEL },
+					{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
+					{ value = "minimap", text = MINIMAP_LABEL },
+					{ value = "unitframe", text = UNITFRAME_LABEL },
+					{ value = "dynamicflight", text = DYNAMIC_FLIGHT },
+				},
+			},
+		},
+	})
+	addon.functions.addToTree("general", { value = "social", text = L["Social"] })
+	table.insert(addon.treeGroupData, {
+		value = "profiles",
+		text = L["Profiles"],
+	})
 	addon.treeGroup:SetLayout("Fill")
 	addon.treeGroup:SetTree(addon.treeGroupData)
 	addon.treeGroup:SetCallback("OnGroupSelected", function(container, _, group)
@@ -3851,14 +3877,14 @@ local function CreateUI()
 			addUnitFrame(container)
 		elseif group == "general\001ui\001dynamicflight" then
 			addDynamicFlightFrame(container)
-elseif group == "general\001ui\001chatframe" then
-addChatFrame(container)
-elseif group == "general\001ui\001minimap" then
-addMinimapFrame(container)
-elseif group == "general\001social" then
-addSocialFrame(container)
-elseif group == "general\001map" then
-addMapFrame(container)
+		elseif group == "general\001ui\001chatframe" then
+			addChatFrame(container)
+		elseif group == "general\001ui\001minimap" then
+			addMinimapFrame(container)
+		elseif group == "general\001social" then
+			addSocialFrame(container)
+		elseif group == "general\001map" then
+			addMapFrame(container)
 		elseif group == "profiles" then
 			local sub = AceGUI:Create("SimpleGroup")
 			sub:SetFullWidth(true)
@@ -4048,11 +4074,11 @@ local function setAllHooks()
 	initParty()
 	initActionBars()
 	initUI()
-initUnitFrame()
-initChatFrame()
-initMap()
-initSocial()
-initBagsFrame()
+	initUnitFrame()
+	initChatFrame()
+	initMap()
+	initSocial()
+	initBagsFrame()
 end
 
 function loadMain()
