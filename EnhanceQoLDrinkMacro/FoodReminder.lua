@@ -167,7 +167,7 @@ local function checkShow()
 		removeBRFrame()
 		return
 	end
-
+	if IsInGroup() then removeBRFrame() return end
 	if not enoughFood then
 		createBRFrame()
 	else
@@ -186,6 +186,7 @@ frameLoad:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
 frameLoad:RegisterEvent("PLAYER_LOGIN")
 frameLoad:RegisterEvent("BAG_UPDATE_DELAYED")
 frameLoad:RegisterEvent("PLAYER_UPDATE_RESTING")
+frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 frameLoad:SetScript("OnEvent", function(self, event)
 	if event == "PLAYER_LOGIN" then

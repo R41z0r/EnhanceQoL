@@ -4145,9 +4145,9 @@ local function setAllHooks()
 		colorString(entry.Name)
 		colorString(entry.ActivityName)
 
-		if entry.ActivityName and entry.ActivityName.GetText then
-			local text = entry.ActivityName:GetText() or ""
-			if not text:find("!!!", 1, true) then entry.ActivityName:SetText("!!! " .. text .. " !!!") end
+		if entry.Name and entry.Name.GetText then
+			local text = entry.Name:GetText() or ""
+			if not text:find("!!!", 1, true) then entry.Name:SetText("!!! " .. text .. " !!!") end
 		end
 	end
 
