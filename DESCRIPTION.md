@@ -12,8 +12,8 @@ Every feature can be switched off; footprint is negligible.
 | <code>/eqol</code> |Open the configuration window                    |
 | <code>/eqol resetframe</code> |Re-center all Enhance QoL windows                |
 | <code>/eqol lag</code> |List gossip IDs of the current NPC dialog        |
-| <code>/eqol aag &lt;id&gt;</code> |Auto-pick a gossip option (chosen via <code>/eqol lag</code>) |
-| <code>/eqol rag &lt;id&gt;</code> |Remove an auto-picked gossip ID                  |
+| <code>/eqol aag <id></code> |Auto-pick a gossip option (chosen via <code>/eqol lag</code>) |
+| <code>/eqol rag <id></code> |Remove an auto-picked gossip ID                  |
 
 ***
 
@@ -32,6 +32,8 @@ English • German • French • Spanish • Italian • Russian • Korean •
 *   Hideable Bag Bar (mouse-over).
 *   Money tracker – total gold for all characters in one tooltip.
 *   Alt-inventory cache – counts how many of each item your alts own.
+*   Inventory filter
+  * Filter By Category, Upgrade Track, itemlevel, "useful for spec" etc.
 
 ### Character & Inspect
 
