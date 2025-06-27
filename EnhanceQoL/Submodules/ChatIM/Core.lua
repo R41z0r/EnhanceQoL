@@ -6,7 +6,6 @@ else
 	error(parentAddonName .. " is not loaded")
 end
 local LSM = LibStub("LibSharedMedia-3.0")
-local Ignore = addon.Ignore
 
 local ChatIM = addon.ChatIM or {}
 addon.ChatIM = ChatIM
@@ -91,36 +90,23 @@ frame:SetScript("OnEvent", function(_, event, ...)
 			ChatIM.pendingShow = false
 			ChatIM.soundQueue = {}
 		end
-       elseif event == "CHAT_MSG_WHISPER" then
-               local msg, sender = ...
-               if
-                       (Ignore and Ignore.IsPlayerIgnored and Ignore:IsPlayerIgnored(sender))
-                       or (C_FriendList.IsIgnored and C_FriendList.IsIgnored(sender))
-                       or (IsIgnored and IsIgnored(sender))
-               then
-                       return
-               end
-               ChatIM:AddMessage(sender, msg)
-               if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
-                       table.insert(ChatIM.soundQueue, sender)
-                       ChatIM.pendingShow = true
+	elseif event == "CHAT_MSG_WHISPER" then
+		local msg, sender = ...
+		if addon.Ignore and addon.Ignore.IsPlayerIgnored and addon.Ignore:IsPlayerIgnored(sender) then return end
+		ChatIM:AddMessage(sender, msg)
+		if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
+			table.insert(ChatIM.soundQueue, sender)
+			ChatIM.pendingShow = true
 		else
 			playIncomingSound(sender)
 			ChatIM:Flash()
 		end
-       elseif event == "CHAT_MSG_BN_WHISPER" then
-               local msg, sender, _, _, _, _, _, _, _, _, _, _, bnetID = ...
-               if
-                       (Ignore and Ignore.IsPlayerIgnored and Ignore:IsPlayerIgnored(sender))
-                       or (C_FriendList.IsIgnored and C_FriendList.IsIgnored(sender))
-                       or (IsIgnored and IsIgnored(sender))
-               then
-                       return
-               end
-               ChatIM:AddMessage(sender, msg, nil, true, bnetID)
-               if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
-                       table.insert(ChatIM.soundQueue, sender)
-                       ChatIM.pendingShow = true
+	elseif event == "CHAT_MSG_BN_WHISPER" then
+		local msg, sender, _, _, _, _, _, _, _, _, _, _, bnetID = ...
+		ChatIM:AddMessage(sender, msg, nil, true, bnetID)
+		if addon.db and addon.db["chatIMHideInCombat"] and ChatIM.inCombat then
+			table.insert(ChatIM.soundQueue, sender)
+			ChatIM.pendingShow = true
 		else
 			playIncomingSound(sender)
 			ChatIM:Flash()

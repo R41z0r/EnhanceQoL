@@ -337,16 +337,16 @@ local function addEntry(name, note, expires)
 	local entry = Ignore.entryLookup[key]
 	if entry then
 		if note ~= nil then entry.note = note end
-		if expires ~= nil then entry.expires = expires ~= "" and expires or NEVER end
+		if expires ~= nil then entry.expires = expires > 0 and expires or NEVER end
 		RefreshList()
 		return
 	end
-	if origAddIgnore and sameRealm and Ignore:HasFreeSlot() then origAddIgnore(name) end
+	--if origAddIgnore and sameRealm and Ignore:HasFreeSlot() then origAddIgnore(name) end
 	local newEntry = {
 		player = player,
 		server = server,
 		date = date("%Y-%m-%d"),
-		expires = expires or NEVER,
+		expires = expires > 0 and expires or NEVER,
 		note = note or "",
 	}
 	table.insert(Ignore.entries, newEntry)
@@ -471,13 +471,10 @@ function Ignore:ShowAddFrame(name, note, expires)
 	addBtn:SetWidth(120)
 	addBtn:SetCallback("OnClick", function()
 		local n = editBox:GetText()
-		local exp = ""
+		local exp = 0
 		if check:GetValue() then
 			exp = tonumber(numBox:GetText())
-			if not exp then
-				print(addon.L["InvalidExpiration"])
-				return
-			end
+			if not exp then exp = 0 end
 		end
 		addEntry(name, n, exp)
 		frame:Hide()
@@ -519,6 +516,39 @@ function C_FriendList.DelIgnore(name) removeEntry(name) end
 
 function C_FriendList.AddOrDelIgnore(name) addOrRemove(name) end
 
+local monthMap = {
+	Jan = 1,
+	Feb = 2,
+	Mar = 3,
+	Apr = 4,
+	May = 5,
+	Jun = 6,
+	Jul = 7,
+	Aug = 8,
+	Sep = 9,
+	Oct = 10,
+	Nov = 11,
+	Dec = 12,
+}
+
+--- Wandelt einen String "DD Mon YYYY" in "YYYY-MM-DD" um.
+-- @param dateStr  String im Format "26 Sep 2024"
+-- @return String im Format "2024-09-26" oder nil bei Fehler
+local function normalizeDate(dateStr)
+	-- Extrahiere Tag, Monatskürzel und Jahr
+	local day, monStr, year = dateStr:match("^(%d%d?)%s+(%a+)%s+(%d%d%d%d)$")
+	if not (day and monStr and year) then return nil, "Ungültiges Datumsformat" end
+
+	local month = monthMap[monStr]
+	if not month then return nil, "Unbekannter Monat: " .. tostring(monStr) end
+
+	-- Erzeuge einen Zeitstempel für Mitternacht dieses Tages
+	local ts = time({ year = tonumber(year), month = month, day = tonumber(day), hour = 0 })
+
+	-- Formatiere mit date()
+	return date("%Y-%m-%d", ts)
+end
+
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:SetScript("OnEvent", function()
@@ -550,6 +580,36 @@ frame:SetScript("OnEvent", function()
 				}
 				table.insert(Ignore.entries, e)
 				Ignore.entryLookup[key] = e
+			end
+		end
+	end
+	if C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then
+		-- Importing from Global Ignore List
+		local gDB = GlobalIgnoreDB
+		if gDB and gDB.ignoreList and #gDB.ignoreList > 0 then
+			for i = 1, #gDB.ignoreList do
+				local name = gDB.ignoreList[i]
+				if name then
+					local player, server = strsplit("-", name)
+					player = player or name
+					server = server or (GetRealmName()):gsub("%s", "")
+					local nDate = normalizeDate(gDB.dateList[i])
+					if not nDate then nDate = date("%Y-%m-%d") end
+					local expires = gDB.expList[i]
+					expires = expires > 0 and expires or NEVER
+					local key = player .. "-" .. server
+					if not Ignore.entryLookup[key] then
+						local e = {
+							player = player,
+							server = server,
+							date = nDate,
+							expires = expires,
+							note = gDB.notes[i],
+						}
+						table.insert(Ignore.entries, e)
+						Ignore.entryLookup[key] = e
+					end
+				end
 			end
 		end
 	end
@@ -612,30 +672,30 @@ Ignore.groupCheckFrame:SetScript("OnEvent", function()
 		StaticPopup_Show("EQOL_IGNORE_GROUP")
 	end
 
-Ignore.groupCheckFrame.lastPartySize = size
-Ignore.groupCheckFrame.lastIgnored = count
+	Ignore.groupCheckFrame.lastPartySize = size
+	Ignore.groupCheckFrame.lastIgnored = count
 end)
 
 -- chat message filter to block messages from ignored players
 local function ignoreChatFilter(_, _, _, sender)
-    if Ignore:IsPlayerIgnored(sender) then return true end
-    return false
+	if Ignore:IsPlayerIgnored(sender) then return true end
+	return false
 end
 
 for _, e in ipairs({
-    "CHAT_MSG_WHISPER",
-    "CHAT_MSG_BN_WHISPER",
-    "CHAT_MSG_GUILD",
-    "CHAT_MSG_OFFICER",
-    "CHAT_MSG_PARTY",
-    "CHAT_MSG_PARTY_LEADER",
-    "CHAT_MSG_RAID",
-    "CHAT_MSG_RAID_LEADER",
-    "CHAT_MSG_RAID_WARNING",
-    "CHAT_MSG_INSTANCE_CHAT",
-    "CHAT_MSG_INSTANCE_CHAT_LEADER",
+	"CHAT_MSG_WHISPER",
+	"CHAT_MSG_BN_WHISPER",
+	"CHAT_MSG_GUILD",
+	"CHAT_MSG_OFFICER",
+	"CHAT_MSG_PARTY",
+	"CHAT_MSG_PARTY_LEADER",
+	"CHAT_MSG_RAID",
+	"CHAT_MSG_RAID_LEADER",
+	"CHAT_MSG_RAID_WARNING",
+	"CHAT_MSG_INSTANCE_CHAT",
+	"CHAT_MSG_INSTANCE_CHAT_LEADER",
 }) do
-    ChatFrame_AddMessageEventFilter(e, ignoreChatFilter)
+	ChatFrame_AddMessageEventFilter(e, ignoreChatFilter)
 end
 
 Ignore.interactionBlocker = Ignore.interactionBlocker or CreateFrame("Frame")
