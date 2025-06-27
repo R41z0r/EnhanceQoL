@@ -1,12 +1,18 @@
 # Changelog
+
 ## [3.23.0] – 2025-06-27
 ### ✨ Added
-- **Enhanced Ignore List** – brand-new tool to manage ignored players
-  - Opens alongside the Friends frame and can stay anchored to it.
-  - Provides a window title and search box for quick lookup.
-  - Sends chat messages when players are added or removed, including expired entries.
-  - Highlights applicants in the Group Finder who are on your list.
-
+- **Enhanced Ignore List** – brand-new tool to manage ignored players (`/eil`, when enabled)
+  - Can open next to the Friends frame and stay anchored there, or be moved freely.
+  - Includes a search box for quick lookup.
+  - Highlights Group-Finder applicants who are on your list in red (`!!! <NAME> !!!`).
+  - Blocks:
+    - Trade requests  
+    - Duels  
+    - Pet Battles  
+    - Whispers  
+    - Yells  
+    - Emotes
 
 ## [3.22.1] – 2025-06-25
 ### 🐛 Fixed

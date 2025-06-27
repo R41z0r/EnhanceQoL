@@ -23,7 +23,9 @@
         <Scripts>
             <OnLoad>EQOLIgnoreFrame_OnLoad(self);</OnLoad>
             <OnMouseDown>
-                self:StartMoving();
+                if self:IsMovable() then
+                    self:StartMoving();
+                end
                 EQOLIgnoreFrameSearchBox:ClearFocus();
             </OnMouseDown>
             <OnMouseUp>

@@ -851,11 +851,10 @@ end
 function Ignore:UpdateAnchor()
 	if not self.frame or not FriendsFrame then return end
 	self.frame:ClearAllPoints()
-	if addon.db.ignoreAnchorFriendsFrame then
+	if addon and addon.db and addon.db.ignoreAnchorFriendsFrame then
 		self.frame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", 5, 0)
 		self.frame:SetMovable(false)
 	else
-		self.frame:SetPoint("CENTER")
 		self.frame:SetMovable(true)
 	end
 end
