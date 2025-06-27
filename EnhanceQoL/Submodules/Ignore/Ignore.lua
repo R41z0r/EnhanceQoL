@@ -757,6 +757,7 @@ LOGIN_FRAME:SetScript("OnEvent", function()
 		return
 	end
 	if not Ignore.enabled then return end
+	ensureFriendsFrame()
 	local numIgnores = 0
 	if C_FriendList and C_FriendList.GetNumIgnores then
 		numIgnores = C_FriendList.GetNumIgnores()

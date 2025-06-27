@@ -183,6 +183,8 @@ globals = {
 	"StaticPopup1EditBox",
 	"StaticPopup_Visible",
 	"GlobalIgnoreDB",
+	"FriendsFrame",
+	"ChatFrame_RemoveMessageEventFilter",
 	"EnhanceQoL_IgnoreDB",
 	"DELETE_ITEM_CONFIRM_STRING",
 	"PaperDollFrame",

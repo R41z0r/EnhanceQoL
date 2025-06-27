@@ -2432,7 +2432,6 @@ local function addSocialFrame(container)
 		groupCore:AddChild(cb)
 	end
 
-	local wrapper = addon.functions.createWrapperData(data, container, L)
 	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["IgnoreDesc"], nil, nil, 14)
 	labelHeadline:SetFullWidth(true)
 	groupCore:AddChild(labelHeadline)
