@@ -2382,9 +2382,21 @@ local function addSocialFrame(container)
 			callback = function(self, _, value)
 				addon.db["enableIgnore"] = value
 				if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
+				container:ReleaseChildren()
+				addSocialFrame(container)
 			end,
 		},
 	}
+	if addon.db["enableIgnore"] then
+		table.insert(data, {
+			parent = "",
+			var = "ignoreAttachFriendsFrame",
+			text = L["IgnoreAttachFriends"],
+			desc = L["IgnoreAttachFriendsDesc"],
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["ignoreAttachFriendsFrame"] = value end,
+		})
+	end
 
 	table.sort(data, function(a, b)
 		local textA = a.var
@@ -2405,14 +2417,7 @@ local function addSocialFrame(container)
 	for _, checkboxData in ipairs(data) do
 		local desc
 		if checkboxData.desc then desc = checkboxData.desc end
-		local cb = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], function(self, _, value)
-			addon.db[checkboxData.var] = value
-			if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
-			if not value then
-				addon.variables.requireReload = true
-				addon.functions.checkReloadFrame()
-			end
-		end, desc)
+		local cb = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], checkboxData.callback, desc)
 		groupCore:AddChild(cb)
 	end
 
@@ -2984,6 +2989,7 @@ end
 
 local function initSocial()
 	addon.functions.InitDBValue("enableIgnore", false)
+	addon.functions.InitDBValue("ignoreAttachFriendsFrame", true)
 	if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
 end
 
