@@ -21,23 +21,35 @@ Ignore.addFrame = Ignore.addFrame or nil
 
 Ignore.filtered = {}
 
+function Ignore:NormalizeName(name)
+	if not name or name == "" then return nil end
+	local player, server = strsplit("-", name)
+	player = player or name
+	server = server or (GetRealmName()):gsub("%s", "")
+	return player:lower() .. "-" .. server:lower()
+end
+
 function Ignore:RebuildLookup()
 	wipe(self.entryLookup)
 	for _, entry in ipairs(self.entries) do
-		self.entryLookup[entry.player .. "-" .. entry.server] = entry
+		local key = self:NormalizeName(entry.player .. "-" .. entry.server)
+		if key then self.entryLookup[key] = entry end
 	end
 end
 Ignore:RebuildLookup()
 
 local IsIgnored = IsIgnored or C_FriendList.IsIgnored
 
+function Ignore:CheckIgnore(name)
+	local key = self:NormalizeName(name)
+	if not key then return nil end
+	return self.entryLookup[key]
+end
+
 function Ignore:IsPlayerIgnored(name)
 	if not name or name == "" then return false end
+	if self:CheckIgnore(name) then return true end
 	local player, server = strsplit("-", name)
-	player = player or name
-	server = server or (GetRealmName()):gsub("%s", "")
-	local key = player .. "-" .. server
-	if self.entryLookup[key] then return true end
 	if IsIgnored then
 		if IsIgnored(name) then return true end
 		if server == (GetRealmName()):gsub("%s", "") and IsIgnored(player) then return true end
@@ -333,7 +345,7 @@ local function addEntry(name, note, expires)
 	local sameRealm = not server or server == myServer
 	player = player or name
 	server = server or myServer
-	local key = player .. "-" .. server
+	local key = Ignore:NormalizeName(player .. "-" .. server)
 	local entry = Ignore.entryLookup[key]
 	if entry then
 		if note ~= nil then entry.note = note end
@@ -358,7 +370,7 @@ removeEntryByIndex = function(index)
 	local entry = Ignore.entries[index]
 	if entry then
 		local fullName = entry.player .. "-" .. entry.server
-		Ignore.entryLookup[fullName] = nil
+		Ignore.entryLookup[Ignore:NormalizeName(fullName)] = nil
 		table.remove(Ignore.entries, index)
 	end
 	RefreshList()
@@ -369,7 +381,7 @@ removeEntry = function(name)
 	if server == (GetRealmName()):gsub("%s", "") then name = player end
 
 	if origDelIgnore and IsIgnored and IsIgnored(name) then origDelIgnore(name) end
-	local key = player .. "-" .. (server or "")
+	local key = Ignore:NormalizeName(player .. "-" .. (server or ""))
 	local entry = Ignore.entryLookup[key]
 	if entry then
 		for i, e in ipairs(Ignore.entries) do
@@ -387,7 +399,7 @@ local function addOrRemove(name)
 	local player, server = strsplit("-", name)
 	player = player or name
 	server = server or (GetRealmName()):gsub("%s", "")
-	if Ignore.entryLookup[player .. "-" .. server] then
+	if Ignore.entryLookup[Ignore:NormalizeName(player .. "-" .. server)] then
 		removeEntry(name)
 		return
 	end
@@ -569,8 +581,8 @@ frame:SetScript("OnEvent", function()
 			local player, server = strsplit("-", name)
 			player = player or name
 			server = server or (GetRealmName()):gsub("%s", "")
-			local key = player .. "-" .. server
-			if not Ignore.entryLookup[key] then
+			local key = Ignore:NormalizeName(player .. "-" .. server)
+			if key and not Ignore.entryLookup[key] then
 				local e = {
 					player = player,
 					server = server,
@@ -597,8 +609,8 @@ frame:SetScript("OnEvent", function()
 					if not nDate then nDate = date("%Y-%m-%d") end
 					local expires = gDB.expList[i]
 					expires = expires > 0 and expires or NEVER
-					local key = player .. "-" .. server
-					if not Ignore.entryLookup[key] then
+					local key = Ignore:NormalizeName(player .. "-" .. server)
+					if key and not Ignore.entryLookup[key] then
 						local e = {
 							player = player,
 							server = server,
@@ -653,7 +665,7 @@ Ignore.groupCheckFrame:SetScript("OnEvent", function()
 	local ignored = {}
 	local count = 0
 	for name in pairs(partyMembers) do
-		if Ignore.entryLookup[name] then
+		if Ignore:CheckIgnore(name) then
 			table.insert(ignored, name)
 			count = count + 1
 		end
@@ -678,7 +690,7 @@ end)
 
 -- chat message filter to block messages from ignored players
 local function ignoreChatFilter(_, _, _, sender)
-	if Ignore:IsPlayerIgnored(sender) then return true end
+	if Ignore:CheckIgnore(sender) then return true end
 	return false
 end
 
@@ -705,7 +717,7 @@ end
 Ignore.interactionBlocker:SetScript("OnEvent", function(_, event, ...)
 	local name = ...
 	if event == "TRADE_SHOW" then name = UnitFullName("npc") end
-	if Ignore:IsPlayerIgnored(name or "") then
+	if Ignore:CheckIgnore(name or "") then
 		if event == "PARTY_INVITE_REQUEST" then
 			DeclineGroup()
 			StaticPopup_Hide("PARTY_INVITE")
