@@ -13,6 +13,36 @@ local AceGUI = addon.AceGUI
 local Ignore = addon.Ignore or {}
 addon.Ignore = Ignore
 
+local function ensureFriendsFrame()
+if not addon.db or not (addon.db.ignoreAnchorFriendsFrame or addon.db.ignoreAttachFriendsFrame) then
+return
+end
+if not FriendsFrame then
+local loaded = false
+if C_AddOns and C_AddOns.LoadAddOn then
+loaded = C_AddOns.LoadAddOn("Blizzard_FriendsFrame")
+elseif LoadAddOn then
+loaded = LoadAddOn("Blizzard_FriendsFrame")
+end
+if not loaded then
+return
+end
+end
+if FriendsFrame and not Ignore.friendsHookInstalled then
+FriendsFrame:HookScript("OnShow", function()
+if addon.db.ignoreAttachFriendsFrame and Ignore.enabled then
+EQOLIgnoreFrame:Show()
+Ignore:UpdateAnchor()
+end
+end)
+FriendsFrame:HookScript("OnHide", function()
+if addon.db.ignoreAttachFriendsFrame then
+EQOLIgnoreFrame:Hide()
+end
+end)
+Ignore.friendsHookInstalled = true
+end
+end
 -- will be replaced with the saved table once the addon is fully loaded
 Ignore.entries = Ignore.entries or {}
 Ignore.entryLookup = Ignore.entryLookup or {}
@@ -391,27 +421,18 @@ function EQOLIgnoreFrame_OnLoad(frame)
 
 	RefreshList()
 
-	if FriendsFrame and not Ignore.friendsHookInstalled then
-		FriendsFrame:HookScript("OnShow", function()
-			if addon.db.ignoreAttachFriendsFrame and Ignore.enabled then
-				EQOLIgnoreFrame:Show()
-				Ignore:UpdateAnchor()
-			end
-		end)
-		FriendsFrame:HookScript("OnHide", function()
-			if addon.db.ignoreAttachFriendsFrame then EQOLIgnoreFrame:Hide() end
-		end)
-		Ignore.friendsHookInstalled = true
-	end
-	Ignore:UpdateAnchor()
+	       ensureFriendsFrame()
+	       Ignore:UpdateAnchor()
 end
 
 function Ignore:Toggle()
-	if EQOLIgnoreFrame:IsShown() then
-		EQOLIgnoreFrame:Hide()
-	else
-		EQOLIgnoreFrame:Show()
-	end
+	       ensureFriendsFrame()
+	       Ignore:UpdateAnchor()
+	       if EQOLIgnoreFrame:IsShown() then
+	               EQOLIgnoreFrame:Hide()
+	       else
+	               EQOLIgnoreFrame:Show()
+	       end
 end
 
 Ignore.origAddIgnore = Ignore.origAddIgnore or (C_FriendList and C_FriendList.AddIgnore)
