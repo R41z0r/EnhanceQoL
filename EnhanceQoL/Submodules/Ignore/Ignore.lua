@@ -279,9 +279,9 @@ end
 
 -- Frame created from XML
 function EQOLIgnoreFrame_OnLoad(frame)
-        Ignore.frame = frame
-        frame:SetFrameStrata("DIALOG")
-        local fn = frame:GetName()
+	Ignore.frame = frame
+	frame:SetFrameStrata("DIALOG")
+	local fn = frame:GetName()
 	Ignore.counter = _G[fn .. "Counter"]
 	Ignore.searchBox = _G[fn .. "SearchBox"]
 	Ignore.header = _G[fn .. "Header"]
@@ -702,7 +702,7 @@ LOGIN_FRAME:SetScript("OnEvent", function()
 end)
 
 local SLASH_NAME = "EQOLIGNORE"
-local SLASH_CMD = "/eig"
+local SLASH_CMD = "/eil"
 
 -- chat message filter to block messages from ignored players
 local function ignoreChatFilter(_, _, _, sender)

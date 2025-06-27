@@ -4051,72 +4051,62 @@ local function setAllHooks()
 		if addon.db["warlock_HideSoulShardBar"] then WarlockPowerFrame:Hide() end
 	end
 
-        local ignoredApplicants = {}
+	local ignoredApplicants = {}
 
-        local function FlagIgnoredApplicants(applicantIDs)
-                if not addon.db.enableIgnore or not addon.Ignore or not addon.Ignore.CheckIgnore then return end
-                wipe(ignoredApplicants)
-                for _, applicantID in ipairs(applicantIDs) do
-                        local name = C_LFGList.GetApplicantMemberInfo(applicantID, 1)
-                        if type(name) == "string" then
-                                local entry = addon.Ignore:CheckIgnore(name)
-                                if entry then ignoredApplicants[applicantID] = entry end
-                        end
-                end
-        end
+	local function FlagIgnoredApplicants(applicantIDs)
+		if not addon.db.enableIgnore or not addon.Ignore or not addon.Ignore.CheckIgnore then return end
+		wipe(ignoredApplicants)
+		for _, applicantID in ipairs(applicantIDs) do
+			local name = C_LFGList.GetApplicantMemberInfo(applicantID, 1)
+			if type(name) == "string" then
+				local entry = addon.Ignore:CheckIgnore(name)
+				if entry then ignoredApplicants[applicantID] = entry end
+			end
+		end
+	end
 
-        local function ApplyIgnoreHighlight(memberFrame, applicantID)
-                local entry = ignoredApplicants[applicantID]
-                if not entry or not memberFrame or not memberFrame.Name then return end
-                memberFrame.Name:SetTextColor(1, 0, 0)
-                if not memberFrame.eqolIgnoreHooked then
-                        memberFrame:HookScript("OnEnter", function(self)
-                                local e = self.eqolIgnoreEntry
-                                if not e then return end
-                                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-                                if e.note and e.note ~= "" then GameTooltip:AddLine(e.note, 1, 0, 0, true) end
-                                GameTooltip:Show()
-                        end)
-                        memberFrame:HookScript("OnLeave", GameTooltip_Hide)
-                        memberFrame.eqolIgnoreHooked = true
-                end
-                memberFrame.eqolIgnoreEntry = entry
-        end
+	local function ApplyIgnoreHighlight(memberFrame, applicantID)
+		local entry = ignoredApplicants[applicantID]
+		if not entry or not memberFrame or not memberFrame.Name then return end
+		memberFrame.Name:SetTextColor(1, 0, 0, 1)
+		memberFrame.Name:SetText("!!! " .. memberFrame.Name:GetText() .. " !!!")
+		memberFrame.eqolIgnoreEntry = entry
+	end
 
-        local function SortApplicants(applicants)
-                if addon.db.lfgSortByRio then
-                        local function SortApplicantsCB(applicantID1, applicantID2)
-                                local applicantInfo1 = C_LFGList.GetApplicantInfo(applicantID1)
-                                local applicantInfo2 = C_LFGList.GetApplicantInfo(applicantID2)
+	local function SortApplicants(applicants)
+		if addon.db.lfgSortByRio then
+			local function SortApplicantsCB(applicantID1, applicantID2)
+				local applicantInfo1 = C_LFGList.GetApplicantInfo(applicantID1)
+				local applicantInfo2 = C_LFGList.GetApplicantInfo(applicantID2)
 
-                                if applicantInfo1 == nil then return false end
+				if applicantInfo1 == nil then return false end
 
-                                if applicantInfo2 == nil then return true end
+				if applicantInfo2 == nil then return true end
 
-                                local _, _, _, _, _, _, _, _, _, _, _, dungeonScore1 = C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1)
-                                local _, _, _, _, _, _, _, _, _, _, _, dungeonScore2 = C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1)
+				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore1 = C_LFGList.GetApplicantMemberInfo(applicantInfo1.applicantID, 1)
+				local _, _, _, _, _, _, _, _, _, _, _, dungeonScore2 = C_LFGList.GetApplicantMemberInfo(applicantInfo2.applicantID, 1)
 
-                                return dungeonScore1 > dungeonScore2
-                        end
+				return dungeonScore1 > dungeonScore2
+			end
 
-                        table.sort(applicants, SortApplicantsCB)
-                end
+			table.sort(applicants, SortApplicantsCB)
+		end
 
-                FlagIgnoredApplicants(applicants)
-                LFGListApplicationViewer_UpdateResults(LFGListFrame.ApplicationViewer)
-        end
+		FlagIgnoredApplicants(applicants)
+		LFGListApplicationViewer_UpdateResults(LFGListFrame.ApplicationViewer)
+	end
 
-        hooksecurefunc("LFGListApplicationViewer_UpdateApplicantMember", function(memberFrame, appID, memberIdx)
-                if addon.db.enableIgnore then ApplyIgnoreHighlight(memberFrame, appID) end
-        end)
+	hooksecurefunc("LFGListApplicationViewer_UpdateApplicantMember", function(memberFrame, appID, memberIdx)
+		if addon.db.enableIgnore then ApplyIgnoreHighlight(memberFrame, appID) end
+	end)
 
-        hooksecurefunc("LFGListApplicationViewer_UpdateResults", function()
-                if not addon.db.enableIgnore or addon.db.lfgSortByRio then return end
-                local applicants = C_LFGList.GetApplicants() or {}
-                FlagIgnoredApplicants(applicants)
-        end)
+	hooksecurefunc("LFGListApplicationViewer_UpdateResults", function()
+		if not addon.db.enableIgnore or addon.db.lfgSortByRio then return end
+		local applicants = C_LFGList.GetApplicants() or {}
+		FlagIgnoredApplicants(applicants)
+	end)
 
-        hooksecurefunc("LFGListUtil_SortApplicants", SortApplicants)
+	hooksecurefunc("LFGListUtil_SortApplicants", SortApplicants)
 
 	initCharacter()
 	initMisc()
