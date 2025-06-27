@@ -28,15 +28,13 @@ Ignore.hooksInstalled = Ignore.hooksInstalled or false
 local loader = CreateFrame("Frame")
 loader:RegisterEvent("ADDON_LOADED")
 loader:SetScript("OnEvent", function(_, event, arg1)
-       if arg1 == parentAddonName then
-               EnhanceQoL_IgnoreDB = EnhanceQoL_IgnoreDB or {}
-               Ignore.entries = EnhanceQoL_IgnoreDB
-               Ignore:RebuildLookup()
-               if addon and addon.db and addon.db.enableIgnore ~= nil then
-                       Ignore:SetEnabled(addon.db.enableIgnore)
-               end
-               loader:UnregisterEvent("ADDON_LOADED")
-       end
+	if arg1 == parentAddonName then
+		EnhanceQoL_IgnoreDB = EnhanceQoL_IgnoreDB or {}
+		Ignore.entries = EnhanceQoL_IgnoreDB
+		Ignore:RebuildLookup()
+		if addon and addon.db and addon.db.enableIgnore ~= nil then Ignore:SetEnabled(addon.db.enableIgnore) end
+		loader:UnregisterEvent("ADDON_LOADED")
+	end
 end)
 
 local LOGIN_FRAME = CreateFrame("Frame")
@@ -600,6 +598,62 @@ local function normalizeDate(dateStr)
 	return date("%Y-%m-%d", ts)
 end
 
+local function showImportPopup()
+	if not addon.db.enableIgnore then return end
+	if not C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then return end
+	local gDB = GlobalIgnoreDB
+	if not (gDB and gDB.ignoreList and #gDB.ignoreList > 0) then return end
+
+	StaticPopupDialogs["EQOL_IMPORT_GIL_WARNING"] = {
+		text = L["ImportGILCancelDialog"],
+		button1 = OKAY,
+		timeout = 0,
+		whileDead = true,
+		hideOnEscape = true,
+		preferredIndex = 3,
+	}
+
+	StaticPopupDialogs["EQOL_IMPORT_GIL"] = {
+		text = L["ImportGILDialog"],
+		button1 = L["ImportGILAccept"],
+		button2 = CANCEL,
+		timeout = 0,
+		whileDead = true,
+		hideOnEscape = true,
+		preferredIndex = 3,
+		OnAccept = function()
+			for i = 1, #gDB.ignoreList do
+				local name = gDB.ignoreList[i]
+				if name then
+					local player, server = strsplit("-", name)
+					player = player or name
+					server = server or (GetRealmName()):gsub("%s", "")
+					local nDate = normalizeDate(gDB.dateList[i])
+					if not nDate then nDate = date("%Y-%m-%d") end
+					local expires = gDB.expList[i]
+					expires = expires > 0 and expires or NEVER
+					local key = Ignore:NormalizeName(player .. "-" .. server)
+					if key and not Ignore.entryLookup[key] then
+						local e = {
+							player = player,
+							server = server,
+							date = nDate,
+							expires = expires,
+							note = gDB.notes[i],
+						}
+						table.insert(Ignore.entries, e)
+						Ignore.entryLookup[key] = e
+					end
+				end
+			end
+			C_AddOns.DisableAddOn("GlobalIgnoreList")
+			ReloadUI()
+		end,
+		OnCancel = function() StaticPopup_Show("EQOL_IMPORT_GIL_WARNING") end,
+	}
+	StaticPopup_Show("EQOL_IMPORT_GIL")
+end
+
 LOGIN_FRAME:SetScript("OnEvent", function()
 	if not Ignore.enabled then return end
 	local numIgnores = 0
@@ -633,36 +687,7 @@ LOGIN_FRAME:SetScript("OnEvent", function()
 			end
 		end
 	end
-	if C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then
-		-- Importing from Global Ignore List
-		local gDB = GlobalIgnoreDB
-		if gDB and gDB.ignoreList and #gDB.ignoreList > 0 then
-			for i = 1, #gDB.ignoreList do
-				local name = gDB.ignoreList[i]
-				if name then
-					local player, server = strsplit("-", name)
-					player = player or name
-					server = server or (GetRealmName()):gsub("%s", "")
-					local nDate = normalizeDate(gDB.dateList[i])
-					if not nDate then nDate = date("%Y-%m-%d") end
-					local expires = gDB.expList[i]
-					expires = expires > 0 and expires or NEVER
-					local key = Ignore:NormalizeName(player .. "-" .. server)
-					if key and not Ignore.entryLookup[key] then
-						local e = {
-							player = player,
-							server = server,
-							date = nDate,
-							expires = expires,
-							note = gDB.notes[i],
-						}
-						table.insert(Ignore.entries, e)
-						Ignore.entryLookup[key] = e
-					end
-				end
-			end
-		end
-	end
+	showImportPopup()
 	RefreshList()
 end)
 
@@ -800,7 +825,6 @@ Ignore.groupCheckFrame:SetScript("OnEvent", function()
 	Ignore.groupCheckFrame.lastPartySize = size
 	Ignore.groupCheckFrame.lastIgnored = count
 end)
-
 
 Ignore.interactionBlocker = Ignore.interactionBlocker or CreateFrame("Frame")
 Ignore.interactionBlocker:SetScript("OnEvent", function(_, event, ...)
