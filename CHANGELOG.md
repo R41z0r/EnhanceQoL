@@ -1,4 +1,12 @@
 # Changelog
+## [3.23.0] – 2025-06-27
+### ✨ Added
+- **Enhanced Ignore List** – brand-new tool to manage ignored players
+  - Opens alongside the Friends frame and can stay anchored to it.
+  - Provides a window title and search box for quick lookup.
+  - Sends chat messages when players are added or removed, including expired entries.
+  - Highlights applicants in the Group Finder who are on your list.
+
 
 ## [3.22.1] – 2025-06-25
 ### 🐛 Fixed
