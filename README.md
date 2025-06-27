@@ -84,7 +84,8 @@ Fully configurable per context (combat, dungeon, friendly/enemy): items, item co
 *   Option to hide Raid Tools in party play.
 *   Disable Talking Head frame, plus other minor class-specific bar tweaks.
 
-* **Instant Messenger** – mini whisper window, toggle with `/eim`.
+* **Enhanced Ignore List** – organise ignored players in a searchable window, highlight them in group finder and block unwanted requests. Toggle with `/eil`.
+* **Instant Messenger** – mini whisper window with tabs, message history and optional fade. Toggle with `/eim`.
 * **Gem-Socket Helper** – shows socketable gems below the socket UI.
 
 # Help

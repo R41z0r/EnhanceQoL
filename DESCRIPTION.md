@@ -80,5 +80,8 @@ Fully configurable per context (combat, dungeon, friendly/enemy): items, item co
 *   Quick-loot mode (disable Blizzard auto-loot for best speed).
 *   Option to hide Raid Tools in party play.
 *   Disable Talking Head frame, plus other minor class-specific bar tweaks.
+*   **Enhanced Ignore List** – organise ignored players in a searchable window, highlight them in group finder and block unwanted requests. Toggle with `/eil`.
+*   **Instant Messenger** – mini whisper window with tabs, message history and optional fade. Toggle with `/eim`.
+*   **Gem-Socket Helper** – shows socketable gems below the socket UI.
 
 …and plenty of other small conveniences to keep Azeroth smooth.
