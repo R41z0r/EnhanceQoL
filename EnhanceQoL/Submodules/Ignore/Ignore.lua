@@ -279,8 +279,9 @@ end
 
 -- Frame created from XML
 function EQOLIgnoreFrame_OnLoad(frame)
-	Ignore.frame = frame
-	local fn = frame:GetName()
+        Ignore.frame = frame
+        frame:SetFrameStrata("DIALOG")
+        local fn = frame:GetName()
 	Ignore.counter = _G[fn .. "Counter"]
 	Ignore.searchBox = _G[fn .. "SearchBox"]
 	Ignore.header = _G[fn .. "Header"]
