@@ -137,6 +137,7 @@ function Ignore:Expire()
                                 if self.origDelIgnore and IsIgnored and IsIgnored(name) then self.origDelIgnore(name) end
                                 table.remove(self.entries, i)
                                 self.entryLookup[key] = nil
+                                print(L["IgnoreExpiredRemoved"]:format(name))
                                 removed = true
                         end
                 end
@@ -311,17 +312,23 @@ end
 
 -- Frame created from XML
 function EQOLIgnoreFrame_OnLoad(frame)
-	Ignore.frame = frame
-	frame:SetFrameStrata("DIALOG")
-	local fn = frame:GetName()
-	Ignore.counter = _G[fn .. "Counter"]
-	Ignore.searchBox = _G[fn .. "SearchBox"]
-	Ignore.header = _G[fn .. "Header"]
-	Ignore.scrollFrame = _G[fn .. "ScrollFrame"]
+        Ignore.frame = frame
+        frame:SetFrameStrata("DIALOG")
+        frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+        frame.title:SetPoint("TOP", frame, "TOP", 0, -6)
+        frame.title:SetText(L["IgnoreWindowTitle"])
+        local fn = frame:GetName()
+        Ignore.counter = _G[fn .. "Counter"]
+        Ignore.searchBox = _G[fn .. "SearchBox"]
+        frame.searchLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+        frame.searchLabel:SetPoint("RIGHT", Ignore.searchBox, "LEFT", -5, 0)
+        frame.searchLabel:SetText(SEARCH .. ":")
+        Ignore.header = _G[fn .. "Header"]
+        Ignore.scrollFrame = _G[fn .. "ScrollFrame"]
 	-- Ensure scrollFrame.scrollBar references the XML-declared slider
 	Ignore.scrollFrame.scrollBar = _G[fn .. "ScrollFrameScrollBar"]
 	Ignore.removeBtn = _G[fn .. "RemoveButton"]
-	Ignore.removeBtn:SetText(REMOVE)
+       Ignore.removeBtn:SetText(REMOVE)
 
 	local listWidth = 0
 	for _, w in ipairs(widths) do
@@ -382,12 +389,13 @@ function EQOLIgnoreFrame_OnLoad(frame)
                 RefreshList()
         end)
 
-        RefreshList()
+       RefreshList()
 
        if FriendsFrame and not Ignore.friendsHookInstalled then
                FriendsFrame:HookScript("OnShow", function()
                        if addon.db.ignoreAttachFriendsFrame and Ignore.enabled then
                                EQOLIgnoreFrame:Show()
+                               Ignore:UpdateAnchor()
                        end
                end)
                FriendsFrame:HookScript("OnHide", function()
@@ -395,6 +403,7 @@ function EQOLIgnoreFrame_OnLoad(frame)
                end)
                Ignore.friendsHookInstalled = true
        end
+       Ignore:UpdateAnchor()
 end
 
 function Ignore:Toggle()
@@ -836,7 +845,19 @@ function Ignore:SetEnabled(val)
 	else
 		Ignore.enabled = false
 	end
-	updateRegistration()
+       updateRegistration()
+end
+
+function Ignore:UpdateAnchor()
+       if not self.frame or not FriendsFrame then return end
+       self.frame:ClearAllPoints()
+       if addon.db.ignoreAnchorFriendsFrame then
+               self.frame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", 5, 0)
+               self.frame:SetMovable(false)
+       else
+               self.frame:SetPoint("CENTER")
+               self.frame:SetMovable(true)
+       end
 end
 
 -- frame to check ignored members in current group
