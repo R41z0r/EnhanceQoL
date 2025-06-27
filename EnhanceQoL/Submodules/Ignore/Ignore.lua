@@ -727,6 +727,7 @@ local function unhookIgnoreApi()
 end
 
 local function updateRegistration()
+	LOGIN_FRAME:UnregisterAllEvents()
 	if Ignore.enabled then
 		hookIgnoreApi()
 		LOGIN_FRAME:RegisterEvent("PLAYER_LOGIN")
@@ -743,7 +744,6 @@ local function updateRegistration()
 		_G["SLASH_" .. SLASH_NAME .. "1"] = SLASH_CMD
 		SlashCmdList[SLASH_NAME] = function() Ignore:Toggle() end
 	else
-		LOGIN_FRAME:UnregisterAllEvents()
 		for _, e in ipairs(CHAT_EVENTS) do
 			if Ignore.registeredFilters[e] then
 				ChatFrame_RemoveMessageEventFilter(e, ignoreChatFilter)
@@ -758,11 +758,24 @@ local function updateRegistration()
 		SlashCmdList[SLASH_NAME] = nil
 		_G["SLASH_" .. SLASH_NAME .. "1"] = nil
 		unhookIgnoreApi()
+		if addon.db.enableIgnore and C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then LOGIN_FRAME:RegisterEvent("PLAYER_LOGIN") end
 	end
 end
 
 function Ignore:SetEnabled(val)
 	Ignore.enabled = val and true or false
+	if Ignore.enabled and C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then
+		Ignore.enabled = false
+		StaticPopupDialogs["EQOL_GIL_ACTIVE"] = {
+			text = L["GILActivePopup"],
+			button1 = OKAY,
+			timeout = 0,
+			whileDead = true,
+			hideOnEscape = true,
+			preferredIndex = 3,
+		}
+		StaticPopup_Show("EQOL_GIL_ACTIVE")
+	end
 	updateRegistration()
 end
 

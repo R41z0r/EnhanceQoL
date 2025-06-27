@@ -231,3 +231,4 @@ L["IgnoreDesc"] = "Blocks duel, pet battle, trade, invite and whisper requests f
 L["ImportGILDialog"] = "GlobalIgnoreList data found. Import entries and disable that addon? Both addons cannot be active together."
 L["ImportGILCancelDialog"] = "Disable the advanced ignore option or GlobalIgnoreList and reload your interface."
 L["ImportGILAccept"] = "Import & Reload"
+L["GILActivePopup"] = "Advanced ignore disabled because GlobalIgnoreList is active. Disable that addon and re-enable the option."
