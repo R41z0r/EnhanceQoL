@@ -2366,6 +2366,26 @@ local function addMapFrame(container)
 	groupCore:AddChild(cbElement)
 end
 
+local function addSocialFrame(container)
+    local data = {
+        {
+            parent = "",
+            var = "enableIgnore",
+            text = L["EnableAdvancedIgnore"],
+            type = "CheckBox",
+            callback = function(self, _, value)
+                addon.db["enableIgnore"] = value
+                if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
+            end,
+        },
+    }
+
+    local wrapper = addon.functions.createWrapperData(data, container, L)
+    local desc = AceGUI:Create("Label")
+    desc:SetFullWidth(true)
+    desc:SetText(L["IgnoreDesc"])
+    wrapper:AddChild(desc)
+end
 local function updateBankButtonInfo()
 	if not addon.db["showIlvlOnBankFrame"] then return end
 
@@ -2925,8 +2945,13 @@ local function initChatFrame()
 end
 
 local function initMap()
-	addon.functions.InitDBValue("enableWayCommand", false)
-	if addon.db["enableWayCommand"] then addon.functions.registerWayCommand() end
+        addon.functions.InitDBValue("enableWayCommand", false)
+        if addon.db["enableWayCommand"] then addon.functions.registerWayCommand() end
+end
+
+local function initSocial()
+        addon.functions.InitDBValue("enableIgnore", false)
+        if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
 end
 
 local function initUI()
@@ -3766,36 +3791,37 @@ local function CreateUI()
 
 	-- Create the TreeGroup
 	addon.treeGroup = AceGUI:Create("TreeGroup")
-	addon.functions.addToTree(nil, {
-		value = "general",
-		text = L["General"],
-		children = {
-			{ value = "character", text = L["Character"] },
-			{ value = "bags", text = HUD_EDIT_MODE_BAGS_LABEL },
-			{ value = "cvar", text = "CVar" },
-			{ value = "party", text = PARTY },
-			{ value = "dungeon", text = L["Dungeon"] },
-			{ value = "misc", text = L["Misc"] },
-			{ value = "quest", text = L["Quest"] },
-			{ value = "map", text = WORLD_MAP },
-			{
-				value = "ui",
-				text = BUG_CATEGORY5,
-				children = {
-					{ value = "auctionhouse", text = BUTTON_LAG_AUCTIONHOUSE },
-					{ value = "actionbar", text = ACTIONBARS_LABEL },
-					{ value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
-					{ value = "minimap", text = MINIMAP_LABEL },
-					{ value = "unitframe", text = UNITFRAME_LABEL },
-					{ value = "dynamicflight", text = DYNAMIC_FLIGHT },
-				},
-			},
-		},
-	})
-	table.insert(addon.treeGroupData, {
-		value = "profiles",
-		text = L["Profiles"],
-	})
+        addon.functions.addToTree(nil, {
+                value = "general",
+                text = L["General"],
+                children = {
+                        { value = "character", text = L["Character"] },
+                        { value = "bags", text = HUD_EDIT_MODE_BAGS_LABEL },
+                        { value = "cvar", text = "CVar" },
+                        { value = "party", text = PARTY },
+                        { value = "dungeon", text = L["Dungeon"] },
+                        { value = "misc", text = L["Misc"] },
+                        { value = "quest", text = L["Quest"] },
+                        { value = "map", text = WORLD_MAP },
+                        {
+                                value = "ui",
+                                text = BUG_CATEGORY5,
+                                children = {
+                                        { value = "auctionhouse", text = BUTTON_LAG_AUCTIONHOUSE },
+                                        { value = "actionbar", text = ACTIONBARS_LABEL },
+                                        { value = "chatframe", text = HUD_EDIT_MODE_CHAT_FRAME_LABEL },
+                                        { value = "minimap", text = MINIMAP_LABEL },
+                                        { value = "unitframe", text = UNITFRAME_LABEL },
+                                        { value = "dynamicflight", text = DYNAMIC_FLIGHT },
+                                },
+                        },
+                },
+        })
+        addon.functions.addToTree("general", { value = "social", text = L["Social"] })
+        table.insert(addon.treeGroupData, {
+                value = "profiles",
+                text = L["Profiles"],
+        })
 	addon.treeGroup:SetLayout("Fill")
 	addon.treeGroup:SetTree(addon.treeGroupData)
 	addon.treeGroup:SetCallback("OnGroupSelected", function(container, _, group)
@@ -3825,12 +3851,14 @@ local function CreateUI()
 			addUnitFrame(container)
 		elseif group == "general\001ui\001dynamicflight" then
 			addDynamicFlightFrame(container)
-		elseif group == "general\001ui\001chatframe" then
-			addChatFrame(container)
-		elseif group == "general\001ui\001minimap" then
-			addMinimapFrame(container)
-		elseif group == "general\001map" then
-			addMapFrame(container)
+elseif group == "general\001ui\001chatframe" then
+addChatFrame(container)
+elseif group == "general\001ui\001minimap" then
+addMinimapFrame(container)
+elseif group == "general\001social" then
+addSocialFrame(container)
+elseif group == "general\001map" then
+addMapFrame(container)
 		elseif group == "profiles" then
 			local sub = AceGUI:Create("SimpleGroup")
 			sub:SetFullWidth(true)
@@ -4020,10 +4048,11 @@ local function setAllHooks()
 	initParty()
 	initActionBars()
 	initUI()
-	initUnitFrame()
-	initChatFrame()
-	initMap()
-	initBagsFrame()
+initUnitFrame()
+initChatFrame()
+initMap()
+initSocial()
+initBagsFrame()
 end
 
 function loadMain()
