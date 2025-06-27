@@ -351,6 +351,7 @@ Ignore.origAddIgnore = Ignore.origAddIgnore or (C_FriendList and C_FriendList.Ad
 Ignore.origDelIgnoreByIndex = Ignore.origDelIgnoreByIndex or (C_FriendList and C_FriendList.DelIgnoreByIndex)
 Ignore.origDelIgnore = Ignore.origDelIgnore or (C_FriendList and C_FriendList.DelIgnore)
 Ignore.origAddOrDelIgnore = Ignore.origAddOrDelIgnore or (C_FriendList and C_FriendList.AddOrDelIgnore)
+
 function Ignore:HasFreeSlot()
 	local num = 0
 	if C_FriendList and C_FriendList.GetNumIgnores then
