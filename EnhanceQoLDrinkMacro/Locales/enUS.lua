@@ -10,4 +10,4 @@ L["mageFoodReminderDesc"] = "Click the reminder to automatically queue for follo
 L["mageFoodReminderText"] = "Get Mage food from follower Dungeon\n\nClick to automatically queue"
 L["mageFoodLeaveText"] = "Leave follower Dungeon\n\nClick to leave group"
 L["allowRecuperate"] = "Allow Recuperate for Healing"
-L["allowRecuperateDesc"] = "This enables Classes with the Recuperate Spell to heal, this spell does not regenerate mana"
+L["allowRecuperateDesc"] = "Lets classes with the Recuperate spell heal themselves; this spell does not restore mana."
