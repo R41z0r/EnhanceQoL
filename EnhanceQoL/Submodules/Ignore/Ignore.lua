@@ -604,15 +604,6 @@ local function showImportPopup()
 	local gDB = GlobalIgnoreDB
 	if not (gDB and gDB.ignoreList and #gDB.ignoreList > 0) then return end
 
-	StaticPopupDialogs["EQOL_IMPORT_GIL_WARNING"] = {
-		text = L["ImportGILCancelDialog"],
-		button1 = OKAY,
-		timeout = 0,
-		whileDead = true,
-		hideOnEscape = true,
-		preferredIndex = 3,
-	}
-
 	StaticPopupDialogs["EQOL_IMPORT_GIL"] = {
 		text = L["ImportGILDialog"],
 		button1 = L["ImportGILAccept"],
@@ -649,12 +640,30 @@ local function showImportPopup()
 			C_AddOns.DisableAddOn("GlobalIgnoreList")
 			ReloadUI()
 		end,
-		OnCancel = function() StaticPopup_Show("EQOL_IMPORT_GIL_WARNING") end,
+		OnCancel = function()
+			addon.db.enableIgnore = false
+			Ignore.pendingImport = nil
+			Ignore:SetEnabled(false)
+			StaticPopupDialogs["EQOL_GIL_ACTIVE"] = {
+				text = L["GILActivePopup"],
+				button1 = OKAY,
+				timeout = 0,
+				whileDead = true,
+				hideOnEscape = true,
+				preferredIndex = 3,
+			}
+			StaticPopup_Show("EQOL_GIL_ACTIVE")
+		end,
 	}
 	StaticPopup_Show("EQOL_IMPORT_GIL")
 end
 
 LOGIN_FRAME:SetScript("OnEvent", function()
+	if Ignore.pendingImport then
+		showImportPopup()
+		Ignore.pendingImport = nil
+		return
+	end
 	if not Ignore.enabled then return end
 	local numIgnores = 0
 	if C_FriendList and C_FriendList.GetNumIgnores then
@@ -687,7 +696,6 @@ LOGIN_FRAME:SetScript("OnEvent", function()
 			end
 		end
 	end
-	showImportPopup()
 	RefreshList()
 end)
 
@@ -758,23 +766,27 @@ local function updateRegistration()
 		SlashCmdList[SLASH_NAME] = nil
 		_G["SLASH_" .. SLASH_NAME .. "1"] = nil
 		unhookIgnoreApi()
-		if addon.db.enableIgnore and C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then LOGIN_FRAME:RegisterEvent("PLAYER_LOGIN") end
 	end
 end
 
 function Ignore:SetEnabled(val)
-	Ignore.enabled = val and true or false
-	if Ignore.enabled and C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then
+	addon.db.enableIgnore = val and true or false
+	Ignore.pendingImport = nil
+	if val then
+		if C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then
+			Ignore.enabled = false
+			Ignore.pendingImport = true
+			if IsLoggedIn() then
+				showImportPopup()
+			else
+				LOGIN_FRAME:RegisterEvent("PLAYER_LOGIN")
+			end
+			updateRegistration()
+			return
+		end
+		Ignore.enabled = true
+	else
 		Ignore.enabled = false
-		StaticPopupDialogs["EQOL_GIL_ACTIVE"] = {
-			text = L["GILActivePopup"],
-			button1 = OKAY,
-			timeout = 0,
-			whileDead = true,
-			hideOnEscape = true,
-			preferredIndex = 3,
-		}
-		StaticPopup_Show("EQOL_GIL_ACTIVE")
 	end
 	updateRegistration()
 end
