@@ -23,6 +23,7 @@ Ignore.addFrame = Ignore.addFrame or nil
 Ignore.enabled = Ignore.enabled or false
 Ignore.registeredFilters = Ignore.registeredFilters or {}
 Ignore.hooksInstalled = Ignore.hooksInstalled or false
+Ignore.friendsHookInstalled = Ignore.friendsHookInstalled or false
 
 -- load the saved ignore database when the addon has fully loaded
 local loader = CreateFrame("Frame")
@@ -339,18 +340,30 @@ function EQOLIgnoreFrame_OnLoad(frame)
 		RefreshList()
 	end)
 
-	Ignore.removeBtn:SetScript("OnClick", function()
-		local entry = Ignore.filtered[Ignore.selectedIndex]
-		if entry then
-			local name = entry.player
-			if entry.server and entry.server ~= "" then name = name .. "-" .. entry.server end
-			removeEntry(name)
-		end
-		Ignore.selectedIndex = nil
-		RefreshList()
-	end)
+        Ignore.removeBtn:SetScript("OnClick", function()
+                local entry = Ignore.filtered[Ignore.selectedIndex]
+                if entry then
+                        local name = entry.player
+                        if entry.server and entry.server ~= "" then name = name .. "-" .. entry.server end
+                        removeEntry(name)
+                end
+                Ignore.selectedIndex = nil
+                RefreshList()
+        end)
 
-	RefreshList()
+        RefreshList()
+
+       if FriendsFrame and not Ignore.friendsHookInstalled then
+               FriendsFrame:HookScript("OnShow", function()
+                       if addon.db.ignoreAttachFriendsFrame and Ignore.enabled then
+                               EQOLIgnoreFrame:Show()
+                       end
+               end)
+               FriendsFrame:HookScript("OnHide", function()
+                       if addon.db.ignoreAttachFriendsFrame then EQOLIgnoreFrame:Hide() end
+               end)
+               Ignore.friendsHookInstalled = true
+       end
 end
 
 function Ignore:Toggle()

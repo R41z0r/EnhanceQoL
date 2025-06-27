@@ -2373,18 +2373,28 @@ local function addSocialFrame(container)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local data = {
-		{
-			parent = "",
-			var = "enableIgnore",
-			text = L["EnableAdvancedIgnore"],
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["enableIgnore"] = value
-				if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
-			end,
-		},
-	}
+        local data = {
+                {
+                        parent = "",
+                        var = "enableIgnore",
+                        text = L["EnableAdvancedIgnore"],
+                        type = "CheckBox",
+                        callback = function(self, _, value)
+                                addon.db["enableIgnore"] = value
+                                if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
+                        end,
+                },
+                {
+                        parent = "",
+                        var = "ignoreAttachFriendsFrame",
+                        text = L["IgnoreAttachFriends"],
+                        desc = L["IgnoreAttachFriendsDesc"],
+                        type = "CheckBox",
+                        callback = function(self, _, value)
+                                addon.db["ignoreAttachFriendsFrame"] = value
+                        end,
+                },
+        }
 
 	table.sort(data, function(a, b)
 		local textA = a.var
@@ -2983,8 +2993,9 @@ local function initMap()
 end
 
 local function initSocial()
-	addon.functions.InitDBValue("enableIgnore", false)
-	if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
+        addon.functions.InitDBValue("enableIgnore", false)
+       addon.functions.InitDBValue("ignoreAttachFriendsFrame", true)
+        if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
 end
 
 local function initUI()
