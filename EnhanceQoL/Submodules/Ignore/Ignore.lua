@@ -603,6 +603,7 @@ local function showImportPopup()
 	if not C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then return end
 	local gDB = GlobalIgnoreDB
 	if not (gDB and gDB.ignoreList and #gDB.ignoreList > 0) then return end
+	if StaticPopup_Visible("EQOL_IMPORT_GIL") then return end
 
 	StaticPopupDialogs["EQOL_IMPORT_GIL"] = {
 		text = L["ImportGILDialog"],
@@ -776,11 +777,7 @@ function Ignore:SetEnabled(val)
 		if C_AddOns.IsAddOnLoaded("GlobalIgnoreList") then
 			Ignore.enabled = false
 			Ignore.pendingImport = true
-			if IsLoggedIn() then
-				showImportPopup()
-			else
-				LOGIN_FRAME:RegisterEvent("PLAYER_LOGIN")
-			end
+			showImportPopup()
 			updateRegistration()
 			return
 		end
