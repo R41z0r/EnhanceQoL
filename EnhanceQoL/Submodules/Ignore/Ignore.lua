@@ -13,7 +13,8 @@ local AceGUI = addon.AceGUI
 local Ignore = addon.Ignore or {}
 addon.Ignore = Ignore
 
-Ignore.entries = Ignore.entries or {}
+EnhanceQoL_IgnoreDB = EnhanceQoL_IgnoreDB or {}
+Ignore.entries = EnhanceQoL_IgnoreDB
 Ignore.entryLookup = Ignore.entryLookup or {}
 Ignore.selectedIndex = nil
 Ignore.searchText = Ignore.searchText or ""
