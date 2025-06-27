@@ -3002,6 +3002,9 @@ local function initSocial()
         addon.functions.InitDBValue("enableIgnore", false)
         addon.functions.InitDBValue("ignoreAttachFriendsFrame", true)
         addon.functions.InitDBValue("ignoreAnchorFriendsFrame", false)
+       addon.functions.InitDBValue("ignoreFramePoint", "CENTER")
+       addon.functions.InitDBValue("ignoreFrameX", 0)
+       addon.functions.InitDBValue("ignoreFrameY", 0)
         if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
         if addon.Ignore and addon.Ignore.UpdateAnchor then addon.Ignore:UpdateAnchor() end
 end

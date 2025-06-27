@@ -14,34 +14,37 @@ local Ignore = addon.Ignore or {}
 addon.Ignore = Ignore
 
 local function ensureFriendsFrame()
-if not addon.db or not (addon.db.ignoreAnchorFriendsFrame or addon.db.ignoreAttachFriendsFrame) then
-return
+       if not addon.db or not (addon.db.ignoreAnchorFriendsFrame or addon.db.ignoreAttachFriendsFrame) then return end
+       if not FriendsFrame then
+               local loaded = false
+               if C_AddOns and C_AddOns.LoadAddOn then
+                       loaded = C_AddOns.LoadAddOn("Blizzard_FriendsFrame")
+               elseif LoadAddOn then
+                       loaded = LoadAddOn("Blizzard_FriendsFrame")
+               end
+               if not loaded then return end
+       end
+       if FriendsFrame and not Ignore.friendsHookInstalled then
+               FriendsFrame:HookScript("OnShow", function()
+                       if addon.db.ignoreAttachFriendsFrame and Ignore.enabled then
+                               EQOLIgnoreFrame:Show()
+                               Ignore:UpdateAnchor()
+                       end
+               end)
+               FriendsFrame:HookScript("OnHide", function()
+                       if addon.db.ignoreAttachFriendsFrame then EQOLIgnoreFrame:Hide() end
+               end)
+               Ignore.friendsHookInstalled = true
+       end
 end
-if not FriendsFrame then
-local loaded = false
-if C_AddOns and C_AddOns.LoadAddOn then
-loaded = C_AddOns.LoadAddOn("Blizzard_FriendsFrame")
-elseif LoadAddOn then
-loaded = LoadAddOn("Blizzard_FriendsFrame")
-end
-if not loaded then
-return
-end
-end
-if FriendsFrame and not Ignore.friendsHookInstalled then
-FriendsFrame:HookScript("OnShow", function()
-if addon.db.ignoreAttachFriendsFrame and Ignore.enabled then
-EQOLIgnoreFrame:Show()
-Ignore:UpdateAnchor()
-end
-end)
-FriendsFrame:HookScript("OnHide", function()
-if addon.db.ignoreAttachFriendsFrame then
-EQOLIgnoreFrame:Hide()
-end
-end)
-Ignore.friendsHookInstalled = true
-end
+
+function Ignore:SavePosition()
+       if not self.frame or not addon or not addon.db then return end
+       if addon.db.ignoreAnchorFriendsFrame then return end
+       local point, _, _, xOfs, yOfs = self.frame:GetPoint()
+       addon.db.ignoreFramePoint = point
+       addon.db.ignoreFrameX = xOfs
+       addon.db.ignoreFrameY = yOfs
 end
 -- will be replaced with the saved table once the addon is fully loaded
 Ignore.entries = Ignore.entries or {}
@@ -419,10 +422,16 @@ function EQOLIgnoreFrame_OnLoad(frame)
 		RefreshList()
 	end)
 
-	RefreshList()
+        RefreshList()
 
-	       ensureFriendsFrame()
-	       Ignore:UpdateAnchor()
+       frame:SetScript("OnMouseUp", function(self)
+               self:StopMovingOrSizing()
+               Ignore:SavePosition()
+       end)
+       frame:SetScript("OnHide", function() Ignore:SavePosition() end)
+
+       ensureFriendsFrame()
+       Ignore:UpdateAnchor()
 end
 
 function Ignore:Toggle()
@@ -870,14 +879,18 @@ function Ignore:SetEnabled(val)
 end
 
 function Ignore:UpdateAnchor()
-	if not self.frame or not FriendsFrame then return end
-	self.frame:ClearAllPoints()
-	if addon and addon.db and addon.db.ignoreAnchorFriendsFrame then
-		self.frame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", 5, 0)
-		self.frame:SetMovable(false)
-	else
-		self.frame:SetMovable(true)
-	end
+       if not self.frame then return end
+       self.frame:ClearAllPoints()
+       if addon and addon.db and addon.db.ignoreAnchorFriendsFrame and FriendsFrame then
+               self.frame:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", 5, 0)
+               self.frame:SetMovable(false)
+       else
+               local p = addon and addon.db and addon.db.ignoreFramePoint or "CENTER"
+               local x = addon and addon.db and addon.db.ignoreFrameX or 0
+               local y = addon and addon.db and addon.db.ignoreFrameY or 0
+               self.frame:SetPoint(p, UIParent, p, x, y)
+               self.frame:SetMovable(true)
+       end
 end
 
 -- frame to check ignored members in current group
