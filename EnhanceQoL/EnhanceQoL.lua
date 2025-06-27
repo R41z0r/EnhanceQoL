@@ -4127,6 +4127,32 @@ local function setAllHooks()
 		FlagIgnoredApplicants(applicants)
 	end)
 
+	-- Highlight group listings where the leader is on the ignore list
+	local function ApplyIgnoreHighlightSearch(entry)
+		if not addon.db.enableIgnore or not addon.Ignore or not addon.Ignore.CheckIgnore then return end
+		if not entry or not entry.resultID then return end
+
+		local info = C_LFGList.GetSearchResultInfo(entry.resultID)
+		if not info or not info.leaderName then return end
+
+		local ignoreEntry = addon.Ignore:CheckIgnore(info.leaderName)
+		if not ignoreEntry then return end
+
+		local function colorString(fs)
+			if fs and fs.SetTextColor then fs:SetTextColor(1, 0, 0, 1) end
+		end
+
+		colorString(entry.Name)
+		colorString(entry.ActivityName)
+
+		if entry.ActivityName and entry.ActivityName.GetText then
+			local text = entry.ActivityName:GetText() or ""
+			if not text:find("!!!", 1, true) then entry.ActivityName:SetText("!!! " .. text .. " !!!") end
+		end
+	end
+
+	hooksecurefunc("LFGListSearchEntry_Update", function(entry) ApplyIgnoreHighlightSearch(entry) end)
+
 	hooksecurefunc("LFGListUtil_SortApplicants", SortApplicants)
 
 	initCharacter()

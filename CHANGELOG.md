@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.23.1] – 2025-06-28
+### ✨ Added
+- Group listings in the Dungeon Finder now show `!!! <KEYLEVEL> !!!` in red when the leader is on your ignore list.
+
 ## [3.23.0] – 2025-06-27
 ### ✨ Added
 - **Enhanced Ignore List** – brand-new tool to manage ignored players (`/eil`, when enabled)
