@@ -19,6 +19,30 @@ Ignore.selectedIndex = nil
 Ignore.searchText = Ignore.searchText or ""
 Ignore.addFrame = Ignore.addFrame or nil
 
+Ignore.enabled = Ignore.enabled or false
+
+local LOGIN_FRAME = CreateFrame("Frame")
+local CHAT_EVENTS = {
+	"CHAT_MSG_WHISPER",
+	"CHAT_MSG_BN_WHISPER",
+	"CHAT_MSG_GUILD",
+	"CHAT_MSG_OFFICER",
+	"CHAT_MSG_PARTY",
+	"CHAT_MSG_PARTY_LEADER",
+	"CHAT_MSG_RAID",
+	"CHAT_MSG_RAID_LEADER",
+	"CHAT_MSG_RAID_WARNING",
+	"CHAT_MSG_INSTANCE_CHAT",
+	"CHAT_MSG_INSTANCE_CHAT_LEADER",
+}
+local INTERACTION_EVENTS = {
+	"PARTY_INVITE_REQUEST",
+	"DUEL_REQUESTED",
+	"PET_BATTLE_PVP_DUEL_REQUESTED",
+	"TRADE_SHOW",
+	"GUILD_INVITE_REQUEST",
+}
+
 Ignore.filtered = {}
 
 function Ignore:NormalizeName(name)
@@ -321,9 +345,6 @@ function Ignore:Toggle()
 	end
 end
 
-SLASH_EQOLIGNORE1 = "/eig"
-SlashCmdList["EQOLIGNORE"] = function() Ignore:Toggle() end
-
 -- keep originals so we can still call Blizzard's ignore API
 local origAddIgnore = C_FriendList and C_FriendList.AddIgnore
 local origDelIgnoreByIndex = C_FriendList and C_FriendList.DelIgnoreByIndex
@@ -561,9 +582,8 @@ local function normalizeDate(dateStr)
 	return date("%Y-%m-%d", ts)
 end
 
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_LOGIN")
-frame:SetScript("OnEvent", function()
+LOGIN_FRAME:SetScript("OnEvent", function()
+	if not Ignore.enabled then return end
 	local numIgnores = 0
 	if C_FriendList and C_FriendList.GetNumIgnores then
 		numIgnores = C_FriendList.GetNumIgnores()
@@ -628,13 +648,48 @@ frame:SetScript("OnEvent", function()
 	RefreshList()
 end)
 
+local SLASH_NAME = "EQOLIGNORE"
+local SLASH_CMD = "/eig"
+
+local function updateRegistration()
+	if Ignore.enabled then
+		LOGIN_FRAME:RegisterEvent("PLAYER_LOGIN")
+		for _, e in ipairs(CHAT_EVENTS) do
+			ChatFrame_AddMessageEventFilter(e, ignoreChatFilter)
+		end
+		for _, evt in ipairs(INTERACTION_EVENTS) do
+			Ignore.interactionBlocker:RegisterEvent(evt)
+		end
+		Ignore.groupCheckFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+		_G["SLASH_" .. SLASH_NAME .. "1"] = SLASH_CMD
+		SlashCmdList[SLASH_NAME] = function() Ignore:Toggle() end
+	else
+		LOGIN_FRAME:UnregisterAllEvents()
+		for _, e in ipairs(CHAT_EVENTS) do
+			ChatFrame_RemoveMessageEventFilter(e, ignoreChatFilter)
+		end
+		for _, evt in ipairs(INTERACTION_EVENTS) do
+			Ignore.interactionBlocker:UnregisterEvent(evt)
+		end
+		Ignore.groupCheckFrame:UnregisterEvent("GROUP_ROSTER_UPDATE")
+		if EQOLIgnoreFrame then EQOLIgnoreFrame:Hide() end
+		SlashCmdList[SLASH_NAME] = nil
+		_G["SLASH_" .. SLASH_NAME .. "1"] = nil
+	end
+end
+
+function Ignore:SetEnabled(val)
+	Ignore.enabled = val and true or false
+	updateRegistration()
+end
+
 -- frame to check ignored members in current group
 Ignore.groupCheckFrame = Ignore.groupCheckFrame or CreateFrame("Frame")
 Ignore.groupCheckFrame.members = {}
 Ignore.groupCheckFrame.lastPartySize = 0
 Ignore.groupCheckFrame.lastIgnored = 0
-Ignore.groupCheckFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 Ignore.groupCheckFrame:SetScript("OnEvent", function()
+	if not Ignore.enabled then return end
 	local partyMembers = Ignore.groupCheckFrame.members
 	wipe(partyMembers)
 
@@ -690,31 +745,14 @@ end)
 
 -- chat message filter to block messages from ignored players
 local function ignoreChatFilter(_, _, _, sender)
+	if not Ignore.enabled then return end
 	if Ignore:CheckIgnore(sender) then return true end
 	return false
 end
 
-for _, e in ipairs({
-	"CHAT_MSG_WHISPER",
-	"CHAT_MSG_BN_WHISPER",
-	"CHAT_MSG_GUILD",
-	"CHAT_MSG_OFFICER",
-	"CHAT_MSG_PARTY",
-	"CHAT_MSG_PARTY_LEADER",
-	"CHAT_MSG_RAID",
-	"CHAT_MSG_RAID_LEADER",
-	"CHAT_MSG_RAID_WARNING",
-	"CHAT_MSG_INSTANCE_CHAT",
-	"CHAT_MSG_INSTANCE_CHAT_LEADER",
-}) do
-	ChatFrame_AddMessageEventFilter(e, ignoreChatFilter)
-end
-
 Ignore.interactionBlocker = Ignore.interactionBlocker or CreateFrame("Frame")
-for _, evt in ipairs({ "PARTY_INVITE_REQUEST", "DUEL_REQUESTED", "PET_BATTLE_PVP_DUEL_REQUESTED", "TRADE_SHOW", "GUILD_INVITE_REQUEST" }) do
-	Ignore.interactionBlocker:RegisterEvent(evt)
-end
 Ignore.interactionBlocker:SetScript("OnEvent", function(_, event, ...)
+	if not Ignore.enabled then return end
 	local name = ...
 	if event == "TRADE_SHOW" then name = UnitFullName("npc") end
 	if Ignore:CheckIgnore(name or "") then
@@ -742,8 +780,8 @@ Ignore.groupCheckFrame = Ignore.groupCheckFrame or CreateFrame("Frame")
 Ignore.groupCheckFrame.members = {}
 Ignore.groupCheckFrame.lastPartySize = 0
 Ignore.groupCheckFrame.lastIgnored = 0
-Ignore.groupCheckFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 Ignore.groupCheckFrame:SetScript("OnEvent", function()
+	if not Ignore.enabled then return end
 	local partyMembers = Ignore.groupCheckFrame.members
 	wipe(partyMembers)
 
