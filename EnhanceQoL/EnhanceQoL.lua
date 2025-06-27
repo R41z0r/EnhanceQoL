@@ -2387,16 +2387,27 @@ local function addSocialFrame(container)
 			end,
 		},
 	}
-	if addon.db["enableIgnore"] then
-		table.insert(data, {
-			parent = "",
-			var = "ignoreAttachFriendsFrame",
-			text = L["IgnoreAttachFriends"],
-			desc = L["IgnoreAttachFriendsDesc"],
-			type = "CheckBox",
-			callback = function(self, _, value) addon.db["ignoreAttachFriendsFrame"] = value end,
-		})
-	end
+        if addon.db["enableIgnore"] then
+                table.insert(data, {
+                        parent = "",
+                        var = "ignoreAttachFriendsFrame",
+                        text = L["IgnoreAttachFriends"],
+                        desc = L["IgnoreAttachFriendsDesc"],
+                        type = "CheckBox",
+                        callback = function(self, _, value) addon.db["ignoreAttachFriendsFrame"] = value end,
+                })
+                table.insert(data, {
+                        parent = "",
+                        var = "ignoreAnchorFriendsFrame",
+                        text = L["IgnoreAnchorFriends"],
+                        desc = L["IgnoreAnchorFriendsDesc"],
+                        type = "CheckBox",
+                        callback = function(self, _, value)
+                                addon.db["ignoreAnchorFriendsFrame"] = value
+                                if addon.Ignore and addon.Ignore.UpdateAnchor then addon.Ignore:UpdateAnchor() end
+                        end,
+                })
+        end
 
 	table.sort(data, function(a, b)
 		local textA = a.var
@@ -2988,9 +2999,11 @@ local function initMap()
 end
 
 local function initSocial()
-	addon.functions.InitDBValue("enableIgnore", false)
-	addon.functions.InitDBValue("ignoreAttachFriendsFrame", true)
-	if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
+        addon.functions.InitDBValue("enableIgnore", false)
+        addon.functions.InitDBValue("ignoreAttachFriendsFrame", true)
+        addon.functions.InitDBValue("ignoreAnchorFriendsFrame", false)
+        if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
+        if addon.Ignore and addon.Ignore.UpdateAnchor then addon.Ignore:UpdateAnchor() end
 end
 
 local function initUI()

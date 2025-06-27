@@ -229,6 +229,8 @@ L["Social"] = "Social"
 L["EnableAdvancedIgnore"] = "Enable advanced Ignore list"
 L["IgnoreAttachFriends"] = "Open with Friends frame"
 L["IgnoreAttachFriendsDesc"] = "Automatically show or hide the enhanced ignore list together with the Friends frame"
+L["IgnoreAnchorFriends"] = "Anchor to Friends frame"
+L["IgnoreAnchorFriendsDesc"] = "Attach the enhanced ignore list to the Friends frame"
 L["IgnoreDesc"] =
         'Blocks duel, pet battle, trade, invite and whisper requests from ignored players. Automatically adds same-realm names to Blizzard’s ignore list when space permits.\nIn the Dungeon Finder ignored Player are displayed as "!!! <Name> !!!"\n\nOpen the Ignore List with /eil'
 L["ImportGILDialog"] = "GlobalIgnoreList data found. Import entries and disable that addon? Both addons cannot be active together."
@@ -238,3 +240,4 @@ L["GILActivePopup"] = "Advanced ignore disabled because GlobalIgnoreList is acti
 L["IgnoredApplicant"] = "Player is on your Ignore list"
 L["IgnoreAdded"] = "%s has been ignored"
 L["IgnoreRemoved"] = "%s is no longer ignored"
+L["IgnoreExpiredRemoved"] = "%s was removed from ignore (expired)"
