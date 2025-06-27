@@ -2405,9 +2405,14 @@ local function addSocialFrame(container)
 	for _, checkboxData in ipairs(data) do
 		local desc
 		if checkboxData.desc then desc = checkboxData.desc end
-		local cb = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], function(self, _, value) addon.db[checkboxData.var] = value end, desc)
-		groupCore:AddChild(cb)
-	end
+               local cb = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], function(self, _, value)
+                       addon.db[checkboxData.var] = value
+                       if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
+                       addon.variables.requireReload = true
+                       addon.functions.checkReloadFrame()
+               end, desc)
+               groupCore:AddChild(cb)
+       end
 
 	local wrapper = addon.functions.createWrapperData(data, container, L)
 	local labelHeadline = addon.functions.createLabelAce("|cffffd700" .. L["IgnoreDesc"], nil, nil, 14)
