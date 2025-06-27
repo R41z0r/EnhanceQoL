@@ -109,12 +109,39 @@ function Ignore.daysFromToday(dateStr)
 end
 
 function Ignore:GetExpireText(entry)
-	if not entry or not entry.expires or entry.expires == "NEVER" then return "NEVER" end
-	local exp = tonumber(entry.expires)
-	if not exp then return tostring(entry.expires) end
-	local left = exp - self.daysFromToday(entry.date)
-	if left <= 0 then return "TODAY" end
-	return left .. "d"
+        if not entry or not entry.expires or entry.expires == "NEVER" then return "NEVER" end
+        local exp = tonumber(entry.expires)
+        if not exp then return tostring(entry.expires) end
+        local left = exp - self.daysFromToday(entry.date)
+        if left <= 0 then return "TODAY" end
+        return left .. "d"
+end
+
+function Ignore:Expire()
+        local removed = false
+        local me, realm = UnitFullName("player")
+        realm = realm or (GetRealmName()):gsub("%s", "")
+        local selfKey = self:NormalizeName(me .. "-" .. realm)
+        for i = #self.entries, 1, -1 do
+                local e = self.entries[i]
+                local key = self:NormalizeName(e.player .. "-" .. e.server)
+                if key == selfKey then
+                        table.remove(self.entries, i)
+                        self.entryLookup[key] = nil
+                        removed = true
+                else
+                        local exp = tonumber(e.expires)
+                        if exp and exp > 0 and self.daysFromToday(e.date) >= exp then
+                                local name = e.player
+                                if e.server and e.server ~= "" then name = name .. "-" .. e.server end
+                                if self.origDelIgnore and IsIgnored and IsIgnored(name) then self.origDelIgnore(name) end
+                                table.remove(self.entries, i)
+                                self.entryLookup[key] = nil
+                                removed = true
+                        end
+                end
+        end
+        if removed then self:RebuildLookup() end
 end
 
 local ROW_HEIGHT = 20
@@ -250,7 +277,8 @@ local function SortFiltered()
 end
 
 local function RefreshList()
-	FilterEntries()
+        Ignore:Expire()
+        FilterEntries()
 	SortFiltered()
 	if Ignore.counter then Ignore.counter:SetText(format(L["IgnoreEntries"], #Ignore.filtered)) end
 	if Ignore.scrollFrame then
@@ -394,19 +422,22 @@ function Ignore:HasFreeSlot()
 end
 
 local function addEntry(name, note, expires)
-	local player, server = strsplit("-", name)
-	local myServer = (GetRealmName()):gsub("%s", "")
-	local sameRealm = not server or server == myServer
-	player = player or name
-	server = server or myServer
-	local key = Ignore:NormalizeName(player .. "-" .. server)
-	local entry = Ignore.entryLookup[key]
-	if entry then
-		if note ~= nil then entry.note = note end
-		if expires ~= nil then entry.expires = expires > 0 and expires or NEVER end
-		RefreshList()
-		return
-	end
+        local player, server = strsplit("-", name)
+        local myServer = (GetRealmName()):gsub("%s", "")
+        local sameRealm = not server or server == myServer
+        player = player or name
+        server = server or myServer
+        local myName, myRealm = UnitFullName("player")
+        myRealm = myRealm or myServer
+        if player:lower() == (myName and myName:lower() or "") and server:lower() == myRealm:lower() then return end
+        local key = Ignore:NormalizeName(player .. "-" .. server)
+        local entry = Ignore.entryLookup[key]
+        if entry then
+                if note ~= nil then entry.note = note end
+                if expires ~= nil then entry.expires = expires > 0 and expires or NEVER end
+                RefreshList()
+                return
+        end
 	--if Ignore.origAddIgnore and sameRealm and Ignore:HasFreeSlot() then Ignore.origAddIgnore(name) end
 	local newEntry = {
 		player = player,
@@ -415,38 +446,41 @@ local function addEntry(name, note, expires)
 		expires = expires > 0 and expires or NEVER,
 		note = note or "",
 	}
-	table.insert(Ignore.entries, newEntry)
-	Ignore.entryLookup[key] = newEntry
-	RefreshList()
+        table.insert(Ignore.entries, newEntry)
+        Ignore.entryLookup[key] = newEntry
+        print(L["IgnoreAdded"]:format(name))
+        RefreshList()
 end
 
 removeEntryByIndex = function(index)
-	local entry = Ignore.entries[index]
-	if entry then
-		local fullName = entry.player .. "-" .. entry.server
-		Ignore.entryLookup[Ignore:NormalizeName(fullName)] = nil
-		table.remove(Ignore.entries, index)
-	end
-	RefreshList()
+        local entry = Ignore.entries[index]
+        if entry then
+                local fullName = entry.player .. "-" .. entry.server
+                Ignore.entryLookup[Ignore:NormalizeName(fullName)] = nil
+                table.remove(Ignore.entries, index)
+                print(L["IgnoreRemoved"]:format(fullName))
+        end
+        RefreshList()
 end
 
 removeEntry = function(name)
-	local player, server = strsplit("-", name)
-	if server == (GetRealmName()):gsub("%s", "") then name = player end
+        local player, server = strsplit("-", name)
+        if server == (GetRealmName()):gsub("%s", "") then name = player end
 
 	if Ignore.origDelIgnore and IsIgnored and IsIgnored(name) then Ignore.origDelIgnore(name) end
 	local key = Ignore:NormalizeName(player .. "-" .. (server or ""))
 	local entry = Ignore.entryLookup[key]
-	if entry then
-		for i, e in ipairs(Ignore.entries) do
-			if e == entry then
-				table.remove(Ignore.entries, i)
-				break
-			end
-		end
-		Ignore.entryLookup[key] = nil
-	end
-	RefreshList()
+        if entry then
+                for i, e in ipairs(Ignore.entries) do
+                        if e == entry then
+                                table.remove(Ignore.entries, i)
+                                break
+                        end
+                end
+                Ignore.entryLookup[key] = nil
+        end
+        print(L["IgnoreRemoved"]:format(name))
+        RefreshList()
 end
 
 local function addOrRemove(name)
