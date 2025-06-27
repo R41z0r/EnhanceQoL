@@ -2408,8 +2408,10 @@ local function addSocialFrame(container)
 		local cb = addon.functions.createCheckboxAce(checkboxData.text, addon.db[checkboxData.var], function(self, _, value)
 			addon.db[checkboxData.var] = value
 			if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(value) end
-			addon.variables.requireReload = true
-			addon.functions.checkReloadFrame()
+			if not value then
+				addon.variables.requireReload = true
+				addon.functions.checkReloadFrame()
+			end
 		end, desc)
 		groupCore:AddChild(cb)
 	end
