@@ -236,3 +236,5 @@ L["ImportGILCancelDialog"] = "Disable the advanced ignore option or GlobalIgnore
 L["ImportGILAccept"] = "Import & Reload"
 L["GILActivePopup"] = "Advanced ignore disabled because GlobalIgnoreList is active. Disable that addon and re-enable the option."
 L["IgnoredApplicant"] = "Player is on your Ignore list"
+L["IgnoreAdded"] = "%s has been ignored"
+L["IgnoreRemoved"] = "%s is no longer ignored"
