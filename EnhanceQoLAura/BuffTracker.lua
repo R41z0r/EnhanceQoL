@@ -189,8 +189,10 @@ local function applySize(id)
 	updatePositions(id)
 end
 
-local function createBuffFrame(icon, parent, size)
-	local frame = CreateFrame("Frame", nil, parent)
+local function createBuffFrame(icon, parent, size, castOnClick, spellID)
+	local frameType = castOnClick and "Button" or "Frame"
+	local template = castOnClick and "SecureActionButtonTemplate" or nil
+	local frame = CreateFrame(frameType, nil, parent, template)
 	frame:SetSize(size, size)
 	frame:SetFrameStrata("DIALOG")
 
@@ -203,6 +205,17 @@ local function createBuffFrame(icon, parent, size)
 	cd:SetAllPoints(frame)
 	cd:SetDrawEdge(false)
 	frame.cd = cd
+
+	frame.castOnClick = castOnClick
+	if castOnClick then
+		frame:SetAttribute("type", "spell")
+		frame:SetAttribute("spell", spellID)
+		if InCombatLockdown() then
+			frame:RegisterForClicks(nil)
+		else
+			frame:RegisterForClicks("LeftButtonUp")
+		end
+	end
 
 	return frame
 end
@@ -254,7 +267,7 @@ local function updateBuff(catId, id)
 	if buff and buff.showAlways then
 		local icon = buff.icon or (aura and aura.icon)
 		if not frame then
-			frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+			frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size, false, id)
 			activeBuffFrames[catId][id] = frame
 		end
 		frame.icon:SetTexture(icon)
@@ -293,14 +306,22 @@ local function updateBuff(catId, id)
 			end
 		else
 			local icon = buff.icon
-			if not frame then
-				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+			local shouldSecure = buff.castOnClick and (IsSpellKnown(id) or IsSpellKnownOrOverridesKnown(id))
+			if not frame or frame.castOnClick ~= shouldSecure then
+				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size, shouldSecure, id)
 				activeBuffFrames[catId][id] = frame
 			end
 			frame.icon:SetTexture(icon)
 			frame.icon:SetDesaturated(false)
 			frame.icon:SetAlpha(1)
 			frame.cd:Clear()
+			if shouldSecure then
+				if InCombatLockdown() then
+					frame:RegisterForClicks(nil)
+				else
+					frame:RegisterForClicks("LeftButtonUp")
+				end
+			end
 			if not wasShown then playBuffSound(catId, id, triggeredId) end
 			frame.isActive = true
 			if buff.glow then
@@ -314,7 +335,7 @@ local function updateBuff(catId, id)
 		if aura then
 			local icon = buff and buff.icon or aura.icon
 			if not frame then
-				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size)
+				frame = createBuffFrame(icon, ensureAnchor(catId), getCategory(catId).size, false, id)
 				activeBuffFrames[catId][id] = frame
 			end
 			frame.icon:SetTexture(icon)
@@ -497,6 +518,14 @@ local function openBuffConfig(catId, id)
 		end)
 		wrapper:AddChild(cbGlow)
 
+		if IsSpellKnown(id) or IsSpellKnownOrOverridesKnown(id) then
+			local cbCast = addon.functions.createCheckboxAce(L["buffTrackerCastOnClick"], buff.castOnClick, function(_, _, val)
+				buff.castOnClick = val
+				scanBuffs()
+			end)
+			wrapper:AddChild(cbCast)
+		end
+
 		-- alternative spell ids
 		buff.altIDs = buff.altIDs or {}
 		for _, altId in ipairs(buff.altIDs) do
@@ -553,7 +582,7 @@ local function addBuff(catId, id)
 	local cat = getCategory(catId)
 	if not cat then return end
 
-	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false, showAlways = false, glow = false }
+	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false, showAlways = false, glow = false, castOnClick = false }
 
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	if not tContains(addon.db["buffTrackerOrder"][catId], id) then table.insert(addon.db["buffTrackerOrder"][catId], id) end
