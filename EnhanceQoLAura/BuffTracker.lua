@@ -216,6 +216,7 @@ local function createBuffFrame(icon, parent, size, castOnClick, spellID)
 		else
 			frame:RegisterForClicks("AnyUp", "AnyDown")
 		end
+		frame:SetScript("PostClick", function() C_Timer.After(0.1, addon.Aura.scanBuffs) end)
 	else
 		frame:EnableMouse(false)
 	end
