@@ -210,11 +210,14 @@ local function createBuffFrame(icon, parent, size, castOnClick, spellID)
 	if castOnClick then
 		frame:SetAttribute("type", "spell")
 		frame:SetAttribute("spell", spellID)
+		frame:EnableMouse(true)
 		if InCombatLockdown() then
 			frame:RegisterForClicks(nil)
 		else
-			frame:RegisterForClicks("LeftButtonUp")
+			frame:RegisterForClicks("AnyUp", "AnyDown")
 		end
+	else
+		frame:EnableMouse(false)
 	end
 
 	return frame
@@ -316,11 +319,14 @@ local function updateBuff(catId, id)
 			frame.icon:SetAlpha(1)
 			frame.cd:Clear()
 			if shouldSecure then
+				frame:EnableMouse(true)
 				if InCombatLockdown() then
 					frame:RegisterForClicks(nil)
 				else
-					frame:RegisterForClicks("LeftButtonUp")
+					frame:RegisterForClicks("AnyUp", "AnyDown")
 				end
+			else
+				frame:EnableMouse(false)
 			end
 			if not wasShown then playBuffSound(catId, id, triggeredId) end
 			frame.isActive = true
