@@ -25,12 +25,16 @@ local LSM = LibStub("LibSharedMedia-3.0")
 
 -- build list of all specialization IDs with their names
 local specNames = {}
+local specOrder = {}
 local classNames = {}
+local specsByClass = {}
 for classID = 1, GetNumClasses() do
 	local className, classTag = select(1, GetClassInfo(classID))
 	local numSpecs = C_SpecializationInfo.GetNumSpecializationsForClassID(classID)
 	for i = 1, numSpecs do
 		local specID, specName, _, specIcon = GetSpecializationInfoForClassID(classID, i)
+		specsByClass[classTag] = specsByClass[classTag] or {}
+		table.insert(specsByClass[classTag], { id = specID, name = specName, icon = specIcon, className = className })
 		specNames[specID] = string.format("|T%s:14:14|t %s (%s)", specIcon, specName, className)
 	end
 	local coords = CLASS_ICON_TCOORDS[classTag]
@@ -45,6 +49,12 @@ for classID = 1, GetNumClasses() do
 		)
 	else
 		classNames[classTag] = className
+	end
+end
+
+for _, classTag in ipairs(CLASS_SORT_ORDER) do
+	for _, info in ipairs(specsByClass[classTag] or {}) do
+		table.insert(specOrder, info.id)
 	end
 end
 
@@ -470,6 +480,7 @@ local function openBuffConfig(catId, id)
 
 		local label = AceGUI:Create("Label")
 		local name = buff.name
+		if buff.useCustomName and buff.customName and buff.customName ~= "" then name = buff.customName end
 		label:SetText((name or "") .. " (" .. id .. ")")
 		wrapper:AddChild(label)
 
@@ -524,6 +535,24 @@ local function openBuffConfig(catId, id)
 			scanBuffs()
 		end)
 		wrapper:AddChild(cbGlow)
+
+		local cbCustom
+		local editCustom
+		cbCustom = addon.functions.createCheckboxAce(L["buffTrackerUseCustomName"], buff.useCustomName, function(_, _, val)
+			buff.useCustomName = val
+			if editCustom then editCustom:SetDisabled(not val) end
+			rebuild()
+			scanBuffs()
+		end)
+		wrapper:AddChild(cbCustom)
+
+		editCustom = addon.functions.createEditboxAce(L["buffTrackerCustomName"], buff.customName, function(_, _, text)
+			buff.customName = text
+			rebuild()
+			scanBuffs()
+		end)
+		if not buff.useCustomName then editCustom:SetDisabled(true) end
+		wrapper:AddChild(editCustom)
 
 		if IsSpellKnown(id) or IsSpellKnownOrOverridesKnown(id) then
 			local cbCast = addon.functions.createCheckboxAce(L["buffTrackerCastOnClick"], buff.castOnClick, function(_, _, val)
@@ -594,7 +623,17 @@ local function addBuff(catId, id)
 	local cat = getCategory(catId)
 	if not cat then return end
 
-	cat.buffs[id] = { name = spellData.name, icon = spellData.iconID, altIDs = {}, showWhenMissing = false, showAlways = false, glow = false, castOnClick = false }
+	cat.buffs[id] = {
+		name = spellData.name,
+		icon = spellData.iconID,
+		altIDs = {},
+		showWhenMissing = false,
+		showAlways = false,
+		glow = false,
+		castOnClick = false,
+		useCustomName = false,
+		customName = nil,
+	}
 
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
 	if not tContains(addon.db["buffTrackerOrder"][catId], id) then table.insert(addon.db["buffTrackerOrder"][catId], id) end
@@ -692,7 +731,7 @@ function addon.Aura.functions.buildCategoryOptions(tabContainer, catId, groupTab
 	typeDrop:SetRelativeWidth(0.4)
 	core:AddChild(typeDrop)
 
-	local specDrop = addon.functions.createDropdownAce(L["ShowForSpec"], specNames, nil, function(self, event, key, checked)
+	local specDrop = addon.functions.createDropdownAce(L["ShowForSpec"], specNames, specOrder, function(self, event, key, checked)
 		cat.allowedSpecs = cat.allowedSpecs or {}
 		cat.allowedSpecs[key] = checked or nil
 		scanBuffs()
@@ -766,7 +805,9 @@ function addon.Aura.functions.buildTabContent(tabContainer, catId, scroll, group
 	local cat = getCategory(catId)
 	if cat then
 		for id, data in pairs(cat.buffs) do
-			table.insert(buffData, { id = id, name = data.name, icon = data.icon })
+			local dname = data.name
+			if data.useCustomName and data.customName and data.customName ~= "" then dname = data.customName end
+			table.insert(buffData, { id = id, name = dname, icon = data.icon })
 		end
 	end
 	if nil == addon.db["buffTrackerOrder"][catId] then addon.db["buffTrackerOrder"][catId] = {} end
