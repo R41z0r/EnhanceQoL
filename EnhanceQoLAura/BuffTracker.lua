@@ -539,7 +539,12 @@ local function openBuffConfig(catId, id)
 			local row = addon.functions.createContainer("SimpleGroup", "Flow")
 			row:SetFullWidth(true)
 			local lbl = AceGUI:Create("Label")
-			lbl:SetText(L["AltSpellIDs"] .. ": " .. altId)
+			local altInfo = C_Spell.GetSpellInfo(altId)
+			if altInfo then
+				lbl:SetText(L["AltSpellIDs"] .. ": " .. altInfo.name .. " (" .. altId .. ")")
+			else
+				lbl:SetText(L["AltSpellIDs"] .. ": " .. altId)
+			end
 			lbl:SetRelativeWidth(0.7)
 			row:AddChild(lbl)
 
