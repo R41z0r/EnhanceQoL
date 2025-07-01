@@ -28,52 +28,98 @@ addon.Aura.anchorFrame = frameAnchor
 
 local mainFrame
 local healthBar
+local barFrames = {}
+
+local function getBarFrame(type)
+	if type == "HEALTH" then return healthBar end
+	return barFrames[type]
+end
+
+local function isCircularAnchor(target, child)
+	while target do
+		if target == child then return true end
+		target = addon.db.resourceBarAnchor[target]
+	end
+	return false
+end
+
+local function applyBarAnchor(barType)
+	local bar = getBarFrame(barType)
+	if not bar then return end
+
+	bar:ClearAllPoints()
+	local anchor = addon.db.resourceBarAnchor[barType]
+	if anchor and not isCircularAnchor(anchor, barType) then
+		local anchorFrame = getBarFrame(anchor)
+		if anchorFrame then
+			if sUI and anchorFrame.specIcon then
+				bar:SetPoint("LEFT", anchorFrame.specIcon, "RIGHT", 0, 0)
+			else
+				bar:SetPoint("TOPLEFT", anchorFrame, "BOTTOMLEFT", 0, 0)
+			end
+		else
+			bar:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+		end
+	else
+		local pos = addon.db.resourceBarPosition[barType] or {}
+		local point = pos.point or "CENTER"
+		bar:SetPoint(point, UIParent, point, pos.x or 0, pos.y or 0)
+	end
+
+	if barType ~= "HEALTH" then
+		if anchor then
+			bar:SetMovable(false)
+		else
+			bar:SetMovable(true)
+		end
+	end
+end
 
 local function updateHealthBar()
-        if healthBar and healthBar:IsVisible() then
-                local opts = addon.db.resourceBarSettings.HEALTH or {}
-                local maxHealth = UnitHealthMax("player")
-                local curHealth = UnitHealth("player")
-                local absorb = UnitGetTotalAbsorbs("player") or 0
+	if healthBar and healthBar:IsVisible() then
+		local opts = addon.db.resourceBarSettings.HEALTH or {}
+		local maxHealth = UnitHealthMax("player")
+		local curHealth = UnitHealth("player")
+		local absorb = UnitGetTotalAbsorbs("player") or 0
 
-                local percent = (curHealth / maxHealth) * 100
-                local percentStr = string.format("%.0f", percent)
-                healthBar:SetMinMaxValues(0, maxHealth)
-                healthBar:SetValue(curHealth)
-                if healthBar.text then
-                        if opts.text then
-                                healthBar.text:SetText(percentStr)
-                                healthBar.text:Show()
-                        else
-                                healthBar.text:SetText("")
-                                healthBar.text:Hide()
-                        end
-                end
+		local percent = (curHealth / maxHealth) * 100
+		local percentStr = string.format("%.0f", percent)
+		healthBar:SetMinMaxValues(0, maxHealth)
+		healthBar:SetValue(curHealth)
+		if healthBar.text then
+			if opts.text then
+				healthBar.text:SetText(percentStr)
+				healthBar.text:Show()
+			else
+				healthBar.text:SetText("")
+				healthBar.text:Hide()
+			end
+		end
 
-                if curHealth == maxHealth then
-                        local c = opts.fullColor or { r = 0, g = 1, b = 0 }
-                        healthBar:SetStatusBarColor(c.r, c.g, c.b)
-                elseif percent >= 60 then
-                        healthBar:SetStatusBarColor(0, 0.7, 0)
-                elseif percent >= 40 then
-                        healthBar:SetStatusBarColor(0.7, 0.7, 0)
-                else
-                        healthBar:SetStatusBarColor(0.7, 0, 0)
-                end
+		if curHealth == maxHealth then
+			local c = opts.fullColor or { r = 0, g = 1, b = 0 }
+			healthBar:SetStatusBarColor(c.r, c.g, c.b)
+		elseif percent >= 60 then
+			healthBar:SetStatusBarColor(0, 0.7, 0)
+		elseif percent >= 40 then
+			healthBar:SetStatusBarColor(0.7, 0.7, 0)
+		else
+			healthBar:SetStatusBarColor(0.7, 0, 0)
+		end
 
-                local combined = absorb
-                if combined > maxHealth then combined = maxHealth end
-                healthBar.absorbBar:SetMinMaxValues(0, maxHealth)
-                healthBar.absorbBar:SetValue(combined)
-        end
+		local combined = absorb
+		if combined > maxHealth then combined = maxHealth end
+		healthBar.absorbBar:SetMinMaxValues(0, maxHealth)
+		healthBar.absorbBar:SetValue(combined)
+	end
 end
 
 local function createHealthBar()
 	mainFrame = CreateFrame("frame", "EQOLResourceFrame", UIParent)
-        healthBar = CreateFrame("StatusBar", "EQOLHealthBar", mainFrame, "BackdropTemplate")
-        local opts = addon.db.resourceBarSettings.HEALTH or {}
-        healthBar:SetSize(opts.width or 100, opts.height or 25)
-        healthBar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
+	healthBar = CreateFrame("StatusBar", "EQOLHealthBar", mainFrame, "BackdropTemplate")
+	local opts = addon.db.resourceBarSettings.HEALTH or {}
+	healthBar:SetSize(opts.width or 100, opts.height or 25)
+	healthBar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
 	healthBar:SetPoint(
 		addon.db["personalResourceBarHealth"].point or "TOPLEFT",
 		UIParent,
@@ -89,10 +135,10 @@ local function createHealthBar()
 	})
 	healthBar:SetBackdropColor(0, 0, 0, 0.8)
 	healthBar:SetBackdropBorderColor(0, 0, 0, 0)
-        healthBar.text = healthBar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-        healthBar.text:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
-        healthBar.text:SetPoint("CENTER", healthBar, "CENTER", 3, 0)
-        if not opts.text then healthBar.text:Hide() end
+	healthBar.text = healthBar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	healthBar.text:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
+	healthBar.text:SetPoint("CENTER", healthBar, "CENTER", 3, 0)
+	if not opts.text then healthBar.text:Hide() end
 
 	healthBar:SetMovable(true)
 	healthBar:EnableMouse(true)
@@ -120,6 +166,8 @@ local function createHealthBar()
 	else
 		healthBar:Hide()
 	end
+	barFrames["HEALTH"] = healthBar
+	applyBarAnchor("HEALTH")
 	updateHealthBar()
 end
 
@@ -209,88 +257,91 @@ local classPowerTypes = {
 	"CHI",
 	"INSANITY",
 	"ARCANE_CHARGES",
-        "MANA",
+	"MANA",
 }
 
 local function isPowerEnabled(powerType)
-       local class = addon.variables.unitClass
-       local spec = addon.variables.unitSpec
-       if not class or not spec then return true end
-       addon.db.resourceSpecEnabled[class] = addon.db.resourceSpecEnabled[class] or {}
-       addon.db.resourceSpecEnabled[class][spec] = addon.db.resourceSpecEnabled[class][spec] or {}
-       if addon.db.resourceSpecEnabled[class][spec][powerType] == nil then
-               addon.db.resourceSpecEnabled[class][spec][powerType] = true
-       end
-       return addon.db.resourceSpecEnabled[class][spec][powerType]
+	local class = addon.variables.unitClass
+	local spec = addon.variables.unitSpec
+	if not class or not spec then return true end
+	addon.db.resourceSpecEnabled[class] = addon.db.resourceSpecEnabled[class] or {}
+	addon.db.resourceSpecEnabled[class][spec] = addon.db.resourceSpecEnabled[class][spec] or {}
+	if addon.db.resourceSpecEnabled[class][spec][powerType] == nil then addon.db.resourceSpecEnabled[class][spec][powerType] = true end
+	return addon.db.resourceSpecEnabled[class][spec][powerType]
 end
 
 local function getPowersForSpec(class, specIndex)
-       local list = {}
-       local info = powertypeClasses[class] and powertypeClasses[class][specIndex]
-       if not info then return list end
-       for _, pType in ipairs(classPowerTypes) do
-               if pType == info.MAIN or info[pType] then table.insert(list, pType) end
-       end
-       return list
+	local list = {}
+	local info = powertypeClasses[class] and powertypeClasses[class][specIndex]
+	if not info then return list end
+	for _, pType in ipairs(classPowerTypes) do
+		if pType == info.MAIN or info[pType] then table.insert(list, pType) end
+	end
+	return list
 end
 
 local function updatePowerBar(type)
-        if powerbar[type] and powerbar[type]:IsVisible() then
-                local opts = addon.db.resourceBarSettings[type] or {}
-                local pType = powerTypeEnums[type:gsub("_", "")]
+	if powerbar[type] and powerbar[type]:IsVisible() then
+		local opts = addon.db.resourceBarSettings[type] or {}
+		local pType = powerTypeEnums[type:gsub("_", "")]
 
-                local maxPower = UnitPowerMax("player", pType)
-                local curPower = UnitPower("player", pType)
+		local maxPower = UnitPowerMax("player", pType)
+		local curPower = UnitPower("player", pType)
 
-                local percentStr
-                local percent = (curPower / maxPower) * 100
-                if type == "MANA" then
-                        percentStr = string.format("%.0f", percent)
-                else
-                        percentStr = curPower .. " / " .. maxPower
-                end
-                local bar = powerbar[type]
-                bar:SetMinMaxValues(0, maxPower)
-                bar:SetValue(curPower)
-                if bar.text then
-                        if opts.text then
-                                bar.text:SetText(percentStr)
-                                bar.text:Show()
-                        else
-                                bar.text:SetText("")
-                                bar.text:Hide()
-                        end
-                end
+		local percentStr
+		local percent = (curPower / maxPower) * 100
+		if type == "MANA" then
+			percentStr = string.format("%.0f", percent)
+		else
+			percentStr = curPower .. " / " .. maxPower
+		end
+		local bar = powerbar[type]
+		bar:SetMinMaxValues(0, maxPower)
+		bar:SetValue(curPower)
+		if bar.text then
+			if opts.text then
+				bar.text:SetText(percentStr)
+				bar.text:Show()
+			else
+				bar.text:SetText("")
+				bar.text:Hide()
+			end
+		end
 
-                if curPower == maxPower then
-                        local c = opts.fullColor or { r = 1, g = 1, b = 1 }
-                        bar:SetStatusBarColor(c.r, c.g, c.b)
-                else
-                        bar:SetStatusBarColor(getPowerBarColor(type))
-                end
-        end
+		if curPower == maxPower then
+			local c = opts.fullColor or { r = 1, g = 1, b = 1 }
+			bar:SetStatusBarColor(c.r, c.g, c.b)
+		else
+			bar:SetStatusBarColor(getPowerBarColor(type))
+		end
+	end
 end
 
-local function createPowerBar(type, anchor)
+local function createPowerBar(type)
 	if powerbar[type] then
 		powerbar[type]:Hide()
 		powerbar[type]:SetParent(nil)
 		powerbar[type] = nil
 	end
 
-        local bar = CreateFrame("StatusBar", "EQOL" .. type .. "Bar", mainFrame, "BackdropTemplate")
-        local opts = addon.db.resourceBarSettings[type] or {}
-        bar:SetSize(opts.width or addon.db["personalResourceBarManaWidth"], opts.height or addon.db["personalResourceBarManaHeight"])
-        bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
-	if anchor then
-		if sUI and anchor.specIcon then
-			bar:SetPoint("LEFT", anchor.specIcon, "RIGHT", 0, 0)
-		else
-			bar:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, 0)
-		end
-	else
-		bar:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, -40)
-	end
+	local bar = CreateFrame("StatusBar", "EQOL" .. type .. "Bar", mainFrame, "BackdropTemplate")
+	local opts = addon.db.resourceBarSettings[type] or {}
+	bar:SetSize(opts.width or addon.db["personalResourceBarManaWidth"], opts.height or addon.db["personalResourceBarManaHeight"])
+	bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8x8")
+	bar:SetMovable(true)
+	bar:EnableMouse(true)
+	bar:RegisterForDrag("LeftButton")
+	bar:SetScript("OnDragStart", function(self)
+		if addon.db.resourceBarAnchor[type] then return end
+		if IsShiftKeyDown() then self:StartMoving() end
+	end)
+	bar:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+		local point, _, _, xOfs, yOfs = self:GetPoint()
+		addon.db.resourceBarPosition[type] = { point = point, x = xOfs, y = yOfs }
+	end)
+
+	applyBarAnchor(type)
 	bar:SetBackdrop({
 		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -299,13 +350,14 @@ local function createPowerBar(type, anchor)
 	})
 	bar:SetBackdropColor(0, 0, 0, 0.8)
 	bar:SetBackdropBorderColor(0, 0, 0, 0)
-        bar.text = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-        bar.text:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
-        bar.text:SetPoint("CENTER", bar, "CENTER", 3, 0)
-        if not opts.text then bar.text:Hide() end
-        bar:SetStatusBarColor(getPowerBarColor(type))
+	bar.text = bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	bar.text:SetFont(addon.variables.defaultFont, 16, "OUTLINE")
+	bar.text:SetPoint("CENTER", bar, "CENTER", 3, 0)
+	if not opts.text then bar.text:Hide() end
+	bar:SetStatusBarColor(getPowerBarColor(type))
 
 	powerbar[type] = bar
+	barFrames[type] = bar
 	bar:Show()
 	updatePowerBar(type)
 end
@@ -336,51 +388,51 @@ local eventsToRegister = {
 }
 
 local function setPowerbars()
-        local _, powerToken = UnitPowerType("player")
-        powerfrequent = {}
-        local mainPowerBar
-        local lastBar
-        local specInfo = powertypeClasses[addon.variables.unitClass] and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]
-        if specInfo and specInfo.MAIN then
-                mainPowerBar = specInfo.MAIN
-                if isPowerEnabled(mainPowerBar) then
-                        createPowerBar(specInfo.MAIN, EQOLHealthBar)
-                        lastBar = mainPowerBar
-                        if powerbar[mainPowerBar] then powerbar[mainPowerBar]:Show() end
-                end
-        end
+	local _, powerToken = UnitPowerType("player")
+	powerfrequent = {}
+	local mainPowerBar
+	local lastBar
+	local specInfo = powertypeClasses[addon.variables.unitClass] and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]
+	if specInfo and specInfo.MAIN then
+		mainPowerBar = specInfo.MAIN
+		if isPowerEnabled(mainPowerBar) then
+			if addon.db.resourceBarAnchor[mainPowerBar] == nil then addon.db.resourceBarAnchor[mainPowerBar] = "HEALTH" end
+			createPowerBar(specInfo.MAIN)
+			lastBar = mainPowerBar
+			if powerbar[mainPowerBar] then powerbar[mainPowerBar]:Show() end
+		end
+	end
 
-        for _, pType in ipairs(classPowerTypes) do
-                if powerbar[pType] then powerbar[pType]:Hide() end
-                if (
-                                mainPowerBar == pType
-                                or (specInfo and specInfo[pType])
-                        ) and isPowerEnabled(pType)
-                then
-                        if addon.variables.unitClass == "DRUID" then
-                                if pType == mainPowerBar and powerbar[pType] then powerbar[pType]:Show() end
-                                powerfrequent[pType] = true
-                                if pType ~= mainPowerBar and pType == "MANA" then
-                                        createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
-                                        lastBar = pType
+	for _, pType in ipairs(classPowerTypes) do
+		if powerbar[pType] then powerbar[pType]:Hide() end
+		if (mainPowerBar == pType or (specInfo and specInfo[pType])) and isPowerEnabled(pType) then
+			if addon.variables.unitClass == "DRUID" then
+				if pType == mainPowerBar and powerbar[pType] then powerbar[pType]:Show() end
+				powerfrequent[pType] = true
+				if pType ~= mainPowerBar and pType == "MANA" then
+					if addon.db.resourceBarAnchor[pType] == nil then addon.db.resourceBarAnchor[pType] = lastBar or "HEALTH" end
+					createPowerBar(pType)
+					lastBar = pType
 					if powerbar[pType] then powerbar[pType]:Show() end
 				elseif powerToken ~= mainPowerBar then
 					if powerToken == pType then
-						createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
+						if addon.db.resourceBarAnchor[pType] == nil then addon.db.resourceBarAnchor[pType] = lastBar or "HEALTH" end
+						createPowerBar(pType)
 						lastBar = pType
 						if powerbar[pType] then powerbar[pType]:Show() end
 					end
 				end
 			else
-                                powerfrequent[pType] = true
-                                if mainPowerBar ~= pType then
-                                        createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
-                                        lastBar = pType
-                                end
-                                if powerbar[pType] then powerbar[pType]:Show() end
-                        end
-                end
-        end
+				powerfrequent[pType] = true
+				if mainPowerBar ~= pType then
+					if addon.db.resourceBarAnchor[pType] == nil then addon.db.resourceBarAnchor[pType] = lastBar or "HEALTH" end
+					createPowerBar(pType)
+					lastBar = pType
+				end
+				if powerbar[pType] then powerbar[pType]:Show() end
+			end
+		end
+	end
 end
 
 local firstStart = true
@@ -415,31 +467,30 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 end
 
 for _, event in ipairs(eventsToRegister) do
-       -- registration handled in updateRegistration
+	-- registration handled in updateRegistration
 end
 
-
 local function updateRegistration()
-       frameAnchor:UnregisterAllEvents()
-       if addon.db["enableResourceFrame"] then
-               for _, event in ipairs(eventsToRegister) do
-                       frameAnchor:RegisterUnitEvent(event, "player")
-               end
-               frameAnchor:RegisterEvent("PLAYER_ENTERING_WORLD")
-               frameAnchor:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
-               frameAnchor:RegisterEvent("TRAIT_CONFIG_UPDATED")
+	frameAnchor:UnregisterAllEvents()
+	if addon.db["enableResourceFrame"] then
+		for _, event in ipairs(eventsToRegister) do
+			frameAnchor:RegisterUnitEvent(event, "player")
+		end
+		frameAnchor:RegisterEvent("PLAYER_ENTERING_WORLD")
+		frameAnchor:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
+		frameAnchor:RegisterEvent("TRAIT_CONFIG_UPDATED")
 
-               if not mainFrame then
-                       createHealthBar()
-                       createSpecIcon(EQOLHealthBar)
-                       setPowerbars()
-                       firstStart = false
-               elseif mainFrame then
-                       mainFrame:Show()
-               end
-       else
-               if mainFrame then mainFrame:Hide() end
-       end
+		if not mainFrame then
+			createHealthBar()
+			createSpecIcon(EQOLHealthBar)
+			setPowerbars()
+			firstStart = false
+		elseif mainFrame then
+			mainFrame:Show()
+		end
+	else
+		if mainFrame then mainFrame:Hide() end
+	end
 end
 
 frameAnchor:SetScript("OnEvent", eventHandler)
@@ -452,18 +503,18 @@ local function addResourceFrame(container)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-		local data = {
-			{
-				text = "Enable Resource frame",
-				var = "enableResourceFrame",
-				func = function(self, _, value)
-					addon.db["enableResourceFrame"] = value
-					Resources.updateRegistration()
-				end,
-			},
-		}
+	local data = {
+		{
+			text = "Enable Resource frame",
+			var = "enableResourceFrame",
+			func = function(self, _, value)
+				addon.db["enableResourceFrame"] = value
+				Resources.updateRegistration()
+			end,
+		},
+	}
 
-			table.sort(data, function(a, b) return a.text < b.text end)
+	table.sort(data, function(a, b) return a.text < b.text end)
 
 	for _, cbData in ipairs(data) do
 		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
@@ -472,105 +523,130 @@ local function addResourceFrame(container)
 		groupCore:AddChild(cbElement)
 	end
 
-        if addon.db["enableResourceFrame"] then
-                local specTabs = {}
-                local numSpecs = C_SpecializationInfo.GetNumSpecializationsForClassID(addon.variables.unitClassID)
-                for i = 1, numSpecs do
-                        local specID, specName, _, specIcon = GetSpecializationInfoForClassID(addon.variables.unitClassID, i)
-                        table.insert(specTabs, { value = i, text = string.format("|T%s:20:20|t", specIcon) })
-                end
+	if addon.db["enableResourceFrame"] then
+		local specTabs = {}
+		local numSpecs = C_SpecializationInfo.GetNumSpecializationsForClassID(addon.variables.unitClassID)
+		for i = 1, numSpecs do
+			local specID, specName, _, specIcon = GetSpecializationInfoForClassID(addon.variables.unitClassID, i)
+			table.insert(specTabs, { value = i, text = string.format("|T%s:20:20|t", specIcon) })
+		end
 
-                local settingsGroup = addon.functions.createContainer("InlineGroup", "List")
-                settingsGroup:SetTitle("Bar Settings")
+		local settingsGroup = addon.functions.createContainer("InlineGroup", "List")
+		settingsGroup:SetTitle("Bar Settings")
 
-                local function buildSettings(powers)
-                        settingsGroup:ReleaseChildren()
+		local function buildSettings(powers)
+			settingsGroup:ReleaseChildren()
 
-                        local function addBarSettings(barType, label)
-                                local opts = addon.db.resourceBarSettings[barType]
-                                if not opts then return end
+			local function addBarSettings(barType, label)
+				local opts = addon.db.resourceBarSettings[barType]
+				if not opts then return end
 
-                                local barWrapper = addon.functions.createContainer("SimpleGroup", "List")
+				local barWrapper = addon.functions.createContainer("SimpleGroup", "List")
 
-                                local sW = addon.functions.createSliderAce(label .. " Width", opts.width, 1, 2000, 1, function(self, _, value)
-                                        opts.width = value
-                                        if barType == "HEALTH" and healthBar then
-                                                healthBar:SetWidth(value)
-                                        elseif powerbar[barType] then
-                                                powerbar[barType]:SetWidth(value)
-                                        end
-                                end)
-                                barWrapper:AddChild(sW)
+				local sW = addon.functions.createSliderAce(label .. " Width", opts.width, 1, 2000, 1, function(self, _, value)
+					opts.width = value
+					if barType == "HEALTH" and healthBar then
+						healthBar:SetWidth(value)
+					elseif powerbar[barType] then
+						powerbar[barType]:SetWidth(value)
+					end
+				end)
+				barWrapper:AddChild(sW)
 
-                                local sH = addon.functions.createSliderAce(label .. " Height", opts.height, 1, 2000, 1, function(self, _, value)
-                                        opts.height = value
-                                        if barType == "HEALTH" and healthBar then
-                                                healthBar:SetHeight(value)
-                                        elseif powerbar[barType] then
-                                                powerbar[barType]:SetHeight(value)
-                                        end
-                                end)
-                                barWrapper:AddChild(sH)
+				local sH = addon.functions.createSliderAce(label .. " Height", opts.height, 1, 2000, 1, function(self, _, value)
+					opts.height = value
+					if barType == "HEALTH" and healthBar then
+						healthBar:SetHeight(value)
+					elseif powerbar[barType] then
+						powerbar[barType]:SetHeight(value)
+					end
+				end)
+				barWrapper:AddChild(sH)
 
-                                local cbText = addon.functions.createCheckboxAce("Show Text", opts.text, function(self, _, val)
-                                        opts.text = val
-                                        if barType == "HEALTH" then
-                                                updateHealthBar()
-                                        else
-                                                updatePowerBar(barType)
-                                        end
-                                end)
-                                barWrapper:AddChild(cbText)
+				local cbText = addon.functions.createCheckboxAce("Show Text", opts.text, function(self, _, val)
+					opts.text = val
+					if barType == "HEALTH" then
+						updateHealthBar()
+					else
+						updatePowerBar(barType)
+					end
+				end)
+				barWrapper:AddChild(cbText)
 
-                                local cp = AceGUI:Create("ColorPicker")
-                                cp:SetLabel("Full Color")
-                                cp:SetColor(opts.fullColor.r, opts.fullColor.g, opts.fullColor.b)
-                                cp:SetCallback("OnValueChanged", function(_, _, r, g, b)
-                                        opts.fullColor = { r = r, g = g, b = b }
-                                        if barType == "HEALTH" then
-                                                updateHealthBar()
-                                        else
-                                                updatePowerBar(barType)
-                                        end
-                                end)
-                                barWrapper:AddChild(cp)
+				local cp = AceGUI:Create("ColorPicker")
+				cp:SetLabel("Full Color")
+				cp:SetColor(opts.fullColor.r, opts.fullColor.g, opts.fullColor.b)
+				cp:SetCallback("OnValueChanged", function(_, _, r, g, b)
+					opts.fullColor = { r = r, g = g, b = b }
+					if barType == "HEALTH" then
+						updateHealthBar()
+					else
+						updatePowerBar(barType)
+					end
+				end)
+				barWrapper:AddChild(cp)
 
-                                settingsGroup:AddChild(barWrapper)
-                                settingsGroup:AddChild(addon.functions.createSpacerAce())
-                        end
+				local anchorOptions = { NONE = "None", HEALTH = "Health" }
+				for _, p in ipairs(powers) do
+					anchorOptions[p] = p:gsub("_", " ")
+				end
+				anchorOptions[barType] = nil
+				local list, order = addon.functions.prepareListForDropdown(anchorOptions)
+				local ddAnchor = addon.functions.createDropdownAce("Anchor To", list, order, function(self, _, val)
+					local anchorVal = val == "NONE" and nil or val
+					if anchorVal and isCircularAnchor(anchorVal, barType) then return end
+					addon.db.resourceBarAnchor[barType] = anchorVal
+					if anchorVal then
+						addon.db.resourceBarPosition[barType] = nil
+					else
+						local bar = getBarFrame(barType)
+						if bar then
+							local point, _, _, xOfs, yOfs = bar:GetPoint()
+							addon.db.resourceBarPosition[barType] = { point = point, x = xOfs, y = yOfs }
+						end
+					end
+					applyBarAnchor(barType)
+					self:SetValue(val)
+				end)
+				ddAnchor:SetValue(addon.db.resourceBarAnchor[barType] or "NONE")
+				barWrapper:AddChild(ddAnchor)
 
-                        addBarSettings("HEALTH", "Healthbar")
-                        for _, pType in ipairs(powers) do
-                                if isPowerEnabled(pType) then addBarSettings(pType, pType:gsub("_", " ")) end
-                        end
-                end
+				settingsGroup:AddChild(barWrapper)
+				settingsGroup:AddChild(addon.functions.createSpacerAce())
+			end
 
-                local specGroup = addon.functions.createContainer("TabGroup", "Flow")
-                specGroup:SetFullWidth(true)
-                specGroup:SetTabs(specTabs)
-                specGroup:SetCallback("OnGroupSelected", function(tabContainer, event, group)
-                        tabContainer:ReleaseChildren()
-                        local powers = getPowersForSpec(addon.variables.unitClass, tonumber(group))
-                        for _, pType in ipairs(powers) do
-                                local enabled = isPowerEnabled(pType)
-                                local cb = addon.functions.createCheckboxAce(pType:gsub("_", " "), enabled, function(self, _, val)
-                                        addon.db.resourceSpecEnabled[addon.variables.unitClass][tonumber(group)][pType] = val
-                                        setPowerbars()
-                                        buildSettings(powers)
-                                end)
-                                tabContainer:AddChild(cb)
-                        end
-                        buildSettings(powers)
-                end)
-                if addon.variables.unitSpec then
-                        specGroup:SelectTab(addon.variables.unitSpec)
-                else
-                        specGroup:SelectTab(specTabs[1].value)
-                end
+			addBarSettings("HEALTH", "Healthbar")
+			for _, pType in ipairs(powers) do
+				if isPowerEnabled(pType) then addBarSettings(pType, pType:gsub("_", " ")) end
+			end
+		end
 
-                wrapper:AddChild(specGroup)
-                wrapper:AddChild(settingsGroup)
-        end
+		local specGroup = addon.functions.createContainer("TabGroup", "Flow")
+		specGroup:SetFullWidth(true)
+		specGroup:SetTabs(specTabs)
+		specGroup:SetCallback("OnGroupSelected", function(tabContainer, event, group)
+			tabContainer:ReleaseChildren()
+			local powers = getPowersForSpec(addon.variables.unitClass, tonumber(group))
+			for _, pType in ipairs(powers) do
+				local enabled = isPowerEnabled(pType)
+				local cb = addon.functions.createCheckboxAce(pType:gsub("_", " "), enabled, function(self, _, val)
+					addon.db.resourceSpecEnabled[addon.variables.unitClass][tonumber(group)][pType] = val
+					setPowerbars()
+					buildSettings(powers)
+				end)
+				tabContainer:AddChild(cb)
+			end
+			buildSettings(powers)
+		end)
+		if addon.variables.unitSpec then
+			specGroup:SelectTab(addon.variables.unitSpec)
+		else
+			specGroup:SelectTab(specTabs[1].value)
+		end
+
+		wrapper:AddChild(specGroup)
+		wrapper:AddChild(settingsGroup)
+	end
 end
 
 Resources.eventHandler = eventHandler
