@@ -364,12 +364,32 @@ local function eventHandler(self, event, unit, arg1, arg2, ...)
 end
 
 for _, event in ipairs(eventsToRegister) do
-	-- frameAnchor:RegisterUnitEvent(event, "player")
+       -- registration handled in updateRegistration
 end
 
--- frameAnchor:RegisterEvent("PLAYER_ENTERING_WORLD")
--- frameAnchor:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
--- frameAnchor:RegisterEvent("TRAIT_CONFIG_UPDATED")
+
+local function updateRegistration()
+       frameAnchor:UnregisterAllEvents()
+       if addon.db["enableResourceFrame"] then
+               for _, event in ipairs(eventsToRegister) do
+                       frameAnchor:RegisterUnitEvent(event, "player")
+               end
+               frameAnchor:RegisterEvent("PLAYER_ENTERING_WORLD")
+               frameAnchor:RegisterEvent("ACTIVE_PLAYER_SPECIALIZATION_CHANGED")
+               frameAnchor:RegisterEvent("TRAIT_CONFIG_UPDATED")
+
+               if not mainFrame then
+                       createHealthBar()
+                       createSpecIcon(EQOLHealthBar)
+                       setPowerbars()
+                       firstStart = false
+               elseif mainFrame then
+                       mainFrame:Show()
+               end
+       else
+               if mainFrame then mainFrame:Hide() end
+       end
+end
 
 frameAnchor:SetScript("OnEvent", eventHandler)
 frameAnchor:Hide()
@@ -381,24 +401,18 @@ local function addResourceFrame(container)
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
 
-	local data = {
-		{
-			text = "Enable Resource frame",
-			var = "enableResourceFrame",
-			func = function(self, _, value)
-				addon.db["enableResourceFrame"] = value
-				if mainFrame then
-					if value then
-						mainFrame:Show()
-					else
-						mainFrame:Hide()
-					end
-				end
-			end,
-		},
-	}
+		local data = {
+			{
+				text = "Enable Resource frame",
+				var = "enableResourceFrame",
+				func = function(self, _, value)
+					addon.db["enableResourceFrame"] = value
+					Resources.updateRegistration()
+				end,
+			},
+		}
 
-	table.sort(data, function(a, b) return a.text < b.text end)
+			table.sort(data, function(a, b) return a.text < b.text end)
 
 	for _, cbData in ipairs(data) do
 		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
@@ -470,3 +484,6 @@ end
 
 Resources.eventHandler = eventHandler
 Resources.addResourceFrame = addResourceFrame
+Resources.updateRegistration = updateRegistration
+
+updateRegistration()
