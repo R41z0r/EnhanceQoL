@@ -510,32 +510,32 @@ local function openBuffConfig(catId, id)
 		wrapper:AddChild(dropSound)
 
 		local cbMissing, cbAlways
-               cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(_, _, val)
-                       buff.showWhenMissing = val
-                       if val then
-                               buff.showAlways = false
-                               if cbAlways then cbAlways:SetValue(false) end
-                       end
-                       if activeBuffFrames[catId] and activeBuffFrames[catId][id] then
-                               activeBuffFrames[catId][id]:Hide()
-                               activeBuffFrames[catId][id] = nil
-                       end
-                       scanBuffs()
-               end)
-               wrapper:AddChild(cbMissing)
+		cbMissing = addon.functions.createCheckboxAce(L["buffTrackerShowWhenMissing"], buff.showWhenMissing, function(_, _, val)
+			buff.showWhenMissing = val
+			if val then
+				buff.showAlways = false
+				if cbAlways then cbAlways:SetValue(false) end
+			end
+			if activeBuffFrames[catId] and activeBuffFrames[catId][id] then
+				activeBuffFrames[catId][id]:Hide()
+				activeBuffFrames[catId][id] = nil
+			end
+			scanBuffs()
+		end)
+		wrapper:AddChild(cbMissing)
 
-               cbAlways = addon.functions.createCheckboxAce(L["buffTrackerAlwaysShow"], buff.showAlways, function(_, _, val)
-                       buff.showAlways = val
-                       if val then
-                               buff.showWhenMissing = false
-                               if cbMissing then cbMissing:SetValue(false) end
-                       end
-                       if activeBuffFrames[catId] and activeBuffFrames[catId][id] then
-                               activeBuffFrames[catId][id]:Hide()
-                               activeBuffFrames[catId][id] = nil
-                       end
-                       scanBuffs()
-               end)
+		cbAlways = addon.functions.createCheckboxAce(L["buffTrackerAlwaysShow"], buff.showAlways, function(_, _, val)
+			buff.showAlways = val
+			if val then
+				buff.showWhenMissing = false
+				if cbMissing then cbMissing:SetValue(false) end
+			end
+			if activeBuffFrames[catId] and activeBuffFrames[catId][id] then
+				activeBuffFrames[catId][id]:Hide()
+				activeBuffFrames[catId][id] = nil
+			end
+			scanBuffs()
+		end)
 		wrapper:AddChild(cbAlways)
 
 		local cbGlow = addon.functions.createCheckboxAce(L["buffTrackerGlow"], buff.glow, function(_, _, val)
