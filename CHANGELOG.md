@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.23.1] – 2025-06-30
+### 🐛 Fixed
+- **Instant Messenger** was sometimes out of the screen 
+
 ## [3.23.0] – 2025-06-27
 ### ✨ Added
 - **Enhanced Ignore List** – brand-new tool to manage ignored players (`/eil`, when enabled)

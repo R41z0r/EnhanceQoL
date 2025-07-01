@@ -13,7 +13,6 @@ end
 local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_Aura")
 
 addon.variables.statusTable.groups["aura"] = true
-addon.variables.statusTable.groups["aura\001cooldownmanager"] = true
 addon.functions.addToTree(nil, {
 	value = "aura",
 	text = L["Aura"],
