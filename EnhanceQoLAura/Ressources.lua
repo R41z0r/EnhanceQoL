@@ -194,8 +194,30 @@ local classPowerTypes = {
 	"CHI",
 	"INSANITY",
 	"ARCANE_CHARGES",
-	"MANA",
+        "MANA",
 }
+
+local function isPowerEnabled(powerType)
+       local class = addon.variables.unitClass
+       local spec = addon.variables.unitSpec
+       if not class or not spec then return true end
+       addon.db.resourceSpecEnabled[class] = addon.db.resourceSpecEnabled[class] or {}
+       addon.db.resourceSpecEnabled[class][spec] = addon.db.resourceSpecEnabled[class][spec] or {}
+       if addon.db.resourceSpecEnabled[class][spec][powerType] == nil then
+               addon.db.resourceSpecEnabled[class][spec][powerType] = true
+       end
+       return addon.db.resourceSpecEnabled[class][spec][powerType]
+end
+
+local function getPowersForSpec(class, specIndex)
+       local list = {}
+       local info = powertypeClasses[class] and powertypeClasses[class][specIndex]
+       if not info then return list end
+       for _, pType in ipairs(classPowerTypes) do
+               if pType == info.MAIN or info[pType] then table.insert(list, pType) end
+       end
+       return list
+end
 
 local function updatePowerBar(type)
 	if powerbar[type] and powerbar[type]:IsVisible() then
@@ -281,37 +303,33 @@ local eventsToRegister = {
 }
 
 local function setPowerbars()
-	local _, powerToken = UnitPowerType("player")
-	powerfrequent = {}
-	local mainPowerBar
-	local lastBar
-	if
-		powertypeClasses[addon.variables.unitClass]
-		and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]
-		and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec].MAIN
-	then
-		createPowerBar(powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec].MAIN, EQOLHealthBar)
-		mainPowerBar = powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec].MAIN
-		lastBar = mainPowerBar
-		if powerbar[mainPowerBar] then powerbar[mainPowerBar]:Show() end
-	end
+        local _, powerToken = UnitPowerType("player")
+        powerfrequent = {}
+        local mainPowerBar
+        local lastBar
+        local specInfo = powertypeClasses[addon.variables.unitClass] and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]
+        if specInfo and specInfo.MAIN then
+                mainPowerBar = specInfo.MAIN
+                if isPowerEnabled(mainPowerBar) then
+                        createPowerBar(specInfo.MAIN, EQOLHealthBar)
+                        lastBar = mainPowerBar
+                        if powerbar[mainPowerBar] then powerbar[mainPowerBar]:Show() end
+                end
+        end
 
-	for _, pType in ipairs(classPowerTypes) do
-		if powerbar[pType] then powerbar[pType]:Hide() end
-		if
-			mainPowerBar == pType
-			or (
-				powertypeClasses[addon.variables.unitClass]
-				and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec]
-				and powertypeClasses[addon.variables.unitClass][addon.variables.unitSpec][pType]
-			)
-		then
-			if addon.variables.unitClass == "DRUID" then
-				if pType == mainPowerBar and powerbar[pType] then powerbar[pType]:Show() end
-				powerfrequent[pType] = true
-				if pType ~= mainPowerBar and pType == "MANA" then
-					createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
-					lastBar = pType
+        for _, pType in ipairs(classPowerTypes) do
+                if powerbar[pType] then powerbar[pType]:Hide() end
+                if (
+                                mainPowerBar == pType
+                                or (specInfo and specInfo[pType])
+                        ) and isPowerEnabled(pType)
+                then
+                        if addon.variables.unitClass == "DRUID" then
+                                if pType == mainPowerBar and powerbar[pType] then powerbar[pType]:Show() end
+                                powerfrequent[pType] = true
+                                if pType ~= mainPowerBar and pType == "MANA" then
+                                        createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
+                                        lastBar = pType
 					if powerbar[pType] then powerbar[pType]:Show() end
 				elseif powerToken ~= mainPowerBar then
 					if powerToken == pType then
@@ -321,15 +339,15 @@ local function setPowerbars()
 					end
 				end
 			else
-				powerfrequent[pType] = true
-				if mainPowerBar ~= pType then
-					createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
-					lastBar = pType
-				end
-				if powerbar[pType] then powerbar[pType]:Show() end
-			end
-		end
-	end
+                                powerfrequent[pType] = true
+                                if mainPowerBar ~= pType then
+                                        createPowerBar(pType, powerbar[lastBar] or EQOLHealthBar)
+                                        lastBar = pType
+                                end
+                                if powerbar[pType] then powerbar[pType]:Show() end
+                        end
+                end
+        end
 end
 
 local firstStart = true
@@ -421,8 +439,8 @@ local function addResourceFrame(container)
 		groupCore:AddChild(cbElement)
 	end
 
-	if addon.db["enableResourceFrame"] then
-		local data = {
+        if addon.db["enableResourceFrame"] then
+                local data = {
 			{
 				text = "Healthbar Width",
 				var = "personalResourceBarHealthWidth",
@@ -477,9 +495,39 @@ local function addResourceFrame(container)
 			healthBarWidth:SetFullWidth(true)
 			groupCore:AddChild(healthBarWidth)
 
-			groupCore:AddChild(addon.functions.createSpacerAce())
-		end
-	end
+                        groupCore:AddChild(addon.functions.createSpacerAce())
+                end
+
+                local specTabs = {}
+                local numSpecs = C_SpecializationInfo.GetNumSpecializationsForClassID(addon.variables.unitClassID)
+                for i = 1, numSpecs do
+                        local specID, specName, _, specIcon = GetSpecializationInfoForClassID(addon.variables.unitClassID, i)
+                        table.insert(specTabs, { value = i, text = string.format("|T%s:20:20|t", specIcon) })
+                end
+
+                local specGroup = addon.functions.createContainer("TabGroup", "Flow")
+                specGroup:SetFullWidth(true)
+                specGroup:SetTabs(specTabs)
+                specGroup:SetCallback("OnGroupSelected", function(tabContainer, event, group)
+                        tabContainer:ReleaseChildren()
+                        local powers = getPowersForSpec(addon.variables.unitClass, tonumber(group))
+                        for _, pType in ipairs(powers) do
+                                local enabled = isPowerEnabled(pType)
+                                local cb = addon.functions.createCheckboxAce(pType:gsub("_", " "), enabled, function(self, _, val)
+                                        addon.db.resourceSpecEnabled[addon.variables.unitClass][tonumber(group)][pType] = val
+                                        setPowerbars()
+                                end)
+                                tabContainer:AddChild(cb)
+                        end
+                end)
+                if addon.variables.unitSpec then
+                        specGroup:SelectTab(addon.variables.unitSpec)
+                else
+                        specGroup:SelectTab(specTabs[1].value)
+                end
+
+                wrapper:AddChild(specGroup)
+        end
 end
 
 Resources.eventHandler = eventHandler
