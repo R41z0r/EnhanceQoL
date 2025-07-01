@@ -11,6 +11,7 @@
 ## Globe-Main: EnhanceQoL
 
 Init.lua
+Ressources.lua
 locales.xml
 
 #DetailsSkin.lua
