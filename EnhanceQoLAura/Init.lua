@@ -20,6 +20,7 @@ addon.functions.InitDBValue("personalResourceBarHealthHeight", 25)
 addon.functions.InitDBValue("personalResourceBarManaWidth", 100)
 addon.functions.InitDBValue("personalResourceBarManaHeight", 25)
 addon.functions.InitDBValue("enableResourceFrame", false)
+addon.functions.InitDBValue("resourceSpecEnabled", {})
 addon.functions.InitDBValue("buffTrackerCategories", {
 	[1] = {
 		name = "Example",
