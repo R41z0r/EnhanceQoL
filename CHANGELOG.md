@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.24.0] – 2025-07-02
+### ✨ Added
+- **Vendoring**
+  - New per-rarity option that lets you choose which crafting materials (grouped by expansion) are automatically sold.
+
 ## [3.23.0] – 2025-06-27
 ### ✨ Added
 - **Enhanced Ignore List** – brand-new tool to manage ignored players (`/eil`, when enabled)
