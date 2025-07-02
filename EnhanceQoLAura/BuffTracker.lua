@@ -191,7 +191,8 @@ end
 
 local function createBuffFrame(icon, parent, size, castOnClick, spellID)
 	local frameType = castOnClick and "Button" or "Frame"
-	local template = castOnClick and "SecureActionButtonTemplate" or nil
+	-- local template = castOnClick and "SecureActionButtonTemplate" or nil
+	local template = nil
 	local frame = CreateFrame(frameType, nil, parent, template)
 	frame:SetSize(size, size)
 	frame:SetFrameStrata("DIALOG")
@@ -211,10 +212,8 @@ local function createBuffFrame(icon, parent, size, castOnClick, spellID)
 		frame:SetAttribute("type", "spell")
 		frame:SetAttribute("spell", spellID)
 		frame:EnableMouse(true)
-		if not InCombatLockdown() then frame:RegisterForClicks("AnyUp", "AnyDown") end
+		frame:RegisterForClicks("AnyUp", "AnyDown")
 		frame:SetScript("PostClick", function() C_Timer.After(0.1, addon.Aura.scanBuffs) end)
-	else
-		frame:EnableMouse(false)
 	end
 
 	return frame
@@ -317,9 +316,7 @@ local function updateBuff(catId, id)
 			frame.cd:Clear()
 			if shouldSecure then
 				frame:EnableMouse(true)
-				if not InCombatLockdown() then frame:RegisterForClicks("AnyUp", "AnyDown") end
-			else
-				frame:EnableMouse(false)
+				frame:RegisterForClicks("AnyUp", "AnyDown")
 			end
 			if not wasShown then playBuffSound(catId, id, triggeredId) end
 			frame.isActive = true
