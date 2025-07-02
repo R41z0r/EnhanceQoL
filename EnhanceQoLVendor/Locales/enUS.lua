@@ -37,3 +37,4 @@ L["labelItemQualityline"] = "This enabled you to automatically sell %s items bas
 L["vendorEnable"] = "Enable automatic selling for %s items"
 L["labelExplainedline"] = "This means it automatically sells %s items with an ilvl of %s and lower %s"
 L["andWord"] = "and"
+L["vendorCraftingExpansions"] = "Crafting material expansions"
