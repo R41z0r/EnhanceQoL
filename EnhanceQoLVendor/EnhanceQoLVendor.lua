@@ -63,6 +63,9 @@ local function checkItem()
 							-- do nothing
 							elseif addon.db["vendorIncludeSellList"][containerInfo.itemID] then -- ignore everything and include in sell
 								if sellPrice > 0 then table.insert(itemsToSell, { bag = bag, slot = slot }) end
+							elseif classID == 7 and addon.Vendor.variables.itemQualityFilter[containerInfo.quality] then
+								local expTable = addon.db["vendor" .. addon.Vendor.variables.tabNames[containerInfo.quality] .. "CraftingExpansions"]
+								if expTable and expTable[expansionID] then table.insert(itemsToSell, { bag = bag, slot = slot }) end
 							elseif addon.Vendor.variables.itemQualityFilter[containerInfo.quality] then
 								local effectiveILvl = C_Item.GetDetailedItemLevelInfo(link) -- item level of the item with all upgrades calculated
 								-- local effectiveILvl = itemLevel -- item level of the item with all upgrades calculated
@@ -293,6 +296,23 @@ local function addVendorFrame(container, type)
 			updateLegend(value, value2)
 		end)
 		groupCore:AddChild(vendorIlvl)
+
+		local expList = {}
+		for i = 0, LE_EXPANSION_LEVEL_CURRENT do
+			expList[i] = _G["EXPANSION_NAME" .. i]
+		end
+		local list, order = addon.functions.prepareListForDropdown(expList, true)
+		local dropCrafting = addon.functions.createDropdownAce(
+			L["vendorCraftingExpansions"],
+			list,
+			order,
+			function(self, event, key, checked) addon.db["vendor" .. value .. "CraftingExpansions"][key] = checked or nil end
+		)
+		dropCrafting:SetMultiselect(true)
+		for id, val in pairs(addon.db["vendor" .. value .. "CraftingExpansions"]) do
+			if val then dropCrafting:SetItemValue(tonumber(id), true) end
+		end
+		groupCore:AddChild(dropCrafting)
 
 		if addon.db["vendor" .. value .. "IgnoreWarbound"] then table.insert(text, L["vendorIgnoreWarbound"]) end
 		if addon.db["vendor" .. value .. "IgnoreBoE"] then table.insert(text, L["vendorIgnoreBoE"]) end
