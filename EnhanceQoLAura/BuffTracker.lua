@@ -211,11 +211,7 @@ local function createBuffFrame(icon, parent, size, castOnClick, spellID)
 		frame:SetAttribute("type", "spell")
 		frame:SetAttribute("spell", spellID)
 		frame:EnableMouse(true)
-		if InCombatLockdown() then
-			frame:RegisterForClicks(nil)
-		else
-			frame:RegisterForClicks("AnyUp", "AnyDown")
-		end
+		if not InCombatLockdown() then frame:RegisterForClicks("AnyUp", "AnyDown") end
 		frame:SetScript("PostClick", function() C_Timer.After(0.1, addon.Aura.scanBuffs) end)
 	else
 		frame:EnableMouse(false)
@@ -321,11 +317,7 @@ local function updateBuff(catId, id)
 			frame.cd:Clear()
 			if shouldSecure then
 				frame:EnableMouse(true)
-				if InCombatLockdown() then
-					frame:RegisterForClicks(nil)
-				else
-					frame:RegisterForClicks("AnyUp", "AnyDown")
-				end
+				if not InCombatLockdown() then frame:RegisterForClicks("AnyUp", "AnyDown") end
 			else
 				frame:EnableMouse(false)
 			end
