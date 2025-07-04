@@ -29,19 +29,26 @@ local function isPet(item)
 end
 
 local function shouldShowToast(item)
-	if addon.db.lootToastIncludeLegendaries then
+
+	local show = false
+	if addon.db.lootToastCheckIlvl and item:GetCurrentItemLevel() >= addon.db.lootToastItemLevel then show = true end
+	if not show and addon.db.lootToastCheckRarity then
 		local quality = select(3, C_Item.GetItemInfo(item:GetItemLink()))
-		if quality == Enum.ItemQuality.Legendary then return true end
+		if addon.db.lootToastRarities and addon.db.lootToastRarities[quality] then show = true end
 	end
-
-	if addon.db.lootToastIncludeMounts and isMount(item) then return passesRarity(item) end
-	if addon.db.lootToastIncludePets and isPet(item) then return passesRarity(item) end
-
-	if addon.db.lootToastCheckIlvl and item:GetCurrentItemLevel() >= addon.db.lootToastItemLevel then return true end
-
-	if addon.db.lootToastCheckRarity and passesRarity(item) then return true end
-
-	return false
+	if not show and addon.db.lootToastIncludeMounts then
+		local classID, subClassID = select(12, C_Item.GetItemInfo(item:GetItemLink()))
+		if classID == 15 and subClassID == 5 then show = true end
+	end
+	if not show and addon.db.lootToastIncludePets then
+		local classID = select(12, C_Item.GetItemInfo(item:GetItemLink()))
+		if classID == 17 then show = true end
+	end
+	if not show and addon.db.lootToastIncludeLegendaries then
+		local quality = select(3, C_Item.GetItemInfo(item:GetItemLink()))
+		if quality == Enum.ItemQuality.Legendary then show = true end
+	end
+	return show
 end
 
 function LootToast:OnEvent(_, _, ...)
@@ -54,13 +61,32 @@ function LootToast:OnEvent(_, _, ...)
 	end)
 end
 
+local BLACKLISTED_EVENTS = {
+	LOOT_ITEM_ROLL_WON = false,
+	LOOT_ITEM_ROLL_SELF = false,
+	LOOT_ITEM_ROLL_NEED = false,
+	LOOT_ITEM_ROLL_GREED = false,
+	LOOT_ITEM_ROLL_PASS = false,
+	LOOT_ITEM_SELF = false,
+	LOOT_ITEM_PUSHED_SELF = false,
+	SHOW_LOOT_TOAST = true,
+	SHOW_LOOT_TOAST_UPGRADE = false,
+	SHOW_LOOT_TOAST_LEGENDARY = false,
+}
+
 function LootToast:Enable()
 	if self.enabled then return end
 	self.enabled = true
 	self.frame:RegisterEvent("SHOW_LOOT_TOAST")
 	self.frame:SetScript("OnEvent", function(...) self:OnEvent(...) end)
 	-- disable default toast
-	if AlertFrame:IsEventRegistered("SHOW_LOOT_TOAST") then AlertFrame:UnregisterEvent("SHOW_LOOT_TOAST") end
+
+	for event, state in pairs(BLACKLISTED_EVENTS) do
+		if state and AlertFrame:IsEventRegistered(event) then AlertFrame:UnregisterEvent(event) end
+	end
+	hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
+		if BLACKLISTED_EVENTS[event] then xpcall(self.UnregisterEvent, self, event) end
+	end)
 end
 
 function LootToast:Disable()
