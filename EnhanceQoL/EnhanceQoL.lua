@@ -2240,18 +2240,6 @@ local function addMiscFrame(container, d)
 				addon.functions.toggleInstantCatalystButton(value)
 			end,
 		},
-		{
-			parent = "",
-			var = "enableLootToastFilter",
-			text = L["enableLootToastFilter"],
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["enableLootToastFilter"] = value
-				addon.variables.requireReload = true
-				container:ReleaseChildren()
-				addMiscFrame(container)
-			end,
-		},
 	}
 	table.sort(data, function(a, b)
 		local textA = a.var
@@ -2285,6 +2273,56 @@ local function addMiscFrame(container, d)
 	end
 
 	-- addon.functions.createWrapperData(data, container, L)
+	scroll:DoLayout()
+end
+
+local function addLootFrame(container, d)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	scroll:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local data = {
+		{
+			parent = "",
+			var = "enableLootToastFilter",
+			text = L["enableLootToastFilter"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["enableLootToastFilter"] = value
+				addon.variables.requireReload = true
+				container:ReleaseChildren()
+				addLootFrame(container)
+			end,
+		},
+	}
+
+	table.sort(data, function(a, b)
+		local textA = a.text or L[a.var]
+		local textB = b.text or L[b.var]
+		return textA < textB
+	end)
+
+	for _, checkboxData in ipairs(data) do
+		local desc
+		if checkboxData.desc then desc = checkboxData.desc end
+		local text
+		if checkboxData.text then
+			text = checkboxData.text
+		else
+			text = L[checkboxData.var]
+		end
+		local uFunc = function(self, _, value) addon.db[checkboxData.var] = value end
+		if checkboxData.callback then uFunc = checkboxData.callback end
+		local cb = addon.functions.createCheckboxAce(text, addon.db[checkboxData.var], uFunc, desc)
+		groupCore:AddChild(cb)
+	end
 
 	if addon.db.enableLootToastFilter then
 		local group = addon.functions.createContainer("InlineGroup", "List")
@@ -2294,7 +2332,7 @@ local function addMiscFrame(container, d)
 		local cbIlvl = addon.functions.createCheckboxAce(L["lootToastCheckIlvl"], addon.db.lootToastCheckIlvl, function(self, _, val)
 			addon.db.lootToastCheckIlvl = val
 			container:ReleaseChildren()
-			addMiscFrame(container)
+			addLootFrame(container)
 		end)
 		group:AddChild(cbIlvl)
 
@@ -2309,7 +2347,7 @@ local function addMiscFrame(container, d)
 		local cbRarity = addon.functions.createCheckboxAce(L["lootToastCheckRarity"], addon.db.lootToastCheckRarity, function(self, _, val)
 			addon.db.lootToastCheckRarity = val
 			container:ReleaseChildren()
-			addMiscFrame(container)
+			addLootFrame(container)
 		end)
 		group:AddChild(cbRarity)
 
@@ -2329,9 +2367,7 @@ local function addMiscFrame(container, d)
 		end
 
 		group:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeMounts"], addon.db.lootToastIncludeMounts, function(self, _, val) addon.db.lootToastIncludeMounts = val end))
-
 		group:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludePets"], addon.db.lootToastIncludePets, function(self, _, val) addon.db.lootToastIncludePets = val end))
-
 		group:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeLegendaries"], addon.db.lootToastIncludeLegendaries, function(self, _, val) addon.db.lootToastIncludeLegendaries = val end))
 
 		local label = addon.functions.createLabelAce("|cffffd700" .. L["lootToastExplanation"] .. "|r", nil, nil, 14)
@@ -2905,14 +2941,6 @@ local function initMisc()
 	addon.functions.InitDBValue("hideBagsBar", false)
 	addon.functions.InitDBValue("hideMicroMenu", false)
 	addon.functions.InitDBValue("instantCatalystEnabled", false)
-	addon.functions.InitDBValue("enableLootToastFilter", false)
-	addon.functions.InitDBValue("lootToastItemLevel", 600)
-	addon.functions.InitDBValue("lootToastCheckIlvl", true)
-	addon.functions.InitDBValue("lootToastCheckRarity", true)
-	addon.functions.InitDBValue("lootToastRarities", { [Enum.ItemQuality.Epic] = true, [Enum.ItemQuality.Legendary] = true })
-	addon.functions.InitDBValue("lootToastIncludeMounts", true)
-	addon.functions.InitDBValue("lootToastIncludePets", true)
-	addon.functions.InitDBValue("lootToastIncludeLegendaries", true)
 	--@debug@
 	addon.functions.InitDBValue("automaticallyOpenContainer", false)
 	--@end-debug@
@@ -2964,6 +2992,17 @@ local function initMisc()
 		end
 		if addon.db["hiddenLandingPages"][id] then self:Hide() end
 	end)
+end
+
+local function initLoot()
+	addon.functions.InitDBValue("enableLootToastFilter", false)
+	addon.functions.InitDBValue("lootToastItemLevel", 600)
+	addon.functions.InitDBValue("lootToastCheckIlvl", true)
+	addon.functions.InitDBValue("lootToastCheckRarity", true)
+	addon.functions.InitDBValue("lootToastRarities", { [Enum.ItemQuality.Epic] = true, [Enum.ItemQuality.Legendary] = true })
+	addon.functions.InitDBValue("lootToastIncludeMounts", true)
+	addon.functions.InitDBValue("lootToastIncludePets", true)
+	addon.functions.InitDBValue("lootToastIncludeLegendaries", true)
 end
 
 local function initUnitFrame()
@@ -4002,6 +4041,7 @@ local function CreateUI()
 		},
 	})
 	addon.functions.addToTree("general", { value = "social", text = L["Social"] })
+	addon.functions.addToTree("general", { value = "loot", text = L["Loot"] })
 	table.insert(addon.treeGroupData, {
 		value = "profiles",
 		text = L["Profiles"],
@@ -4015,6 +4055,8 @@ local function CreateUI()
 			addMiscFrame(container, true) -- Ruft die Funktion zum Hinzufügen der Misc-Optionen auf
 		elseif group == "general\001quest" then
 			addQuestFrame(container, true) -- Ruft die Funktion zum Hinzufügen der Quest-Optionen auf
+		elseif group == "general\001loot" then
+			addLootFrame(container, true)
 		elseif group == "general\001cvar" then
 			addCVarFrame(container, true) -- Ruft die Funktion zum Hinzufügen der CVar-Optionen auf
 		elseif group == "general\001dungeon" then
@@ -4287,6 +4329,7 @@ local function setAllHooks()
 
 	initCharacter()
 	initMisc()
+	initLoot()
 	initQuest()
 	initDungeon()
 	initParty()
