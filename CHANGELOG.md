@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.25.0] – 2025-07-04
+### ✨ Added
+- **Skip Cinematic**
+  - Option to skip cinematics
+- **Loot Toast modification**
+  - Option to change the behaviour when a new item pop ups
+
 ## [3.24.0] – 2025-07-02
 ### ✨ Added
 - **Vendoring**

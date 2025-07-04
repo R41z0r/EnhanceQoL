@@ -4831,8 +4831,17 @@ local eventHandlers = {
 			addon.variables.safedAuctionFilters = nil
 		end
 	end,
-	["CINEMATIC_START"] = function(canBeCancelled)
-		if addon.db["autoCancelCinematic"] and canBeCancelled then StopCinematic() end
+	["CINEMATIC_START"] = function()
+		if addon.db["autoCancelCinematic"] then
+			if CinematicFrame.isRealCinematic then
+				StopCinematic()
+			elseif CanCancelScene() then
+				CancelScene()
+			end
+		end
+	end,
+	["PLAY_MOVIE"] = function()
+		if addon.db["autoCancelCinematic"] then MovieFrame:Hide() end
 	end,
 }
 
