@@ -2214,18 +2214,83 @@ local function addMiscFrame(container, d)
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["autoQuickLoot"] = value end,
 		},
-		{
-			parent = "",
-			var = "instantCatalystEnabled",
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["instantCatalystEnabled"] = value
-				addon.functions.toggleInstantCatalystButton(value)
-			end,
-		},
-	}
+                {
+                        parent = "",
+                        var = "instantCatalystEnabled",
+                        type = "CheckBox",
+                        callback = function(self, _, value)
+                                addon.db["instantCatalystEnabled"] = value
+                                addon.functions.toggleInstantCatalystButton(value)
+                        end,
+                },
+                {
+                        parent = "",
+                        var = "enableLootToastFilter",
+                        text = L["enableLootToastFilter"],
+                        type = "CheckBox",
+                        callback = function(self, _, value)
+                                addon.db["enableLootToastFilter"] = value
+                                addon.variables.requireReload = true
+                        end,
+                },
+        }
 
-	addon.functions.createWrapperData(data, container, L)
+        addon.functions.createWrapperData(data, container, L)
+
+        if addon.db.enableLootToastFilter then
+                local group = addon.functions.createContainer("InlineGroup", "List")
+                group:SetTitle(L["enableLootToastFilter"])
+                container:AddChild(group)
+
+                local cbIlvl = addon.functions.createCheckboxAce(L["lootToastCheckIlvl"], addon.db.lootToastCheckIlvl, function(self, _, val)
+                        addon.db.lootToastCheckIlvl = val
+                end)
+                group:AddChild(cbIlvl)
+
+                if addon.db.lootToastCheckIlvl then
+                        local slider = addon.functions.createSliderAce(L["lootToastItemLevel"] .. ": " .. addon.db.lootToastItemLevel, addon.db.lootToastItemLevel, 0, 1000, 1, function(self, _, val)
+                                addon.db.lootToastItemLevel = val
+                                self:SetLabel(L["lootToastItemLevel"] .. ": " .. val)
+                        end)
+                        group:AddChild(slider)
+                end
+
+                local cbRarity = addon.functions.createCheckboxAce(L["lootToastCheckRarity"], addon.db.lootToastCheckRarity, function(self, _, val)
+                        addon.db.lootToastCheckRarity = val
+                        container:ReleaseChildren()
+                        addMiscFrame(container)
+                end)
+                group:AddChild(cbRarity)
+
+                if addon.db.lootToastCheckRarity then
+                        local list = {
+                                [tostring(Enum.ItemQuality.Rare)] = ITEM_QUALITY3_DESC,
+                                [tostring(Enum.ItemQuality.Epic)] = ITEM_QUALITY4_DESC,
+                                [tostring(Enum.ItemQuality.Legendary)] = ITEM_QUALITY5_DESC,
+                        }
+                        local order = { tostring(Enum.ItemQuality.Rare), tostring(Enum.ItemQuality.Epic), tostring(Enum.ItemQuality.Legendary) }
+                        local drop = addon.functions.createDropdownAce(L["lootToastRarity"], list, order, function(self, event, key, state)
+                                addon.db.lootToastRarities[tonumber(key)] = state
+                        end)
+                        drop:SetMultiselect(true)
+                        for k, v in pairs(addon.db.lootToastRarities or {}) do
+                                drop:SetItemValue(tostring(k), v)
+                        end
+                        group:AddChild(drop)
+                end
+
+                group:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeMounts"], addon.db.lootToastIncludeMounts, function(self, _, val)
+                        addon.db.lootToastIncludeMounts = val
+                end))
+
+                group:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludePets"], addon.db.lootToastIncludePets, function(self, _, val)
+                        addon.db.lootToastIncludePets = val
+                end))
+
+                group:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeLegendaries"], addon.db.lootToastIncludeLegendaries, function(self, _, val)
+                        addon.db.lootToastIncludeLegendaries = val
+                end))
+        end
 end
 
 local function addQuestFrame(container, d)
@@ -2790,7 +2855,15 @@ local function initMisc()
 	addon.functions.InitDBValue("hideMinimapButton", false)
 	addon.functions.InitDBValue("hideBagsBar", false)
 	addon.functions.InitDBValue("hideMicroMenu", false)
-	addon.functions.InitDBValue("instantCatalystEnabled", false)
+        addon.functions.InitDBValue("instantCatalystEnabled", false)
+        addon.functions.InitDBValue("enableLootToastFilter", false)
+        addon.functions.InitDBValue("lootToastItemLevel", 600)
+        addon.functions.InitDBValue("lootToastCheckIlvl", true)
+        addon.functions.InitDBValue("lootToastCheckRarity", true)
+        addon.functions.InitDBValue("lootToastRarities", { [Enum.ItemQuality.Epic] = true, [Enum.ItemQuality.Legendary] = true })
+        addon.functions.InitDBValue("lootToastIncludeMounts", true)
+        addon.functions.InitDBValue("lootToastIncludePets", true)
+        addon.functions.InitDBValue("lootToastIncludeLegendaries", true)
 	--@debug@
 	addon.functions.InitDBValue("automaticallyOpenContainer", false)
 	--@end-debug@
@@ -3006,6 +3079,14 @@ local function initSocial()
 	addon.functions.InitDBValue("ignoreFrameY", 0)
 	if addon.Ignore and addon.Ignore.SetEnabled then addon.Ignore:SetEnabled(addon.db["enableIgnore"]) end
 	if addon.Ignore and addon.Ignore.UpdateAnchor then addon.Ignore:UpdateAnchor() end
+end
+
+local function initLootToast()
+        if addon.db.enableLootToastFilter and addon.LootToast and addon.LootToast.Enable then
+                addon.LootToast:Enable()
+        elseif addon.LootToast and addon.LootToast.Disable then
+                addon.LootToast:Disable()
+        end
 end
 
 local function initUI()
@@ -4163,10 +4244,11 @@ local function setAllHooks()
 	initActionBars()
 	initUI()
 	initUnitFrame()
-	initChatFrame()
-	initMap()
-	initSocial()
-	initBagsFrame()
+        initChatFrame()
+        initMap()
+        initSocial()
+        initLootToast()
+        initBagsFrame()
 end
 
 function loadMain()
