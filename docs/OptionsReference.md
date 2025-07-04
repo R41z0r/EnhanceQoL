@@ -96,6 +96,7 @@ Each action bar can be set to appear only on mouseover:
 - **Open the character frame when upgrading items at the vendor** (Open the character frame when upgrading items at the vendor).
 - **Quick loot items** (Quick loot items).
 - **Instant Catalyst button** (Instant Catalyst button).
+- **Enable custom loot toasts** (Enable custom loot toasts): suppresses all default loot toasts and only shows messages for items that meet your filters.
 
 ## Map Tools
 - **Enable /way command** (Enable /way command): provides a simple waypoint command if no other addon uses /way.

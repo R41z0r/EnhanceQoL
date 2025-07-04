@@ -12,7 +12,24 @@ addon.LootToast = LootToast
 LootToast.enabled = false
 LootToast.frame = LootToast.frame or CreateFrame("Frame")
 
+local function passesRarity(item)
+	if not addon.db.lootToastCheckRarity then return true end
+	local quality = select(3, C_Item.GetItemInfo(item:GetItemLink()))
+	return addon.db.lootToastRarities and addon.db.lootToastRarities[quality]
+end
+
+local function isMount(item)
+	local classID, subClassID = select(12, C_Item.GetItemInfo(item:GetItemLink()))
+	return classID == 15 and subClassID == 5
+end
+
+local function isPet(item)
+	local classID = select(12, C_Item.GetItemInfo(item:GetItemLink()))
+	return classID == 17
+end
+
 local function shouldShowToast(item)
+
 	local show = false
 	if addon.db.lootToastCheckIlvl and item:GetCurrentItemLevel() >= addon.db.lootToastItemLevel then show = true end
 	if not show and addon.db.lootToastCheckRarity then
@@ -63,6 +80,7 @@ function LootToast:Enable()
 	self.frame:RegisterEvent("SHOW_LOOT_TOAST")
 	self.frame:SetScript("OnEvent", function(...) self:OnEvent(...) end)
 	-- disable default toast
+
 	for event, state in pairs(BLACKLISTED_EVENTS) do
 		if state and AlertFrame:IsEventRegistered(event) then AlertFrame:UnregisterEvent(event) end
 	end
