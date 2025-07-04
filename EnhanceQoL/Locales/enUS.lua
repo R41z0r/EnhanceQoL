@@ -71,6 +71,7 @@ L["Character"] = "Character"
 L["Dungeon"] = "Dungeon"
 L["Misc"] = "Misc."
 L["Quest"] = "Quest"
+L["Loot"] = "Loot"
 
 L["hideBagsBar"] = "Hide Bagsbar"
 L["hideMicroMenu"] = "Hide Micro Menu"
