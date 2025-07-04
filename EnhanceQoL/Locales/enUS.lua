@@ -16,6 +16,7 @@ L["repairCost"] = "Repaired items for "
 L["autoRepair"] = "Automatically repair all items"
 L["sellAllJunk"] = "Automatically sell all junk items"
 L["ignoreTalkingHead"] = "Automatically hide Talking Head Frame"
+L["autoCancelCinematic"] = "Automatically skip cinematics if possible"
 L["landingPageHide"] = "Enable this option to hide the Expansion Landing Page button on the minimap."
 L["automaticallyOpenContainer"] = "Automatically open Container items in bag"
 
