@@ -103,6 +103,8 @@ L["lootToastRarity"] = "Rarities"
 L["lootToastIncludeMounts"] = "Show for mounts"
 L["lootToastIncludePets"] = "Show for pets"
 L["lootToastIncludeLegendaries"] = "Show for legendaries"
+L["lootToastExplanation"] =
+	"Only loot toasts that match at least one filter will be shown. If rarity filtering is enabled the selected rarities also apply to mounts and pets. Item level is ignored for mounts and pets."
 
 L["headerClassInfo"] = "These settings only apply to %s"
 

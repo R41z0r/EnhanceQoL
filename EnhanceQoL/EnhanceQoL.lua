@@ -2327,6 +2327,10 @@ local function addMiscFrame(container, d)
 		group:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludePets"], addon.db.lootToastIncludePets, function(self, _, val) addon.db.lootToastIncludePets = val end))
 
 		group:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeLegendaries"], addon.db.lootToastIncludeLegendaries, function(self, _, val) addon.db.lootToastIncludeLegendaries = val end))
+
+		local label = addon.functions.createLabelAce("|cffffd700" .. L["lootToastExplanation"] .. "|r", nil, nil, 14)
+		label:SetFullWidth(true)
+		group:AddChild(label)
 	end
 	scroll:DoLayout()
 end
