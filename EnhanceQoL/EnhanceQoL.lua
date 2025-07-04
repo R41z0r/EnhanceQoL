@@ -2227,6 +2227,12 @@ local function addMiscFrame(container, d)
 		},
 		{
 			parent = "",
+			var = "autoCancelCinematic",
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["autoCancelCinematic"] = value end,
+		},
+		{
+			parent = "",
 			var = "instantCatalystEnabled",
 			type = "CheckBox",
 			callback = function(self, _, value)
@@ -2892,6 +2898,7 @@ local function initMisc()
 	addon.functions.InitDBValue("hideRaidTools", false)
 	addon.functions.InitDBValue("autoRepair", false)
 	addon.functions.InitDBValue("sellAllJunk", false)
+	addon.functions.InitDBValue("autoCancelCinematic", false)
 	addon.functions.InitDBValue("ignoreTalkingHead", false)
 	addon.functions.InitDBValue("hiddenLandingPages", {})
 	addon.functions.InitDBValue("hideMinimapButton", false)
@@ -4823,6 +4830,9 @@ local eventHandlers = {
 		else
 			addon.variables.safedAuctionFilters = nil
 		end
+	end,
+	["CINEMATIC_START"] = function(canBeCancelled)
+		if addon.db["autoCancelCinematic"] and canBeCancelled then StopCinematic() end
 	end,
 }
 
