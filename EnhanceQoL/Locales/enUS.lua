@@ -103,11 +103,12 @@ L["lootToastCheckIlvl"] = "Check item level"
 L["lootToastIncludeMounts"] = "Show for mounts"
 L["lootToastIncludePets"] = "Show for pets"
 L["lootToastExplanation"] =
-        "Only loot toasts that match at least one filter will be shown. If rarity filtering is enabled the selected rarities also apply to mounts and pets. Item level is ignored for mounts and pets."
+        "Only loot toasts that match at least one filter will be shown. Items on the include list always trigger a toast. If rarity filtering is enabled the selected rarities also apply to mounts and pets. Item level is ignored for mounts and pets."
 L["lootToastSummaryIlvl"] = "Shows loot toasts for items with an item level of %d or higher%s."
 L["lootToastSummaryNoIlvl"] = "Shows loot toasts for items%s."
 L["enableLootToastCustomSound"] = "Use custom loot sound"
 L["lootToastCustomSound"] = "Toast sound"
+L["andWord"] = "and"
 
 L["Include"] = "Include"
 L["Add"] = "Add"
