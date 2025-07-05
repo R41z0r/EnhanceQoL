@@ -609,65 +609,83 @@ function addon.Aura.functions.treeCallback(container, group)
 	end
 end
 
-local BLACKLISTED_EVENTS = {
-	LOOT_ITEM_ROLL_WON = false,
-	LOOT_ITEM_ROLL_SELF = false,
-	LOOT_ITEM_ROLL_NEED = false,
-	LOOT_ITEM_ROLL_GREED = false,
-	LOOT_ITEM_ROLL_PASS = false,
-	LOOT_ITEM_SELF = false,
-	LOOT_ITEM_PUSHED_SELF = false,
-	SHOW_LOOT_TOAST = true,
-	SHOW_LOOT_TOAST_UPGRADE = false,
-	SHOW_LOOT_TOAST_LEGENDARY = false,
-}
-hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
-	if BLACKLISTED_EVENTS[event] then xpcall(self.UnregisterEvent, self, event) end
-end)
+-- local BLACKLISTED_EVENTS = {
+-- 	LOOT_ITEM_ROLL_WON = false,
+-- 	LOOT_ITEM_ROLL_SELF = false,
+-- 	LOOT_ITEM_ROLL_NEED = false,
+-- 	LOOT_ITEM_ROLL_GREED = false,
+-- 	LOOT_ITEM_ROLL_PASS = false,
+-- 	LOOT_ITEM_SELF = false,
+-- 	LOOT_ITEM_PUSHED_SELF = false,
+-- 	SHOW_LOOT_TOAST = true,
+-- 	SHOW_LOOT_TOAST_UPGRADE = false,
+-- 	SHOW_LOOT_TOAST_LEGENDARY = false,
+-- }
+-- hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
+-- 	if BLACKLISTED_EVENTS[event] then xpcall(self.UnregisterEvent, self, event) end
+-- end)
 
-local function errorHandler(err) return geterrorhandler()(err) end
+-- local function errorHandler(err) return geterrorhandler()(err) end
 
-for event, state in pairs(BLACKLISTED_EVENTS) do
-	if state and AlertFrame:IsEventRegistered(event) then AlertFrame:UnregisterEvent(event) end
-end
+-- for event, state in pairs(BLACKLISTED_EVENTS) do
+-- 	if state and AlertFrame:IsEventRegistered(event) then AlertFrame:UnregisterEvent(event) end
+-- end
 
-local blocker = CreateFrame("Frame")
-blocker:RegisterEvent("SHOW_LOOT_TOAST")
-blocker:SetScript("OnEvent", function(_, event, ...)
-	local typeIdentifier, itemLink, quantity, specID, _, _, _, lessAwesome, isUpgraded, isCorrupted = ...
-	if typeIdentifier == "item" then
-		local eItem = Item:CreateFromItemLink(itemLink)
-		if eItem and not eItem:IsItemEmpty() then
-			eItem:ContinueOnItemLoad(function()
-				local showToast = false
-				local bType = nil
-				if eItem:GetCurrentItemLevel() > 600 then showToast = true end
-				local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(eItem:GetItemLink())
-				if not showToast then
-					-- show mount loots
-					if classID == 15 and subclassID == 5 then showToast = true end
-					if itemQuality == 5 then showToast = true end
-					if not showToast then
-						local data = C_TooltipInfo.GetHyperlink(itemLink)
-						for i, v in pairs(data.lines) do
-							if v.type == 20 then
-								if v.leftText == ITEM_BIND_ON_EQUIP then
-									bType = "BoE"
-									showToast = true
-								elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
-									bType = "WuE"
-									showToast = true
-								elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
-									bType = "WB"
-									showToast = true
-								end
-								break
-							end
-						end
-					end
-				end
-				if showToast then LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, specID, nil, nil, nil, lessAwesome, isUpgraded, isCorrupted) end
-			end)
-		end
-	end
-end)
+-- local blocker = CreateFrame("Frame")
+-- blocker:RegisterEvent("SHOW_LOOT_TOAST")
+-- blocker:SetScript("OnEvent", function(_, event, ...)
+-- 	local typeIdentifier, itemLink, quantity, specID, _, _, _, lessAwesome, isUpgraded, isCorrupted = ...
+-- 	if typeIdentifier == "item" then
+-- 		local eItem = Item:CreateFromItemLink(itemLink)
+-- 		if eItem and not eItem:IsItemEmpty() then
+-- 			eItem:ContinueOnItemLoad(function()
+-- 				local showToast = false
+-- 				local bType = nil
+-- 				if eItem:GetCurrentItemLevel() > 600 then showToast = true end
+-- 				local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID = C_Item.GetItemInfo(eItem:GetItemLink())
+-- 				if not showToast then
+-- 					-- show mount loots
+-- 					if classID == 15 and subclassID == 5 then showToast = true end
+-- 					if itemQuality == 5 then showToast = true end
+-- 					if not showToast then
+-- 						local data = C_TooltipInfo.GetHyperlink(itemLink)
+-- 						for i, v in pairs(data.lines) do
+-- 							if v.type == 20 then
+-- 								if v.leftText == ITEM_BIND_ON_EQUIP then
+-- 									bType = "BoE"
+-- 									showToast = true
+-- 								elseif v.leftText == ITEM_ACCOUNTBOUND_UNTIL_EQUIP or v.leftText == ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP then
+-- 									bType = "WuE"
+-- 									showToast = true
+-- 								elseif v.leftText == ITEM_ACCOUNTBOUND or v.leftText == ITEM_BIND_TO_BNETACCOUNT then
+-- 									bType = "WB"
+-- 									showToast = true
+-- 								end
+-- 								break
+-- 							end
+-- 						end
+-- 					end
+-- 				end
+-- 				if showToast then LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, specID, nil, nil, nil, lessAwesome, isUpgraded, isCorrupted) end
+-- 			end)
+-- 		end
+-- 	end
+-- end)
+
+-- local ITEM_LINK_PATTERN = "|Hitem:.-|h%[.-%]|h|r"
+
+-- local myGUID = UnitGUID("player")
+
+-- local f = CreateFrame("Frame")
+-- f:RegisterEvent("CHAT_MSG_LOOT")
+-- f:SetScript("OnEvent", function(_, _, msg, _, _, _, _, _, _, _, _, _, _, guid)
+-- 	if guid ~= myGUID then return end -- fremden Loot überspringen
+-- 	local itemLink = msg:match(ITEM_LINK_PATTERN)
+-- 	if not itemLink then
+-- 		return -- war z. B. nur Gold / Währung
+-- 	end
+-- 	local quantity = tonumber(msg:match("x(%d+)")) or 1
+-- 	local itemID = tonumber(itemLink:match("item:(%d+)"))
+
+-- 	LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, 0, nil, nil, nil, false, false, false)
+-- end)

@@ -12,6 +12,16 @@ addon.LootToast = LootToast
 LootToast.enabled = false
 LootToast.frame = LootToast.frame or CreateFrame("Frame")
 
+local function isMount(item)
+	local classID, subClassID = select(12, C_Item.GetItemInfo(item:GetItemLink()))
+	return classID == 15 and subClassID == 5
+end
+
+local function isPet(item)
+	local classID = select(12, C_Item.GetItemInfo(item:GetItemLink()))
+	return classID == 17
+end
+
 local function passesFilters(item)
 	local quality = select(3, C_Item.GetItemInfo(item:GetItemLink()))
 	local filter = addon.db.lootToastFilters and addon.db.lootToastFilters[quality]
@@ -28,19 +38,12 @@ local function passesFilters(item)
 	return false
 end
 
-local function isMount(item)
-	local classID, subClassID = select(12, C_Item.GetItemInfo(item:GetItemLink()))
-	return classID == 15 and subClassID == 5
-end
-
-local function isPet(item)
-	local classID = select(12, C_Item.GetItemInfo(item:GetItemLink()))
-	return classID == 17
-end
-
 local function shouldShowToast(item) return passesFilters(item) end
 
-function LootToast:OnEvent(event, ...)
+local ITEM_LINK_PATTERN = "|Hitem:.-|h%[.-%]|h|r"
+local myGUID = UnitGUID("player")
+
+function LootToast:OnEvent(_, event, ...)
 	if event == "SHOW_LOOT_TOAST" then
 		local typeIdentifier, itemLink, quantity, specID, _, _, _, lessAwesome, isUpgraded, isCorrupted = ...
 		if typeIdentifier ~= "item" then return end
@@ -49,13 +52,15 @@ function LootToast:OnEvent(event, ...)
 		item:ContinueOnItemLoad(function()
 			if shouldShowToast(item) then LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, specID, nil, nil, nil, lessAwesome, isUpgraded, isCorrupted) end
 		end)
-	elseif event == "LOOT_ITEM_SELF" or event == "LOOT_ITEM_PUSHED_SELF" then
-		local itemLink, quantity = ...
-		local item = Item:CreateFromItemLink(itemLink)
-		if not item or item:IsItemEmpty() then return end
-		item:ContinueOnItemLoad(function()
-			if addon.db.lootToastIncludeIDs and addon.db.lootToastIncludeIDs[item:GetItemID()] then LootAlertSystem:AddAlert(itemLink, quantity) end
-		end)
+	elseif event == "CHAT_MSG_LOOT" then
+		local msg, _, _, _, _, _, _, _, _, _, guid0, guid, guid2 = ...
+		if guid ~= myGUID then return end
+		local itemLink = msg:match(ITEM_LINK_PATTERN)
+		if not itemLink then return end
+		local quantity = tonumber(msg:match("x(%d+)")) or 1
+		local itemID = tonumber(itemLink:match("item:(%d+)"))
+
+		if addon.db.lootToastIncludeIDs and addon.db.lootToastIncludeIDs[itemID] then LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, 0, nil, nil, nil, false, false, false) end
 	end
 end
 
@@ -76,8 +81,7 @@ function LootToast:Enable()
 	if self.enabled then return end
 	self.enabled = true
 	self.frame:RegisterEvent("SHOW_LOOT_TOAST")
-	self.frame:RegisterEvent("LOOT_ITEM_SELF")
-	self.frame:RegisterEvent("LOOT_ITEM_PUSHED_SELF")
+	self.frame:RegisterEvent("CHAT_MSG_LOOT")
 	self.frame:SetScript("OnEvent", function(...) self:OnEvent(...) end)
 	-- disable default toast
 
