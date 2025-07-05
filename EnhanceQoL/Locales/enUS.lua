@@ -116,6 +116,8 @@ L["Add"] = "Add"
 L["Remove"] = "Remove"
 L["IncludeVendorList"] = "Itemlist"
 L["Item id or drag item"] = "Item id or drag item"
+L["lootToastItemAdded"] = "Added %s (%d) to the include list"
+L["Item id does not exist"] = "Item id does not exist"
 
 L["headerClassInfo"] = "These settings only apply to %s"
 
