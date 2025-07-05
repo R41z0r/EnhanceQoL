@@ -101,8 +101,8 @@ function LootToast:Enable()
 	for event, state in pairs(BLACKLISTED_EVENTS) do
 		if state and AlertFrame:IsEventRegistered(event) then AlertFrame:UnregisterEvent(event) end
 	end
-	hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
-		if BLACKLISTED_EVENTS[event] then xpcall(self.UnregisterEvent, self, event) end
+	hooksecurefunc(AlertFrame, "RegisterEvent", function(selfFrame, event)
+		if LootToast.enabled and BLACKLISTED_EVENTS[event] then xpcall(selfFrame.UnregisterEvent, selfFrame, event) end
 	end)
 end
 
