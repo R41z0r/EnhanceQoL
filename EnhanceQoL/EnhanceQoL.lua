@@ -2221,12 +2221,6 @@ local function addMiscFrame(container, d)
 		},
 		{
 			parent = "",
-			var = "autoQuickLoot",
-			type = "CheckBox",
-			callback = function(self, _, value) addon.db["autoQuickLoot"] = value end,
-		},
-		{
-			parent = "",
 			var = "autoCancelCinematic",
 			type = "CheckBox",
 			callback = function(self, _, value) addon.db["autoCancelCinematic"] = value end,
@@ -2301,6 +2295,13 @@ local function addLootFrame(container, d)
 				addLootFrame(container)
 			end,
 		},
+		{
+			parent = "",
+			var = "autoQuickLoot",
+			desc = L["autoQuickLootDesc"],
+			type = "CheckBox",
+			callback = function(self, _, value) addon.db["autoQuickLoot"] = value end,
+		},
 	}
 
 	table.sort(data, function(a, b)
@@ -2329,7 +2330,6 @@ local function addLootFrame(container, d)
 		group:SetTitle(L["enableLootToastFilter"])
 		wrapper:AddChild(group)
 
-
 		local tabs = {
 			{ text = ITEM_QUALITY3_DESC, value = tostring(Enum.ItemQuality.Rare) },
 			{ text = ITEM_QUALITY4_DESC, value = tostring(Enum.ItemQuality.Epic) },
@@ -2339,40 +2339,40 @@ local function addLootFrame(container, d)
 
 		local function buildTab(tabContainer, rarity)
 			tabContainer:ReleaseChildren()
-                        if rarity == "include" then
-                                local eBox
-                                local dropIncludeList
+			if rarity == "include" then
+				local eBox
+				local dropIncludeList
 
-                                local function addInclude(input)
-                                        local id = tonumber(input)
-                                        if not id then id = tonumber(string.match(tostring(input), "item:(%d+)")) end
-                                        if not id then
-                                                print("|cffff0000Invalid input!|r")
-                                                eBox:SetText("")
-                                                return
-                                        end
-                                        local eItem
-                                        if type(input) == "string" and input:find("|Hitem:") then
-                                                eItem = Item:CreateFromItemLink(input)
-                                        else
-                                                eItem = Item:CreateFromItemID(id)
-                                        end
-                                        if eItem and not eItem:IsItemEmpty() then
-                                                eItem:ContinueOnItemLoad(function()
-                                                        if not addon.db.lootToastIncludeIDs[eItem:GetItemID()] then
-                                                                addon.db.lootToastIncludeIDs[eItem:GetItemID()] = eItem:GetItemName()
-                                                                local list, order = addon.functions.prepareListForDropdown(addon.db.lootToastIncludeIDs)
-                                                                dropIncludeList:SetList(list, order)
-                                                                dropIncludeList:SetValue(nil)
-                                                        end
-                                                        eBox:SetText("")
-                                                end)
-                                        end
-                                end
+				local function addInclude(input)
+					local id = tonumber(input)
+					if not id then id = tonumber(string.match(tostring(input), "item:(%d+)")) end
+					if not id then
+						print("|cffff0000Invalid input!|r")
+						eBox:SetText("")
+						return
+					end
+					local eItem
+					if type(input) == "string" and input:find("|Hitem:") then
+						eItem = Item:CreateFromItemLink(input)
+					else
+						eItem = Item:CreateFromItemID(id)
+					end
+					if eItem and not eItem:IsItemEmpty() then
+						eItem:ContinueOnItemLoad(function()
+							if not addon.db.lootToastIncludeIDs[eItem:GetItemID()] then
+								addon.db.lootToastIncludeIDs[eItem:GetItemID()] = eItem:GetItemName()
+								local list, order = addon.functions.prepareListForDropdown(addon.db.lootToastIncludeIDs)
+								dropIncludeList:SetList(list, order)
+								dropIncludeList:SetValue(nil)
+							end
+							eBox:SetText("")
+						end)
+					end
+				end
 
-                                eBox = addon.functions.createEditboxAce(L["Item id or drag item"], nil, function(self, _, txt)
-                                        if txt ~= "" and txt ~= L["Item id or drag item"] then addInclude(txt) end
-                                end)
+				eBox = addon.functions.createEditboxAce(L["Item id or drag item"], nil, function(self, _, txt)
+					if txt ~= "" and txt ~= L["Item id or drag item"] then addInclude(txt) end
+				end)
 				tabContainer:AddChild(eBox)
 
 				local list, order = addon.functions.prepareListForDropdown(addon.db.lootToastIncludeIDs)
@@ -2386,78 +2386,80 @@ local function addLootFrame(container, d)
 						dropIncludeList:SetValue(nil)
 					end
 				end)
-                                tabContainer:AddChild(dropIncludeList)
-                                tabContainer:AddChild(btnRemove)
+				tabContainer:AddChild(dropIncludeList)
+				tabContainer:AddChild(btnRemove)
 
-                                local cbSound = addon.functions.createCheckboxAce(L["enableLootToastCustomSound"], addon.db.lootToastUseCustomSound, function(self, _, v)
-                                        addon.db.lootToastUseCustomSound = v
-                                        buildTab(tabContainer, "include")
-                                end)
-                                tabContainer:AddChild(cbSound)
+				local cbSound = addon.functions.createCheckboxAce(L["enableLootToastCustomSound"], addon.db.lootToastUseCustomSound, function(self, _, v)
+					addon.db.lootToastUseCustomSound = v
+					buildTab(tabContainer, "include")
+				end)
+				tabContainer:AddChild(cbSound)
 
-                                if addon.db.lootToastUseCustomSound then
-                                        if addon.ChatIM and addon.ChatIM.BuildSoundTable and not addon.ChatIM.availableSounds then addon.ChatIM:BuildSoundTable() end
-                                        local soundList = {}
-                                        for name in pairs(addon.ChatIM.availableSounds or {}) do soundList[name] = name end
-                                        local list, order = addon.functions.prepareListForDropdown(soundList)
-                                        local dropSound = addon.functions.createDropdownAce(L["lootToastCustomSound"], list, order, function(self, _, val)
-                                                addon.db.lootToastCustomSoundFile = val
-                                                self:SetValue(val)
-                                                local file = addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[val]
-                                                if file then PlaySoundFile(file, "Master") end
-                                        end)
-                                        dropSound:SetValue(addon.db.lootToastCustomSoundFile)
-                                        tabContainer:AddChild(dropSound)
-                                end
-                        else
-                                local q = tonumber(rarity)
-                                local filter = addon.db.lootToastFilters[q]
-                                local label = addon.functions.createLabelAce("", nil, nil, 14)
-                                label:SetFullWidth(true)
-                                tabContainer:AddChild(label)
+				if addon.db.lootToastUseCustomSound then
+					if addon.ChatIM and addon.ChatIM.BuildSoundTable and not addon.ChatIM.availableSounds then addon.ChatIM:BuildSoundTable() end
+					local soundList = {}
+					for name in pairs(addon.ChatIM.availableSounds or {}) do
+						soundList[name] = name
+					end
+					local list, order = addon.functions.prepareListForDropdown(soundList)
+					local dropSound = addon.functions.createDropdownAce(L["lootToastCustomSound"], list, order, function(self, _, val)
+						addon.db.lootToastCustomSoundFile = val
+						self:SetValue(val)
+						local file = addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[val]
+						if file then PlaySoundFile(file, "Master") end
+					end)
+					dropSound:SetValue(addon.db.lootToastCustomSoundFile)
+					tabContainer:AddChild(dropSound)
+				end
+			else
+				local q = tonumber(rarity)
+				local filter = addon.db.lootToastFilters[q]
+				local label = addon.functions.createLabelAce("", nil, nil, 14)
+				label:SetFullWidth(true)
+				tabContainer:AddChild(label)
 
-                                local refreshLabel
-                                refreshLabel = function()
-                                        local text
-                                        if rarity ~= "include" then
-                                                local extras = {}
-                                                if filter.mounts then table.insert(extras, MOUNTS:lower()) end
-                                                if filter.pets then table.insert(extras, PETS:lower()) end
-                                                local eText = ""
-                                                if #extras > 0 then eText = " including " .. table.concat(extras, " " .. L["andWord"] .. " ") end
-                                                if filter.ilvl then
-                                                        text = L["lootToastSummaryIlvl"]:format(addon.db.lootToastItemLevels[q], eText)
-                                                else
-                                                        text = L["lootToastSummaryNoIlvl"]:format(eText)
-                                                end
-                                        else
-                                                text = L["lootToastExplanation"]
-                                        end
-                                        label:SetText("|cffffd700" .. text .. "|r")
-                                end
+				local refreshLabel
+				refreshLabel = function()
+					local text
+					if rarity ~= "include" then
+						local extras = {}
+						if filter.mounts then table.insert(extras, MOUNTS:lower()) end
+						if filter.pets then table.insert(extras, PETS:lower()) end
+						local eText = ""
+						if #extras > 0 then eText = " including " .. table.concat(extras, " " .. L["andWord"] .. " ") end
+						if filter.ilvl then
+							text = L["lootToastSummaryIlvl"]:format(addon.db.lootToastItemLevels[q], eText)
+						else
+							text = L["lootToastSummaryNoIlvl"]:format(eText)
+						end
+					else
+						text = L["lootToastExplanation"]
+					end
+					label:SetText("|cffffd700" .. text .. "|r")
+				end
 
-                                tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastCheckIlvl"], filter.ilvl, function(self, _, v)
-                                        addon.db.lootToastFilters[q].ilvl = v
-                                        refreshLabel()
-                                end))
-                                local slider = addon.functions.createSliderAce(L["lootToastItemLevel"] .. ": " .. addon.db.lootToastItemLevels[q], addon.db.lootToastItemLevels[q], 0, 1000, 1, function(self, _, val)
-                                        addon.db.lootToastItemLevels[q] = val
-                                        self:SetLabel(L["lootToastItemLevel"] .. ": " .. val)
-                                        refreshLabel()
-                                end)
-                                tabContainer:AddChild(slider)
-                                tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeMounts"], filter.mounts, function(self, _, v)
-                                        addon.db.lootToastFilters[q].mounts = v
-                                        refreshLabel()
-                                end))
-                                tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludePets"], filter.pets, function(self, _, v)
-                                        addon.db.lootToastFilters[q].pets = v
-                                        refreshLabel()
-                                end))
-                                refreshLabel()
-                        end
-                        scroll:DoLayout()
-                end
+				tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastCheckIlvl"], filter.ilvl, function(self, _, v)
+					addon.db.lootToastFilters[q].ilvl = v
+					refreshLabel()
+				end))
+				local slider = addon.functions.createSliderAce(L["lootToastItemLevel"] .. ": " .. addon.db.lootToastItemLevels[q], addon.db.lootToastItemLevels[q], 0, 1000, 1, function(self, _, val)
+					addon.db.lootToastItemLevels[q] = val
+					self:SetLabel(L["lootToastItemLevel"] .. ": " .. val)
+					refreshLabel()
+				end)
+				tabContainer:AddChild(slider)
+				tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeMounts"], filter.mounts, function(self, _, v)
+					addon.db.lootToastFilters[q].mounts = v
+					refreshLabel()
+				end))
+				tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludePets"], filter.pets, function(self, _, v)
+					addon.db.lootToastFilters[q].pets = v
+					refreshLabel()
+				end))
+				refreshLabel()
+			end
+			scroll:DoLayout()
+		end
 
 		local tabGroup = addon.functions.createContainer("TabGroup", "Flow")
 		tabGroup:SetTabs(tabs)
@@ -3086,28 +3088,28 @@ local function initMisc()
 end
 
 local function initLoot()
-        addon.functions.InitDBValue("enableLootToastFilter", false)
-        addon.functions.InitDBValue("lootToastItemLevels", {
-                [Enum.ItemQuality.Rare] = 600,
-                [Enum.ItemQuality.Epic] = 600,
-                [Enum.ItemQuality.Legendary] = 600,
-        })
-        if addon.db.lootToastItemLevel then
-                local v = addon.db.lootToastItemLevel
-                addon.db.lootToastItemLevels[Enum.ItemQuality.Rare] = v
-                addon.db.lootToastItemLevels[Enum.ItemQuality.Epic] = v
-                addon.db.lootToastItemLevels[Enum.ItemQuality.Legendary] = v
-                addon.db.lootToastItemLevel = nil
-        end
-        addon.functions.InitDBValue("lootToastFilters", {
-                [Enum.ItemQuality.Rare] = { ilvl = true, mounts = true, pets = true },
-                [Enum.ItemQuality.Epic] = { ilvl = true, mounts = true, pets = true },
-                [Enum.ItemQuality.Legendary] = { ilvl = true, mounts = true, pets = true },
-        })
-        addon.functions.InitDBValue("lootToastIncludeIDs", {})
-        addon.functions.InitDBValue("lootToastUseCustomSound", false)
-        addon.functions.InitDBValue("lootToastCustomSoundFile", "")
-        if addon.ChatIM and addon.ChatIM.BuildSoundTable and not addon.ChatIM.availableSounds then addon.ChatIM:BuildSoundTable() end
+	addon.functions.InitDBValue("enableLootToastFilter", false)
+	addon.functions.InitDBValue("lootToastItemLevels", {
+		[Enum.ItemQuality.Rare] = 600,
+		[Enum.ItemQuality.Epic] = 600,
+		[Enum.ItemQuality.Legendary] = 600,
+	})
+	if addon.db.lootToastItemLevel then
+		local v = addon.db.lootToastItemLevel
+		addon.db.lootToastItemLevels[Enum.ItemQuality.Rare] = v
+		addon.db.lootToastItemLevels[Enum.ItemQuality.Epic] = v
+		addon.db.lootToastItemLevels[Enum.ItemQuality.Legendary] = v
+		addon.db.lootToastItemLevel = nil
+	end
+	addon.functions.InitDBValue("lootToastFilters", {
+		[Enum.ItemQuality.Rare] = { ilvl = true, mounts = true, pets = true },
+		[Enum.ItemQuality.Epic] = { ilvl = true, mounts = true, pets = true },
+		[Enum.ItemQuality.Legendary] = { ilvl = true, mounts = true, pets = true },
+	})
+	addon.functions.InitDBValue("lootToastIncludeIDs", {})
+	addon.functions.InitDBValue("lootToastUseCustomSound", false)
+	addon.functions.InitDBValue("lootToastCustomSoundFile", "")
+	if addon.ChatIM and addon.ChatIM.BuildSoundTable and not addon.ChatIM.availableSounds then addon.ChatIM:BuildSoundTable() end
 end
 
 local function initUnitFrame()

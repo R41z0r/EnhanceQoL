@@ -33,11 +33,11 @@ local function passesFilters(item)
 	if filter.mounts and isMount(item) then return true end
 	if filter.pets and isPet(item) then return true end
 
-    if filter.ilvl then
-        local thresholds = addon.db.lootToastItemLevels or {}
-        local limit = thresholds[quality] or addon.db.lootToastItemLevel
-        if limit and item:GetCurrentItemLevel() >= limit then return true end
-    end
+	if filter.ilvl then
+		local thresholds = addon.db.lootToastItemLevels or {}
+		local limit = thresholds[quality] or addon.db.lootToastItemLevel
+		if limit and item:GetCurrentItemLevel() >= limit then return true end
+	end
 
 	return false
 end
@@ -53,26 +53,27 @@ function LootToast:OnEvent(_, event, ...)
 		if typeIdentifier ~= "item" then return end
 		local item = Item:CreateFromItemLink(itemLink)
 		if not item or item:IsItemEmpty() then return end
-                item:ContinueOnItemLoad(function()
-                        if shouldShowToast(item) then
-                                LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, specID, nil, nil, nil, lessAwesome, isUpgraded, isCorrupted)
-                                local file = addon.ChatIM and addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[addon.db.lootToastCustomSoundFile]
-                                if addon.db.lootToastUseCustomSound and file then PlaySoundFile(file, "Master") end
-                        end
-                end)
+		item:ContinueOnItemLoad(function()
+			if shouldShowToast(item) then
+				LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, specID, nil, nil, nil, lessAwesome, isUpgraded, isCorrupted)
+				local file = addon.ChatIM and addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[addon.db.lootToastCustomSoundFile]
+				if addon.db.lootToastUseCustomSound and file then PlaySoundFile(file, "Master") end
+			end
+		end)
 	elseif event == "CHAT_MSG_LOOT" then
-		local msg, _, _, _, _, _, _, _, _, _, guid0, guid, guid2 = ...
+		if ItemUpgradeFrame and ItemUpgradeFrame:IsShown() then return end
+		local msg, _, _, _, _, _, _, _, _, _, _, guid = ...
 		if guid ~= myGUID then return end
 		local itemLink = msg:match(ITEM_LINK_PATTERN)
 		if not itemLink then return end
 		local quantity = tonumber(msg:match("x(%d+)")) or 1
 		local itemID = tonumber(itemLink:match("item:(%d+)"))
 
-                if addon.db.lootToastIncludeIDs and addon.db.lootToastIncludeIDs[itemID] then
-                        LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, 0, nil, nil, nil, false, false, false)
-                        local file = addon.ChatIM and addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[addon.db.lootToastCustomSoundFile]
-                        if addon.db.lootToastUseCustomSound and file then PlaySoundFile(file, "Master") end
-                end
+		if addon.db.lootToastIncludeIDs and addon.db.lootToastIncludeIDs[itemID] then
+			LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, 0, nil, nil, nil, false, false, false)
+			local file = addon.ChatIM and addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[addon.db.lootToastCustomSoundFile]
+			if addon.db.lootToastUseCustomSound and file then PlaySoundFile(file, "Master") end
+		end
 	end
 end
 
