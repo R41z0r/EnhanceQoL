@@ -2359,14 +2359,24 @@ local function addLootFrame(container, d)
 					end
 					if eItem and not eItem:IsItemEmpty() then
 						eItem:ContinueOnItemLoad(function()
+							local name = eItem:GetItemName()
+							if not name then
+								print(L["Item id does not exist"])
+								eBox:SetText("")
+								return
+							end
 							if not addon.db.lootToastIncludeIDs[eItem:GetItemID()] then
-								addon.db.lootToastIncludeIDs[eItem:GetItemID()] = eItem:GetItemName()
+								addon.db.lootToastIncludeIDs[eItem:GetItemID()] = string.format("%s (%d)", name, eItem:GetItemID())
 								local list, order = addon.functions.prepareListForDropdown(addon.db.lootToastIncludeIDs)
 								dropIncludeList:SetList(list, order)
 								dropIncludeList:SetValue(nil)
+								print(L["lootToastItemAdded"]:format(name, eItem:GetItemID()))
 							end
 							eBox:SetText("")
 						end)
+					else
+						print(L["Item id does not exist"])
+						eBox:SetText("")
 					end
 				end
 
