@@ -100,13 +100,16 @@ L["Instant Catalyst"] = "Instant Catalyst"
 L["enableLootToastFilter"] = "Enable custom loot toasts"
 L["lootToastItemLevel"] = "Item level threshold"
 L["lootToastCheckIlvl"] = "Check item level"
-L["lootToastCheckRarity"] = "Check rarity"
-L["lootToastRarity"] = "Rarities"
 L["lootToastIncludeMounts"] = "Show for mounts"
 L["lootToastIncludePets"] = "Show for pets"
-L["lootToastIncludeLegendaries"] = "Show for legendaries"
 L["lootToastExplanation"] =
 	"Only loot toasts that match at least one filter will be shown. If rarity filtering is enabled the selected rarities also apply to mounts and pets. Item level is ignored for mounts and pets."
+
+L["Include"] = "Include"
+L["Add"] = "Add"
+L["Remove"] = "Remove"
+L["IncludeVendorList"] = "Itemlist"
+L["Item id or drag item"] = "Item id or drag item"
 
 L["headerClassInfo"] = "These settings only apply to %s"
 

@@ -12,10 +12,20 @@ addon.LootToast = LootToast
 LootToast.enabled = false
 LootToast.frame = LootToast.frame or CreateFrame("Frame")
 
-local function passesRarity(item)
-	if not addon.db.lootToastCheckRarity then return true end
+local function passesFilters(item)
 	local quality = select(3, C_Item.GetItemInfo(item:GetItemLink()))
-	return addon.db.lootToastRarities and addon.db.lootToastRarities[quality]
+	local filter = addon.db.lootToastFilters and addon.db.lootToastFilters[quality]
+	if not filter then return false end
+
+	local has = filter.ilvl or filter.mounts or filter.pets
+	if not has then return true end
+
+	if filter.mounts and isMount(item) then return true end
+	if filter.pets and isPet(item) then return true end
+
+	if filter.ilvl and item:GetCurrentItemLevel() >= addon.db.lootToastItemLevel then return true end
+
+	return false
 end
 
 local function isMount(item)
@@ -28,30 +38,25 @@ local function isPet(item)
 	return classID == 17
 end
 
-local function shouldShowToast(item)
-	if addon.db.lootToastIncludeLegendaries then
-		local quality = select(3, C_Item.GetItemInfo(item:GetItemLink()))
-		if quality == Enum.ItemQuality.Legendary then return true end
+local function shouldShowToast(item) return passesFilters(item) end
+
+function LootToast:OnEvent(event, ...)
+	if event == "SHOW_LOOT_TOAST" then
+		local typeIdentifier, itemLink, quantity, specID, _, _, _, lessAwesome, isUpgraded, isCorrupted = ...
+		if typeIdentifier ~= "item" then return end
+		local item = Item:CreateFromItemLink(itemLink)
+		if not item or item:IsItemEmpty() then return end
+		item:ContinueOnItemLoad(function()
+			if shouldShowToast(item) then LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, specID, nil, nil, nil, lessAwesome, isUpgraded, isCorrupted) end
+		end)
+	elseif event == "LOOT_ITEM_SELF" or event == "LOOT_ITEM_PUSHED_SELF" then
+		local itemLink, quantity = ...
+		local item = Item:CreateFromItemLink(itemLink)
+		if not item or item:IsItemEmpty() then return end
+		item:ContinueOnItemLoad(function()
+			if addon.db.lootToastIncludeIDs and addon.db.lootToastIncludeIDs[item:GetItemID()] then LootAlertSystem:AddAlert(itemLink, quantity) end
+		end)
 	end
-
-	if addon.db.lootToastIncludeMounts and isMount(item) then return passesRarity(item) end
-	if addon.db.lootToastIncludePets and isPet(item) then return passesRarity(item) end
-
-	if addon.db.lootToastCheckIlvl and item:GetCurrentItemLevel() >= addon.db.lootToastItemLevel then return true end
-
-	if addon.db.lootToastCheckRarity and passesRarity(item) then return true end
-
-	return false
-end
-
-function LootToast:OnEvent(_, _, ...)
-	local typeIdentifier, itemLink, quantity, specID, _, _, _, lessAwesome, isUpgraded, isCorrupted = ...
-	if typeIdentifier ~= "item" then return end
-	local item = Item:CreateFromItemLink(itemLink)
-	if not item or item:IsItemEmpty() then return end
-	item:ContinueOnItemLoad(function()
-		if shouldShowToast(item) then LootAlertSystem:AddAlert(itemLink, quantity, nil, nil, specID, nil, nil, nil, lessAwesome, isUpgraded, isCorrupted) end
-	end)
 end
 
 local BLACKLISTED_EVENTS = {
@@ -71,6 +76,8 @@ function LootToast:Enable()
 	if self.enabled then return end
 	self.enabled = true
 	self.frame:RegisterEvent("SHOW_LOOT_TOAST")
+	self.frame:RegisterEvent("LOOT_ITEM_SELF")
+	self.frame:RegisterEvent("LOOT_ITEM_PUSHED_SELF")
 	self.frame:SetScript("OnEvent", function(...) self:OnEvent(...) end)
 	-- disable default toast
 
@@ -86,6 +93,8 @@ function LootToast:Disable()
 	if not self.enabled then return end
 	self.enabled = false
 	self.frame:UnregisterEvent("SHOW_LOOT_TOAST")
+	self.frame:UnregisterEvent("LOOT_ITEM_SELF")
+	self.frame:UnregisterEvent("LOOT_ITEM_PUSHED_SELF")
 	self.frame:SetScript("OnEvent", nil)
 	AlertFrame:RegisterEvent("SHOW_LOOT_TOAST")
 end
