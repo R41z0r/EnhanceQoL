@@ -97,6 +97,8 @@ Each action bar can be set to appear only on mouseover:
 - **Quick loot items** (Quick loot items).
 - **Instant Catalyst button** (Instant Catalyst button).
 - **Enable custom loot toasts** (Enable custom loot toasts): suppresses all default loot toasts and only shows messages for items that meet your filters.
+- **Use custom loot sound** (Use custom loot sound): choose a custom sound for loot toasts.
+- **Set item level thresholds per rarity** (Set item level thresholds per rarity).
 
 ## Map Tools
 - **Enable /way command** (Enable /way command): provides a simple waypoint command if no other addon uses /way.

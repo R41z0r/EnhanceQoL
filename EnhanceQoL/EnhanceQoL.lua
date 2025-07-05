@@ -2329,11 +2329,6 @@ local function addLootFrame(container, d)
 		group:SetTitle(L["enableLootToastFilter"])
 		wrapper:AddChild(group)
 
-		local slider = addon.functions.createSliderAce(L["lootToastItemLevel"] .. ": " .. addon.db.lootToastItemLevel, addon.db.lootToastItemLevel, 0, 1000, 1, function(self, _, val)
-			addon.db.lootToastItemLevel = val
-			self:SetLabel(L["lootToastItemLevel"] .. ": " .. val)
-		end)
-		group:AddChild(slider)
 
 		local tabs = {
 			{ text = ITEM_QUALITY3_DESC, value = tostring(Enum.ItemQuality.Rare) },
@@ -2344,9 +2339,9 @@ local function addLootFrame(container, d)
 
 		local function buildTab(tabContainer, rarity)
 			tabContainer:ReleaseChildren()
-			if rarity == "include" then
-				local eBox
-				local dropIncludeList
+                        if rarity == "include" then
+                                local eBox
+                                local dropIncludeList
 
 				local function addInclude(input)
 					local id = tonumber(input)
@@ -2386,15 +2381,41 @@ local function addLootFrame(container, d)
 						dropIncludeList:SetValue(nil)
 					end
 				end)
-				tabContainer:AddChild(dropIncludeList)
-				tabContainer:AddChild(btnRemove)
-			else
-				local q = tonumber(rarity)
-				local filter = addon.db.lootToastFilters[q]
-				tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastCheckIlvl"], filter.ilvl, function(self, _, v) addon.db.lootToastFilters[q].ilvl = v end))
-				tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeMounts"], filter.mounts, function(self, _, v) addon.db.lootToastFilters[q].mounts = v end))
-				tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludePets"], filter.pets, function(self, _, v) addon.db.lootToastFilters[q].pets = v end))
-			end
+                                tabContainer:AddChild(dropIncludeList)
+                                tabContainer:AddChild(btnRemove)
+
+                                local cbSound = addon.functions.createCheckboxAce(L["enableLootToastCustomSound"], addon.db.lootToastUseCustomSound, function(self, _, v)
+                                        addon.db.lootToastUseCustomSound = v
+                                        buildTab(tabContainer, "include")
+                                end)
+                                tabContainer:AddChild(cbSound)
+
+                                if addon.db.lootToastUseCustomSound then
+                                        if addon.ChatIM and addon.ChatIM.BuildSoundTable and not addon.ChatIM.availableSounds then addon.ChatIM:BuildSoundTable() end
+                                        local soundList = {}
+                                        for name in pairs(addon.ChatIM.availableSounds or {}) do soundList[name] = name end
+                                        local list, order = addon.functions.prepareListForDropdown(soundList)
+                                        local dropSound = addon.functions.createDropdownAce(L["lootToastCustomSound"], list, order, function(self, _, val)
+                                                addon.db.lootToastCustomSoundFile = val
+                                                self:SetValue(val)
+                                                local file = addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[val]
+                                                if file then PlaySoundFile(file, "Master") end
+                                        end)
+                                        dropSound:SetValue(addon.db.lootToastCustomSoundFile)
+                                        tabContainer:AddChild(dropSound)
+                                end
+                        else
+                                local q = tonumber(rarity)
+                                local filter = addon.db.lootToastFilters[q]
+                                tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastCheckIlvl"], filter.ilvl, function(self, _, v) addon.db.lootToastFilters[q].ilvl = v end))
+                                local slider = addon.functions.createSliderAce(L["lootToastItemLevel"] .. ": " .. addon.db.lootToastItemLevels[q], addon.db.lootToastItemLevels[q], 0, 1000, 1, function(self, _, val)
+                                        addon.db.lootToastItemLevels[q] = val
+                                        self:SetLabel(L["lootToastItemLevel"] .. ": " .. val)
+                                end)
+                                tabContainer:AddChild(slider)
+                                tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludeMounts"], filter.mounts, function(self, _, v) addon.db.lootToastFilters[q].mounts = v end))
+                                tabContainer:AddChild(addon.functions.createCheckboxAce(L["lootToastIncludePets"], filter.pets, function(self, _, v) addon.db.lootToastFilters[q].pets = v end))
+                        end
 			local label = addon.functions.createLabelAce("|cffffd700" .. L["lootToastExplanation"] .. "|r", nil, nil, 14)
 			label:SetFullWidth(true)
 			tabContainer:AddChild(label)
@@ -3028,14 +3049,28 @@ local function initMisc()
 end
 
 local function initLoot()
-	addon.functions.InitDBValue("enableLootToastFilter", false)
-	addon.functions.InitDBValue("lootToastItemLevel", 600)
-	addon.functions.InitDBValue("lootToastFilters", {
-		[Enum.ItemQuality.Rare] = { ilvl = true, mounts = true, pets = true },
-		[Enum.ItemQuality.Epic] = { ilvl = true, mounts = true, pets = true },
-		[Enum.ItemQuality.Legendary] = { ilvl = true, mounts = true, pets = true },
-	})
-	addon.functions.InitDBValue("lootToastIncludeIDs", {})
+        addon.functions.InitDBValue("enableLootToastFilter", false)
+        addon.functions.InitDBValue("lootToastItemLevels", {
+                [Enum.ItemQuality.Rare] = 600,
+                [Enum.ItemQuality.Epic] = 600,
+                [Enum.ItemQuality.Legendary] = 600,
+        })
+        if addon.db.lootToastItemLevel then
+                local v = addon.db.lootToastItemLevel
+                addon.db.lootToastItemLevels[Enum.ItemQuality.Rare] = v
+                addon.db.lootToastItemLevels[Enum.ItemQuality.Epic] = v
+                addon.db.lootToastItemLevels[Enum.ItemQuality.Legendary] = v
+                addon.db.lootToastItemLevel = nil
+        end
+        addon.functions.InitDBValue("lootToastFilters", {
+                [Enum.ItemQuality.Rare] = { ilvl = true, mounts = true, pets = true },
+                [Enum.ItemQuality.Epic] = { ilvl = true, mounts = true, pets = true },
+                [Enum.ItemQuality.Legendary] = { ilvl = true, mounts = true, pets = true },
+        })
+        addon.functions.InitDBValue("lootToastIncludeIDs", {})
+        addon.functions.InitDBValue("lootToastUseCustomSound", false)
+        addon.functions.InitDBValue("lootToastCustomSoundFile", "")
+        if addon.ChatIM and addon.ChatIM.BuildSoundTable and not addon.ChatIM.availableSounds then addon.ChatIM:BuildSoundTable() end
 end
 
 local function initUnitFrame()
