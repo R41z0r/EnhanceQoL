@@ -80,6 +80,8 @@ Fully configurable per context (combat, dungeon, friendly/enemy): items, item co
 *   Hideable Target Frame, Micro Menu (fade in on mouse-over).
 *   Profession-quality icon fade while searching.
 *   Quick-loot mode (disable Blizzard auto-loot for best speed).
+*   Custom loot toasts with item-level thresholds, mount/pet filtering,
+    include list and optional sound.
 *   Option to hide Raid Tools in party play.
 *   Disable Talking Head frame, plus other minor class-specific bar tweaks.
 *   **Enhanced Ignore List** – organise ignored players in a searchable window, highlight them in group finder and block unwanted requests. Toggle with `/eil`.
