@@ -2396,6 +2396,10 @@ local function addLootFrame(container, d)
 						dropIncludeList:SetValue(nil)
 					end
 				end)
+				local label = addon.functions.createLabelAce("", nil, nil, 14)
+				label:SetFullWidth(true)
+				tabContainer:AddChild(label)
+				label:SetText("|cffffd700" .. L["includeInfoLoot"] .. "|r")
 				tabContainer:AddChild(dropIncludeList)
 				tabContainer:AddChild(btnRemove)
 			else

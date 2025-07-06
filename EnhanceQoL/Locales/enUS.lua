@@ -103,6 +103,7 @@ L["lootToastItemLevel"] = "Item level threshold"
 L["lootToastCheckIlvl"] = "Check item level"
 L["lootToastIncludeMounts"] = "Always show for mounts"
 L["lootToastIncludePets"] = "Always show for pets"
+L["includeInfoLoot"] = "Enter any item ID here to trigger a Toast when that item is looted."
 L["alwaysShow"] = ". It will always show "
 L["lootToastExplanation"] =
 	"Only loot toasts that match at least one filter will be shown. Items on the include list always trigger a toast. If rarity filtering is enabled the selected rarities also apply to mounts and pets. Item level is ignored for mounts and pets."
