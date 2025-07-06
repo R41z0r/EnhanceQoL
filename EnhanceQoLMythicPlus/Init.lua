@@ -603,6 +603,7 @@ addon.MythicPlus.variables.portalCompendium = {
 
 -- Pre-Stage all icon to have less calls to LUA API
 local hearthstoneID = {
+	{ isToy = true, icon = 4622300, id = 235016, spellID = 1217281 }, -- Redeployment Module
 	{ isItem = true, icon = 134414, id = 6948, spellID = 8690 }, -- Default Hearthstone
 	{ isToy = true, icon = 236222, id = 54452, spellID = 75136 }, -- Ethereal Portal
 	{ isToy = true, icon = 458254, id = 64488, spellID = 94716 }, -- The Innkeeper's Daughter

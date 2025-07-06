@@ -2398,29 +2398,6 @@ local function addLootFrame(container, d)
 				end)
 				tabContainer:AddChild(dropIncludeList)
 				tabContainer:AddChild(btnRemove)
-
-				local cbSound = addon.functions.createCheckboxAce(L["enableLootToastCustomSound"], addon.db.lootToastUseCustomSound, function(self, _, v)
-					addon.db.lootToastUseCustomSound = v
-					buildTab(tabContainer, "include")
-				end)
-				tabContainer:AddChild(cbSound)
-
-				if addon.db.lootToastUseCustomSound then
-					if addon.ChatIM and addon.ChatIM.BuildSoundTable and not addon.ChatIM.availableSounds then addon.ChatIM:BuildSoundTable() end
-					local soundList = {}
-					for name in pairs(addon.ChatIM.availableSounds or {}) do
-						soundList[name] = name
-					end
-					local list, order = addon.functions.prepareListForDropdown(soundList)
-					local dropSound = addon.functions.createDropdownAce(L["lootToastCustomSound"], list, order, function(self, _, val)
-						addon.db.lootToastCustomSoundFile = val
-						self:SetValue(val)
-						local file = addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[val]
-						if file then PlaySoundFile(file, "Master") end
-					end)
-					dropSound:SetValue(addon.db.lootToastCustomSoundFile)
-					tabContainer:AddChild(dropSound)
-				end
 			else
 				local q = tonumber(rarity)
 				local filter = addon.db.lootToastFilters[q]
@@ -2436,7 +2413,7 @@ local function addLootFrame(container, d)
 						if filter.mounts then table.insert(extras, MOUNTS:lower()) end
 						if filter.pets then table.insert(extras, PETS:lower()) end
 						local eText = ""
-						if #extras > 0 then eText = " including " .. table.concat(extras, " " .. L["andWord"] .. " ") end
+						if #extras > 0 then eText = L["alwaysShow"] .. table.concat(extras, " " .. L["andWord"] .. " ") end
 						if filter.ilvl then
 							text = L["lootToastSummaryIlvl"]:format(addon.db.lootToastItemLevels[q], eText)
 						else
@@ -2469,6 +2446,30 @@ local function addLootFrame(container, d)
 				refreshLabel()
 			end
 			scroll:DoLayout()
+		end
+
+		local cbSound = addon.functions.createCheckboxAce(L["enableLootToastCustomSound"], addon.db.lootToastUseCustomSound, function(self, _, v)
+			addon.db.lootToastUseCustomSound = v
+			container:ReleaseChildren()
+			addLootFrame(container)
+		end)
+		group:AddChild(cbSound)
+
+		if addon.db.lootToastUseCustomSound then
+			if addon.ChatIM and addon.ChatIM.BuildSoundTable and not addon.ChatIM.availableSounds then addon.ChatIM:BuildSoundTable() end
+			local soundList = {}
+			for name in pairs(addon.ChatIM.availableSounds or {}) do
+				soundList[name] = name
+			end
+			local list, order = addon.functions.prepareListForDropdown(soundList)
+			local dropSound = addon.functions.createDropdownAce(L["lootToastCustomSound"], list, order, function(self, _, val)
+				addon.db.lootToastCustomSoundFile = val
+				self:SetValue(val)
+				local file = addon.ChatIM.availableSounds and addon.ChatIM.availableSounds[val]
+				if file then PlaySoundFile(file, "Master") end
+			end)
+			dropSound:SetValue(addon.db.lootToastCustomSoundFile)
+			group:AddChild(dropSound)
 		end
 
 		local tabGroup = addon.functions.createContainer("TabGroup", "Flow")

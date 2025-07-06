@@ -1,11 +1,15 @@
 # Changelog
 
-## [3.25.0] – 2025-07-04
+## [3.25.0] – 2025-07-05
 ### ✨ Added
-- **Skip Cinematic**
-  - Option to skip cinematics
-- **Loot Toast modification**
-  - Option to change the behaviour when a new item pop ups
+- **New Delve Hearthstone**
+  - *Redeployment Module* added to the random hearthstone on Teleport Frame
+- **Skip Cinematics**
+  - New toggle to automatically skip all in-game cinematics.
+- **Loot Toast Enhancements**
+  - Customise how loot toasts behave when a new item appears.
+  - Add individual items to a “watched list” and trigger a custom sound + popup when any of them drop.  
+    *Example: play a sound whenever you loot a specific uncommon trade good.*
 
 ## [3.24.0] – 2025-07-02
 ### ✨ Added
