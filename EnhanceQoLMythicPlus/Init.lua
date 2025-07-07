@@ -629,6 +629,19 @@ local hearthstoneID = {
 	{ isToy = true, icon = 5524923, id = 212337, spellID = 401802 }, -- Stone of the Hearth
 	{ isToy = true, icon = 5891370, id = 228940, spellID = 463481 }, -- Notorious Thread's Hearthstone
 	{ isToy = true, icon = 6383489, id = 236687, spellID = 1220729 }, -- Explosive Hearthstone
+	{
+		isToy = true,
+		icon = 1686574,
+		id = 210455,
+		spellID = 438606,
+		usable = function()
+			if addon.variables.unitRace == "LightforgedDraenei" or addon.variables.unitRace == "Draenei" then
+				return true
+			else
+				return false
+			end
+		end,
+	}, -- Draenic Hologem
 
 	-- Covenent Hearthstones
 	{ isToy = true, icon = 3257748, id = 184353, spellID = 345393, achievementID = 15242 }, -- Kyrian Hearthstone
@@ -646,7 +659,9 @@ local function setAvailableHearthstone()
 		if v.isItem then
 			if C_Item.GetItemCount(v.id) > 0 then addIt = true end
 		elseif PlayerHasToy(v.id) then
-			if v.achievementID then
+			if v.usable and v.usable() then
+				addIt = true
+			elseif v.achievementID then
 				if select(4, GetAchievementInfo(v.achievementID)) then addIt = true end
 			else
 				addIt = true
