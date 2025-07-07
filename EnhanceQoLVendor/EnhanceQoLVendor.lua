@@ -9,6 +9,17 @@ end
 
 local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_Vendor")
 local lastEbox = nil
+local sellMoreButton
+local hasMoreItems = false
+
+local function updateSellMoreButton()
+	if not sellMoreButton then return end
+	if addon.db["vendorOnly12Items"] and hasMoreItems and MerchantFrame:IsShown() then
+		sellMoreButton:Show()
+	else
+		sellMoreButton:Hide()
+	end
+end
 
 local frameLoad = CreateFrame("Frame")
 
@@ -31,7 +42,7 @@ local function sellItems(items)
 			return
 		end
 		if #items == 0 then
-			-- print("Finished selling items.")
+			updateSellMoreButton()
 			return
 		end
 
@@ -43,6 +54,8 @@ local function sellItems(items)
 end
 
 local function checkItem()
+	hasMoreItems = false
+	updateSellMoreButton()
 	local _, avgItemLevelEquipped = GetAverageItemLevel()
 	local itemsToSell = {}
 	for bag = 0, NUM_TOTAL_EQUIPPED_BAG_SLOTS do
@@ -139,6 +152,8 @@ local function checkItem()
 	end
 	if #itemsToSell > 0 then
 		if addon.db["vendorOnly12Items"] then
+			if #itemsToSell > 12 then hasMoreItems = true end
+
 			local limitedItems = {}
 			for i = 1, math.min(12, #itemsToSell) do
 				table.insert(limitedItems, itemsToSell[i])
@@ -149,10 +164,35 @@ local function checkItem()
 	end
 end
 
+local function createSellMoreButton()
+	if sellMoreButton then return end
+	sellMoreButton = CreateFrame("Button", nil, MerchantFrame, "GameMenuButtonTemplate")
+	sellMoreButton:SetSize(120, 25)
+	if MerchantRepairItemButton then
+		sellMoreButton:SetPoint("TOPLEFT", MerchantRepairItemButton, "BOTTOMLEFT", 5, -5)
+	else
+		sellMoreButton:SetPoint("BOTTOMLEFT", MerchantFrame, "BOTTOMLEFT", 60, 34)
+	end
+	sellMoreButton:SetText(L["vendorSellNext"])
+	sellMoreButton:SetScript("OnClick", function(self)
+		checkItem()
+		self:Hide()
+	end)
+	sellMoreButton:Hide()
+end
+
 local eventHandlers = {
 	["MERCHANT_SHOW"] = function()
-		if (IsShiftKeyDown() and addon.db["vendorSwapAutoSellShift"] == false) or (addon.db["vendorSwapAutoSellShift"] and not IsShiftKeyDown()) then return end
+		createSellMoreButton()
+		if (IsShiftKeyDown() and addon.db["vendorSwapAutoSellShift"] == false) or (addon.db["vendorSwapAutoSellShift"] and not IsShiftKeyDown()) then
+			updateSellMoreButton()
+			return
+		end
 		checkItem()
+	end,
+	["MERCHANT_CLOSED"] = function()
+		hasMoreItems = false
+		updateSellMoreButton()
 	end,
 	["ITEM_DATA_LOAD_RESULT"] = function(arg1, arg2)
 		if arg2 == false and addon.aceFrame:IsShown() and lastEbox then
@@ -419,12 +459,24 @@ local function addGeneralFrame(container)
 
 	local data = {
 		{ text = L["vendorSwapAutoSellShift"], var = "vendorSwapAutoSellShift" },
-		{ text = L["vendorOnly12Items"], var = "vendorOnly12Items" },
+		{
+			text = L["vendorOnly12Items"],
+			desc = L["vendorOnly12ItemsDesc"],
+			var = "vendorOnly12Items",
+			func = function(self, _, checked)
+				addon.db["vendorOnly12Items"] = checked
+				if MerchantRepairItemButton and MerchantRepairItemButton:IsShown() then createSellMoreButton() end
+			end,
+		},
 	}
 	table.sort(data, function(a, b) return a.text < b.text end)
 
 	for _, cbData in ipairs(data) do
-		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], function(self, _, checked) addon.db[cbData.var] = checked end)
+		local func = function(self, _, checked) addon.db[cbData.var] = checked end
+		if cbData.func then func = cbData.func end
+		local desc
+		if cbData.desc then desc = cbData.desc end
+		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], func, desc)
 		groupCore:AddChild(cbElement)
 	end
 end

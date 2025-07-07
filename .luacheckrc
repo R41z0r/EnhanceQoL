@@ -173,6 +173,7 @@ globals = {
 	"PetHitIndicator",
 	"RogueComboPointBarFrame",
 	"PaladinPowerBarFrame",
+	"MerchantRepairItemButton",
 	"QuestFrame",
 	"C_PlayerChoice",
 	"PlayerChoiceFrame",

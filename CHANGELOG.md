@@ -1,15 +1,17 @@
 # Changelog
 
-## [3.25.0] – 2025-07-05
+## [3.25.0] – 2025-07-07
 ### ✨ Added
-- **New Delve Hearthstone**
-  - *Redeployment Module* added to the random hearthstone on Teleport Frame
-- **Skip Cinematics**
-  - New toggle to automatically skip all in-game cinematics.
-- **Loot Toast Enhancements**
-  - Customise how loot toasts behave when a new item appears.
-  - Add individual items to a “watched list” and trigger a custom sound + popup when any of them drop.  
-    *Example: play a sound whenever you loot a specific uncommon trade good.*
+- **Delve Hearthstone**
+  - The *Redeployment Module* is now part of the Teleport Frame’s random-hearthstone pool.
+- **Auto-Skip Cinematics**
+  - New toggle that automatically skips all in-game cinematics whenever possible.
+- **Loot-Toast Upgrades**
+  - Fine-tune which loot toasts appear and how they behave.
+  - Maintain a watch-list of specific items; when any of them drop you’ll get a custom sound and popup.  
+    *Example: play a sound whenever you loot a particular uncommon trade good.*
+- **Vendor – Sell Next**
+  - When *Only sell 12 items* is enabled, a **Sell Next** button appears in the merchant window to unload the next batch.
 
 ## [3.24.0] – 2025-07-02
 ### ✨ Added
