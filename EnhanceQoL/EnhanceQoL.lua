@@ -1284,19 +1284,7 @@ local function addMinimapFrame(container)
 			end,
 		})
 	end
-	if addon.db["instanceDifficultyUseIcon"] then
-		table.insert(data, {
-			parent = "",
-			var = "instanceDifficultyCustomIcon",
-			text = L["instanceDifficultyCustomIcon"],
-			type = "CheckBox",
-			value = addon.db["instanceDifficultyCustomIcon"],
-			callback = function(self, _, text)
-				addon.db["instanceDifficultyCustomIcon"] = text
-				if addon.InstanceDifficulty then addon.InstanceDifficulty:Update() end
-			end,
-		})
-	end
+	-- custom icon path removed
 	local wrapper = addon.functions.createWrapperData(data, container, L)
 end
 
@@ -3345,7 +3333,6 @@ local function initUI()
 	addon.functions.InitDBValue("hideDynamicFlightBar", false)
 	addon.functions.InitDBValue("showInstanceDifficulty", false)
 	addon.functions.InitDBValue("instanceDifficultyUseIcon", false)
-	addon.functions.InitDBValue("instanceDifficultyCustomIcon", "")
 
 	table.insert(addon.variables.unitFrameNames, {
 		name = "MicroMenu",
