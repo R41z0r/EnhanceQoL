@@ -28,6 +28,14 @@ InstanceDifficulty.icon = InstanceDifficulty.icon or indicator:CreateTexture(nil
 InstanceDifficulty.icon:SetAllPoints()
 InstanceDifficulty.icon:Hide()
 
+InstanceDifficulty.icons = {
+	NM = "Interface\\AddOns\\EnhanceQoL\\Icons\\Difficulty_NM.tga",
+	HC = "Interface\\AddOns\\EnhanceQoL\\Icons\\Difficulty_HC.tga",
+	M = "Interface\\AddOns\\EnhanceQoL\\Icons\\Difficulty_M.tga",
+	MPLUS = "Interface\\AddOns\\EnhanceQoL\\Icons\\Difficulty_MPlus.tga",
+	LFR = "Interface\\AddOns\\EnhanceQoL\\Icons\\Difficulty_LFR.tga",
+}
+
 local function getShortLabel(difficultyID, difficultyName)
 	if difficultyID == 1 or difficultyID == 3 or difficultyID == 4 or difficultyID == 14 or difficultyID == 33 or difficultyID == 150 then
 		return "NM"
@@ -54,14 +62,21 @@ function InstanceDifficulty:Update()
 	end
 
 	local _, _, difficultyID, difficultyName, maxPlayers = GetInstanceInfo()
-	if addon.db.instanceDifficultyUseIcon and addon.db.instanceDifficultyCustomIcon ~= "" then
-		self.icon:SetTexture(addon.db.instanceDifficultyCustomIcon)
-		self.icon:Show()
-		self.text:Hide()
-		return
+	local short = getShortLabel(difficultyID, difficultyName)
+
+	if addon.db.instanceDifficultyUseIcon then
+		local key = short
+		if key:find("^M%+") then key = "MPLUS" end
+		local icon = self.icons[key]
+		if icon then
+			self.icon:SetTexture(icon)
+			self.icon:Show()
+			self.text:SetText(short)
+			self.text:Show()
+			return
+		end
 	end
 
-	local short = getShortLabel(difficultyID, difficultyName)
 	local text
 	if maxPlayers and maxPlayers > 0 then
 		text = string.format("%d (%s)", maxPlayers, short)
