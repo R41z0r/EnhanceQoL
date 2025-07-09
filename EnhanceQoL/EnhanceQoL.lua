@@ -1190,6 +1190,28 @@ local function addMinimapFrame(container)
 				addon.functions.checkReloadFrame()
 			end,
 		},
+		{
+			parent = "",
+			var = "showInstanceDifficulty",
+			text = L["showInstanceDifficulty"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["showInstanceDifficulty"] = value
+				if addon.InstanceDifficulty and addon.InstanceDifficulty.SetEnabled then addon.InstanceDifficulty:SetEnabled(value) end
+			end,
+		},
+		{
+			parent = "",
+			var = "instanceDifficultyUseIcon",
+			text = L["instanceDifficultyUseIcon"],
+			type = "CheckBox",
+			callback = function(self, _, value)
+				addon.db["instanceDifficultyUseIcon"] = value
+				if addon.InstanceDifficulty then addon.InstanceDifficulty:Update() end
+				container:ReleaseChildren()
+				addMinimapFrame(container)
+			end,
+		},
 	}
 
 	if addon.db["enableMinimapButtonBin"] then
@@ -1263,7 +1285,14 @@ local function addMinimapFrame(container)
 		})
 	end
 
-	addon.functions.createWrapperData(data, container, L)
+	local wrapper = addon.functions.createWrapperData(data, container, L)
+	if addon.db["instanceDifficultyUseIcon"] then
+		local edit = addon.functions.createEditboxAce(L["instanceDifficultyCustomIcon"], addon.db["instanceDifficultyCustomIcon"], function(self, _, text)
+			addon.db["instanceDifficultyCustomIcon"] = text
+			if addon.InstanceDifficulty then addon.InstanceDifficulty:Update() end
+		end)
+		wrapper:AddChild(edit)
+	end
 end
 
 local function addUnitFrame(container)
@@ -3309,6 +3338,9 @@ local function initUI()
 	addon.functions.InitDBValue("enableSquareMinimap", false)
 	addon.functions.InitDBValue("persistAuctionHouseFilter", false)
 	addon.functions.InitDBValue("hideDynamicFlightBar", false)
+	addon.functions.InitDBValue("showInstanceDifficulty", false)
+	addon.functions.InitDBValue("instanceDifficultyUseIcon", false)
+	addon.functions.InitDBValue("instanceDifficultyCustomIcon", "")
 
 	table.insert(addon.variables.unitFrameNames, {
 		name = "MicroMenu",
@@ -3864,6 +3896,7 @@ local function initUI()
 	end
 
 	if addon.db["enableLootspecQuickswitch"] then addon.functions.createLootspecFrame() end
+	if addon.InstanceDifficulty and addon.InstanceDifficulty.SetEnabled then addon.InstanceDifficulty:SetEnabled(addon.db["showInstanceDifficulty"]) end
 end
 
 function addon.functions.createCatalystFrame()

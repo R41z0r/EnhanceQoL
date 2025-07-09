@@ -59,6 +59,7 @@ Each action bar can be set to appear only on mouseover:
   - **Show a movable frame for the button sink with mouseover** (Show a movable frame for the button sink with mouseover).
   - **Lock the button sink frame** (Lock the button sink frame).
 - **Use a square minimap** (Use a square minimap instead of the normal round).
+- **Show instance difficulty** (Display the current instance difficulty near the minimap; optionally use a custom icon).
 - **Hide Minimap Button** (Hide Minimap Button).
 - **Hide Bagsbar** (Hide Bagsbar).
 - **Hide Micro Menu** (Hide Micro Menu).
