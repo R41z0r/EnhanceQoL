@@ -15,6 +15,10 @@ InstanceDifficulty.frame = InstanceDifficulty.frame or CreateFrame("Frame")
 
 local indicator = MinimapCluster.InstanceDifficulty
 indicator:SetAlpha(1)
+if indicator.Default then
+	indicator.Default:Hide()
+	indicator.Default:SetScript("OnShow", indicator.Default.Hide)
+end
 
 InstanceDifficulty.text = InstanceDifficulty.text or indicator:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 InstanceDifficulty.text:SetPoint("CENTER", indicator, "CENTER", 0, 0)
@@ -75,6 +79,10 @@ function InstanceDifficulty:SetEnabled(value)
 		self.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 		self.frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 		self.frame:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
+		if indicator.Default then
+			indicator.Default:Hide()
+			indicator.Default:SetScript("OnShow", indicator.Default.Hide)
+		end
 		self:Update()
 	else
 		self.frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
@@ -82,6 +90,10 @@ function InstanceDifficulty:SetEnabled(value)
 		self.frame:UnregisterEvent("PLAYER_DIFFICULTY_CHANGED")
 		self.text:Hide()
 		self.icon:Hide()
+		if indicator.Default then
+			indicator.Default:SetScript("OnShow", nil)
+			indicator.Default:Show()
+		end
 	end
 end
 
