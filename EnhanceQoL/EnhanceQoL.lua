@@ -1200,18 +1200,18 @@ local function addMinimapFrame(container)
 				if addon.InstanceDifficulty and addon.InstanceDifficulty.SetEnabled then addon.InstanceDifficulty:SetEnabled(value) end
 			end,
 		},
-		{
-			parent = "",
-			var = "instanceDifficultyUseIcon",
-			text = L["instanceDifficultyUseIcon"],
-			type = "CheckBox",
-			callback = function(self, _, value)
-				addon.db["instanceDifficultyUseIcon"] = value
-				if addon.InstanceDifficulty then addon.InstanceDifficulty:Update() end
-				container:ReleaseChildren()
-				addMinimapFrame(container)
-			end,
-		},
+		-- {
+		-- 	parent = "",
+		-- 	var = "instanceDifficultyUseIcon",
+		-- 	text = L["instanceDifficultyUseIcon"],
+		-- 	type = "CheckBox",
+		-- 	callback = function(self, _, value)
+		-- 		addon.db["instanceDifficultyUseIcon"] = value
+		-- 		if addon.InstanceDifficulty then addon.InstanceDifficulty:Update() end
+		-- 		container:ReleaseChildren()
+		-- 		addMinimapFrame(container)
+		-- 	end,
+		-- },
 	}
 
 	if addon.db["enableMinimapButtonBin"] then
