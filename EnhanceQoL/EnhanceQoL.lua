@@ -1284,15 +1284,20 @@ local function addMinimapFrame(container)
 			end,
 		})
 	end
-
-	local wrapper = addon.functions.createWrapperData(data, container, L)
 	if addon.db["instanceDifficultyUseIcon"] then
-		local edit = addon.functions.createEditboxAce(L["instanceDifficultyCustomIcon"], addon.db["instanceDifficultyCustomIcon"], function(self, _, text)
-			addon.db["instanceDifficultyCustomIcon"] = text
-			if addon.InstanceDifficulty then addon.InstanceDifficulty:Update() end
-		end)
-		wrapper:AddChild(edit)
+		table.insert(data, {
+			parent = "",
+			var = "instanceDifficultyCustomIcon",
+			text = L["instanceDifficultyCustomIcon"],
+			type = "CheckBox",
+			value = addon.db["instanceDifficultyCustomIcon"],
+			callback = function(self, _, text)
+				addon.db["instanceDifficultyCustomIcon"] = text
+				if addon.InstanceDifficulty then addon.InstanceDifficulty:Update() end
+			end,
+		})
 	end
+	local wrapper = addon.functions.createWrapperData(data, container, L)
 end
 
 local function addUnitFrame(container)
