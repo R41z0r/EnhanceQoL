@@ -24,7 +24,8 @@ if indicator.ChallengeMode then
 	indicator.ChallengeMode:SetScript("OnShow", indicator.ChallengeMode.Hide)
 end
 
-InstanceDifficulty.text = InstanceDifficulty.text or indicator:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+InstanceDifficulty.text = InstanceDifficulty.text or indicator:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+InstanceDifficulty.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 InstanceDifficulty.text:SetPoint("CENTER", indicator, "CENTER", 0, 0)
 InstanceDifficulty.text:Hide()
 
@@ -70,17 +71,7 @@ function InstanceDifficulty:Update()
 	local _, _, difficultyID, difficultyName, maxPlayers = GetInstanceInfo()
 	local short = getShortLabel(difficultyID, difficultyName)
 
-	if addon.db.instanceDifficultyUseIcon then
-		local key = short
-		if key:find("^M%+") then key = "MPLUS" end
-		local icon = self.icons[key]
-		if icon then
-			self.icon:SetTexture(icon)
-			self.icon:Show()
-			self.text:Hide()
-			return
-		end
-	end
+       -- Custom icons are temporarily disabled
 
 	local text
 	if maxPlayers and maxPlayers > 0 then
