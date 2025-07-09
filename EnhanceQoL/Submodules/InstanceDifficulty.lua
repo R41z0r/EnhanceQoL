@@ -29,7 +29,9 @@ InstanceDifficulty.text:SetPoint("CENTER", indicator, "CENTER", 0, 0)
 InstanceDifficulty.text:Hide()
 
 InstanceDifficulty.icon = InstanceDifficulty.icon or indicator:CreateTexture(nil, "OVERLAY")
-InstanceDifficulty.icon:SetAllPoints()
+InstanceDifficulty.icon:ClearAllPoints()
+InstanceDifficulty.icon:SetPoint("CENTER", indicator, "CENTER", 0, 4)
+InstanceDifficulty.icon:SetSize(50,50)
 InstanceDifficulty.icon:Hide()
 
 InstanceDifficulty.icons = {
@@ -75,8 +77,7 @@ function InstanceDifficulty:Update()
 		if icon then
 			self.icon:SetTexture(icon)
 			self.icon:Show()
-			self.text:SetText(short)
-			self.text:Show()
+			self.text:Hide()
 			return
 		end
 	end
