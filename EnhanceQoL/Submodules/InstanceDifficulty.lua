@@ -19,6 +19,10 @@ if indicator.Default then
 	indicator.Default:Hide()
 	indicator.Default:SetScript("OnShow", indicator.Default.Hide)
 end
+if indicator.ChallengeMode then
+	indicator.ChallengeMode:Hide()
+	indicator.ChallengeMode:SetScript("OnShow", indicator.ChallengeMode.Hide)
+end
 
 InstanceDifficulty.text = InstanceDifficulty.text or indicator:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
 InstanceDifficulty.text:SetPoint("CENTER", indicator, "CENTER", 0, 0)
@@ -37,7 +41,7 @@ local function getShortLabel(difficultyID, difficultyName)
 		return "M"
 	elseif difficultyID == 8 then
 		local _, level = C_ChallengeMode.GetActiveKeystoneInfo()
-		if level and level > 0 then return "M+" .. level end
+		if level and type(level) ~= "table" and level > 0 then return "M+" .. level end
 		return "M+"
 	elseif difficultyID == 7 or difficultyID == 17 or difficultyID == 151 then
 		return "LFR"
