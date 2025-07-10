@@ -24,6 +24,8 @@ if indicator.ChallengeMode then
 	indicator.ChallengeMode:SetScript("OnShow", indicator.ChallengeMode.Hide)
 end
 
+indicator:HookScript("OnShow", function() InstanceDifficulty:Update() end)
+
 InstanceDifficulty.text = InstanceDifficulty.text or indicator:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 InstanceDifficulty.text:SetFont(addon.variables.defaultFont, 14, "OUTLINE")
 InstanceDifficulty.text:SetPoint("CENTER", indicator, "CENTER", 0, 0)
@@ -32,7 +34,7 @@ InstanceDifficulty.text:Hide()
 InstanceDifficulty.icon = InstanceDifficulty.icon or indicator:CreateTexture(nil, "OVERLAY")
 InstanceDifficulty.icon:ClearAllPoints()
 InstanceDifficulty.icon:SetPoint("CENTER", indicator, "CENTER", 0, 4)
-InstanceDifficulty.icon:SetSize(50,50)
+InstanceDifficulty.icon:SetSize(50, 50)
 InstanceDifficulty.icon:Hide()
 
 InstanceDifficulty.icons = {
@@ -51,8 +53,8 @@ local function getShortLabel(difficultyID, difficultyName)
 	elseif difficultyID == 16 or difficultyID == 23 then
 		return "M"
 	elseif difficultyID == 8 then
-		local _, level = C_ChallengeMode.GetActiveKeystoneInfo()
-		if level and type(level) ~= "table" and level > 0 then return "M+" .. level end
+		local level = C_ChallengeMode.GetActiveKeystoneInfo()
+		if level and type(level) == "number" and level > 0 then return "M+" .. level end
 		return "M+"
 	elseif difficultyID == 7 or difficultyID == 17 or difficultyID == 151 then
 		return "LFR"
@@ -71,7 +73,7 @@ function InstanceDifficulty:Update()
 	local _, _, difficultyID, difficultyName, maxPlayers = GetInstanceInfo()
 	local short = getShortLabel(difficultyID, difficultyName)
 
-       -- Custom icons are temporarily disabled
+	-- Custom icons are temporarily disabled
 
 	local text
 	if maxPlayers and maxPlayers > 0 then
@@ -90,6 +92,7 @@ function InstanceDifficulty:SetEnabled(value)
 		self.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 		self.frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 		self.frame:RegisterEvent("PLAYER_DIFFICULTY_CHANGED")
+		self.frame:RegisterEvent("CHALLENGE_MODE_START")
 		if indicator.Default then
 			indicator.Default:Hide()
 			indicator.Default:SetScript("OnShow", indicator.Default.Hide)
@@ -99,6 +102,7 @@ function InstanceDifficulty:SetEnabled(value)
 		self.frame:UnregisterEvent("PLAYER_ENTERING_WORLD")
 		self.frame:UnregisterEvent("ZONE_CHANGED_NEW_AREA")
 		self.frame:UnregisterEvent("PLAYER_DIFFICULTY_CHANGED")
+		self.frame:UnregisterEvent("CHALLENGE_MODE_START")
 		self.text:Hide()
 		self.icon:Hide()
 		if indicator.Default then
@@ -108,4 +112,4 @@ function InstanceDifficulty:SetEnabled(value)
 	end
 end
 
-InstanceDifficulty.frame:SetScript("OnEvent", function() InstanceDifficulty:Update() end)
+InstanceDifficulty.frame:SetScript("OnEvent", function(e) InstanceDifficulty:Update() end)
