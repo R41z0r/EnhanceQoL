@@ -3332,7 +3332,7 @@ local function initUI()
 	addon.functions.InitDBValue("persistAuctionHouseFilter", false)
 	addon.functions.InitDBValue("hideDynamicFlightBar", false)
 	addon.functions.InitDBValue("showInstanceDifficulty", false)
-	addon.functions.InitDBValue("instanceDifficultyUseIcon", false)
+	-- addon.functions.InitDBValue("instanceDifficultyUseIcon", false)
 
 	table.insert(addon.variables.unitFrameNames, {
 		name = "MicroMenu",

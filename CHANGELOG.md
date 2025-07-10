@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.26.0] – 2025-07-10
+### ✨ Added
+- **Alternative Difficulty Indicator**
+  - New toggle that replaces the default icon with a clear text label, making the current dungeon difficulty easier to read at a glance.
+
 ## [3.25.0] – 2025-07-07
 ### ✨ Added
 - **Delve Hearthstone**
