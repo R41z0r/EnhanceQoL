@@ -83,6 +83,7 @@ L["portalShowToyHearthstones"] = "Show Teleport Items and Toys (e.g. Hearthstone
 L["portalShowEngineering"] = "Show Engineering Teleports (Requires Engineering)"
 L["portalShowClassTeleport"] = "Show Class-Specific Teleports (Only if this class has any)"
 L["portalShowMagePortal"] = "Show Mage Portals (Mage only)"
+L["Favorites"] = "Favorites"
 
 -- BR Tracker
 L["BRTracker"] = "Combat Resurrection"
