@@ -46,5 +46,6 @@ Submodules\\ChatIM\\Core.lua
 Submodules\LootToast.lua
 Submodules\Ignore\Ignore.lua
 Submodules\Ignore\Ignore.xml
+Submodules\InstanceDifficulty.lua
 
 
