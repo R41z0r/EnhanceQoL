@@ -1193,6 +1193,7 @@ local function addMinimapFrame(container)
 		{
 			parent = "",
 			var = "showInstanceDifficulty",
+			desc = L["showInstanceDifficultyDesc"],
 			text = L["showInstanceDifficulty"],
 			type = "CheckBox",
 			callback = function(self, _, value)

@@ -220,6 +220,7 @@ L["enableLootspecQuickswitchDesc"] = "Left-click a specialization to set your lo
 L["enableSquareMinimap"] = "Use a square minimap instead of the normal round"
 L["enableSquareMinimapDesc"] = "This option required a reload"
 L["showInstanceDifficulty"] = "Show instance difficulty"
+L["showInstanceDifficultyDesc"] = "Replace the default icon with a short text label (NM, HC, M, M+, LFR) showing the current instance difficulty."
 -- L["instanceDifficultyUseIcon"] = "Use icons for difficulty"
 
 L["Profiles"] = "Profiles"
