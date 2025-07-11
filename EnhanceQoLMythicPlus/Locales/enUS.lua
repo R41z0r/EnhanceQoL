@@ -84,6 +84,7 @@ L["portalShowEngineering"] = "Show Engineering Teleports (Requires Engineering)"
 L["portalShowClassTeleport"] = "Show Class-Specific Teleports (Only if this class has any)"
 L["portalShowMagePortal"] = "Show Mage Portals (Mage only)"
 L["Favorites"] = "Favorites"
+L["teleportFavoritesIgnoreExpansionHide"] = "Always show favorites from hidden expansions"
 
 -- BR Tracker
 L["BRTracker"] = "Combat Resurrection"

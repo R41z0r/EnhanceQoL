@@ -756,6 +756,10 @@ local function addTeleportFrame(container)
 				text = L["portalShowMagePortal"],
 				var = "portalShowMagePortal",
 			},
+			{
+				text = L["teleportFavoritesIgnoreExpansionHide"],
+				var = "teleportFavoritesIgnoreExpansionHide",
+			},
 		}
 
 		for _, cbData in ipairs(data) do

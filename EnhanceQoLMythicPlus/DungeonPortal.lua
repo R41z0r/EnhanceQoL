@@ -335,8 +335,11 @@ local function CreatePortalCompendium(frame, compendium)
 	local newCompendium = {}
 	local favSpells = {}
 	for _, section in pairs(compendium) do
+		local hidden = addon.db["teleportsCompendiumHide" .. section.headline]
 		for spellID, data in pairs(section.spells) do
-			if favorites[spellID] then favSpells[spellID] = data end
+			if favorites[spellID] then
+				if addon.db.teleportFavoritesIgnoreExpansionHide or not hidden then favSpells[spellID] = data end
+			end
 		end
 	end
 	if next(favSpells) then newCompendium[9999] = { headline = L["Favorites"] or "Favorites", spells = favSpells } end
