@@ -11,5 +11,6 @@
 ## Globe-Main: EnhanceQoL
 
 Init.lua
+locales.xml
 AltInventory.lua
 UI.lua
