@@ -256,10 +256,12 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 			button.cooldownFrame:SetAllPoints(button)
 
 			-- Sichere Aktion (CastSpell)
-			button:SetAttribute("type", "spell")
-			button:SetAttribute("spell", spellID)
+                        button:SetAttribute("type1", "spell")
+                        button:SetAttribute("spell1", spellID)
+                        button:SetAttribute("type2", nil)
+                        button:SetAttribute("spell2", nil)
 
-			button:RegisterForClicks("AnyUp", "AnyDown")
+                        button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 			button:SetScript("OnMouseUp", function(self, btn)
 				if btn == "RightButton" then
 					local favs = addon.db.teleportFavorites
@@ -536,21 +538,27 @@ local function CreatePortalCompendium(frame, compendium)
 				button.cooldownFrame:SetAllPoints(button)
 
 				-- Sichere Aktion (CastSpell)
-				if spellData.isToy then
-					if spellData.isKnown then
-						button:SetAttribute("type", "macro")
-						button:SetAttribute("macrotext", "/use item:" .. spellData.toyID)
-					end
-				elseif spellData.isItem then
-					if spellData.isKnown then
-						button:SetAttribute("type", "macro")
-						button:SetAttribute("macrotext", "/use item:" .. spellData.itemID)
-					end
-				else
-					button:SetAttribute("type", "spell")
-					button:SetAttribute("spell", spellID)
-				end
-				button:RegisterForClicks("AnyUp", "AnyDown")
+                                if spellData.isToy then
+                                        if spellData.isKnown then
+                                                button:SetAttribute("type1", "macro")
+                                                button:SetAttribute("macrotext1", "/use item:" .. spellData.toyID)
+                                                button:SetAttribute("type2", nil)
+                                                button:SetAttribute("macrotext2", nil)
+                                        end
+                                elseif spellData.isItem then
+                                        if spellData.isKnown then
+                                                button:SetAttribute("type1", "macro")
+                                                button:SetAttribute("macrotext1", "/use item:" .. spellData.itemID)
+                                                button:SetAttribute("type2", nil)
+                                                button:SetAttribute("macrotext2", nil)
+                                        end
+                                else
+                                        button:SetAttribute("type1", "spell")
+                                        button:SetAttribute("spell1", spellID)
+                                        button:SetAttribute("type2", nil)
+                                        button:SetAttribute("spell2", nil)
+                                end
+                                button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 				button:SetScript("OnMouseUp", function(self, btn)
 					if btn == "RightButton" then
 						local favs = addon.db.teleportFavorites
