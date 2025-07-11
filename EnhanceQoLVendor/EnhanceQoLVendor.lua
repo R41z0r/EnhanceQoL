@@ -168,10 +168,10 @@ local function createSellMoreButton()
 	if sellMoreButton then return end
 	sellMoreButton = CreateFrame("Button", nil, MerchantFrame, "GameMenuButtonTemplate")
 	sellMoreButton:SetSize(120, 25)
-	if MerchantRepairItemButton then
+	if MerchantRepairItemButton and MerchantRepairItemButton:IsShown() then
 		sellMoreButton:SetPoint("TOPLEFT", MerchantRepairItemButton, "BOTTOMLEFT", 5, -5)
-       elseif MerchantSellAllJunkButton then
-               sellMoreButton:SetPoint("TOPRIGHT", MerchantSellAllJunkButton, "BOTTOMLEFT", -5, -5)
+	elseif MerchantSellAllJunkButton and MerchantSellAllJunkButton:IsShown() then
+		sellMoreButton:SetPoint("TOPRIGHT", MerchantSellAllJunkButton, "BOTTOMLEFT", -5, -5)
 	else
 		sellMoreButton:SetPoint("BOTTOMLEFT", MerchantFrame, "BOTTOMLEFT", 60, 60)
 	end
