@@ -33,6 +33,7 @@ English • German • French • Spanish • Italian • Russian • Korean •
 *   Hideable Bag Bar (mouse-over).
 *   Money tracker – total gold for all characters in one tooltip.
 *   Alt-inventory cache – counts how many of each item your alts own.
+*   Alt-inventory viewer – `/eqol altinv` shows which character holds each item. Counts are stored automatically when bags update.
 
 ### Character & Inspect
 
