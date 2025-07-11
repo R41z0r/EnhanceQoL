@@ -5,4 +5,5 @@ L["By Item"] = "By Item"
 L["By Character"] = "By Character"
 L["Total"] = "Total"
 L["AltInventoryTooltip"] = "|cffeda55fClick|r to toggle Alt Inventory"
+L["Search"] = "Search"
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.27.1] – 2025-07-11
+### ✨ Added
+- Search box for filtering the alt‑inventory viewer.
+### 🐛 Bug Fixes
+- Item tooltips now show when hovering entries in the alt‑inventory viewer.
+- Fixed an error when toggling the alt‑inventory viewer.
+
 ## [3.27.0] – 2025-07-11
 ### ✨ Added
 - **Teleport Favorites in the Compendium**

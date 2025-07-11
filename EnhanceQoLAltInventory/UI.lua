@@ -13,6 +13,8 @@ local AceGUI = addon.AceGUI
 
 local frame
 local tabGroup
+local searchBox
+local searchText = ""
 local AltInventory = addon.AltInventory or {}
 
 local function getItemInfoFromLink(link)
@@ -22,58 +24,84 @@ local function getItemInfoFromLink(link)
 end
 
 local function buildByItem(container)
-	local aggregated = {}
-	for guid, items in pairs(addon.db.altInventory or {}) do
-		for link, count in pairs(items) do
-			if not aggregated[link] then aggregated[link] = { total = 0, chars = {} } end
-			aggregated[link].total = aggregated[link].total + count
-			aggregated[link].chars[guid] = count
-		end
-	end
+        local aggregated = {}
+        for guid, items in pairs(addon.db.altInventory or {}) do
+                for link, count in pairs(items) do
+                        if not aggregated[link] then aggregated[link] = { total = 0, chars = {} } end
+                        aggregated[link].total = aggregated[link].total + count
+                        aggregated[link].chars[guid] = count
+                end
+        end
 
-	local tree = {}
-	for link, data in pairs(aggregated) do
-		local name, icon, quality = getItemInfoFromLink(link)
-		local colorHex = select(4, GetItemQualityColor(quality or 1))
-		local text = string.format("|T%s:0|t |c%s%s|r x%d", icon or "", colorHex, name or link, data.total)
-		local node = { value = link, text = text, children = {} }
-		for guid, count in pairs(data.chars) do
-			local charName = addon.db.altInventoryNames and addon.db.altInventoryNames[guid] or guid
-			table.insert(node.children, { value = link .. guid, text = string.format("%s x%d", charName, count) })
-		end
-		table.sort(node.children, function(a, b) return a.text < b.text end)
-		table.insert(tree, node)
-	end
-	table.sort(tree, function(a, b) return a.text < b.text end)
+        local tree = {}
+        for link, data in pairs(aggregated) do
+                local name, icon, quality = getItemInfoFromLink(link)
+               if searchText == "" or (name and string.find(string.lower(name), searchText, 1, true)) then
+                local colorHex = select(4, GetItemQualityColor(quality or 1))
+                local text = string.format("|T%s:0|t |c%s%s|r x%d", icon or "", colorHex, name or link, data.total)
+                local node = { value = link, text = text, link = link, children = {} }
+                for guid, count in pairs(data.chars) do
+                        local charName = addon.db.altInventoryNames and addon.db.altInventoryNames[guid] or guid
+                        table.insert(node.children, { value = link .. guid, text = string.format("%s x%d", charName, count), link = link })
+                end
+                table.sort(node.children, function(a, b) return a.text < b.text end)
+                table.insert(tree, node)
+               end
+        end
+        table.sort(tree, function(a, b) return a.text < b.text end)
 
-	local tg = AceGUI:Create("TreeGroup")
-	tg:SetFullWidth(true)
-	tg:SetFullHeight(true)
-	tg:SetTree(tree)
-	container:AddChild(tg)
+        local tg = AceGUI:Create("TreeGroup")
+        tg:SetFullWidth(true)
+        tg:SetFullHeight(true)
+        tg:SetTree(tree)
+       tg:SetCallback("OnButtonEnter", function(widget, _, value, button)
+               local link = button.treeline and button.treeline.link
+               if link then
+                       GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+                       GameTooltip:SetHyperlink(link)
+                       GameTooltip:Show()
+               end
+       end)
+       tg:SetCallback("OnButtonLeave", function() GameTooltip:Hide() end)
+        container:AddChild(tg)
 end
 
 local function buildByChar(container)
-	local tree = {}
-	for guid, items in pairs(addon.db.altInventory or {}) do
-		local charName = addon.db.altInventoryNames and addon.db.altInventoryNames[guid] or guid
-		local node = { value = guid, text = charName, children = {} }
-		for link, count in pairs(items) do
-			local name, icon, quality = getItemInfoFromLink(link)
-			local colorHex = select(4, GetItemQualityColor(quality or 1))
-			local childText = string.format("|T%s:0|t |c%s%s|r x%d", icon or "", colorHex, name or link, count)
-			table.insert(node.children, { value = guid .. link, text = childText })
-		end
-		table.sort(node.children, function(a, b) return a.text < b.text end)
-		table.insert(tree, node)
-	end
-	table.sort(tree, function(a, b) return a.text < b.text end)
+       local tree = {}
+       for guid, items in pairs(addon.db.altInventory or {}) do
+               local charName = addon.db.altInventoryNames and addon.db.altInventoryNames[guid] or guid
+               local node = { value = guid, text = charName, children = {} }
+               for link, count in pairs(items) do
+                       local name, icon, quality = getItemInfoFromLink(link)
+                       local matches = searchText == "" or (name and string.find(string.lower(name), searchText, 1, true))
+                       if matches then
+                               local colorHex = select(4, GetItemQualityColor(quality or 1))
+                               local childText = string.format("|T%s:0|t |c%s%s|r x%d", icon or "", colorHex, name or link, count)
+                               table.insert(node.children, { value = guid .. link, text = childText, link = link })
+                       end
+               end
+               if (#node.children > 0) or (searchText ~= "" and string.find(string.lower(charName), searchText, 1, true)) then
+                       table.sort(node.children, function(a, b) return a.text < b.text end)
+                       node.link = nil
+                       table.insert(tree, node)
+               end
+       end
+       table.sort(tree, function(a, b) return a.text < b.text end)
 
-	local tg = AceGUI:Create("TreeGroup")
-	tg:SetFullWidth(true)
-	tg:SetFullHeight(true)
-	tg:SetTree(tree)
-	container:AddChild(tg)
+       local tg = AceGUI:Create("TreeGroup")
+       tg:SetFullWidth(true)
+       tg:SetFullHeight(true)
+       tg:SetTree(tree)
+       tg:SetCallback("OnButtonEnter", function(widget, _, value, button)
+               local link = button.treeline and button.treeline.link
+               if link then
+                       GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+                       GameTooltip:SetHyperlink(link)
+                       GameTooltip:Show()
+               end
+       end)
+       tg:SetCallback("OnButtonLeave", function() GameTooltip:Hide() end)
+       container:AddChild(tg)
 end
 
 local function buildTab(container, group)
@@ -88,15 +116,22 @@ end
 function AltInventory:CreateFrame()
 	if frame then return frame end
 	frame = AceGUI:Create("Frame")
-	frame:SetTitle("Alt Inventory")
-	frame:SetWidth(500)
-	frame:SetHeight(600)
-	frame:SetLayout("Fill")
-	frame.frame:Hide()
+       frame:SetTitle(L["Alt Inventory"])
+       frame:SetWidth(500)
+       frame:SetHeight(600)
+       frame:SetLayout("Flow")
+       frame.frame:Hide()
+
+       searchBox = addon.functions.createEditboxAce(L["Search"], nil, nil, function(self, _, text)
+               searchText = string.lower(text or "")
+               buildTab(tabGroup, (tabGroup.status and tabGroup.status.selected) or "byitem")
+       end)
+       searchBox:SetFullWidth(true)
+       frame:AddChild(searchBox)
 
 	tabGroup = AceGUI:Create("TabGroup")
 	tabGroup:SetLayout("Fill")
-	tabGroup:SetTabs({ { text = "By Item", value = "byitem" }, { text = "By Character", value = "bychar" } })
+       tabGroup:SetTabs({ { text = L["By Item"], value = "byitem" }, { text = L["By Character"], value = "bychar" } })
 	tabGroup:SetCallback("OnGroupSelected", buildTab)
 	frame:AddChild(tabGroup)
 	tabGroup:SelectTab("byitem")
@@ -108,9 +143,8 @@ function AltInventory:ToggleFrame()
 	if frame.frame:IsShown() then
 		frame.frame:Hide()
 	else
-		frame.frame:Show()
-		buildTab(tabGroup, tabGroup:GetSelectedTab() or "byitem")
-	end
+               frame.frame:Show()
+               buildTab(tabGroup, (tabGroup.status and tabGroup.status.selected) or "byitem")
+       end
 end
 
-print("drin")
