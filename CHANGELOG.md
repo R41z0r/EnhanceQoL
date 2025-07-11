@@ -4,7 +4,9 @@
 ### ✨ Added
 - **Teleport Favorites in the Compendium**
   - New option lets you right-click any portal, teleport, toy, or hearthstone in the Compendium to mark it as a favourite.  
-  - Favorited entries receive a star icon, are pinned to the top of their section, and can be set to ignore expansion or filter-based hiding.
+  - Favourited entries receive a star icon, are pinned to the top of their section, and can be set to ignore expansion or filter-based hiding.
+- **Auto-Mark Healer**
+  - Automatically assigns a raid/world marker to the party’s healer, just like the existing *Auto-Mark Tank* feature.
 
 ## [3.26.0] – 2025-07-10
 ### ✨ Added
