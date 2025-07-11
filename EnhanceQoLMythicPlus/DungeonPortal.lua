@@ -299,9 +299,204 @@ local function CreatePortalCompendium(frame, compendium)
 		table.insert(sortedIndexes, key)
 	end
 
-	table.sort(sortedIndexes, function(a, b) return a > b end)
+        table.sort(sortedIndexes, function(a, b) return a > b end)
 
-	for _, key in ipairs(sortedIndexes) do
+        local favoriteSpells = {}
+        if addon.db["teleportFavoritesIgnoreExpansionHide"] then
+                for _, key in ipairs(sortedIndexes) do
+                        local section = compendium[key]
+                        if addon.db["teleportsCompendiumHide" .. section.headline] then
+                                for spellID, data in pairs(section.spells) do
+                                        local known = (IsSpellKnown(spellID) and not data.isToy)
+                                                or (hasEngineering and data.toyID and not data.isHearthstone and isToyUsable(data.toyID))
+                                                or (data.isItem and GetItemCount(data.itemID) > 0)
+                                                or (data.isHearthstone and isToyUsable(data.toyID))
+                                        local isFavorite = false
+                                        if data.isToy and data.toyID and C_ToyBox and C_ToyBox.GetIsFavorite then
+                                                isFavorite = C_ToyBox.GetIsFavorite(data.toyID)
+                                        elseif C_SpellBook and C_SpellBook.IsSpellFavorite then
+                                                isFavorite = C_SpellBook.IsSpellFavorite(spellID)
+                                        end
+                                        if isFavorite
+                                                and (not data.faction or data.faction == faction)
+                                                and (not data.map or (data.map == C_Map.GetBestMapForUnit("player")))
+                                                and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
+                                                and (not addon.db["hideActualSeason"] or not portalSpells[spellID])
+                                                and (addon.db["portalShowRaidTeleports"] or not data.isRaid)
+                                                and (addon.db["portalShowToyHearthstones"] or not data.isHearthstone)
+                                                and (addon.db["portalShowEngineering"] or not data.isEngineering)
+                                                and ((addon.db["portalShowClassTeleport"] and (addon.variables.unitClass == data.isClassTP)) or not data.isClassTP)
+                                                and ((addon.db["portalShowClassTeleport"] and addon.variables.unitRace == data.isRaceTP) or not data.isRaceTP)
+                                                and ((addon.db["portalShowMagePortal"] and addon.variables.unitClass == "MAGE") or not data.isMagePortal)
+                                                and (addon.db["portalShowDungeonTeleports"] or not data.cId)
+                                        then
+                                                table.insert(favoriteSpells, {
+                                                        spellID = spellID,
+                                                        text = data.text,
+                                                        iconID = data.iconID,
+                                                        isKnown = known,
+                                                        isToy = data.isToy or false,
+                                                        toyID = data.toyID or false,
+                                                        isItem = data.isItem or false,
+                                                        itemID = data.itemID or false,
+                                                        icon = data.icon or false,
+                                                        isClassTP = data.isClassTP or false,
+                                                        isMagePortal = data.isMagePortal or false,
+                                                })
+                                        end
+                                end
+                        end
+                end
+
+                table.sort(favoriteSpells, function(a, b)
+                        if a.text < b.text then
+                                return true
+                        elseif a.text > b.text then
+                                return false
+                        else
+                                local aIsTP = a.isClassTP or false
+                                local bIsTP = b.isClassTP or false
+                                local aIsPortal = a.isMagePortal or false
+                                local bIsPortal = b.isMagePortal or false
+                                local aToyID = a.toyID or false
+                                local bToyID = b.toyID or false
+                                if aIsTP and not bIsTP then
+                                        return true
+                                elseif bIsTP and not aIsTP then
+                                        return false
+                                elseif aIsPortal and not bIsPortal then
+                                        return false
+                                elseif bIsPortal and not aIsPortal then
+                                        return true
+                                elseif aToyID and bToyID then
+                                        return aToyID < bToyID
+                                end
+                                return false
+                        end
+                end)
+
+                if #favoriteSpells > 0 then
+                        local headline = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                        headline:SetPoint("TOP", frame, "TOP", 0, currentYOffset)
+                        headline:SetText(FAVORITES)
+                        currentYOffset = currentYOffset - headline:GetStringHeight() - 10
+                        table.insert(frame.headline, headline)
+
+                        local buttonsPerRow = math.max(1, math.ceil(#favoriteSpells))
+                        local totalButtonWidth = (buttonSize * buttonsPerRow) + (spacingCompendium * (buttonsPerRow - 1))
+                        maxWidth = math.max(maxWidth, totalButtonWidth + 20)
+
+                        local index = 0
+                        for _, spellData in ipairs(favoriteSpells) do
+                                local spellID = spellData.spellID
+                                local spellInfo = C_Spell.GetSpellInfo(spellID)
+
+                                if spellInfo then
+                                        local row = math.floor(index / buttonsPerRow)
+                                        local col = index % buttonsPerRow
+
+                                        local button = CreateFrame("Button", "CompendiumFavoriteButton" .. index, frame, "SecureActionButtonTemplate")
+                                        button:SetSize(buttonSize, buttonSize)
+                                        button:SetPoint("TOPLEFT", frame, "TOPLEFT", 10 + col * (buttonSize + spacingCompendium), currentYOffset - row * (buttonSize + hSpacingCompendium))
+                                        button.spellID = spellID
+                                        if spellData.isToy then
+                                                button.isToy = spellData.isToy
+                                                button.toyID = spellData.toyID
+                                        elseif spellData.isItem then
+                                                button.isItem = spellData.isItem
+                                                button.itemID = spellData.itemID
+                                        end
+
+                                        local bg = button:CreateTexture(nil, "BACKGROUND")
+                                        bg:SetAllPoints(button)
+                                        bg:SetColorTexture(0, 0, 0, 0.8)
+
+                                        local border = button:CreateTexture(nil, "BORDER")
+                                        border:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1)
+                                        border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
+                                        border:SetColorTexture(1, 1, 1, 1)
+
+                                        local highlight = button:CreateTexture(nil, "HIGHLIGHT")
+                                        highlight:SetAllPoints(button)
+                                        highlight:SetColorTexture(1, 1, 0, 0.4)
+                                        button:SetHighlightTexture(highlight)
+
+                                        local icon = button:CreateTexture(nil, "ARTWORK")
+                                        icon:SetAllPoints(button)
+                                        if spellData.isToy then
+                                                if spellData.icon then
+                                                        icon:SetTexture(spellData.icon)
+                                                else
+                                                        local _, _, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
+                                                        icon:SetTexture(iconId)
+                                                end
+                                        elseif spellData.isItem then
+                                                if spellData.icon then icon:SetTexture(spellData.icon) end
+                                        else
+                                                icon:SetTexture(spellInfo.iconID or "Interface\\ICONS\\INV_Misc_QuestionMark")
+                                        end
+                                        button.icon = icon
+
+                                        if not spellData.isKnown then
+                                                icon:SetDesaturated(true)
+                                                icon:SetAlpha(0.5)
+                                                button:EnableMouse(false)
+                                        else
+                                                isKnown[spellID] = true
+                                                icon:SetDesaturated(false)
+                                                icon:SetAlpha(1)
+                                                button:EnableMouse(true)
+                                        end
+
+                                        button.cooldownFrame = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")
+                                        button.cooldownFrame:SetAllPoints(button)
+
+                                        if spellData.isToy then
+                                                if spellData.isKnown then
+                                                        button:SetAttribute("type", "macro")
+                                                        button:SetAttribute("macrotext", "/use item:" .. spellData.toyID)
+                                                end
+                                        elseif spellData.isItem then
+                                                if spellData.isKnown then
+                                                        button:SetAttribute("type", "macro")
+                                                        button:SetAttribute("macrotext", "/use item:" .. spellData.itemID)
+                                                end
+                                        else
+                                                button:SetAttribute("type", "spell")
+                                                button:SetAttribute("spell", spellID)
+                                        end
+                                        button:RegisterForClicks("AnyUp", "AnyDown")
+
+                                        local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                                        label:SetPoint("TOP", button, "BOTTOM", 0, -2)
+                                        label:SetText(spellData.text)
+
+                                        button:SetScript("OnEnter", function(self)
+                                                if addon.db["portalShowTooltip"] then
+                                                        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                                                        if spellData.isToy then
+                                                                GameTooltip:SetToyByItemID(spellData.toyID)
+                                                        elseif spellData.isItem then
+                                                                GameTooltip:SetItemByID(spellData.itemID)
+                                                        else
+                                                                GameTooltip:SetSpellByID(spellID)
+                                                        end
+                                                        GameTooltip:Show()
+                                                end
+                                        end)
+                                        button:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+                                        table.insert(frame.buttons, button)
+                                        index = index + 1
+                                end
+                        end
+
+                        local rows = math.ceil(#favoriteSpells / buttonsPerRow)
+                        currentYOffset = currentYOffset - rows * (buttonSize + hSpacingCompendium + 10)
+                end
+        end
+
+        for _, key in ipairs(sortedIndexes) do
 		local section = compendium[key]
 
 		local sortedSpells = {}

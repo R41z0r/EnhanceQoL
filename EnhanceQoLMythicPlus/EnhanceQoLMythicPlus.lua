@@ -699,15 +699,19 @@ local function addTeleportFrame(container)
 				addon.MythicPlus.functions.toggleFrame()
 			end,
 		},
-		{
-			text = L["portalHideMissing"],
-			var = "portalHideMissing",
-		},
-		{
-			text = L["portalShowTooltip"],
-			var = "portalShowTooltip",
-			func = function(self, _, value) addon.db["portalShowTooltip"] = value end,
-		},
+                {
+                        text = L["portalHideMissing"],
+                        var = "portalHideMissing",
+                },
+                {
+                        text = L["teleportFavoritesIgnoreExpansionHide"],
+                        var = "teleportFavoritesIgnoreExpansionHide",
+                },
+                {
+                        text = L["portalShowTooltip"],
+                        var = "portalShowTooltip",
+                        func = function(self, _, value) addon.db["portalShowTooltip"] = value end,
+                },
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)
