@@ -12,3 +12,4 @@
 
 Init.lua
 AltInventory.lua
+UI.lua
