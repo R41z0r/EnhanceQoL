@@ -17,10 +17,8 @@ local AltInventory = addon.AltInventory or {}
 
 local function getItemInfoFromLink(link)
 	if not link then return end
-	local tipData = C_TooltipInfo.GetHyperlink(link)
-	if not tipData then return end
-	TooltipUtil.SurfaceArgs(tipData)
-	return tipData.name, tipData.icon, tipData.quality
+	local itemName, _, itemQuality, _, _, _, _, _, _, itemTexture = C_Item.GetItemInfo(link)
+	return itemName, itemTexture, itemQuality
 end
 
 local function buildByItem(container)
