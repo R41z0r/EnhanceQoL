@@ -355,6 +355,17 @@ local function checkRaidMarker()
 				SetRaidTarget(addon.MythicPlus.actTank, addon.db["autoMarkTankInDungeonMarker"])
 			end
 		end
+
+		function addon.MythicPlus.functions.cycleWorldMarker()
+			if not addon.db["worldMarkerCycleEnabled"] then return end
+			if IsShiftKeyDown() then
+				RunMacroText("/cwm 0")
+				addon.MythicPlus.variables.worldMarkerIndex = 0
+			else
+				addon.MythicPlus.variables.worldMarkerIndex = (addon.MythicPlus.variables.worldMarkerIndex % 8) + 1
+				RunMacroText("/wm [@cursor]" .. addon.MythicPlus.variables.worldMarkerIndex)
+			end
+		end
 	end
 
 	if addon.db["autoMarkHealerInDungeon"] then
@@ -1069,6 +1080,34 @@ local function addGroupFilterFrame(container)
 	end
 end
 
+local function addWorldMarkerFrame(container)
+	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
+	container:AddChild(wrapper)
+
+	local groupCore = addon.functions.createContainer("InlineGroup", "List")
+	wrapper:AddChild(groupCore)
+
+	local cbEnable = addon.functions.createCheckboxAce(L["worldMarkerCycleEnabled"], addon.db["worldMarkerCycleEnabled"], function(self, _, value)
+		addon.db["worldMarkerCycleEnabled"] = value
+		container:ReleaseChildren()
+		addWorldMarkerFrame(container)
+	end)
+	groupCore:AddChild(cbEnable)
+
+	if addon.db["worldMarkerCycleEnabled"] then
+		groupCore:AddChild(addon.functions.createSpacerAce())
+		local keybind = addon.functions.createKeybindingAce(L["worldMarkerCycleKeybind"], GetBindingKey("ENHANCEQOL_WORLD_MARKER_CYCLE"), function(self, _, key)
+			if key and key ~= "" then
+				SetBinding(key, "ENHANCEQOL_WORLD_MARKER_CYCLE")
+			else
+				SetBinding(nil, "ENHANCEQOL_WORLD_MARKER_CYCLE")
+			end
+			SaveBindings(GetCurrentBindingSet())
+		end)
+		groupCore:AddChild(keybind)
+	end
+end
+
 local function addRatingFrame(container)
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
 	container:AddChild(wrapper)
@@ -1239,6 +1278,7 @@ addon.functions.addToTree(nil, {
 		{ value = "brtracker", text = L["BRTracker"] },
 		{ value = "rating", text = DUNGEON_SCORE },
 		{ value = "talents", text = L["TalentReminder"] },
+		{ value = "worldmarker", text = L["WorldMarkerCycle"] },
 		{ value = "objectivetracker", text = HUD_EDIT_MODE_OBJECTIVE_TRACKER_LABEL },
 		{ value = "groupfilter", text = L["groupFilter"] },
 	},
@@ -1261,6 +1301,8 @@ function addon.MythicPlus.functions.treeCallback(container, group)
 		addRatingFrame(container)
 	elseif group == "mythicplus\001talents" then
 		addTalentFrame(container)
+	elseif group == "mythicplus\001worldmarker" then
+		addWorldMarkerFrame(container)
 	elseif group == "mythicplus\001groupfilter" then
 		addGroupFilterFrame(container)
 	elseif group == "mythicplus\001objectivetracker" then

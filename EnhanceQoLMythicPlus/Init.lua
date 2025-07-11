@@ -50,6 +50,7 @@ addon.functions.InitDBValue("mythicPlusIgnoreMythic", true)
 addon.functions.InitDBValue("mythicPlusIgnoreHeroic", true)
 addon.functions.InitDBValue("mythicPlusIgnoreNormal", true)
 addon.functions.InitDBValue("mythicPlusIgnoreTimewalking", true)
+addon.functions.InitDBValue("worldMarkerCycleEnabled", false)
 
 -- BR Tracker
 addon.functions.InitDBValue("mythicPlusBRTrackerEnabled", false)
@@ -69,6 +70,7 @@ addon.MythicPlus.functions = {}
 addon.MythicPlus.Buttons = {}
 addon.MythicPlus.nrOfButtons = 0
 addon.MythicPlus.variables = {}
+addon.MythicPlus.variables.worldMarkerIndex = 0
 
 -- Teleports
 addon.functions.InitDBValue("teleportFrame", false)

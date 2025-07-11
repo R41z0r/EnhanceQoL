@@ -175,6 +175,15 @@ function addon.functions.createDropdownAce(text, list, order, callBack)
 	return dropdown
 end
 
+function addon.functions.createKeybindingAce(text, key, callBack)
+	local keybind = AceGUI:Create("Keybinding")
+	keybind:SetLabel(text or "")
+	if key then keybind:SetKey(key) end
+	keybind:SetFullWidth(true)
+	if callBack then keybind:SetCallback("OnKeyChanged", callBack) end
+	return keybind
+end
+
 function addon.functions.createWrapperData(data, container, L)
 	local sortedParents = {}
 	for _, checkbox in ipairs(data) do

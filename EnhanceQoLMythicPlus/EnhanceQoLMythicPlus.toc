@@ -31,3 +31,4 @@ TalentReminder.lua
 DungeonFilter.lua
 ObjectiveTracker.lua
 EnhanceQoLMythicPlus.lua
+Bindings.lua

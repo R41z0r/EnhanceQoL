@@ -97,6 +97,10 @@ L["mythicPlusBRTrackerEnabled"] = "Enable Combat Resurrection tracker"
 L["mythicPlusBRTrackerLocked"] = "Lock the tracker's position"
 L["mythicPlusBRButtonSizeHeadline"] = "Button Size"
 
+L["WorldMarkerCycle"] = "World Marker Cycle"
+L["worldMarkerCycleEnabled"] = "Enable world marker cycling"
+L["worldMarkerCycleKeybind"] = "Keybind"
+
 -- Talent Reminder
 L["TalentReminder"] = "Talent Reminder"
 L["talentReminderEnabled"] = "Enable Talent Reminder"
