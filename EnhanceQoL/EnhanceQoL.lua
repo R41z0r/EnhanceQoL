@@ -4508,7 +4508,8 @@ function loadMain()
 	SLASH_ENHANCEQOL4 = "/eqol rag"
 	SLASH_ENHANCEQOL5 = "/eqol lag"
 	SLASH_ENHANCEQOL6 = "/eqol lcid"
-	SLASH_ENHANCEQOL6 = "/eqol rq"
+	SLASH_ENHANCEQOL7 = "/eqol rq"
+	SLASH_ENHANCEQOL8 = "/eqol altinv"
 	SlashCmdList["ENHANCEQOL"] = function(msg)
 		if msg == "resetframe" then
 			-- Frame zurücksetzen
@@ -4550,6 +4551,8 @@ function loadMain()
 			end
 		elseif msg == "rq" then
 			if addon.Query and addon.Query.frame then addon.Query.frame:Show() end
+		elseif msg == "altinv" then
+			if addon.AltInventory and addon.AltInventory.ToggleFrame then addon.AltInventory:ToggleFrame() end
 		else
 			if addon.aceFrame:IsShown() then
 				addon.aceFrame:Hide()
@@ -4706,6 +4709,7 @@ local eventHandlers = {
 			loadSubAddon("EnhanceQoLMouse")
 			loadSubAddon("EnhanceQoLMythicPlus")
 			loadSubAddon("EnhanceQoLDrinkMacro")
+			loadSubAddon("EnhanceQoLAltInventory")
 			loadSubAddon("EnhanceQoLTooltip")
 			loadSubAddon("EnhanceQoLVendor")
 
