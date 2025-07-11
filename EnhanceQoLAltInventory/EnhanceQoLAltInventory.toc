@@ -1,0 +1,14 @@
+## Interface: 110000, 110002, 110005, 110007, 110100, 110105, 110107, 110200
+## Title: Alt Inventory
+## Author: R41Z0R
+## Version: @project-version@
+## Notes: Manage and view alt inventory items
+## Dependencies: EnhanceQoL
+## IconTexture: Interface\\AddOns\\EnhanceQoL\\Icons\\Icon.tga
+## Retail: true
+## X-Compatible-With: retail
+## LoadOnDemand: 1
+## Globe-Main: EnhanceQoL
+
+Init.lua
+AltInventory.lua

@@ -4705,8 +4705,9 @@ local eventHandlers = {
 			loadSubAddon("EnhanceQoLSound")
 			loadSubAddon("EnhanceQoLMouse")
 			loadSubAddon("EnhanceQoLMythicPlus")
-			loadSubAddon("EnhanceQoLDrinkMacro")
-			loadSubAddon("EnhanceQoLTooltip")
+                        loadSubAddon("EnhanceQoLDrinkMacro")
+                        loadSubAddon("EnhanceQoLAltInventory")
+                        loadSubAddon("EnhanceQoLTooltip")
 			loadSubAddon("EnhanceQoLVendor")
 
 			checkBagIgnoreJunk()
