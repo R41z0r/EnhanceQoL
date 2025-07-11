@@ -356,7 +356,7 @@ local function CreatePortalCompendium(frame, compendium)
 		end
 		newCompendium[k] = { headline = section.headline, spells = newSpells }
 	end
-	if next(favSpells) then newCompendium[9999] = { headline = L["Favorites"] or "Favorites", spells = favSpells } end
+	if next(favSpells) then newCompendium[9999] = { headline = FAVORITES, spells = favSpells } end
 
 	local sortedIndexes = {}
 	for key, _ in pairs(newCompendium) do
