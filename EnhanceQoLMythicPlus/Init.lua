@@ -74,6 +74,7 @@ addon.functions.InitDBValue("portalShowTooltip", false)
 addon.functions.InitDBValue("teleportsEnableCompendium", false)
 addon.functions.InitDBValue("teleportFavorites", {})
 addon.functions.InitDBValue("teleportFavoritesIgnoreExpansionHide", false)
+addon.functions.InitDBValue("teleportFavoritesIgnoreFilters", false)
 
 -- Group Dungeon Filter
 addon.functions.InitDBValue("mythicPlusEnableDungeonFilter", false)

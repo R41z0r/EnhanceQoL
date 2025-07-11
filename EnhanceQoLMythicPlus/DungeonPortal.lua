@@ -148,9 +148,19 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 	local others = {}
 	for spellID, data in pairs(spells) do
 		local known = IsSpellKnown(spellID)
-		if (not data.faction or data.faction == faction) and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known)) then
-			local entry = { spellID = spellID, text = data.text, iconID = data.iconID, isKnown = known, isFavorite = favoriteLookup[spellID] }
-			if favoriteLookup[spellID] then
+		local isFavorite = favoriteLookup[spellID]
+		local passes = (not data.faction or data.faction == faction)
+		if addon.db["portalHideMissing"] then passes = passes and known end
+
+		if passes or (addon.db.teleportFavoritesIgnoreFilters and isFavorite and (not addon.db["portalHideMissing"] or known)) then
+			local entry = {
+				spellID = spellID,
+				text = data.text,
+				iconID = data.iconID,
+				isKnown = known,
+				isFavorite = isFavorite,
+			}
+			if isFavorite then
 				table.insert(favorites, entry)
 			else
 				table.insert(others, entry)
@@ -334,18 +344,19 @@ local function CreatePortalCompendium(frame, compendium)
 	local favorites = addon.db.teleportFavorites
 	local newCompendium = {}
 	local favSpells = {}
-	for _, section in pairs(compendium) do
+	for k, section in pairs(compendium) do
 		local hidden = addon.db["teleportsCompendiumHide" .. section.headline]
+		local newSpells = {}
 		for spellID, data in pairs(section.spells) do
 			if favorites[spellID] then
 				if addon.db.teleportFavoritesIgnoreExpansionHide or not hidden then favSpells[spellID] = data end
+			else
+				newSpells[spellID] = data
 			end
 		end
+		newCompendium[k] = { headline = section.headline, spells = newSpells }
 	end
 	if next(favSpells) then newCompendium[9999] = { headline = L["Favorites"] or "Favorites", spells = favSpells } end
-	for k, v in pairs(compendium) do
-		newCompendium[k] = v
-	end
 
 	local sortedIndexes = {}
 	for key, _ in pairs(newCompendium) do
@@ -364,8 +375,7 @@ local function CreatePortalCompendium(frame, compendium)
 					or (hasEngineering and data.toyID and not data.isHearthstone and isToyUsable(data.toyID))
 					or (data.isItem and GetItemCount(data.itemID) > 0)
 					or (data.isHearthstone and isToyUsable(data.toyID))
-				if
-					(not data.faction or data.faction == faction)
+				local showSpell = (not data.faction or data.faction == faction)
 					and (not data.map or (data.map == C_Map.GetBestMapForUnit("player")))
 					and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
 					and (not addon.db["hideActualSeason"] or not portalSpells[spellID])
@@ -373,10 +383,15 @@ local function CreatePortalCompendium(frame, compendium)
 					and (addon.db["portalShowToyHearthstones"] or not data.isHearthstone)
 					and (addon.db["portalShowEngineering"] or not data.isEngineering)
 					and ((addon.db["portalShowClassTeleport"] and (addon.variables.unitClass == data.isClassTP)) or not data.isClassTP)
-					and ((addon.db["portalShowClassTeleport"] and addon.variables.unitRace == data.isRaceTP) or not data.isRaceTP) -- Racial Dark Iron Dwarf
+					and ((addon.db["portalShowClassTeleport"] and addon.variables.unitRace == data.isRaceTP) or not data.isRaceTP)
 					and ((addon.db["portalShowMagePortal"] and addon.variables.unitClass == "MAGE") or not data.isMagePortal)
 					and (addon.db["portalShowDungeonTeleports"] or not data.cId)
-				then
+
+				if not showSpell and addon.db.teleportFavoritesIgnoreFilters and favorites[spellID] then
+					showSpell = (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
+				end
+
+				if showSpell then
 					table.insert(sortedSpells, {
 						spellID = spellID,
 						text = data.text,
