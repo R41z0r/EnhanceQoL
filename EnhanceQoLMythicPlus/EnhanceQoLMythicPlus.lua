@@ -12,6 +12,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_MythicPlus")
 local frameLoad = CreateFrame("Frame")
 
 local brButton
+local worldMarkerButton
 local defaultButtonSize = 60
 local defaultFontSize = 16
 
@@ -110,6 +111,33 @@ local function setBRInfo(info)
 		end
 		brButton.charges:SetText(current)
 	end
+end
+
+local function createWorldMarkerButton()
+	if worldMarkerButton then return end
+	worldMarkerButton = CreateFrame("Button", "EnhanceQoLWorldMarkerButton", UIParent, "SecureActionButtonTemplate")
+	worldMarkerButton:SetAttribute("type", "macro")
+	worldMarkerButton:SetAttribute("index", 0)
+	SecureHandlerWrapScript(
+		worldMarkerButton,
+		"PreClick",
+		worldMarkerButton,
+		[[
+               if IsShiftKeyDown() then
+                       self:SetAttribute("macrotext", "/cwm 0")
+                       self:SetAttribute("index", 0)
+               else
+                       local i = (self:GetAttribute("index") or 0) % 8 + 1
+                       self:SetAttribute("macrotext", "/wm [@cursor]" .. i)
+                       self:SetAttribute("index", i)
+               end
+       ]]
+	)
+end
+
+function addon.MythicPlus.functions.cycleWorldMarker()
+	if not addon.db["worldMarkerCycleEnabled"] then return end
+	if worldMarkerButton then worldMarkerButton:Click() end
 end
 
 hooksecurefunc(ScenarioObjectiveTracker.ChallengeModeBlock, "UpdateTime", function(self, elapsedTime)
@@ -315,6 +343,7 @@ frameLoad:RegisterEvent("READY_CHECK")
 frameLoad:RegisterEvent("GROUP_ROSTER_UPDATE")
 frameLoad:RegisterEvent("SPELL_UPDATE_CHARGES")
 frameLoad:RegisterEvent("ENCOUNTER_END")
+frameLoad:RegisterEvent("PLAYER_LOGIN")
 
 local function setActTank()
 	if UnitGroupRolesAssigned("player") == "TANK" then
@@ -355,17 +384,6 @@ local function checkRaidMarker()
 				SetRaidTarget(addon.MythicPlus.actTank, addon.db["autoMarkTankInDungeonMarker"])
 			end
 		end
-
-		function addon.MythicPlus.functions.cycleWorldMarker()
-			if not addon.db["worldMarkerCycleEnabled"] then return end
-			if IsShiftKeyDown() then
-				RunMacroText("/cwm 0")
-				addon.MythicPlus.variables.worldMarkerIndex = 0
-			else
-				addon.MythicPlus.variables.worldMarkerIndex = (addon.MythicPlus.variables.worldMarkerIndex % 8) + 1
-				RunMacroText("/wm [@cursor]" .. addon.MythicPlus.variables.worldMarkerIndex)
-			end
-		end
 	end
 
 	if addon.db["autoMarkHealerInDungeon"] then
@@ -402,6 +420,15 @@ end
 local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 	if event == "ADDON_LOADED" and arg1 == addonName then
 		-- loadMain()
+	elseif event == "PLAYER_LOGIN" then
+		if InCombatLockdown() then
+			frameLoad:RegisterEvent("PLAYER_REGEN_ENABLED")
+		else
+			createWorldMarkerButton()
+		end
+	elseif event == "PLAYER_REGEN_ENABLED" then
+		if not worldMarkerButton then createWorldMarkerButton() end
+		frameLoad:UnregisterEvent("PLAYER_REGEN_ENABLED")
 	elseif event == "CHALLENGE_MODE_KEYSTONE_RECEPTABLE_OPEN" then
 		if InCombatLockdown() then return end
 		if addon.db["enableKeystoneHelper"] then checkKeyStone() end

@@ -70,7 +70,6 @@ addon.MythicPlus.functions = {}
 addon.MythicPlus.Buttons = {}
 addon.MythicPlus.nrOfButtons = 0
 addon.MythicPlus.variables = {}
-addon.MythicPlus.variables.worldMarkerIndex = 0
 
 -- Teleports
 addon.functions.InitDBValue("teleportFrame", false)
