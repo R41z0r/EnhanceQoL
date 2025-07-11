@@ -708,6 +708,10 @@ local function addTeleportFrame(container)
 			var = "portalShowTooltip",
 			func = function(self, _, value) addon.db["portalShowTooltip"] = value end,
 		},
+		{
+			text = L["teleportFavoritesIgnoreFilters"],
+			var = "teleportFavoritesIgnoreFilters",
+		},
 	}
 
 	table.sort(data, function(a, b) return a.text < b.text end)
