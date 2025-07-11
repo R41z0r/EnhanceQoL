@@ -2,7 +2,7 @@
 
 ## [3.27.0] – 2025-07-11
 ### ✨ Added
-- **Teleport Favourites in the Compendium**
+- **Teleport Favorites in the Compendium**
   - New option lets you right-click any portal, teleport, toy, or hearthstone in the Compendium to mark it as a favourite.  
   - Favourited entries receive a star icon, are pinned to the top of their section, and can be set to ignore expansion or filter-based hiding.
 - **Auto-Mark Healer**
