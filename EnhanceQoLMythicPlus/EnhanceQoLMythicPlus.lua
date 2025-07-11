@@ -854,11 +854,21 @@ local function addTeleportFrame(container)
 end
 
 local function addAutoMarkFrame(container)
+	local scroll = addon.functions.createContainer("ScrollFrame", "Flow")
+	scroll:SetFullWidth(true)
+	scroll:SetFullHeight(true)
+	container:AddChild(scroll)
+
 	local wrapper = addon.functions.createContainer("SimpleGroup", "Flow")
-	container:AddChild(wrapper)
+	scroll:AddChild(wrapper)
 
 	local groupCore = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupCore)
+
+	local labelExplanation = addon.functions.createLabelAce("|cffffd700" .. L["autoMarkTankExplanation"]:format(TANK, COMMUNITY_MEMBER_ROLE_NAME_LEADER, TANK) .. "|r", nil, nil, 14)
+	labelExplanation:SetFullWidth(true)
+	groupCore:AddChild(labelExplanation)
+	groupCore:AddChild(addon.functions.createSpacerAce())
 
 	local cbAutoMarkTank = addon.functions.createCheckboxAce(L["autoMarkTankInDungeon"]:format(TANK), addon.db["autoMarkTankInDungeon"], function(self, _, value)
 		addon.db["autoMarkTankInDungeon"] = value
@@ -897,32 +907,8 @@ local function addAutoMarkFrame(container)
 		groupCore:AddChild(dropTankMark)
 
 		groupCore:AddChild(addon.functions.createSpacerAce())
-
-		local data = {
-			{ text = L["mythicPlusIgnoreNormal"]:format(PLAYER_DIFFICULTY1), var = "mythicPlusIgnoreNormal" },
-			{ text = L["mythicPlusIgnoreHeroic"]:format(PLAYER_DIFFICULTY2), var = "mythicPlusIgnoreHeroic" },
-			{ text = L["mythicPlusIgnoreEvent"]:format(BATTLE_PET_SOURCE_7), var = "mythicPlusIgnoreEvent" },
-			{ text = L["mythicPlusIgnoreMythic"]:format(PLAYER_DIFFICULTY6), var = "mythicPlusIgnoreMythic" },
-			{ text = L["mythicPlusIgnoreTimewalking"]:format(PLAYER_DIFFICULTY_TIMEWALKER), var = "mythicPlusIgnoreTimewalking" },
-		}
-
-		-- table.sort(data, function(a, b) return a.text < b.text end)
-
-		for _, cbData in ipairs(data) do
-			local uFunc = function(self, _, value) addon.db[cbData.var] = value end
-			if cbData.func then uFunc = cbData.func end
-			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
-			groupCore:AddChild(cbElement)
-		end
 	end
 
-	groupCore:AddChild(addon.functions.createSpacerAce())
-	local labelExplanation = addon.functions.createLabelAce("|cffffd700" .. L["autoMarkTankExplanation"]:format(TANK, COMMUNITY_MEMBER_ROLE_NAME_LEADER, TANK) .. "|r", nil, nil, 14)
-	labelExplanation:SetFullWidth(true)
-	groupCore:AddChild(labelExplanation)
-
-	local groupHealer = addon.functions.createContainer("InlineGroup", "List")
-	wrapper:AddChild(groupHealer)
 	local cbAutoMarkHealer = addon.functions.createCheckboxAce(L["autoMarkHealerInDungeon"]:format(HEALER), addon.db["autoMarkHealerInDungeon"], function(self, _, value)
 		addon.db["autoMarkHealerInDungeon"] = value
 		if value and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
@@ -932,7 +918,7 @@ local function addAutoMarkFrame(container)
 		container:ReleaseChildren()
 		addAutoMarkFrame(container)
 	end)
-	groupHealer:AddChild(cbAutoMarkHealer)
+	groupCore:AddChild(cbAutoMarkHealer)
 
 	if addon.db["autoMarkHealerInDungeon"] then
 		local list, order = addon.functions.prepareListForDropdown({
@@ -957,10 +943,10 @@ local function addAutoMarkFrame(container)
 		dropHealerMark:SetValue(addon.db["autoMarkHealerInDungeonMarker"])
 		dropHealerMark:SetFullWidth(false)
 		dropHealerMark:SetWidth(100)
-		groupHealer:AddChild(dropHealerMark)
+		groupCore:AddChild(dropHealerMark)
+		groupCore:AddChild(addon.functions.createSpacerAce())
 	end
 
-	groupHealer:AddChild(addon.functions.createSpacerAce())
 	local data = {
 		{
 			text = L["mythicPlusNoHealerMark"],
@@ -976,8 +962,30 @@ local function addAutoMarkFrame(container)
 		local uFunc = function(self, _, value) addon.db[cbData.var] = value end
 		if cbData.func then uFunc = cbData.func end
 		local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
-		groupHealer:AddChild(cbElement)
+		groupCore:AddChild(cbElement)
 	end
+
+	if addon.db["autoMarkHealerInDungeon"] or addon.db["autoMarkTankInDungeon"] then
+		local groupOptions = addon.functions.createContainer("InlineGroup", "List")
+		wrapper:AddChild(groupOptions)
+		local data = {
+			{ text = L["mythicPlusIgnoreNormal"]:format(PLAYER_DIFFICULTY1), var = "mythicPlusIgnoreNormal" },
+			{ text = L["mythicPlusIgnoreHeroic"]:format(PLAYER_DIFFICULTY2), var = "mythicPlusIgnoreHeroic" },
+			{ text = L["mythicPlusIgnoreEvent"]:format(BATTLE_PET_SOURCE_7), var = "mythicPlusIgnoreEvent" },
+			{ text = L["mythicPlusIgnoreMythic"]:format(PLAYER_DIFFICULTY6), var = "mythicPlusIgnoreMythic" },
+			{ text = L["mythicPlusIgnoreTimewalking"]:format(PLAYER_DIFFICULTY_TIMEWALKER), var = "mythicPlusIgnoreTimewalking" },
+		}
+
+		-- table.sort(data, function(a, b) return a.text < b.text end)
+
+		for _, cbData in ipairs(data) do
+			local uFunc = function(self, _, value) addon.db[cbData.var] = value end
+			if cbData.func then uFunc = cbData.func end
+			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc)
+			groupOptions:AddChild(cbElement)
+		end
+	end
+	scroll:DoLayout()
 end
 
 local function addObjectiveTrackerFrame(container)
