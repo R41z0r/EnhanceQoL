@@ -170,8 +170,10 @@ local function createSellMoreButton()
 	sellMoreButton:SetSize(120, 25)
 	if MerchantRepairItemButton then
 		sellMoreButton:SetPoint("TOPLEFT", MerchantRepairItemButton, "BOTTOMLEFT", 5, -5)
+       elseif MerchantSellAllJunkButton then
+               sellMoreButton:SetPoint("TOPRIGHT", MerchantSellAllJunkButton, "BOTTOMLEFT", -5, -5)
 	else
-		sellMoreButton:SetPoint("BOTTOMLEFT", MerchantFrame, "BOTTOMLEFT", 60, 34)
+		sellMoreButton:SetPoint("BOTTOMLEFT", MerchantFrame, "BOTTOMLEFT", 60, 60)
 	end
 	sellMoreButton:SetText(L["vendorSellNext"])
 	sellMoreButton:SetScript("OnClick", function(self)
