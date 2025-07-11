@@ -1,5 +1,17 @@
+local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
-if not addon then addon = _G["EnhanceQoL"] end
+
+if _G[parentAddonName] then
+	addon = _G[parentAddonName]
+else
+	error(parentAddonName .. " is not loaded")
+end
+
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_AltInventory")
+
+local AceGUI = addon.AceGUI
+
+local sUI = false
 
 -- Module table
 local AltInventory = addon.AltInventory or {}

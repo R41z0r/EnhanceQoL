@@ -1,15 +1,19 @@
--- luacheck: globals TooltipUtil
 local parentAddonName = "EnhanceQoL"
 local addonName, addon = ...
-if not addon then addon = _G[parentAddonName] end
 
-local AceGUI = LibStub("AceGUI-3.0")
+if _G[parentAddonName] then
+	addon = _G[parentAddonName]
+else
+	error(parentAddonName .. " is not loaded")
+end
 
-local AltInventory = addon.AltInventory or {}
-addon.AltInventory = AltInventory
+local L = LibStub("AceLocale-3.0"):GetLocale("EnhanceQoL_AltInventory")
+
+local AceGUI = addon.AceGUI
 
 local frame
 local tabGroup
+local AltInventory = addon.AltInventory or {}
 
 local function getItemInfoFromLink(link)
 	if not link then return end
@@ -110,3 +114,5 @@ function AltInventory:ToggleFrame()
 		buildTab(tabGroup, tabGroup:GetSelectedTab() or "byitem")
 	end
 end
+
+print("drin")
