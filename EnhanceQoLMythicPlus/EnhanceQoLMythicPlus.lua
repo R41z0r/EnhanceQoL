@@ -727,7 +727,7 @@ local function addTeleportFrame(container)
 		local groupCompendiumAddition = addon.functions.createContainer("InlineGroup", "List")
 		wrapper:AddChild(groupCompendiumAddition)
 		groupCompendiumAddition:SetTitle(L["teleportCompendiumAdditionHeadline"])
-		local data = {
+		data = {
 			{
 				text = L["hideActualSeason"],
 				var = "hideActualSeason",
