@@ -462,19 +462,19 @@ local function CreatePortalCompendium(frame, compendium)
 		for _, spellData in ipairs(sortedSpells) do
 			local spellID = spellData.spellID
 			local spellInfo = C_Spell.GetSpellInfo(spellID)
-			if not spellInfo then spellInfo = {} end
+			if not spellInfo and spellID == 999999 then spellInfo = {} end
 
-			if spellData.isToy then
-				if spellData.icon then
-					spellInfo.iconID = spellData.icon
-				else
-					local _, _, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
-					spellInfo.iconID = iconId
-				end
-			elseif spellData.isItem then
-				if spellData.icon then spellInfo.iconID = spellData.icon end
-			end
 			if spellInfo then
+				if spellData.isToy then
+					if spellData.icon then
+						spellInfo.iconID = spellData.icon
+					else
+						local _, _, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
+						spellInfo.iconID = iconId
+					end
+				elseif spellData.isItem then
+					if spellData.icon then spellInfo.iconID = spellData.icon end
+				end
 				local row = math.floor(index / buttonsPerRow)
 				local col = index % buttonsPerRow
 

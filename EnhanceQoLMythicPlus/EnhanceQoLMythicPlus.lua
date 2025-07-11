@@ -786,7 +786,7 @@ local function addTeleportFrame(container)
 		for _, cbData in ipairs(data) do
 			local uFunc = function(self, _, value)
 				addon.db[cbData.var] = value
-				-- addon.MythicPlus.functions.toggleFrame()
+				addon.MythicPlus.functions.toggleFrame()
 			end
 			if cbData.func then uFunc = cbData.func end
 			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc, cbData.desc)
