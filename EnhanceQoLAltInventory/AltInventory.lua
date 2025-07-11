@@ -7,6 +7,7 @@ addon.AltInventory = AltInventory
 
 local function update()
 	if not addon.db.altInventory then addon.db.altInventory = {} end
+	if not addon.db.altInventoryNames then addon.db.altInventoryNames = {} end
 
 	local guid = UnitGUID("player")
 	if not guid then return end
@@ -37,6 +38,8 @@ local function update()
 	if IsReagentBankUnlocked() then scanBag(REAGENTBANK_CONTAINER) end
 
 	addon.db.altInventory[guid] = data
+	local name = GetUnitName("player", true)
+	addon.db.altInventoryNames[guid] = name
 end
 
 local eventHandlers = {
