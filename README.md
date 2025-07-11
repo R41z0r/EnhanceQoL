@@ -65,6 +65,7 @@ English • German • French • Spanish • Italian • Russian • Korean •
 
 *   Teleport Frame with cooldowns, portals, class & engineering teleports, toys, etc.
 *   "Teleport Compendium" tab inside the PVE frame.
+*   Right-click portals to mark them as favourites – favourites show at the top and can bypass hide options when **Always show favorites from hidden expansions** and **Always show favorite teleports regardless of filters** are enabled.
 
 ### Quest & Vendor Automation
 
