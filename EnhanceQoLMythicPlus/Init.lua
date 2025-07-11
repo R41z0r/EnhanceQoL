@@ -681,20 +681,20 @@ function addon.MythicPlus.functions.setRandomHearthstone()
 		if #availableHearthstones == 0 then return nil end
 	end
 
-        local randomIndex = math.random(1, #availableHearthstones)
+	local randomIndex = math.random(1, #availableHearthstones)
 
-        local hs = availableHearthstones[randomIndex]
-        addon.MythicPlus.variables.portalCompendium[11].spells = {
-                [RANDOM_HS_ID] = {
-                        text = "HS",
-                        isItem = hs.isItem or false,
-                        itemID = hs.id,
-                        isToy = hs.isToy or false,
-                        toyID = hs.id,
-                        isHearthstone = true,
-                        icon = hs.icon,
-                },
-        }
+	local hs = availableHearthstones[randomIndex]
+	addon.MythicPlus.variables.portalCompendium[11].spells = {
+		[RANDOM_HS_ID] = {
+			text = "HS",
+			isItem = hs.isItem or false,
+			itemID = hs.id,
+			isToy = hs.isToy or false,
+			toyID = hs.id,
+			isHearthstone = true,
+			icon = hs.icon,
+		},
+	}
 end
 
 addon.MythicPlus.variables.collapseFrames = {
