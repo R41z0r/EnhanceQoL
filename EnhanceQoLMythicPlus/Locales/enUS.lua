@@ -56,6 +56,8 @@ L["potionTrackerOffhealing"] = "Track Offhealing CD usage"
 L["AutoMark"] = "Auto marker"
 L["autoMarkTankInDungeon"] = "Automatically mark the %s in dungeons"
 L["autoMarkTankInDungeonMarker"] = "Tank marker"
+L["autoMarkHealerInDungeon"] = "Automatically mark the %s in dungeons"
+L["autoMarkHealerInDungeonMarker"] = "Healer marker"
 L["Disabled"] = "Disabled"
 L["autoMarkTankExplanation"] = "It will mark the %s when he has no mark and only changes the mark, when you are either %s or %s"
 
@@ -123,6 +125,7 @@ L["collapse"] = "Collapse"
 
 L["mythicPlusNoHealerMark"] = "Remove the marker from me when I’m in the healer role"
 L["HideTracker"] = "Hide"
+L["markerAlreadyUsed"] = "This marker is already used for the %s"
 
 L["useTalentLoadoutEx"] = "Switch talents via Talent Loadout Ex"
 L["OpenTalents"] = "Open Talents"

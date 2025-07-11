@@ -331,17 +331,39 @@ local function setActTank()
 	addon.MythicPlus.actTank = nil
 end
 
+local function setActHealer()
+	if UnitGroupRolesAssigned("player") == "HEALER" then
+		addon.MythicPlus.actHealer = "player"
+		return
+	end
+	for i = 1, 4 do
+		local unit = "party" .. i
+		if UnitGroupRolesAssigned(unit) == "HEALER" then
+			addon.MythicPlus.actHealer = unit
+			return
+		end
+	end
+	addon.MythicPlus.actHealer = nil
+end
+
 local function checkRaidMarker()
-	if nil == addon.MythicPlus.actTank then setActTank() end
-	if nil ~= addon.MythicPlus.actTank then
-		if UnitInParty(addon.MythicPlus.actTank) then
+	if addon.db["autoMarkTankInDungeon"] then
+		if nil == addon.MythicPlus.actTank then setActTank() end
+		if nil ~= addon.MythicPlus.actTank and UnitInParty(addon.MythicPlus.actTank) then
 			local rIndex = GetRaidTargetIndex(addon.MythicPlus.actTank)
-			if nil == rIndex then
+			if rIndex == nil or rIndex ~= addon.db["autoMarkTankInDungeonMarker"] and (UnitGroupRolesAssigned("player") == "TANK" or UnitIsGroupLeader("player")) then
 				SetRaidTarget(addon.MythicPlus.actTank, addon.db["autoMarkTankInDungeonMarker"])
-			elseif rIndex ~= addon.db["autoMarkTankInDungeonMarker"] and UnitGroupRolesAssigned("player") == "TANK" then
-				SetRaidTarget(addon.MythicPlus.actTank, addon.db["autoMarkTankInDungeonMarker"])
-			elseif rIndex ~= addon.db["autoMarkTankInDungeonMarker"] and UnitIsGroupLeader("player") then
-				SetRaidTarget(addon.MythicPlus.actTank, addon.db["autoMarkTankInDungeonMarker"])
+			end
+		end
+	end
+
+	if addon.db["autoMarkHealerInDungeon"] then
+		if nil == addon.MythicPlus.actHealer then setActHealer() end
+		if nil ~= addon.MythicPlus.actHealer and UnitInParty(addon.MythicPlus.actHealer) then
+			if addon.MythicPlus.actHealer == "player" and addon.db["mythicPlusNoHealerMark"] then return end
+			local rIndex = GetRaidTargetIndex(addon.MythicPlus.actHealer)
+			if rIndex == nil or rIndex ~= addon.db["autoMarkHealerInDungeonMarker"] and (UnitGroupRolesAssigned("player") == "HEALER" or UnitIsGroupLeader("player")) then
+				SetRaidTarget(addon.MythicPlus.actHealer, addon.db["autoMarkHealerInDungeonMarker"])
 			end
 		end
 	end
@@ -353,7 +375,7 @@ local function checkCondition()
 		if nil ~= rIndex then SetRaidTarget("player", 0) end
 	end
 
-	if addon.db["autoMarkTankInDungeon"] then
+	if addon.db["autoMarkTankInDungeon"] or addon.db["autoMarkHealerInDungeon"] then
 		local _, _, difficultyID, difficultyName = GetInstanceInfo()
 		if difficultyID == 1 and addon.db["mythicPlusIgnoreNormal"] then return false end
 		if difficultyID == 2 and addon.db["mythicPlusIgnoreHeroic"] then return false end
@@ -378,12 +400,15 @@ local function eventHandler(self, event, arg1, arg2, arg3, arg4)
 		C_Timer.After(0.5, function() checkRaidMarker() end)
 	elseif event == "PLAYER_ROLES_ASSIGNED" and checkCondition() then
 		setActTank()
+		setActHealer()
 		checkRaidMarker()
 	elseif event == "GROUP_ROSTER_UPDATE" and checkCondition() then
 		setActTank()
+		setActHealer()
 		checkRaidMarker()
 	elseif event == "READY_CHECK" and checkCondition() then
 		setActTank()
+		setActHealer()
 		checkRaidMarker()
 	elseif event == "SPELL_UPDATE_CHARGES" then
 		if IsInInstance() and select(3, GetInstanceInfo()) == 8 then
@@ -858,7 +883,14 @@ local function addAutoMarkFrame(container)
 			[8] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:20|t",
 		})
 
-		local dropTankMark = addon.functions.createDropdownAce(L["autoMarkTankInDungeonMarker"], list, order, function(self, _, value) addon.db["autoMarkTankInDungeonMarker"] = value end)
+		local dropTankMark = addon.functions.createDropdownAce(L["autoMarkTankInDungeonMarker"], list, order, function(self, _, value)
+			if value == addon.db["autoMarkHealerInDungeonMarker"] then
+				print("|cff00ff98Enhance QoL|r: " .. L["markerAlreadyUsed"]:format(HEALER))
+				self:SetValue(addon.db["autoMarkTankInDungeonMarker"])
+				return
+			end
+			addon.db["autoMarkTankInDungeonMarker"] = value
+		end)
 		dropTankMark:SetValue(addon.db["autoMarkTankInDungeonMarker"])
 		dropTankMark:SetFullWidth(false)
 		dropTankMark:SetWidth(100)
@@ -891,6 +923,44 @@ local function addAutoMarkFrame(container)
 
 	local groupHealer = addon.functions.createContainer("InlineGroup", "List")
 	wrapper:AddChild(groupHealer)
+	local cbAutoMarkHealer = addon.functions.createCheckboxAce(L["autoMarkHealerInDungeon"]:format(HEALER), addon.db["autoMarkHealerInDungeon"], function(self, _, value)
+		addon.db["autoMarkHealerInDungeon"] = value
+		if value and UnitInParty("player") and not UnitInRaid("player") and select(1, IsInInstance()) == true then
+			setActHealer()
+			checkRaidMarker()
+		end
+		container:ReleaseChildren()
+		addAutoMarkFrame(container)
+	end)
+	groupHealer:AddChild(cbAutoMarkHealer)
+
+	if addon.db["autoMarkHealerInDungeon"] then
+		local list, order = addon.functions.prepareListForDropdown({
+			[1] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:20|t",
+			[2] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:20|t",
+			[3] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:20|t",
+			[4] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_4:20|t",
+			[5] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_5:20|t",
+			[6] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_6:20|t",
+			[7] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_7:20|t",
+			[8] = "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_8:20|t",
+		})
+
+		local dropHealerMark = addon.functions.createDropdownAce(L["autoMarkHealerInDungeonMarker"], list, order, function(self, _, value)
+			if value == addon.db["autoMarkTankInDungeonMarker"] then
+				print("|cff00ff98Enhance QoL|r: " .. L["markerAlreadyUsed"]:format(TANK))
+				self:SetValue(addon.db["autoMarkHealerInDungeonMarker"])
+				return
+			end
+			addon.db["autoMarkHealerInDungeonMarker"] = value
+		end)
+		dropHealerMark:SetValue(addon.db["autoMarkHealerInDungeonMarker"])
+		dropHealerMark:SetFullWidth(false)
+		dropHealerMark:SetWidth(100)
+		groupHealer:AddChild(dropHealerMark)
+	end
+
+	groupHealer:AddChild(addon.functions.createSpacerAce())
 	local data = {
 		{
 			text = L["mythicPlusNoHealerMark"],
