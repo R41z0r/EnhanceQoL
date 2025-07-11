@@ -768,6 +768,31 @@ local function addTeleportFrame(container)
 			groupCompendiumAddition:AddChild(cbElement)
 		end
 
+		local groupCompendiumFavorite = addon.functions.createContainer("InlineGroup", "List")
+		wrapper:AddChild(groupCompendiumFavorite)
+		groupCompendiumFavorite:SetTitle(L["teleportFavoritesHeadline"])
+		local data = {
+			{
+				text = L["teleportFavoritesIgnoreExpansionHide"],
+				var = "teleportFavoritesIgnoreExpansionHide",
+			},
+			{
+				text = L["teleportFavoritesIgnoreFilters"],
+				desc = L["teleportFavoritesIgnoreFiltersDesc"],
+				var = "teleportFavoritesIgnoreFilters",
+			},
+		}
+
+		for _, cbData in ipairs(data) do
+			local uFunc = function(self, _, value)
+				addon.db[cbData.var] = value
+				addon.MythicPlus.functions.toggleFrame()
+			end
+			if cbData.func then uFunc = cbData.func end
+			local cbElement = addon.functions.createCheckboxAce(cbData.text, addon.db[cbData.var], uFunc, cbData.desc)
+			groupCompendiumFavorite:AddChild(cbElement)
+		end
+
 		local groupCompendium = addon.functions.createContainer("InlineGroup", "List")
 		wrapper:AddChild(groupCompendium)
 		groupCompendium:SetTitle(L["teleportCompendiumHeadline"])

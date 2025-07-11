@@ -17,6 +17,9 @@ local mapInfo = {}
 local mapIDInfo = {}
 local selectedMapId
 local faction = select(2, UnitFactionGroup("player"))
+local checkCooldown
+
+addon.functions.InitDBValue("teleportFavorites", {})
 
 local GetItemCooldown = C_Item.GetItemCooldown
 local GetItemCount = C_Item.GetItemCount
@@ -140,16 +143,41 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 	frame.buttons = {}
 
 	-- Sortiere und filtere die bekannten Spells
-	local sortedSpells = {}
+	local favoriteLookup = addon.db.teleportFavorites
+	local favorites = {}
+	local others = {}
 	for spellID, data in pairs(spells) do
 		local known = IsSpellKnown(spellID)
-		if (not data.faction or data.faction == faction) and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known)) then
-			table.insert(sortedSpells, { spellID = spellID, text = data.text, iconID = data.iconID, isKnown = known })
+		local isFavorite = favoriteLookup[spellID]
+		local passes = (not data.faction or data.faction == faction)
+		if addon.db["portalHideMissing"] then passes = passes and known end
+
+		if passes or (addon.db.teleportFavoritesIgnoreFilters and isFavorite and (not addon.db["portalHideMissing"] or known)) then
+			local entry = {
+				spellID = spellID,
+				text = data.text,
+				iconID = data.iconID,
+				isKnown = known,
+				isFavorite = isFavorite,
+			}
+			if isFavorite then
+				table.insert(favorites, entry)
+			else
+				table.insert(others, entry)
+			end
 		end
 	end
 
-	-- Sortiere alphabetisch nach Text
-	table.sort(sortedSpells, function(a, b) return a.text < b.text end)
+	table.sort(favorites, function(a, b) return a.text < b.text end)
+	table.sort(others, function(a, b) return a.text < b.text end)
+
+	local sortedSpells = {}
+	for _, v in ipairs(favorites) do
+		table.insert(sortedSpells, v)
+	end
+	for _, v in ipairs(others) do
+		table.insert(sortedSpells, v)
+	end
 
 	-- Berechne dynamische Anzahl der Buttons
 	local totalButtons = #sortedSpells
@@ -203,6 +231,14 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 			icon:SetTexture(spellInfo.iconID or "Interface\\ICONS\\INV_Misc_QuestionMark")
 			button.icon = icon
 
+			-- Favoritenanzeige
+			local star = button:CreateTexture(nil, "OVERLAY")
+			star:SetSize(12, 12)
+			star:SetPoint("TOPRIGHT", -2, -2)
+			star:SetTexture("Interface\\COMMON\\ReputationStar")
+			if not spellData.isFavorite then star:Hide() end
+			button.favoriteStar = star
+
 			-- berprüfen, ob der Zauber bekannt ist
 			if not spellData.isKnown then
 				icon:SetDesaturated(true) -- Macht das Icon grau/schwarzweiß
@@ -220,10 +256,23 @@ local function CreatePortalButtonsWithCooldown(frame, spells)
 			button.cooldownFrame:SetAllPoints(button)
 
 			-- Sichere Aktion (CastSpell)
-			button:SetAttribute("type", "spell")
-			button:SetAttribute("spell", spellID)
-			button:RegisterForClicks("AnyUp", "AnyDown")
+			button:SetAttribute("type1", "spell")
+			button:SetAttribute("spell1", spellID)
+			button:SetAttribute("type2", nil)
+			button:SetAttribute("spell2", nil)
 
+			button:RegisterForClicks("AnyUp", "AnyDown")
+			button:SetScript("OnMouseUp", function(self, btn)
+				if btn == "RightButton" then
+					local favs = addon.db.teleportFavorites
+					if favs[self.spellID] then
+						favs[self.spellID] = nil
+					else
+						favs[self.spellID] = true
+					end
+					checkCooldown()
+				end
+			end)
 			-- Text und Tooltip
 			local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 			label:SetPoint("TOP", button, "BOTTOM", 0, -2)
@@ -294,15 +343,32 @@ local function CreatePortalCompendium(frame, compendium)
 	local currentYOffset = 0 - titleCompendium:GetStringHeight() - 20 -- Startabstand vom oberen Rand
 	local maxWidth = titleCompendium:GetStringWidth() + 20
 
+	local favorites = addon.db.teleportFavorites
+	local newCompendium = {}
+	local favSpells = {}
+	for k, section in pairs(compendium) do
+		local hidden = addon.db["teleportsCompendiumHide" .. section.headline]
+		local newSpells = {}
+		for spellID, data in pairs(section.spells) do
+			if favorites[spellID] then
+				if addon.db.teleportFavoritesIgnoreExpansionHide or not hidden then favSpells[spellID] = data end
+			else
+				newSpells[spellID] = data
+			end
+		end
+		newCompendium[k] = { headline = section.headline, spells = newSpells }
+	end
+	if next(favSpells) then newCompendium[9999] = { headline = FAVORITES, spells = favSpells } end
+
 	local sortedIndexes = {}
-	for key, _ in pairs(compendium) do
+	for key, _ in pairs(newCompendium) do
 		table.insert(sortedIndexes, key)
 	end
 
 	table.sort(sortedIndexes, function(a, b) return a > b end)
 
 	for _, key in ipairs(sortedIndexes) do
-		local section = compendium[key]
+		local section = newCompendium[key]
 
 		local sortedSpells = {}
 		if not addon.db["teleportsCompendiumHide" .. section.headline] then
@@ -311,8 +377,7 @@ local function CreatePortalCompendium(frame, compendium)
 					or (hasEngineering and data.toyID and not data.isHearthstone and isToyUsable(data.toyID))
 					or (data.isItem and GetItemCount(data.itemID) > 0)
 					or (data.isHearthstone and isToyUsable(data.toyID))
-				if
-					(not data.faction or data.faction == faction)
+				local showSpell = (not data.faction or data.faction == faction)
 					and (not data.map or (data.map == C_Map.GetBestMapForUnit("player")))
 					and (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
 					and (not addon.db["hideActualSeason"] or not portalSpells[spellID])
@@ -320,10 +385,15 @@ local function CreatePortalCompendium(frame, compendium)
 					and (addon.db["portalShowToyHearthstones"] or not data.isHearthstone)
 					and (addon.db["portalShowEngineering"] or not data.isEngineering)
 					and ((addon.db["portalShowClassTeleport"] and (addon.variables.unitClass == data.isClassTP)) or not data.isClassTP)
-					and ((addon.db["portalShowClassTeleport"] and addon.variables.unitRace == data.isRaceTP) or not data.isRaceTP) -- Racial Dark Iron Dwarf
+					and ((addon.db["portalShowClassTeleport"] and addon.variables.unitRace == data.isRaceTP) or not data.isRaceTP)
 					and ((addon.db["portalShowMagePortal"] and addon.variables.unitClass == "MAGE") or not data.isMagePortal)
 					and (addon.db["portalShowDungeonTeleports"] or not data.cId)
-				then
+
+				if not showSpell and addon.db.teleportFavoritesIgnoreFilters and favorites[spellID] then
+					showSpell = (not addon.db["portalHideMissing"] or (addon.db["portalHideMissing"] and known))
+				end
+
+				if showSpell then
 					table.insert(sortedSpells, {
 						spellID = spellID,
 						text = data.text,
@@ -336,6 +406,7 @@ local function CreatePortalCompendium(frame, compendium)
 						icon = data.icon or false,
 						isClassTP = data.isClassTP or false,
 						isMagePortal = data.isMagePortal or false,
+						isFavorite = favorites[spellID],
 					})
 				end
 			end
@@ -391,18 +462,19 @@ local function CreatePortalCompendium(frame, compendium)
 		for _, spellData in ipairs(sortedSpells) do
 			local spellID = spellData.spellID
 			local spellInfo = C_Spell.GetSpellInfo(spellID)
+			if not spellInfo and spellID == 999999 then spellInfo = {} end
 
-			if spellData.isToy then
-				if spellData.icon then
-					spellInfo.iconID = spellData.icon
-				else
-					local _, _, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
-					spellInfo.iconID = iconId
-				end
-			elseif spellData.isItem then
-				if spellData.icon then spellInfo.iconID = spellData.icon end
-			end
 			if spellInfo then
+				if spellData.isToy then
+					if spellData.icon then
+						spellInfo.iconID = spellData.icon
+					else
+						local _, _, iconId = C_ToyBox.GetToyInfo(spellData.toyID)
+						spellInfo.iconID = iconId
+					end
+				elseif spellData.isItem then
+					if spellData.icon then spellInfo.iconID = spellData.icon end
+				end
 				local row = math.floor(index / buttonsPerRow)
 				local col = index % buttonsPerRow
 
@@ -442,6 +514,14 @@ local function CreatePortalCompendium(frame, compendium)
 				icon:SetTexture(spellInfo.iconID or "Interface\\ICONS\\INV_Misc_QuestionMark")
 				button.icon = icon
 
+				-- Favoritenanzeige
+				local star = button:CreateTexture(nil, "OVERLAY")
+				star:SetSize(12, 12)
+				star:SetPoint("TOPRIGHT", -2, -2)
+				star:SetTexture("Interface\\COMMON\\ReputationStar")
+				if not spellData.isFavorite then star:Hide() end
+				button.favoriteStar = star
+
 				-- Überprüfen, ob der Zauber bekannt ist
 				if not spellData.isKnown then
 					icon:SetDesaturated(true) -- Macht das Icon grau/schwarzweiß
@@ -461,19 +541,36 @@ local function CreatePortalCompendium(frame, compendium)
 				-- Sichere Aktion (CastSpell)
 				if spellData.isToy then
 					if spellData.isKnown then
-						button:SetAttribute("type", "macro")
-						button:SetAttribute("macrotext", "/use item:" .. spellData.toyID)
+						button:SetAttribute("type1", "macro")
+						button:SetAttribute("macrotext1", "/use item:" .. spellData.toyID)
+						button:SetAttribute("type2", nil)
+						button:SetAttribute("macrotext2", nil)
 					end
 				elseif spellData.isItem then
 					if spellData.isKnown then
-						button:SetAttribute("type", "macro")
-						button:SetAttribute("macrotext", "/use item:" .. spellData.itemID)
+						button:SetAttribute("type1", "macro")
+						button:SetAttribute("macrotext1", "/use item:" .. spellData.itemID)
+						button:SetAttribute("type2", nil)
+						button:SetAttribute("macrotext2", nil)
 					end
 				else
-					button:SetAttribute("type", "spell")
-					button:SetAttribute("spell", spellID)
+					button:SetAttribute("type1", "spell")
+					button:SetAttribute("spell1", spellID)
+					button:SetAttribute("type2", nil)
+					button:SetAttribute("spell2", nil)
 				end
 				button:RegisterForClicks("AnyUp", "AnyDown")
+				button:SetScript("OnMouseUp", function(self, btn)
+					if btn == "RightButton" then
+						local favs = addon.db.teleportFavorites
+						if favs[self.spellID] then
+							favs[self.spellID] = nil
+						else
+							favs[self.spellID] = true
+						end
+						checkCooldown()
+					end
+				end)
 
 				-- Text und Tooltip
 				local label = button:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -509,7 +606,7 @@ local function CreatePortalCompendium(frame, compendium)
 	frame:SetSize(maxWidth, max(math.abs(currentYOffset) + 20, titleCompendium:GetStringHeight() + 20))
 end
 
-local function checkCooldown()
+function checkCooldown()
 	if addon.db["teleportFrame"] then CreatePortalButtonsWithCooldown(frameAnchor, portalSpells) end
 
 	if addon.db["teleportsEnableCompendium"] then CreatePortalCompendium(frameAnchorCompendium, addon.MythicPlus.variables.portalCompendium) end

@@ -72,6 +72,9 @@ addon.functions.InitDBValue("teleportFrame", false)
 addon.functions.InitDBValue("portalHideMissing", false)
 addon.functions.InitDBValue("portalShowTooltip", false)
 addon.functions.InitDBValue("teleportsEnableCompendium", false)
+addon.functions.InitDBValue("teleportFavorites", {})
+addon.functions.InitDBValue("teleportFavoritesIgnoreExpansionHide", false)
+addon.functions.InitDBValue("teleportFavoritesIgnoreFilters", false)
 
 -- Group Dungeon Filter
 addon.functions.InitDBValue("mythicPlusEnableDungeonFilter", false)
@@ -602,6 +605,7 @@ addon.MythicPlus.variables.portalCompendium = {
 }
 
 -- Pre-Stage all icon to have less calls to LUA API
+local RANDOM_HS_ID = 999999
 local hearthstoneID = {
 	{ isToy = true, icon = 4622300, id = 235016, spellID = 1217281 }, -- Redeployment Module
 	{ isItem = true, icon = 134414, id = 6948, spellID = 8690 }, -- Default Hearthstone
@@ -680,9 +684,16 @@ function addon.MythicPlus.functions.setRandomHearthstone()
 	local randomIndex = math.random(1, #availableHearthstones)
 
 	local hs = availableHearthstones[randomIndex]
-	local hsSpellID = hs.spellID or 1
 	addon.MythicPlus.variables.portalCompendium[11].spells = {
-		[hsSpellID] = { text = "HS", isItem = false or hs.isItem, itemID = hs.id, isToy = false or hs.isToy, toyID = hs.id, isHearthstone = true, icon = hs.icon },
+		[RANDOM_HS_ID] = {
+			text = "HS",
+			isItem = hs.isItem or false,
+			itemID = hs.id,
+			isToy = hs.isToy or false,
+			toyID = hs.id,
+			isHearthstone = true,
+			icon = hs.icon,
+		},
 	}
 end
 
