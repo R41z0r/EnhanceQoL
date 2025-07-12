@@ -25,6 +25,7 @@ ignore:
   - generate_changelog.sh
   - README.md
   - CONTRIBUTING.md
+  - unused_assets
 
 manual-changelog:
   filename: CHANGELOG.md
